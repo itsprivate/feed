@@ -1,0 +1,12 @@
+translations:
+  'HN Discussion':
+    'zh-Hans': "HN 讨论"
+sites:
+  hackernews.buzzing.cc:
+    site:
+      _title_zh-Hans: Hacker News 中文热门
+      _description_zh-Hans: 收集Hacker News 中文热门
+    sources:
+      - url: https://hn.algolia.com/api/v1/search_by_date?tags=front_page&hitsPerPage=50
+        itemsPath: hits
+        type: hn

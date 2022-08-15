@@ -1,0 +1,30 @@
+{
+  "created_at": "2022-08-10T04:30:51.000Z",
+  "title": "Reddit’s database has two tables (2012)",
+  "url": "https://kevin.burke.dev/kevin/reddits-database-has-two-tables/",
+  "author": "swyx",
+  "points": 10,
+  "story_text": null,
+  "comment_text": null,
+  "num_comments": 4,
+  "story_id": null,
+  "story_title": null,
+  "story_url": null,
+  "parent_id": null,
+  "created_at_i": 1660105851,
+  "_tags": ["story", "author_swyx", "story_32407873", "front_page"],
+  "objectID": "32407873",
+  "_highlightResult": {
+    "title": {
+      "value": "Reddit’s database has two tables (2012)",
+      "matchLevel": "none",
+      "matchedWords": []
+    },
+    "url": {
+      "value": "https://kevin.burke.dev/kevin/reddits-database-has-two-tables/",
+      "matchLevel": "none",
+      "matchedWords": []
+    },
+    "author": { "value": "swyx", "matchLevel": "none", "matchedWords": [] }
+  }
+}
