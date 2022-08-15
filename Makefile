@@ -7,26 +7,26 @@ install:
 run:
 	DEV=1 MOCK=1 deno run -A main.ts --site hackernews.buzzing.cc
 
-.Phony: runfromformatedhn
-runfromtrhn:
+.Phony: start
+start:
 	DEV=1 MOCK=1 deno run -A main.ts --stage translate,build_items,archive,build_site,serve_site --site hackernews.buzzing.cc
 
-.Phony: fetchhn
-fetchhn:
+.Phony: fetch
+fetch:
 	DEV=1 deno run -A main.ts --stage fetch --site hackernews.buzzing.cc
 
-.Phony: formathn
-formathn:
+.Phony: format
+format:
 	DEV=1 deno run -A main.ts --stage format --site hackernews.buzzing.cc
 
-.Phony: trhn
-trhn:
+.Phony: tr
+tr:
 	DEV=1 deno run -A main.ts --stage translate --site hackernews.buzzing.cc
 
-.Phony: itemshn
-itemshn:
-	DEV=1 deno run -A main.ts --stage build_items --site hackernews.buzzing.cc
+.Phony: current
+current:
+	DEV=1 deno run -A main.ts --stage build_current --site hackernews.buzzing.cc
 
-.Phony: sitehn
-servehn:
-	DEV=1 deno run -A main.ts --stage serve_site --site hackernews.buzzing.cc
+.Phony: site
+site:
+	DEV=1 deno run -A main.ts --stage build_site,serve_site --site hackernews.buzzing.cc
