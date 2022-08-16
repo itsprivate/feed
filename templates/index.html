@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="{{language}}" class="h-feed hfeed">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{title}} - {{description}}</title>
+    <meta itemprop="name" content="{{{name}}}" />
+    <meta itemprop="image" content="{{{image}}}" />
+    <meta
+      itemprop="description"
+      name="description"
+      content="{{{description}}}"
+    />
+    <meta property="og:url" content="{{{home_page_url}}}" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="{{{title}}}" />
+    <meta property="og:image" content="{{{icon}}}" />
+    <meta property="og:image:alt" content="{{{title}}} Logo" />
+    <meta property="og:description" content="{{{description}}}" />
+    <meta property="og:site_name" content="{{{title}}}" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:site" content="@buzzingcc" />
+    <meta name="twitter:url" content="{{{home_page_url}}}" />
+    <meta name="twitter:title" content="{{{title}}}" />
+    <meta name="twitter:description" content="{{{description}}}" />
+    <meta name="twitter:image" content="{{{image}}}" />
+    <meta name="twitter:image:alt" content="{{{title}}} Logo" />
+    <meta property="og:locale" content="{{{language}}}" />
+    <link
+      rel="alternate"
+      href="{{{_rss_url}}}"
+      type="application/rss+xml"
+      title="{{{title}}} - RSS"
+    />
+    <link
+      rel="alternate"
+      href="{{{_atom_url}}}"
+      type="application/atom+xml"
+      title="Atom 1.0"
+    />
+    <link
+      rel="alternate"
+      href="{{{feed_url}}}"
+      type="application/feed+json"
+      title="{{{title}}} - JSON Feed 1"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="/apple-touch-icon.png?v=20220816"
+      type="image/png"
+    />
+    <link rel="icon" href="/favicon.ico?v=20220816" type="image/png" />
+    <style>
+      @charset "UTF-8";
+      body {
+        padding: 0;
+        margin: 0;
+        font-size: 1.1em;
+        line-height: 1.5em;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          Helvetica, Arial, "Palatino Linotype", "Palatino LT STD",
+          "Book Antiqua", Georgia, "SF Pro SC", "SF Pro Text", "SF Pro Icons",
+          "PingFang SC", "Helvetica Neue", "Helvetica", "Arial", sans-serif,
+          "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", Palatino,
+          sans-serif;
+      }
+      img {
+        max-width: 100%;
+        display: block;
+        margin: 0.75em auto;
+      }
+
+      .root-indent {
+        padding-left: 1rem;
+      }
+      main {
+        max-width: 45em;
+        margin: auto;
+        padding: 0 2%;
+      }
+      nav {
+        background-color: #f0f0f0;
+      }
+      .h-entry {
+        margin-bottom: 1rem;
+      }
+      .small {
+        font-size: smaller;
+      }
+      .muted {
+        color: #828282;
+      }
+      .content {
+        font-style: italic;
+      }
+      .content a {
+        color: initial;
+      }
+      .initial-color {
+        color: initial;
+      }
+      .no-underline {
+        text-decoration: none;
+      }
+      .no-underline:hover {
+        text-decoration: underline;
+      }
+      .no-visited:visited {
+        color: initial;
+      }
+      .px {
+        padding-left: 1rem;
+        padding-right: 1rem;
+      }
+      .details,
+      .less,
+      .more:target {
+        display: none;
+      }
+      .more:target ~ .details {
+        display: block;
+      }
+      .more:target ~ .less {
+        display: inline;
+      }
+    </style>
+  </head>
+  <body>
+    <header class="small">
+      <nav class="px">
+        <a
+          class="p-name site-title no-underline no-visited initial-color"
+          href="{{{home_page_url}}}"
+          >👋 {{title}}</a
+        >
+        <a class="no-visited no-underline" href="#about">{{about_label}}</a>
+        <span> | </span>
+        {{#_related_sites}}
+        <a class="no-underline no-visited initial-color" href="{{{url}}}"
+          >{{name}}</a
+        >{{^is_last}}<span> · </span>{{/is_last}} {{/_related_sites}}
+        {{#_other_sites}}
+        <a id="more" href="#more" class="no-underline no-visited more"
+          >+ {{more_label}}</a
+        >
+        <a id="less" href="#" class="no-underline no-visited less"
+          >- {{less_label}}</a
+        >
+        <div class="details">
+          <a class="no-underline no-visited initial-color" href="{{{url}}}"
+            >{{name}}</a
+          >{{^is_last}}<span> · </span>{{/is_last}}
+        </div>
+        {{/_other_sites}}
+      </nav>
+    </header>
+    <main>
+      <ol class="root-indent">
+        {{#items}}
+        <li class="h-entry hentry">
+          <a class="u-url p-name entry-title no-underline" href="{{{url}}}"
+            >{{title}}</a
+          >
+          <div class="p-summary entry-summary content small">
+            {{{content_html}}}
+          </div>
+        </li>
+        {{/items}}
+      </ol>
+      <footer id="about">
+        <h5>{{about_label}}</h5>
+        <div class="p-summary site-description content small">
+          {{description}}
+        </div>
+        <p class="content small">
+          {{languages_label}}: {{#_languages}}
+          <a href="{{{url}}}">{{name}}</a>
+          {{/_languages}}
+          <br />
+          {{subscription_label}}:
+          <a class="no-visited" href="{{{_rss_url}}}">RSS</a>
+          <a class="no-visited" href="{{{_atom_url}}}">Atom</a>
+          <a class="no-visited" href="{{{feed_url}}}">JSON Feed</a>
+          <br />
+          {{other_sites_label}}: {{#_other_sites}}
+          <a class="no-visited" href="{{{url}}}">{{name}}</a>
+          {{/_other_sites}}
+          <br />
+          {{powered_by_label}}:
+          <a class="no-visited" href="https://twitter.com/OwenYoungZh">Owen</a>
+        </p>
+      </footer>
+    </main>
+  </body>
+</html>

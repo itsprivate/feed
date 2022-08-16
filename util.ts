@@ -1,5 +1,6 @@
-import { DateTimeFormatter, fs, OpenCC, path, YAML } from "./deps.ts";
+import { DateTimeFormatter, fs, OpenCC, path, resize, YAML } from "./deps.ts";
 import { Config } from "./interface.ts";
+// @ts-ignore: npm module
 const zhHansToZhHant = OpenCC.Converter({ from: "cn", to: "tw" });
 
 export const toZhHant = (text: string): string => {
@@ -22,6 +23,9 @@ export const get = (obj: unknown, path: string, defaultValue = undefined) => {
 };
 export const isDev = () => {
   return Deno.env.get("DEV") === "1";
+};
+export const isDebug = () => {
+  return Deno.env.get("DEBUG") === "1";
 };
 export const getDataPath = () => {
   const dataPath = isDev() ? "dev-data" : "data";
@@ -132,4 +136,29 @@ export const formatHumanTime = (date: Date) => {
   } else {
     return formatBeijing(date, "yy-MM-dd");
   }
+};
+
+export const generateIcons = async function (domain: string) {
+  const icon = await Deno.readFile(`./static/${domain}/icon.png`);
+  // copy icon to dist
+  await Deno.writeFile(getDistFilePath(domain, "icon.png"), icon);
+  // generate apple-touch-icon
+  const appleTouchIcon = await resize(icon, {
+    width: 180,
+    height: 180,
+  });
+  await Deno.writeFile(
+    getDistFilePath(domain, "apple-touch-icon.png"),
+    appleTouchIcon,
+  );
+  const favicon32 = await resize(icon, {
+    width: 32,
+    height: 32,
+  });
+  // write to file
+
+  await Deno.writeFile(
+    getDistFilePath(domain, "favicon.ico"),
+    favicon32,
+  );
 };

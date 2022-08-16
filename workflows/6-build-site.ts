@@ -1,4 +1,14 @@
-import { colors, datetime, flags, fs, mustache, path, YAML } from "../deps.ts";
+import {
+  colors,
+  datetime,
+  flags,
+  fs,
+  jsonfeedToAtom,
+  jsonfeedToRSS,
+  mustache,
+  path,
+  YAML,
+} from "../deps.ts";
 import {
   Author,
   Config,
@@ -6,10 +16,10 @@ import {
   Link,
   RunOptions,
 } from "../interface.ts";
-import adapters from "../adapters/mod.ts";
-import Item from "../item.ts";
+
 import {
   formatHumanTime,
+  generateIcons,
   get,
   getArchivedItemsFilePath,
   getConfig,
@@ -20,6 +30,7 @@ import {
   getDataRawPath,
   getDataTranslatedPath,
   getDistFilePath,
+  getDistPath,
   isDev,
   readJSONFile,
   writeJSONFile,
@@ -31,10 +42,9 @@ import {
   DEV_MODE_HANDLED_ITEMS,
   MAX_ITEMS_PER_PAGE,
   TARGET_SITE_LANGUAEGS,
-  TRANSLATED_ITEMS_PER_PAGE,
 } from "../constant.ts";
 
-export default async function buildSite(options: RunOptions | undefined = {}) {
+export default async function buildSite(options: RunOptions) {
   const config = await getConfig();
   const translations = config.translations ?? {};
   const sitesMap = config.sites;
@@ -46,7 +56,7 @@ export default async function buildSite(options: RunOptions | undefined = {}) {
       domains.push(dirEntry.name);
     }
   }
-  const sites = options.sites;
+  const sites = options.domains;
   if (sites && Array.isArray(sites)) {
     domains = domains.filter((domain) => {
       return (sites as string[]).includes(domain);
@@ -80,22 +90,25 @@ export default async function buildSite(options: RunOptions | undefined = {}) {
       });
 
     if (currentItemsJsonKeysSorted.length > 0) {
-      const siteConfig = sitesMap[domain].site as unknown as Record<
-        string,
-        string
-      >;
+      const siteConfig = sitesMap[domain];
 
       // multiple languages support
       const languages = TARGET_SITE_LANGUAEGS;
       for (const language of languages) {
+        let currentTranslations = translations[language.code] ?? {};
+        // merge site translations
+        currentTranslations = {
+          ...currentTranslations,
+          ...siteConfig.translations[language.code],
+        };
         // check config
-        if (!siteConfig["_title_" + language.code]) {
+        if (!currentTranslations.title) {
           throw new Error(
             `${domain} config missing title for language ${language.code}`,
           );
         }
         // check description
-        if (!siteConfig["_description_" + language.code]) {
+        if (!currentTranslations.description) {
           throw new Error(
             `${domain} config missing description for language ${language.code}`,
           );
@@ -106,27 +119,59 @@ export default async function buildSite(options: RunOptions | undefined = {}) {
           const item = currentItemsJson[key] as FormatedItem;
           const itemUrl = item["url"];
           const itemUrlObj = new URL(itemUrl);
-          item.title = item[`_title_${language.code}`] as string;
+          const translationObj = item._translations[language.code];
+
+          const translationFields = Object.keys(translationObj);
+          for (const translationField of translationFields) {
+            const translationValue = translationObj[translationField];
+            item[translationField] = translationValue;
+          }
+
           let summary = "";
 
-          let content_html = `<cite>${
-            item[`_title_${item._original_language}`]
-          } - ${itemUrlObj.hostname}</cite><br/>`;
+          let content_html =
+            `${item.title} - <a href="${itemUrlObj.protocol}//${itemUrlObj.hostname}">${itemUrlObj.hostname}</a>`;
+
+          if (
+            item.authors && Array.isArray(item.authors) &&
+            item.authors.length > 0
+          ) {
+            content_html += " by ";
+            for (const author of item.authors) {
+              content_html +=
+                ` <a class="p-author author h-card" rel="author" href="${author.url}">${author.name}</a>`;
+            }
+          }
+
+          content_html +=
+            `<br><time class="dt-published published" datetime="${item.date_published}">${
+              formatHumanTime(
+                new Date(item.date_published as string),
+              )
+            }</time>`;
+
           for (const link of item._links) {
-            const linkName = translations[link.name]?.[language.code] ??
+            const linkName = currentTranslations[link.name] ??
               link.name;
             summary += `${linkName}: ${link.url}\n`;
-            content_html += `<a href="${link.url}">${linkName}</a>\n`;
+            content_html += ` <a href="${link.url}">${linkName}</a>`;
           }
           item.summary = summary;
           item.content_text = summary;
           item.content_html = content_html;
+          // add feed 1.0 adapter author
+          if (
+            item.authors && Array.isArray(item.authors) &&
+            item.authors.length > 0
+          ) {
+            item.author = item.authors[0];
+          }
           items.push(item);
         });
-        const feedJson = {
-          "version": "https://jsonfeed.org/version/1.1",
-          "title": siteConfig["_title_" + language.code],
-          "description": siteConfig["_description_" + language.code],
+        let feedJson = {
+          "version": "https://jsonfeed.org/version/1",
+          "title": currentTranslations.title,
+          "description": currentTranslations.description,
           "icon": `https://${domain}/icon.png`,
           "favicon": `https://${domain}/favicon.ico`,
           "language": language.code,
@@ -137,29 +182,99 @@ export default async function buildSite(options: RunOptions | undefined = {}) {
         // write to dist file
         const feedPath = getDistFilePath(domain, "feed.json");
         await writeJSONFile(feedPath, feedJson);
-        // add some meta data to feedJson
-        feedJson.items = feedJson.items.map((item) => {
-          item.date_published_time = formatHumanTime(
-            new Date(item.date_published as string),
-          );
+
+        // build atom.xml
+        // @ts-ignore: npm module
+        const atomOutput = jsonfeedToAtom(feedJson);
+        // write to dist file
+        const atomPath = getDistFilePath(domain, "atom.xml");
+        await writeTextFile(atomPath, atomOutput);
+
+        // build rss.xml
+        // @ts-ignore: npm module
+        const rssOutput = jsonfeedToRSS(feedJson);
+        // write to dist file
+        const rssPath = getDistFilePath(domain, "rss.xml");
+        await writeTextFile(rssPath, rssOutput);
+
+        feedJson = {
+          ...currentTranslations,
+          ...feedJson,
+        };
+
+        // @ts-ignore: add meta data
+        feedJson._languages = languages.map((item) => {
+          // @ts-ignore: add meta data
+          item.active = item.code === language.code;
+          // @ts-ignore: add meta data
+          item.url = `/${item.prefix}`;
           return item;
         });
-
+        // related sites is has common tags sites
+        const otherSites: string[] = [];
+        const relatedSites = Object.keys(sitesMap).filter((site) => {
+          const siteTags = sitesMap[site].tags;
+          const currentSiteTags = siteConfig.tags;
+          // ignore self
+          if (site === domain) {
+            return false;
+          }
+          if (siteTags && currentSiteTags) {
+            return siteTags.some((tag) => currentSiteTags.includes(tag));
+          } else {
+            otherSites.push(site);
+            return false;
+          }
+        });
+        //@ts-ignore: add meta data
+        feedJson._related_sites = relatedSites.map(
+          (item, index) => {
+            const itemSiteConfig = sitesMap[item];
+            const siteTranslations = itemSiteConfig.translations[language.code];
+            const siteShortName = siteTranslations.short_title;
+            const siteName = siteTranslations.title;
+            return {
+              //@ts-ignore: add meta data
+              name: siteShortName || siteName,
+              url: `https://${item}/` + language.prefix,
+              is_last: index === relatedSites.length - 1,
+            };
+          },
+        );
+        //@ts-ignore: add meta data
+        feedJson._other_sites = otherSites.map(
+          (item, index) => {
+            const siteShortName = currentTranslations.short_title;
+            const siteName = currentTranslations.title;
+            return {
+              //@ts-ignore: add meta data
+              name: siteShortName || siteName,
+              url: `https://${item}/` + language.prefix,
+              is_last: index === otherSites.length - 1,
+            };
+          },
+        );
+        // @ts-ignore: add meta data
+        feedJson._rss_url = `https://${domain}/rss.xml`;
+        // @ts-ignore: add meta data
+        feedJson._atom_url = `https://${domain}/atom.xml`;
         // build index.html
-        let output = "";
         const indexTemplateString = await Deno.readTextFile(
-          "./templates/index.html.tmpl",
+          "./templates/index.html",
         );
         // build index.html
         // @ts-ignore: js package does not have type for mustache
-        output = mustache.render(indexTemplateString, feedJson);
+        const output = mustache.render(indexTemplateString, feedJson);
         const indexPath = getDistFilePath(domain, "index.html");
-
         await writeTextFile(indexPath, output);
 
-        // build atom.xml
-
-        // build rss.xml
+        // copy static files
+        try {
+          await generateIcons(domain);
+        } catch (e) {
+          console.log("can not generate icons for ", domain);
+          throw e;
+        }
         log.info(`${domain} build success`);
       }
     } else {

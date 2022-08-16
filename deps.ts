@@ -32,4 +32,7 @@ export {
 
 // export { colors } from "https://deno.land/x/cliffy@v0.24.2/ansi/colors.ts";
 export { default as mustache } from "https://jspm.dev/mustache@4.2.0";
-export { default as OpenCC } from "https://esm.sh/opencc-js?no-check";
+export { default as OpenCC } from "https://jspm.dev/opencc-js@1.0.4";
+export { default as jsonfeedToAtom } from "https://jspm.dev/jsonfeed-to-atom@1.2.2";
+export { default as jsonfeedToRSS } from "https://jspm.dev/jsonfeed-to-rss@3.0.6";
+export { resize } from "https://deno.land/x/deno_image@0.0.4/mod.ts";

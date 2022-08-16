@@ -1,7 +1,6 @@
 import { serve, serveDir, serveFile } from "../deps.ts";
 import { getDistPath } from "../util.ts";
-export default async function serveSite(domain: string) {
-  const port = Number(Deno.env.get("PORT") || "8000");
+export default function serveSite(domain: string, port: number) {
   const BASE_PATH = getDistPath() + "/" + domain;
   console.log("BASE_PATH", BASE_PATH);
   const handler = (request: Request): Promise<Response> => {
@@ -18,5 +17,5 @@ export default async function serveSite(domain: string) {
   console.log(
     `HTTP webserver running. Access it at: http://localhost:${port}/`,
   );
-  await serve(handler, { port });
+  serve(handler, { port });
 }

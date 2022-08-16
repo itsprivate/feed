@@ -9,7 +9,7 @@ import {
 import log from "../log.ts";
 import { FormatedItem, RunOptions } from "../interface.ts";
 
-export default async function archive(options: RunOptions | undefined = {}) {
+export default async function archive(options: RunOptions) {
   const now = new Date();
 
   let domains: string[] = [];
@@ -19,7 +19,7 @@ export default async function archive(options: RunOptions | undefined = {}) {
       domains.push(dirEntry.name);
     }
   }
-  const sites = options.sites;
+  const sites = options.domains;
   if (sites && Array.isArray(sites)) {
     domains = domains.filter((domain) => {
       return (sites as string[]).includes(domain);

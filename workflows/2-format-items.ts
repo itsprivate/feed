@@ -1,32 +1,12 @@
-import { colors, datetime, flags, fs, path, YAML } from "../deps.ts";
-import { Config, FormatedItem, RunOptions } from "../interface.ts";
+import { fs } from "../deps.ts";
+import { RunOptions } from "../interface.ts";
 import adapters from "../adapters/mod.ts";
 import Item from "../item.ts";
-import {
-  get,
-  getArchivedItemsFilePath,
-  getConfig,
-  getCurrentItemsFilePath,
-  getCurrentToBeArchivedItemsFilePath,
-  getDataCurrentItemsPath,
-  getDataFormatedPath,
-  getDataRawPath,
-  getDataTranslatedPath,
-  getDistPath,
-  isDev,
-  readJSONFile,
-  writeJSONFile,
-} from "../util.ts";
+import { getDataRawPath, writeJSONFile } from "../util.ts";
 import log from "../log.ts";
-import Translation from "../translate.ts";
-import {
-  DEV_MODE_HANDLED_ITEMS,
-  MAX_ITEMS_PER_PAGE,
-  TRANSLATED_ITEMS_PER_PAGE,
-} from "../constant.ts";
 
 export default async function formatItems(
-  _options: RunOptions | undefined = {},
+  _options: RunOptions,
 ) {
   // get all 1-raw files
   // is exists raw files folder

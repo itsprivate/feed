@@ -26,7 +26,7 @@ import {
 } from "../constant.ts";
 
 export default async function buildCurrent(
-  options: RunOptions | undefined = {},
+  options: RunOptions,
 ) {
   // get all 3-translated files
   // is exists translated files folder
@@ -37,7 +37,7 @@ export default async function buildCurrent(
       domains.push(dirEntry.name);
     }
   }
-  const sites = options.sites;
+  const sites = options.domains;
   if (sites && Array.isArray(sites)) {
     domains = domains.filter((domain) => {
       return (sites as string[]).includes(domain);
@@ -140,7 +140,8 @@ export default async function buildCurrent(
       currentToBeArchivedItemsJson = null;
 
       // delete translated folder
-      await Deno.remove(getDataTranslatedPath() + "/" + domain, {
+      const translatedPath = getDataTranslatedPath() + "/" + domain;
+      await Deno.remove(translatedPath, {
         recursive: true,
       });
     }

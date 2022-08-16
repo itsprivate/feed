@@ -2,18 +2,28 @@
 install:
 	PUPPETEER_PRODUCT=chrome deno run -A --unstable https://deno.land/x/puppeteer@14.1.1/install.ts
 
+.Phony: all
+all:
+	DEV=1 MOCK=1 deno run -A --watch=main.ts,templates/,config.yml,static/ main.ts
+.Phony: build
+build:
+	DEV=1 MOCK=1 NO_SERVE=1 deno run -A main.ts
 
 .Phony: run
 run:
-	DEV=1 MOCK=1 deno run -A main.ts --site hackernews.buzzing.cc
+	DEV=1 MOCK=1 deno run -A --watch=main.ts,templates/,config.yml,static/ main.ts --site hackernews.buzzing.cc
 
 .Phony: start
 start:
-	DEV=1 MOCK=1 deno run -A main.ts --stage translate,build_items,archive,build_site,serve_site --site hackernews.buzzing.cc
+	DEV=1 MOCK=1 deno run -A --watch=main.ts,templates/,config.yml,static/ main.ts --stage translate,build_current,archive,build_site,serve_site --site hackernews.buzzing.cc
 
 .Phony: fetch
 fetch:
 	DEV=1 deno run -A main.ts --stage fetch --site hackernews.buzzing.cc
+
+.Phony: fetchall
+fetchall:
+	DEV=1 deno run -A main.ts --stage fetch
 
 .Phony: format
 format:
@@ -22,6 +32,10 @@ format:
 .Phony: tr
 tr:
 	DEV=1 deno run -A main.ts --stage translate --site hackernews.buzzing.cc
+
+.Phony: trall
+trall:
+	DEV=1 MOCK=1 deno run -A main.ts --stage translate
 
 .Phony: current
 current:

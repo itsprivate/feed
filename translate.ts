@@ -75,7 +75,6 @@ export default class Translation {
     // if mock
     if (this.isMock) {
       return {
-        "zh-Hant": sentence,
         "zh-Hans": sentence,
       };
     }

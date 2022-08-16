@@ -4,19 +4,16 @@ export interface Source {
   itemsPath?: string;
 }
 export interface RunOptions {
-  sites?: string[];
+  domains: string[];
 }
+
 export interface SiteConfig {
-  title: string;
-  "_title_zh-Hant": string;
-  "_title_zh-Hans": string;
-}
-export interface Site {
   sources: Source[];
-  site: SiteConfig;
+  tags: string[];
+  translations: Record<string, Record<string, string>>;
 }
 export interface Config {
-  sites: Record<string, Site>;
+  sites: Record<string, SiteConfig>;
   translations: Record<string, Record<string, string>>;
 }
 export interface Link {
@@ -47,6 +44,7 @@ export interface FormatedItem {
   authors: Author[];
   _original_language: string;
   _links: Link[];
+  _translations: Record<string, Record<string, string>>;
   [key: string]: unknown;
 }
 export type LevelName = "debug" | "info" | "warn" | "error" | "fatal";

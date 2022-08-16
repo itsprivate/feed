@@ -118,11 +118,21 @@ export default class Item {
   getFormatedPath(): string {
     return `${getDataFormatedPath()}/${this.getTargetSite()}/${this.getModifiedYear()}/${this.getModifiedMonth()}/${this.getModifiedDay()}/${this.getFilename()}.json`;
   }
-  getFormatedItem(): FormatedItem {
-    const titleField = `_title_${this.getLanguage()}`;
+  getExternalUrl(): string | undefined {
+    return undefined;
+  }
+  getTranslations(): Record<string, string> {
     return {
+      "title": this.getTitle(),
+    };
+  }
+  getFormatedItem(): FormatedItem {
+    const externalUrl = this.getExternalUrl();
+    const translations: Record<string, Record<string, string>> = {};
+    translations[this.getLanguage()] = this.getTranslations();
+
+    const item: FormatedItem = {
       id: this.getFilename(),
-      [titleField]: this.getTitle(),
       image: this.getImage(),
       url: this.getUrl(),
       date_published: this.getPublished(),
@@ -131,7 +141,12 @@ export default class Item {
       tags: this.getTags(),
       authors: this.getAuthors(),
       _links: this.getLinks(),
+      _translations: translations,
     };
+    if (externalUrl) {
+      item.external_url = externalUrl;
+    }
+    return item;
   }
   getTags(): string[] {
     return [];

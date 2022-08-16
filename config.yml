@@ -1,12 +1,35 @@
 translations:
-  'HN Discussion':
-    'zh-Hans': "HN 讨论"
+  "zh-Hans":
+    "HN Discussion": "HN 讨论"
+    "about_label": "关于"
+    "subscription_label": "用RSS客户端订阅"
+    "powered_by_label": "背后的人❤️"
+    "other_sites_label": "所有站点"
+    "languages_label": "其他语言"
+    "more_label": "更多"
+    "less_label": "收起"
 sites:
   hackernews.buzzing.cc:
-    site:
-      _title_zh-Hans: Hacker News 中文热门
-      _description_zh-Hans: 收集Hacker News 中文热门
+    tags:
+      - hn
+    translations:
+      "zh-Hans":
+        title: "Hacker News 首页"
+        short_title: "HN首页"
+        description: "Hacker News 首页文章"
     sources:
       - url: https://hn.algolia.com/api/v1/search_by_date?tags=front_page&hitsPerPage=50
+        itemsPath: hits
+        type: hn
+  hn.buzzing.cc:
+    tags:
+      - hn
+    translations:
+      "zh-Hans":
+        title: "Hacker News 热门"
+        short_title: "HN热门"
+        description: "Hacker News上超过200 points"
+    sources:
+      - url: http://hn.algolia.com/api/v1/search_by_date?tags=(story,poll,show_hn,ask_hn)&numericFilters=points>=200&hitsPerPage=50
         itemsPath: hits
         type: hn

@@ -1,4 +1,4 @@
-import { Link } from "../interface.ts";
+import { Author, Link } from "../interface.ts";
 import Item from "../item.ts";
 export default class hn extends Item {
   getPublishedDate(): Date {
@@ -11,12 +11,21 @@ export default class hn extends Item {
     return this.originalItem.title as string;
   }
   getUrl(): string {
-    return this.originalItem.url as string;
+    return this.originalItem.url as string || this.getExternalUrl();
+  }
+  getExternalUrl(): string {
+    return `https://news.ycombinator.com/item?id=${this.getId()}`;
+  }
+  getAuthors(): Author[] {
+    return [{
+      name: this.originalItem.author as string,
+      url: `https://news.ycombinator.com/user?id=${this.originalItem.author}`,
+    }];
   }
   getLinks(): Link[] {
     return [
       {
-        url: `https://news.ycombinator.com/item?id=${this.getId()}`,
+        url: this.getExternalUrl(),
         name: "HN Discussion",
       },
     ];
