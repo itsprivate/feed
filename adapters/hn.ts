@@ -31,4 +31,23 @@ export default class hn extends Item {
       },
     ];
   }
+  getTags(): string[] {
+    // check if specific tags are present in the item
+    // like Show HN, Ask HN, etc.
+    const tags: string[] = [];
+    const originalItem = this.originalItem as Record<string, unknown>;
+    if (originalItem._tags && Array.isArray(originalItem._tags)) {
+      if (originalItem._tags.includes("show_hn")) {
+        tags.push("Show HN");
+      } else if (originalItem._tags.includes("ask_hn")) {
+        tags.push("Ask HN");
+      } else if (originalItem._tags.includes("job")) {
+        tags.push("Job");
+      } else if (originalItem._tags.includes("poll")) {
+        tags.push("Poll");
+      }
+    }
+
+    return tags;
+  }
 }

@@ -1,12 +1,12 @@
 import { RunOptions } from "../interface.ts";
 import adapters from "../adapters/mod.ts";
-import { get, getConfig, writeJSONFile } from "../util.ts";
+import { get, writeJSONFile } from "../util.ts";
 import log from "../log.ts";
 
 export default async function fetchSources(
   options: RunOptions,
 ) {
-  const config = await getConfig();
+  const config = options.config;
   const sitesMap = config.sites;
   const domains = options.domains;
   for (const domain of domains) {

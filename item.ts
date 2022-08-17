@@ -1,22 +1,29 @@
 import { Author, FormatedItem, Link, ParsedFilename } from "./interface.ts";
 import {
+  domainToPath,
   getDataFormatedPath,
   getDataRawPath,
   getDataTranslatedPath,
   getFullDay,
   getFullMonth,
   getFullYear,
+  isMock,
+  pathToDomain,
 } from "./util.ts";
-import { DOMParser, DOMParserMimeType, getMetadata } from "./deps.ts";
+import { MAX_ITEMS_PER_PAGE } from "./constant.ts";
+import { DOMParser, getMetadata } from "./deps.ts";
 import log from "./log.ts";
 export default class Item {
   originalItem: Record<string, unknown>;
   private targetSite: string;
   private image: string | null | undefined;
-  static parseFilename(fileBasename: string): ParsedFilename {
+  static parseItemIdentifier(fileBasename: string): ParsedFilename {
     // remove extension
-    const filename = fileBasename.replace(/\.[^/.]+$/, "");
-    const parts = filename.split("_");
+    let filename = fileBasename;
+    if (filename.endsWith(".json")) {
+      filename = filename.slice(0, -5);
+    }
+    const parts = filename.split("--");
     // first will be safe part, other will be the id parts
     const safePart = parts[0];
     const symParts = safePart.split("-");
@@ -25,10 +32,10 @@ export default class Item {
     const day = symParts[2];
     const language = symParts[3];
     const type = symParts[4];
-    const targetSite = symParts[5];
-
+    const targetSitePath = symParts[5];
+    const targetSite = pathToDomain(targetSitePath);
     const idParts = parts.slice(1);
-    const id = idParts.join("");
+    const id = idParts.join("--");
     return {
       id,
       year,
@@ -37,21 +44,26 @@ export default class Item {
       language,
       type,
       targetSite,
+      targetSitePath,
     };
   }
   static getTranslatedPath(filename: string): string {
-    const parsed = Item.parseFilename(filename);
+    const parsed = Item.parseItemIdentifier(filename);
     const now = new Date();
-    return `${getDataTranslatedPath()}/${parsed.targetSite}/${
+    return `${getDataTranslatedPath()}/${parsed.targetSitePath}/${
       getFullYear(now)
     }/${getFullMonth(now)}/${getFullDay(now)}/${filename}`;
   }
+
   constructor(originalItem: Record<string, unknown>, targetSite: string) {
     this.originalItem = originalItem;
     this.targetSite = targetSite;
   }
   getTargetSite(): string {
     return this.targetSite;
+  }
+  getTargetSitePath(): string {
+    return domainToPath(this.targetSite);
   }
   getType(): string {
     return this.constructor.name;
@@ -112,6 +124,10 @@ export default class Item {
     return undefined;
   }
   async tryToLoadImage(): Promise<string | null> {
+    if (isMock()) {
+      this.image = null;
+      return null;
+    }
     const url = this.getUrl();
     // add domain referrer
     const targetSite = this.getTargetSite();
@@ -164,17 +180,19 @@ export default class Item {
   getAuthors(): Author[] {
     return [];
   }
-  getFilename(): string {
-    return `${this.getPublishedYear()}-${this.getPublishedMonth()}-${this.getPublishedDay()}-${this.getLanguage()}-${this.getType()}-${this.getTargetSite()}_${this.getId()}`;
+  getItemIdentifier(): string {
+    return `${this.getPublishedYear()}-${this.getPublishedMonth()}-${this.getPublishedDay()}-${this.getLanguage()}-${this.getType()}-${this.getTargetSitePath()}--${this.getId()}`;
   }
   getLanguage(): string {
     return "en";
   }
   getRawPath(): string {
-    return `${getDataRawPath()}/${this.getTargetSite()}/${this.getModifiedYear()}/${this.getModifiedMonth()}/${this.getModifiedDay()}/${this.getFilename()}.json`;
+    return `${getDataRawPath()}/${(this
+      .getTargetSitePath())}/${this.getModifiedYear()}/${this.getModifiedMonth()}/${this.getModifiedDay()}/${this.getItemIdentifier()}.json`;
   }
   getFormatedPath(): string {
-    return `${getDataFormatedPath()}/${this.getTargetSite()}/${this.getModifiedYear()}/${this.getModifiedMonth()}/${this.getModifiedDay()}/${this.getFilename()}.json`;
+    return `${getDataFormatedPath()}/${(this
+      .getTargetSitePath())}/${this.getModifiedYear()}/${this.getModifiedMonth()}/${this.getModifiedDay()}/${this.getItemIdentifier()}.json`;
   }
   getExternalUrl(): string | undefined {
     return undefined;
@@ -194,7 +212,7 @@ export default class Item {
       image = this.image;
     }
     const item: FormatedItem = {
-      id: this.getFilename(),
+      id: this.getItemIdentifier(),
       url: this.getUrl(),
       date_published: this.getPublished(),
       date_modified: this.getModified(),

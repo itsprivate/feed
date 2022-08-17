@@ -1,29 +1,19 @@
-import { colors, datetime, flags, fs, path, YAML } from "../deps.ts";
-import { Config, FormatedItem, RunOptions } from "../interface.ts";
-import adapters from "../adapters/mod.ts";
+import { fs } from "../deps.ts";
+import { FormatedItem, RunOptions } from "../interface.ts";
 import Item from "../item.ts";
+import getLatestItems from "../latest-items.ts";
 import {
-  get,
-  getArchivedItemsFilePath,
-  getConfig,
+  arrayToObj,
+  domainToPath,
+  getArchivedFilePath,
   getCurrentItemsFilePath,
   getCurrentToBeArchivedItemsFilePath,
-  getDataCurrentItemsPath,
-  getDataFormatedPath,
-  getDataRawPath,
   getDataTranslatedPath,
-  getDistPath,
-  isDev,
+  pathToDomain,
   readJSONFile,
   writeJSONFile,
 } from "../util.ts";
 import log from "../log.ts";
-import Translation from "../translate.ts";
-import {
-  DEV_MODE_HANDLED_ITEMS,
-  MAX_ITEMS_PER_PAGE,
-  TRANSLATED_ITEMS_PER_PAGE,
-} from "../constant.ts";
 
 export default async function buildCurrent(
   options: RunOptions,
@@ -34,7 +24,7 @@ export default async function buildCurrent(
 
   for await (const dirEntry of Deno.readDir(getDataTranslatedPath())) {
     if (dirEntry.isDirectory && !dirEntry.name.startsWith(".")) {
-      domains.push(dirEntry.name);
+      domains.push(pathToDomain(dirEntry.name));
     }
   }
   const sites = options.domains;
@@ -48,7 +38,9 @@ export default async function buildCurrent(
     const files: string[] = [];
     try {
       for await (
-        const entry of fs.walk(getDataTranslatedPath() + "/" + domain)
+        const entry of fs.walk(
+          getDataTranslatedPath() + "/" + domainToPath(domain),
+        )
       ) {
         if (entry.isFile) {
           files.push(entry.path);
@@ -74,8 +66,9 @@ export default async function buildCurrent(
       let currentItemsJson: Record<string, FormatedItem> = {};
       try {
         currentItemsJson = await readJSONFile(currentItemsPath);
-      } catch (_e) {
+      } catch (e) {
         // ignore
+        log.debug(`read json file error: ${e}`);
       }
 
       const currentToBeArchivedFilePath = getCurrentToBeArchivedItemsFilePath(
@@ -89,42 +82,61 @@ export default async function buildCurrent(
         currentToBeArchivedItemsJson = await readJSONFile(
           currentToBeArchivedFilePath,
         );
-      } catch (_e) {
+      } catch (e) {
         // ignore
+        log.debug(`read json file error: ${e}`);
       }
 
       // merge items to current itemsJson
+      const tagFiles: Record<string, Record<string, FormatedItem>> = {};
       for (const item of items) {
         const id = item["id"];
         currentItemsJson[id] = item;
         currentToBeArchivedItemsJson[id] = item;
+        // handle tags
+        const tags = item["tags"];
+        if (tags && Array.isArray(tags) && tags.length > 0) {
+          // look for tags
+          for (const tag of tags) {
+            const tagFilePath = getArchivedFilePath(
+              domain,
+              // @ts-ignore: npm module
+              `tags/${slug(tag)}/items.json`,
+            );
+            if (tagFiles[tagFilePath]) {
+              tagFiles[tagFilePath][id] = item;
+            } else {
+              let tagFileJson: Record<string, FormatedItem> = {};
+              try {
+                tagFileJson = await readJSONFile(tagFilePath);
+              } catch (e) {
+                // ignore
+                log.debug(
+                  `can not found tag file: ${tagFilePath}, will create ${e}`,
+                );
+              }
+              tagFileJson[id] = item;
+              tagFiles[tagFilePath] = tagFileJson;
+            }
+          }
+        }
       }
 
-      // sort current items by date_modified
-      // archive over max items
-      const currentItemsKeys = Object.keys(currentItemsJson);
-      const currentItemsKeysSorted = currentItemsKeys.sort((a, b) => {
-        const aModified = currentItemsJson[a]["date_modified"]!;
-        const bModified = currentItemsJson[b]["date_modified"]!;
-        return new Date(aModified) > new Date(bModified) ? -1 : 1;
-      });
-
-      // generate new current items
-      const newCurrentItems = currentItemsKeysSorted.slice(
-        0,
-        MAX_ITEMS_PER_PAGE,
-      )
-        .reduce(
-          (acc, key) => {
-            acc[key] = currentItemsJson[key];
-            return acc;
-          },
-          {} as Record<string, unknown>,
+      // write tagFiles
+      const tagFilePaths = Object.keys(tagFiles);
+      for (const tagFilePath of tagFilePaths) {
+        // only write max 1000 items
+        await writeJSONFile(
+          tagFilePath,
+          arrayToObj(getLatestItems(tagFiles[tagFilePath])),
         );
-
+      }
       // write new current items to file
 
-      await writeJSONFile(currentItemsPath, newCurrentItems);
+      await writeJSONFile(
+        currentItemsPath,
+        arrayToObj(getLatestItems(currentItemsJson)),
+      );
 
       // for garbage collection
       // @ts-ignore: type is not assignable
@@ -140,7 +152,8 @@ export default async function buildCurrent(
       currentToBeArchivedItemsJson = null;
 
       // delete translated folder
-      const translatedPath = getDataTranslatedPath() + "/" + domain;
+      const translatedPath = getDataTranslatedPath() + "/" +
+        domainToPath(domain);
       await Deno.remove(translatedPath, {
         recursive: true,
       });

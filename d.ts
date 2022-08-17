@@ -1,4 +1,4 @@
-import { Page } from "https://deno.land/x/puppeteer@14.1.1/mod.ts";
+import { Page } from "./deps.ts";
 import log from "./log.ts";
 export default async (
   page: Page,
@@ -10,6 +10,9 @@ export default async (
   if (mock) {
     return sentence;
   }
+  if (targetLanguage.startsWith("zh")) {
+    targetLanguage = "zh";
+  }
   // max 5000
   if (sentence.length > 4500) {
     sentence = sentence.substring(0, 4500);
@@ -20,6 +23,7 @@ export default async (
   if (!/^[a-z]{2}$/.test(targetLanguage)) {
     throw new Error("INVALID_TARGET_LANGUAGE");
   }
+
   const sourceLangSelect = "button[dl-test=translator-source-lang-btn]",
     targetLangSelect = "button[dl-test=translator-target-lang-btn]",
     sourceLangMenu = "div[dl-test=translator-source-lang-list]",

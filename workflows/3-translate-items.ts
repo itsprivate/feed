@@ -1,13 +1,16 @@
 import { fs, path } from "../deps.ts";
 import { FormatedItem, RunOptions } from "../interface.ts";
 import Item from "../item.ts";
-import { getDataFormatedPath, isDev, writeJSONFile } from "../util.ts";
+import {
+  domainToPath,
+  getDataFormatedPath,
+  isDev,
+  pathToDomain,
+  writeJSONFile,
+} from "../util.ts";
 import log from "../log.ts";
 import Translation from "../translate.ts";
-import {
-  DEV_MODE_HANDLED_ITEMS,
-  TRANSLATED_ITEMS_PER_PAGE,
-} from "../constant.ts";
+import { DEV_MODE_HANDLED_ITEMS } from "../constant.ts";
 
 export default async function translateItems(
   options: RunOptions,
@@ -20,7 +23,7 @@ export default async function translateItems(
 
   for await (const dirEntry of Deno.readDir(getDataFormatedPath())) {
     if (dirEntry.isDirectory && !dirEntry.name.startsWith(".")) {
-      domains.push(dirEntry.name);
+      domains.push(pathToDomain(dirEntry.name));
     }
   }
   const sites = options.domains;
@@ -32,11 +35,7 @@ export default async function translateItems(
   if (domains.length > 0) {
     // yes
     // start instance
-    const isMock = Deno.env.get("MOCK") === "1";
-    const translation = new Translation({
-      mock: isMock,
-      countPerPage: TRANSLATED_ITEMS_PER_PAGE,
-    });
+    const translation = new Translation();
     await translation.init();
 
     for (const domain of domains) {
@@ -45,7 +44,9 @@ export default async function translateItems(
       try {
         let totalFiles = 0;
         for await (
-          const entry of fs.walk(getDataFormatedPath() + "/" + domain)
+          const entry of fs.walk(
+            getDataFormatedPath() + "/" + domainToPath(domain),
+          )
         ) {
           if (isDev()) {
             if (totalFiles >= DEV_MODE_HANDLED_ITEMS) {
@@ -67,7 +68,7 @@ export default async function translateItems(
             await Deno.readTextFile(file),
           ) as FormatedItem;
           const filename = path.basename(file);
-          const parsedFilename = Item.parseFilename(filename);
+          const parsedFilename = Item.parseItemIdentifier(filename);
 
           const originalTranslations =
             item._translations[item._original_language];

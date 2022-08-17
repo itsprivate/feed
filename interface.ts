@@ -5,6 +5,7 @@ export interface Source {
 }
 export interface RunOptions {
   domains: string[];
+  config: Config;
 }
 
 export interface SiteConfig {
@@ -33,6 +34,7 @@ export interface ParsedFilename {
   language: string;
   type: string;
   targetSite: string;
+  targetSitePath: string;
 }
 export interface FormatedItem {
   id: string;
@@ -58,6 +60,24 @@ export enum Level {
 }
 
 export interface TranslationOptions {
-  mock?: boolean;
+  isMock?: boolean;
   countPerPage?: number;
+}
+export interface Feedjson {
+  version: string;
+  title: string;
+  description: string;
+  icon: string;
+  favicon: string;
+  language: string;
+  home_page_url: string;
+  feed_url: string;
+  items: FeedItem[];
+}
+
+export interface FeedItem extends FormatedItem {
+  title: string;
+  summary: string;
+  content_text: string;
+  content_html: string;
 }

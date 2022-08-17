@@ -27,7 +27,8 @@ export { serve } from "https://deno.land/std@0.152.0/http/server.ts";
 export {
   serveDir,
   serveFile,
-} from "https://deno.land/std@0.152.0/http/file_server.ts";
+} from "https://deno.land/x/std@0.152.0/http/file_server.ts";
+
 // third party modules
 
 // export { colors } from "https://deno.land/x/cliffy@v0.24.2/ansi/colors.ts";
@@ -44,3 +45,10 @@ export type {
   DOMParserMimeType,
 } from "https://deno.land/x/deno_dom@v0.1.33-alpha/deno-dom-wasm.ts";
 export { getMetadata } from "https://jspm.dev/page-metadata-parser@1.1.4";
+export { default as slug } from "https://jspm.dev/slug@6.0.0";
+export {
+  Browser,
+  default as puppeteer,
+  Page,
+} from "https://deno.land/x/puppeteer@14.1.1/mod.ts";
+export { default as staticFiles } from "https://deno.land/x/static_files@1.1.6/mod.ts";

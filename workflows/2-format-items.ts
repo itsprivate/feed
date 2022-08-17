@@ -2,7 +2,7 @@ import { fs } from "../deps.ts";
 import { RunOptions } from "../interface.ts";
 import adapters from "../adapters/mod.ts";
 import Item from "../item.ts";
-import { getDataRawPath, isDev, writeJSONFile } from "../util.ts";
+import { getDataRawPath, isDev, isMock, writeJSONFile } from "../util.ts";
 import log from "../log.ts";
 import { DEV_MODE_HANDLED_ITEMS } from "../constant.ts";
 export default async function formatItems(
@@ -21,7 +21,7 @@ export default async function formatItems(
             break;
           }
         }
-        const parsedFilename = Item.parseFilename(entry.name);
+        const parsedFilename = Item.parseItemIdentifier(entry.name);
         const originalItem = JSON.parse(
           await Deno.readTextFile(entry.path),
         ) as Record<string, unknown>;

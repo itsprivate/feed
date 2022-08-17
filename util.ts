@@ -1,8 +1,15 @@
-import { DateTimeFormatter, fs, OpenCC, path, resize, YAML } from "./deps.ts";
-import { Config } from "./interface.ts";
+import {
+  DateTimeFormatter,
+  fs,
+  OpenCC,
+  path,
+  resize,
+  slug,
+  YAML,
+} from "./deps.ts";
+import { Config, FormatedItem } from "./interface.ts";
 // @ts-ignore: npm module
 const zhHansToZhHant = OpenCC.Converter({ from: "cn", to: "tw" });
-
 export const toZhHant = (text: string): string => {
   return zhHansToZhHant(text);
 };
@@ -24,6 +31,9 @@ export const get = (obj: unknown, path: string, defaultValue = undefined) => {
 export const isDev = () => {
   return Deno.env.get("DEV") === "1";
 };
+export const isMock = () => {
+  return !(Deno.env.get("MOCK") === "0");
+};
 export const isDebug = () => {
   return Deno.env.get("DEBUG") === "1";
 };
@@ -34,8 +44,11 @@ export const getDataPath = () => {
 export const getDistPath = () => {
   return "dist";
 };
+export const getDomainDistPath = (domain: string) => {
+  return `${getDistPath()}/${domainToPath(domain)}`;
+};
 export const getDistFilePath = (domain: string, file: string) => {
-  return path.join(getDistPath(), domain, file);
+  return path.join(getDistPath(), domainToPath(domain), file);
 };
 export const getDataRawPath = () => {
   return `${getDataPath()}/1-raw`;
@@ -61,18 +74,14 @@ export const getDataArchivePath = () => {
   return `${getDataPath()}/5-archive`;
 };
 export const getCurrentItemsFilePath = (targetSite: string) => {
-  return `${getDataCurrentItemsPath()}/${targetSite}/items.json`;
+  return `${getDataCurrentItemsPath()}/${domainToPath(targetSite)}/items.json`;
 };
 export const getCurrentToBeArchivedItemsFilePath = (targetSite: string) => {
-  return `${getDataCurrentItemsPath()}/${targetSite}/to-be-archived-items.json`;
+  return `${getDataCurrentItemsPath()}/${
+    domainToPath(targetSite)
+  }/to-be-archived-items.json`;
 };
 
-export const getArchivedItemsFilePath = (
-  targetSite: string,
-  archivedFolder: string,
-) => {
-  return `${getDataArchivePath()}/${targetSite}/${archivedFolder}/items.json`;
-};
 export const readJSONFile = async (path: string) => {
   const file = await Deno.readTextFile(path);
   return JSON.parse(file);
@@ -106,9 +115,14 @@ export const getFullDay = (date: Date): string => {
 };
 
 export const getConfig = async function (): Promise<Config> {
-  // parse config file
-  const config = await YAML.parse(
+  const config = YAML.parse(
     await Deno.readTextFile("config.yml"),
+  ) as Config;
+  return config;
+};
+export const getConfigSync = function (): Config {
+  const config = YAML.parse(
+    Deno.readTextFileSync("config.yml"),
   ) as Config;
   return config;
 };
@@ -139,7 +153,7 @@ export const formatHumanTime = (date: Date) => {
 };
 
 export const generateIcons = async function (domain: string) {
-  const icon = await Deno.readFile(`./static/${domain}/icon.png`);
+  const icon = await Deno.readFile(`./static/${domainToPath(domain)}/icon.png`);
   // copy icon to dist
   await Deno.writeFile(getDistFilePath(domain, "icon.png"), icon);
   // generate apple-touch-icon
@@ -161,4 +175,66 @@ export const generateIcons = async function (domain: string) {
     getDistFilePath(domain, "favicon.ico"),
     favicon32,
   );
+};
+
+export const getArchivedFilePath = function (
+  domain: string,
+  relativePath: string,
+): string {
+  let filePath = getDataArchivePath() + "/" + domainToPath(domain);
+  // remove relative path slashes
+  if (relativePath.startsWith("/")) {
+    relativePath = relativePath.substring(1);
+  }
+  filePath += "/" + relativePath;
+  return filePath;
+};
+
+export const domainToPath = (domain: string) => {
+  // return domain.replace(/\./g, "_");
+  return domain;
+};
+export const pathToDomain = (path: string) => {
+  // return path.replace(/_/g, ".");
+  return path;
+};
+export const arrayToObj = <T>(
+  arr: Record<string, T>[],
+  key = "id",
+): Record<string, Record<string, T>> => {
+  const obj: Record<string, Record<string, T>> = {};
+  for (const item of arr) {
+    obj[item[key] as unknown as string] = item;
+  }
+  return obj;
+};
+export const getCurrentTranslations = function (
+  domain: string,
+  languageCode: string,
+  config: Config,
+): Record<string, string> {
+  let currentTranslations: Record<string, string> = {};
+  const translations = config.translations;
+  const sitesMap = config.sites;
+  const siteConfig = sitesMap[domain];
+  if (languageCode === "zh-Hant") {
+    const generalTranslations = translations["zh-Hans"] ?? {};
+    currentTranslations = {
+      ...generalTranslations,
+      ...siteConfig.translations["zh-Hans"],
+    };
+    // translate to traditional chinese
+    for (const key in currentTranslations) {
+      currentTranslations[key] = toZhHant(currentTranslations[key]);
+    }
+  } else {
+    // merge site translations
+    const generalTranslations = translations[languageCode] ?? {};
+
+    currentTranslations = {
+      ...generalTranslations,
+      ...siteConfig.translations[languageCode],
+    };
+  }
+  return currentTranslations;
 };

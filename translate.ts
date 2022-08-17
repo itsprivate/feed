@@ -1,25 +1,24 @@
-import puppeteer, {
-  Browser,
-  Page,
-} from "https://deno.land/x/puppeteer@14.1.1/mod.ts";
-
-import d from "./deepl.ts";
-const homepage = "https://www.deepl.com/en/translator-mobile";
-import { isDev } from "./util.ts";
+import { Browser, Page, puppeteer } from "./deps.ts";
+import d from "./d.ts";
+import { isMock } from "./util.ts";
 import log from "./log.ts";
 import { TranslationOptions } from "./interface.ts";
-export const TRANSLATION_LENGTH_PER_INSTANCE = isDev() ? 3 : 100;
-
+import {
+  TARGET_SITE_LANGUAEGS,
+  TRANSLATED_ITEMS_PER_PAGE,
+} from "./constant.ts";
+const homepage = "https://www.deepl.com/en/translator-mobile";
 export default class Translation {
   browser: Browser | null = null;
   page: Page | null = null;
   private currentTranslated = 0;
-  private isMock = false;
-  private countPerPage = 100;
+  private isMock = isMock();
+  private countPerPage = TRANSLATED_ITEMS_PER_PAGE;
   constructor(options: TranslationOptions = {}) {
-    if (options.mock) {
-      this.isMock = true;
+    if (options.isMock !== undefined) {
+      this.isMock = options.isMock;
     }
+
     if (options.countPerPage !== undefined) {
       this.countPerPage = options.countPerPage;
     }
@@ -74,9 +73,13 @@ export default class Translation {
   ): Promise<Record<string, string>> {
     // if mock
     if (this.isMock) {
-      return {
-        "zh-Hans": sentence,
-      };
+      const translatedObj: Record<string, string> = {};
+      for (const targetLanguage of TARGET_SITE_LANGUAEGS) {
+        if (!targetLanguage.realtime) {
+          translatedObj[targetLanguage.code] = sentence;
+        }
+      }
+      return translatedObj;
     }
     if (!this.page) {
       throw new Error("page not init, must call init() first");
@@ -89,21 +92,26 @@ export default class Translation {
       await this.init();
       this.currentTranslated = 0;
     }
-    let translated = await d(
-      this.page!,
-      sentence,
-      sourceLanguage,
-      "zh",
-      {
-        mock: this.page === null,
-      },
-    );
-    // remove end newline
-    translated = translated.replace(/\n$/, "");
-    this.currentTranslated++;
-    return {
-      "zh-Hans": translated,
-    };
+    const translatedObj: Record<string, string> = {};
+    for (const targetLanguage of TARGET_SITE_LANGUAEGS) {
+      if (!targetLanguage.realtime) {
+        let translated = await d(
+          this.page!,
+          sentence,
+          sourceLanguage,
+          targetLanguage.code,
+          {
+            mock: this.page === null,
+          },
+        );
+        // remove end newline
+        translated = translated.replace(/\n$/, "");
+        translatedObj[targetLanguage.code] = translated;
+        this.currentTranslated++;
+      }
+    }
+
+    return translatedObj;
   }
   async close() {
     if (this.page) {

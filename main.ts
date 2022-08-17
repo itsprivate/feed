@@ -10,6 +10,7 @@ import buildCurrent from "./workflows/4-build-current.ts";
 import archive from "./workflows/5-archive.ts";
 import buildSite from "./workflows/6-build-site.ts";
 import serveSite from "./workflows/7-serve-site.ts";
+import serveArchiveSite from "./workflows/8-serve-archive-site.ts";
 import { RunOptions } from "./interface.ts";
 export default async function main() {
   let stage = [
@@ -43,7 +44,7 @@ export default async function main() {
       return (sites as string[]).includes(domain);
     });
   }
-  const runOptions: RunOptions = { domains: domains };
+  const runOptions: RunOptions = { domains: domains, config };
 
   // 1. fetch sources
   if (stage.includes("fetch")) {
@@ -97,6 +98,8 @@ export default async function main() {
     for (const domain of domains) {
       serveSite(domain, port++);
     }
+    // serve archive
+    serveArchiveSite();
   } else {
     log.info("skip serve_site stage");
   }

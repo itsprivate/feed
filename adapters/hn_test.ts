@@ -8,6 +8,9 @@ Deno.test("hn parse raw json #1", () => {
   const item = new HnItem(hnExampleJson, "example.com");
   assertEquals(item.getPublishedYear(), "2022");
   assertEquals(item.getId(), "32407873");
-  assertEquals(item.getFilename(), "2022-08-10-en-example.com-32407873.json");
+  assertEquals(
+    item.getItemIdentifier(),
+    "2022-08-10-en-hn-example.com_32407873",
+  );
   assertEquals(item.getTitle(), "Reddit’s database has two tables (2012)");
 });

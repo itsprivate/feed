@@ -1,8 +1,9 @@
 import { datetime } from "../deps.ts";
 import {
-  getArchivedItemsFilePath,
+  getArchivedFilePath,
   getCurrentToBeArchivedItemsFilePath,
   getDataCurrentItemsPath,
+  pathToDomain,
   readJSONFile,
   writeJSONFile,
 } from "../util.ts";
@@ -16,7 +17,7 @@ export default async function archive(options: RunOptions) {
 
   for await (const dirEntry of Deno.readDir(getDataCurrentItemsPath())) {
     if (dirEntry.isDirectory && !dirEntry.name.startsWith(".")) {
-      domains.push(dirEntry.name);
+      domains.push(pathToDomain(dirEntry.name));
     }
   }
   const sites = options.domains;
@@ -105,9 +106,9 @@ export default async function archive(options: RunOptions) {
         );
         // write archived items to file
         for (const archivedFolder of Object.keys(archiedGroups)) {
-          const archivedItemsPath = getArchivedItemsFilePath(
+          const archivedItemsPath = getArchivedFilePath(
             domain,
-            archivedFolder,
+            `archive/${archivedFolder}/items.json`,
           );
           await writeJSONFile(
             archivedItemsPath,
