@@ -3,14 +3,16 @@ import {
   getDataFormatedPath,
   getDataRawPath,
   getDataTranslatedPath,
-  getDistPath,
   getFullDay,
   getFullMonth,
   getFullYear,
 } from "./util.ts";
+import { DOMParser, DOMParserMimeType, getMetadata } from "./deps.ts";
+import log from "./log.ts";
 export default class Item {
   originalItem: Record<string, unknown>;
   private targetSite: string;
+  private image: string | null | undefined;
   static parseFilename(fileBasename: string): ParsedFilename {
     // remove extension
     const filename = fileBasename.replace(/\.[^/.]+$/, "");
@@ -97,8 +99,64 @@ export default class Item {
   getDomain(): string {
     return new URL(this.getUrl()).hostname;
   }
-  getImage(): string | undefined {
+  getImage(): string | undefined | null {
+    // undefined means not init
+    // null means no image
+    const url = this.getUrl();
+    const urlObj = new URL(url);
+    const domain = urlObj.hostname;
+    // ignore specific domain
+    if (domain === "news.ycombinator.com") {
+      return null;
+    }
     return undefined;
+  }
+  async tryToLoadImage(): Promise<string | null> {
+    const url = this.getUrl();
+    // add domain referrer
+    const targetSite = this.getTargetSite();
+    log.debug(`try to load image for ${url}`);
+    let resource: { text: string; contentType: string };
+    try {
+      resource = await fetch(url, {
+        referrer: `https://${targetSite}`,
+      }).then(async (res) => {
+        if (res.ok) {
+          const contentType = res.headers.get("content-type");
+          if (contentType && contentType.includes("text/html")) {
+            const text = await res.text();
+            return {
+              text: text,
+              contentType: contentType,
+            };
+          } else {
+            throw new Error(
+              `fetch ${url} failed, content type is not text/html, it is ${contentType}`,
+            );
+          }
+        } else {
+          throw new Error(`fetch ${url} failed`);
+        }
+      });
+    } catch (e) {
+      log.debug(e.message);
+      this.image = null;
+      return null;
+    }
+
+    const doc = new DOMParser().parseFromString(
+      resource.text,
+      "text/html",
+    );
+
+    const metadata = getMetadata(doc, url);
+    if (metadata.image) {
+      this.image = metadata.image;
+      return metadata.image;
+    } else {
+      this.image = null;
+    }
+    return null;
   }
   getLinks(): Link[] {
     return [];
@@ -126,14 +184,17 @@ export default class Item {
       "title": this.getTitle(),
     };
   }
-  getFormatedItem(): FormatedItem {
+  async getFormatedItem(): Promise<FormatedItem> {
     const externalUrl = this.getExternalUrl();
     const translations: Record<string, Record<string, string>> = {};
     translations[this.getLanguage()] = this.getTranslations();
-
+    let image = this.getImage();
+    if (image === undefined) {
+      await this.tryToLoadImage();
+      image = this.image;
+    }
     const item: FormatedItem = {
       id: this.getFilename(),
-      image: this.getImage(),
       url: this.getUrl(),
       date_published: this.getPublished(),
       date_modified: this.getModified(),
@@ -143,6 +204,9 @@ export default class Item {
       _links: this.getLinks(),
       _translations: translations,
     };
+    if (image) {
+      item.image = image;
+    }
     if (externalUrl) {
       item.external_url = externalUrl;
     }

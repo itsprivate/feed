@@ -1,8 +1,8 @@
 import { serve, serveDir, serveFile } from "../deps.ts";
 import { getDistPath } from "../util.ts";
+import log from "../log.ts";
 export default function serveSite(domain: string, port: number) {
   const BASE_PATH = getDistPath() + "/" + domain;
-  console.log("BASE_PATH", BASE_PATH);
   const handler = (request: Request): Promise<Response> => {
     const url = new URL(request.url);
     const path = url.pathname;
@@ -14,7 +14,7 @@ export default function serveSite(domain: string, port: number) {
       fsRoot: BASE_PATH,
     });
   };
-  console.log(
+  log.info(
     `HTTP webserver running. Access it at: http://localhost:${port}/`,
   );
   serve(handler, { port });

@@ -10,6 +10,7 @@ export default class hn extends Item {
   getTitle(): string {
     return this.originalItem.title as string;
   }
+
   getUrl(): string {
     return this.originalItem.url as string || this.getExternalUrl();
   }

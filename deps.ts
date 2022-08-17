@@ -36,3 +36,11 @@ export { default as OpenCC } from "https://jspm.dev/opencc-js@1.0.4";
 export { default as jsonfeedToAtom } from "https://jspm.dev/jsonfeed-to-atom@1.2.2";
 export { default as jsonfeedToRSS } from "https://jspm.dev/jsonfeed-to-rss@3.0.6";
 export { resize } from "https://deno.land/x/deno_image@0.0.4/mod.ts";
+export {
+  DOMParser,
+  Element,
+} from "https://deno.land/x/deno_dom@v0.1.33-alpha/deno-dom-wasm.ts";
+export type {
+  DOMParserMimeType,
+} from "https://deno.land/x/deno_dom@v0.1.33-alpha/deno-dom-wasm.ts";
+export { getMetadata } from "https://jspm.dev/page-metadata-parser@1.1.4";

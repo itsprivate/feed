@@ -272,7 +272,7 @@ export default async function buildSite(options: RunOptions) {
         try {
           await generateIcons(domain);
         } catch (e) {
-          console.log("can not generate icons for ", domain);
+          log.error("can not generate icons for ", domain);
           throw e;
         }
         log.info(`${domain} build success`);

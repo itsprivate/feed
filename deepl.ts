@@ -1,4 +1,5 @@
 import { Page } from "https://deno.land/x/puppeteer@14.1.1/mod.ts";
+import log from "./log.ts";
 export default async (
   page: Page,
   sentence: string,
@@ -87,8 +88,8 @@ export default async (
       '//textarea[@dl-test="translator-target-input"]/parent::*/child::*[position()=2]',
     );
   } catch (e) {
-    console.log("can not detect .lmt--active_translation_request");
-    console.warn(e);
+    log.warn("can not detect .lmt--active_translation_request");
+    log.warn(e);
   }
   await page.waitForXPath(
     '//textarea[@dl-test="translator-target-input"]/parent::*/child::*[position()=2]',

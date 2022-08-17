@@ -2,9 +2,9 @@ import { fs } from "../deps.ts";
 import { RunOptions } from "../interface.ts";
 import adapters from "../adapters/mod.ts";
 import Item from "../item.ts";
-import { getDataRawPath, writeJSONFile } from "../util.ts";
+import { getDataRawPath, isDev, writeJSONFile } from "../util.ts";
 import log from "../log.ts";
-
+import { DEV_MODE_HANDLED_ITEMS } from "../constant.ts";
 export default async function formatItems(
   _options: RunOptions,
 ) {
@@ -15,6 +15,12 @@ export default async function formatItems(
 
     for await (const entry of fs.walk(getDataRawPath())) {
       if (entry.isFile) {
+        if (isDev()) {
+          if (total >= DEV_MODE_HANDLED_ITEMS) {
+            log.info(`dev mode, only take ${DEV_MODE_HANDLED_ITEMS} files`);
+            break;
+          }
+        }
         const parsedFilename = Item.parseFilename(entry.name);
         const originalItem = JSON.parse(
           await Deno.readTextFile(entry.path),
@@ -24,10 +30,13 @@ export default async function formatItems(
           originalItem,
           parsedFilename.targetSite,
         );
+
+        const itemJson = await item.getFormatedItem();
+
         // write formated item to file
         await writeJSONFile(
           item.getFormatedPath(),
-          item.getFormatedItem(),
+          itemJson,
         );
         // then delete raw file
         await Deno.remove(entry.path);

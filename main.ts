@@ -43,7 +43,6 @@ export default async function main() {
       return (sites as string[]).includes(domain);
     });
   }
-  console.log("domains", domains);
   const runOptions: RunOptions = { domains: domains };
 
   // 1. fetch sources
