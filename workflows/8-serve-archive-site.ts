@@ -16,7 +16,6 @@ export default function serveSite() {
     const url = new URL(request.url);
     // get language code
     const langField = url.pathname.split("/")[1];
-    console.log("langField", langField);
     // check if language code is valid
     let language = TARGET_SITE_LANGUAEGS[0];
     let pathname = url.pathname;
@@ -33,14 +32,11 @@ export default function serveSite() {
       }
     }
 
-    console.log("pathname", pathname);
-
-    // get domain
+    // get siteIdentifier
     const fields = pathname.split("/");
 
-    console.log("fields", fields);
-    const domain = fields[1];
-    if (!domain) {
+    const siteIdentifier = fields[1];
+    if (!siteIdentifier) {
       return Promise.resolve(
         new Response("Not Found", {
           status: 404,
@@ -59,9 +55,8 @@ export default function serveSite() {
     relativeItemsPath = relativeItemsPath + "items.json";
     let itemsJson: Record<string, FormatedItem> | null = null;
     if (isDev()) {
-      const filePath = getArchivedFilePath(domain, relativeItemsPath);
+      const filePath = getArchivedFilePath(siteIdentifier, relativeItemsPath);
       // get file
-      console.log("filePath", filePath);
       try {
         itemsJson = await readJSONFile(filePath) as Record<
           string,
@@ -77,7 +72,12 @@ export default function serveSite() {
       }
     }
     if (itemsJson) {
-      const feedjson = itemsToFeed(itemsJson, domain, language.code, config);
+      const feedjson = itemsToFeed(
+        itemsJson,
+        siteIdentifier,
+        language.code,
+        config,
+      );
       const html = feedToHTML(feedjson, config);
       return new Response(html, {
         status: 200,

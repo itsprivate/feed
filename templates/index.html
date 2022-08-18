@@ -35,12 +35,6 @@
     />
     <link
       rel="alternate"
-      href="{{{_atom_url}}}"
-      type="application/atom+xml"
-      title="Atom 1.0"
-    />
-    <link
-      rel="alternate"
       href="{{{feed_url}}}"
       type="application/feed+json"
       title="{{{title}}} - JSON Feed 1"
@@ -48,15 +42,16 @@
     <link
       rel="apple-touch-icon"
       sizes="180x180"
-      href="/apple-touch-icon.png?v=20220816"
+      href="/icon.png?v=20220816"
       type="image/png"
     />
     <link rel="icon" href="/favicon.ico?v=20220816" type="image/png" />
     <style>
       @charset "UTF-8";
       body {
-        padding: 0;
-        margin: 0;
+        max-width: 45em;
+        margin: 0 auto;
+        padding: 0 2%;
         font-size: 1.1em;
         line-height: 1.5em;
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
@@ -67,38 +62,48 @@
           sans-serif;
       }
       img {
-        max-width: 100%;
+        max-width: 90%;
+        max-height: 16rem;
+        border-radius: 0.3rem;
         display: block;
         margin: 0.5rem 0;
+        height: auto;
+      }
+      a:link,
+      a:hover {
+        color: rgb(0, 102, 204);
       }
 
-      .root-indent {
-        padding-left: 1rem;
-      }
-      main {
-        max-width: 45em;
-        margin: auto;
-        padding: 0 2%;
-      }
       nav {
         background-color: #f0f0f0;
       }
       .h-entry {
         margin-bottom: 1rem;
       }
+
+      .pl-1-5 {
+        padding-left: 1.5rem;
+      }
+
       .small {
         font-size: smaller;
       }
       .muted {
         color: #828282;
       }
-      .content {
-        font-style: italic;
-      }
-      .content a {
+      .primary-content a {
         color: initial;
       }
-      .initial-color {
+      .secondary-content {
+        font-style: italic;
+      }
+      .secondary-content a {
+        color: #828282;
+      }
+      a:hover {
+        text-decoration: underline;
+      }
+      a.initial-color {
         color: initial;
       }
       .no-underline {
@@ -111,8 +116,8 @@
         color: initial;
       }
       .px {
-        padding-left: 1rem;
-        padding-right: 1rem;
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
       }
       .details,
       .less,
@@ -130,13 +135,6 @@
   <body>
     <header class="small">
       <nav class="px">
-        <a
-          class="p-name site-title no-underline no-visited initial-color"
-          href="{{{home_page_url}}}"
-          >👋 {{title}}</a
-        >
-        <a class="no-visited no-underline" href="#about">{{about_label}}</a>
-        <span> | </span>
         {{#_related_sites}}
         <a class="no-underline no-visited initial-color" href="{{{url}}}"
           >{{name}}</a
@@ -155,46 +153,48 @@
         </div>
         {{/_other_sites}}
       </nav>
-    </header>
-    <main>
-      <ol class="root-indent">
-        {{#items}}
-        <li class="h-entry hentry">
-          <a class="u-url p-name entry-title no-underline" href="{{{url}}}"
-            >{{title}}</a
-          >
-          {{#image}}
-          <img class="u-photo" src="{{{image}}}" alt="image" />
-          {{/image}}
-          <div class="p-summary entry-summary content small">
-            {{{content_html}}}
-          </div>
-        </li>
-        {{/items}}
-      </ol>
-      <footer id="about">
-        <h5>{{about_label}}</h5>
-        <div class="p-summary site-description content small">
-          {{description}}
-        </div>
-        <p class="content small">
-          {{languages_label}}: {{#_languages}}
+      <h2>
+        <a
+          class="p-name site-title no-underline no-visited initial-color"
+          href="{{{home_page_url}}}{{{}}}"
+          >👋 {{title}}</a
+        >
+      </h2>
+      <details class="primary-content pl-1-5">
+        <summary>{{about_label}}</summary>
+        <p class="p-summary site-description">{{description}}</p>
+        <p>
+          {{languages_label}}: {{#_languages}} {{#active}}
+          <span>{{name}}</span>
+          {{/active}} {{^active}}
           <a href="{{{url}}}">{{name}}</a>
-          {{/_languages}}
+          {{/active}} {{/_languages}}
           <br />
-          {{subscription_label}}:
+          {{subscription_label}}: {{#_rss_url}}
           <a class="no-visited" href="{{{_rss_url}}}">RSS</a>
+          {{/_rss_url}} {{#_atom_url}}
           <a class="no-visited" href="{{{_atom_url}}}">Atom</a>
+          {{/_atom_url}} {{#feed_url}}
           <a class="no-visited" href="{{{feed_url}}}">JSON Feed</a>
-          <br />
-          {{other_sites_label}}: {{#_other_sites}}
-          <a class="no-visited" href="{{{url}}}">{{name}}</a>
-          {{/_other_sites}}
+          {{/feed_url}}
           <br />
           {{powered_by_label}}:
-          <a class="no-visited" href="https://twitter.com/OwenYoungZh">Owen</a>
+          <a class="no-visited" href="https://www.owenyoung.com">Owen</a>
         </p>
-      </footer>
-    </main>
+      </details>
+    </header>
+    <ol>
+      {{#items}}
+      <li class="h-entry hentry">
+        <a class="u-url p-name entry-title no-underline" href="{{{url}}}"
+          >{{title}}</a
+        >
+
+        <div class="p-summary entry-summary secondary-content small">
+          {{{content_html}}}
+        </div>
+      </li>
+      {{/items}}
+    </ol>
   </body>
 </html>

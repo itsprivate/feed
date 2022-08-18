@@ -11,6 +11,7 @@ import archive from "./workflows/5-archive.ts";
 import buildSite from "./workflows/6-build-site.ts";
 import serveSite from "./workflows/7-serve-site.ts";
 import serveArchiveSite from "./workflows/8-serve-archive-site.ts";
+import deployToR2 from "./workflows/9-deploy-to-r2.ts";
 import { RunOptions } from "./interface.ts";
 export default async function main() {
   let stage = [
@@ -23,6 +24,8 @@ export default async function main() {
   ];
   if (isDev()) {
     stage.push("serve_site");
+  } else {
+    stage.push("deploy");
   }
   if (isDebug()) {
     log.setLevel("debug");
@@ -38,13 +41,14 @@ export default async function main() {
   }
   const config = await getConfig();
   const sitesMap = config.sites;
-  let domains = Object.keys(sitesMap);
+  let siteIdentifiers = Object.keys(sitesMap);
   if (sites && Array.isArray(sites)) {
-    domains = domains.filter((domain) => {
-      return (sites as string[]).includes(domain);
+    siteIdentifiers = siteIdentifiers.filter((siteIdentifier) => {
+      return (sites as string[]).includes(siteIdentifier);
     });
   }
-  const runOptions: RunOptions = { domains: domains, config };
+  log.info("start build ", siteIdentifiers);
+  const runOptions: RunOptions = { siteIdentifiers: siteIdentifiers, config };
 
   // 1. fetch sources
   if (stage.includes("fetch")) {
@@ -91,17 +95,23 @@ export default async function main() {
   // 7. serve site
   const isServer = !(Deno.env.get("NO_SERVE") === "1");
   if (
-    isServer && stage.includes("serve_site") && Array.isArray(domains) &&
-    domains.length > 0
+    isServer && stage.includes("serve_site") &&
+    Array.isArray(siteIdentifiers) &&
+    siteIdentifiers.length > 0
   ) {
-    let port = 8000;
-    for (const domain of domains) {
-      serveSite(domain, port++);
+    for (const siteIdentifier of siteIdentifiers) {
+      const siteConfig = sitesMap[siteIdentifier];
+      serveSite(siteIdentifier, siteConfig.port);
     }
     // serve archive
     serveArchiveSite();
   } else {
     log.info("skip serve_site stage");
+  }
+
+  // 9. deploy to r2
+  if (stage.includes("deploy")) {
+    await deployToR2(runOptions);
   }
 }
 

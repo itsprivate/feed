@@ -1,6 +1,6 @@
 import { assertEquals, assertNotEquals } from "./deps.ts";
 import HnItem from "./adapters/hn.ts";
-import hnExampleJson from "./example/data/1-raw/hn/2022/08/10/2022-08-10-en-hn-hackernews.buzzing.cc_32407873.json" assert {
+import hnExampleJson from "./example/current/1-raw/hn/2022/08/10/2022-08-10-en-hn-hackernews.buzzing.cc_32407873.json" assert {
   type: "json",
 };
 import Item from "./item.ts";
@@ -45,12 +45,12 @@ for (const testItem of list) {
 
 Deno.test("parseItemIdentifier #10", () => {
   const parsed = Item.parseItemIdentifier(
-    "2022-08-10-en-hn-example_com--32407873",
+    "2022_08_10_en_hn_example-com__32407873",
   );
   assertEquals(parsed, {
     type: "hn",
-    targetSite: "example.com",
-    targetSitePath: "example_com",
+    targetSite: "example-com.buzzing.cc",
+    targetSitePath: "example-com",
     id: "32407873",
     year: "2022",
     month: "08",
@@ -60,13 +60,13 @@ Deno.test("parseItemIdentifier #10", () => {
 });
 Deno.test("parseItemIdentifier #11", () => {
   const parsed = Item.parseItemIdentifier(
-    "2022-08-10-en-hn-example_com---_32407873_-1223",
+    "2022_08_10_en_hn_example-com___32407873_-1223",
   );
   assertEquals(parsed, {
     type: "hn",
-    targetSite: "example.com",
-    targetSitePath: "example_com",
-    id: "-_32407873_-1223",
+    targetSite: "example-com.buzzing.cc",
+    targetSitePath: "example-com",
+    id: "_32407873_-1223",
     year: "2022",
     month: "08",
     day: "10",

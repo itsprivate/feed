@@ -1,36 +1,26 @@
-import { serve, serveDir, serveFile } from "../deps.ts";
+import { serve, serveFile } from "../deps.ts";
 
-import { getDistPath } from "../util.ts";
+import { getDistPath, urlToFilePath } from "../util.ts";
 import log from "../log.ts";
-export default function serveSite(domain: string, port: number) {
-  const BASE_PATH = getDistPath() + "/" + domain;
+export default function serveSite(siteIdentifier: string, port: number) {
+  const BASE_PATH = getDistPath() + "/" + siteIdentifier;
   const handler = (request: Request): Promise<Response> => {
-    const url = new URL(request.url);
-    const path = url.pathname;
-
-    let filepath = path;
-
-    if (path === "/") {
-      filepath = "index.html";
-    } else {
-      filepath = path.slice(1);
-    }
-    // check is exists
-    const file = Deno.statSync(BASE_PATH + "/" + filepath);
-    if (file.isFile) {
-      return serveFile(request, BASE_PATH + "/" + filepath);
-    } else if (file.isDirectory) {
-      if (!filepath.endsWith("/")) {
-        filepath = filepath + "/";
+    const filepath = urlToFilePath(request.url);
+    const localPath = BASE_PATH + "/" + filepath;
+    // check if file exists
+    let finalPath: string | undefined;
+    try {
+      const fileInfo = Deno.statSync(localPath);
+      if (fileInfo.isFile) {
+        finalPath = localPath;
       }
-      return serveFile(request, BASE_PATH + "/" + filepath + "index.html");
+    } catch (e) {
+      log.error(e);
+    }
+    if (finalPath) {
+      return serveFile(request, localPath);
     } else {
-      // 404
-      return Promise.resolve(
-        new Response("Not Found", {
-          status: 404,
-        }),
-      );
+      return Promise.resolve(new Response("Not Found", { status: 404 }));
     }
   };
   log.info(

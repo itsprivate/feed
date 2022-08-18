@@ -1,8 +1,10 @@
 # custom
-
-dist/
-dev-data/
-data/archive/
+dev-current/
+current/
+dev-archive/
+archive/
+wrangler.toml
+public/
 # Logs
 logs
 *.log

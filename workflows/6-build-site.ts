@@ -1,4 +1,4 @@
-import { jsonfeedToAtom, jsonfeedToRSS, mustache, slug } from "../deps.ts";
+import { jsonfeedToAtom, jsonfeedToRSS } from "../deps.ts";
 import { FormatedItem, RunOptions } from "../interface.ts";
 import itemsToFeed from "../items-to-feed.ts";
 import {
@@ -6,7 +6,8 @@ import {
   getCurrentItemsFilePath,
   getDataCurrentItemsPath,
   getDistFilePath,
-  pathToDomain,
+  getDistPath,
+  pathToSiteIdentifier,
   readJSONFile,
   writeJSONFile,
   writeTextFile,
@@ -18,22 +19,28 @@ import feedToHTML from "../feed-to-html.ts";
 export default async function buildSite(options: RunOptions) {
   const config = options.config;
   const currentDataPath = getDataCurrentItemsPath();
-  let domains: string[] = [];
+  let siteIdentifiers: string[] = [];
 
   for await (const dirEntry of Deno.readDir(currentDataPath)) {
     if (dirEntry.isDirectory && !dirEntry.name.startsWith(".")) {
-      domains.push(pathToDomain(dirEntry.name));
+      siteIdentifiers.push(pathToSiteIdentifier(dirEntry.name));
     }
   }
-  const sites = options.domains;
+  const sites = options.siteIdentifiers;
   if (sites && Array.isArray(sites)) {
-    domains = domains.filter((domain) => {
-      return (sites as string[]).includes(domain);
+    siteIdentifiers = siteIdentifiers.filter((siteIdentifier) => {
+      return (sites as string[]).includes(siteIdentifier);
     });
   }
-  for (const domain of domains) {
+  // clear dist folder
+  try {
+    await Deno.remove(getDistPath(), { recursive: true });
+  } catch (_e) {
+    // ignore
+  }
+  for (const siteIdentifier of siteIdentifiers) {
     const currentItemsFilePath = getCurrentItemsFilePath(
-      domain,
+      siteIdentifier,
     );
     let currentItemsJson: Record<
       string,
@@ -58,30 +65,42 @@ export default async function buildSite(options: RunOptions) {
       for (const language of languages) {
         const feedJson = await itemsToFeed(
           currentItemsJson,
-          domain,
+          siteIdentifier,
           language.code,
           config,
         );
         // write to dist file
-        const feedPath = getDistFilePath(domain, `${language.prefix}feed.json`);
+        const feedPath = getDistFilePath(
+          siteIdentifier,
+          `${language.prefix}feed.json`,
+        );
         await writeJSONFile(feedPath, feedJson);
 
         // build atom.xml
+        // no need
         // @ts-ignore: npm module
-        const atomOutput = jsonfeedToAtom(feedJson);
-        // write to dist file
-        const atomPath = getDistFilePath(domain, `${language.prefix}atom.xml`);
-        await writeTextFile(atomPath, atomOutput);
+        // const atomOutput = jsonfeedToAtom(feedJson);
+        // // write to dist file
+        // const atomPath = getDistFilePath(
+        //   siteIdentifier,
+        //   `${language.prefix}atom.xml`,
+        // );
+        // await writeTextFile(atomPath, atomOutput);
 
         // build rss.xml
         // @ts-ignore: npm module
-        const rssOutput = jsonfeedToRSS(feedJson);
+        const rssOutput = jsonfeedToRSS(feedJson, {
+          language: feedJson.language,
+        });
         // write to dist file
-        const rssPath = getDistFilePath(domain, `${language.prefix}rss.xml`);
+        const rssPath = getDistFilePath(
+          siteIdentifier,
+          `${language.prefix}rss.xml`,
+        );
         await writeTextFile(rssPath, rssOutput);
 
         const indexPath = getDistFilePath(
-          domain,
+          siteIdentifier,
           `${language.prefix}index.html`,
         );
         const indexHTML = await feedToHTML(feedJson, config);
@@ -89,16 +108,16 @@ export default async function buildSite(options: RunOptions) {
 
         // copy static files
         try {
-          await generateIcons(domain);
+          await generateIcons(siteIdentifier);
         } catch (e) {
-          log.error("can not generate icons for ", domain);
+          log.error("can not generate icons for ", siteIdentifier);
           throw e;
         }
       }
-      log.info(`${domain} build success`);
+      log.info(`${siteIdentifier} build success`);
     } else {
       log.info(
-        `skip build ${domain}, cause no items to be build`,
+        `skip build ${siteIdentifier}, cause no items to be build`,
       );
     }
     // latest item date_modified is greater Monday

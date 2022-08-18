@@ -4,11 +4,12 @@ export interface Source {
   itemsPath?: string;
 }
 export interface RunOptions {
-  domains: string[];
+  siteIdentifiers: string[];
   config: Config;
 }
 
 export interface SiteConfig {
+  port: number;
   sources: Source[];
   tags: string[];
   translations: Record<string, Record<string, string>>;
@@ -44,7 +45,9 @@ export interface FormatedItem {
   date_modified: string;
   tags: string[];
   authors: Author[];
+  _original_published: string;
   _original_language: string;
+
   _links: Link[];
   _translations: Record<string, Record<string, string>>;
   [key: string]: unknown;

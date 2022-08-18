@@ -1,0 +1,17 @@
+{
+  "test": {
+    "files": {
+      "include": ["src/"],
+      "exclude": [
+        "node_modules/",
+        "public/",
+        "example",
+        "workers-site/",
+        "current/",
+        "dev-current/",
+        "dev-archive/",
+        "archive/"
+      ]
+    }
+  }
+}

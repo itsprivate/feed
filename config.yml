@@ -1,15 +1,15 @@
 translations:
   "zh-Hans":
     "HN Discussion": "HN 讨论"
-    "about_label": "关于"
-    "subscription_label": "用RSS客户端订阅"
+    "about_label": "关于此站"
+    "subscription_label": "订阅地址"
     "powered_by_label": "背后的人❤️"
-    "other_sites_label": "所有站点"
-    "languages_label": "其他语言"
+    "languages_label": "所有语言"
     "more_label": "更多"
     "less_label": "收起"
 sites:
   hackernews:
+    port: 8000
     tags:
       - hn
     translations:
@@ -22,6 +22,7 @@ sites:
         itemsPath: hits
         type: hn
   hn:
+    port: 8001
     tags:
       - hn
     translations:
@@ -31,5 +32,31 @@ sites:
         description: "Hacker News上超过200 points"
     sources:
       - url: http://hn.algolia.com/api/v1/search_by_date?tags=(story,poll,show_hn,ask_hn)&numericFilters=points>=200&hitsPerPage=50
+        itemsPath: hits
+        type: hn
+  askhn:
+    port: 8002
+    tags:
+      - hn
+    translations:
+      "zh-Hans":
+        title: "Hacker News 问答"
+        short_title: "HN问答"
+        description: "Hacker News上的问答"
+    sources:
+      - url: https://hn.algolia.com/api/v1/search_by_date?tags=(ask_hn)&hitsPerPage=50
+        itemsPath: hits
+        type: hn
+  showhn:
+    port: 8003
+    tags:
+      - reddit
+    translations:
+      "zh-Hans":
+        title: "Show HN"
+        short_title: "Show HN"
+        description: "Hacker News上的项目展示"
+    sources:
+      - url: https://hn.algolia.com/api/v1/search_by_date?tags=(show_hn)&hitsPerPage=50
         itemsPath: hits
         type: hn

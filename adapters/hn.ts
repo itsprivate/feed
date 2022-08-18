@@ -1,7 +1,7 @@
 import { Author, Link } from "../interface.ts";
 import Item from "../item.ts";
 export default class hn extends Item {
-  getPublishedDate(): Date {
+  getOriginalPublishedDate(): Date {
     return new Date(this.originalItem.created_at as string);
   }
   getId(): string {
@@ -23,13 +23,28 @@ export default class hn extends Item {
       url: `https://news.ycombinator.com/user?id=${this.originalItem.author}`,
     }];
   }
+  getPoints(): number {
+    return this.originalItem.points as number;
+  }
+  getCommentCount(): number {
+    return this.originalItem.num_comments as number;
+  }
   getLinks(): Link[] {
-    return [
-      {
-        url: this.getExternalUrl(),
-        name: "HN Discussion",
-      },
-    ];
+    if (this.getPoints() > 0) {
+      return [
+        {
+          url: this.getExternalUrl(),
+          name: `HN ${this.getPoints()} points`,
+        },
+      ];
+    } else {
+      return [
+        {
+          url: this.getExternalUrl(),
+          name: `HN Link`,
+        },
+      ];
+    }
   }
   getTags(): string[] {
     // check if specific tags are present in the item

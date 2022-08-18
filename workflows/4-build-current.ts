@@ -1,16 +1,17 @@
-import { fs } from "../deps.ts";
+import { fs, slug } from "../deps.ts";
 import { FormatedItem, RunOptions } from "../interface.ts";
-import Item from "../item.ts";
 import getLatestItems from "../latest-items.ts";
 import {
   arrayToObj,
-  domainToPath,
   getArchivedFilePath,
+  getCurrentArchiveFilePath,
   getCurrentItemsFilePath,
+  getCurrentTagsFilePath,
   getCurrentToBeArchivedItemsFilePath,
   getDataTranslatedPath,
-  pathToDomain,
+  pathToSiteIdentifier,
   readJSONFile,
+  siteIdentifierToPath,
   writeJSONFile,
 } from "../util.ts";
 import log from "../log.ts";
@@ -20,26 +21,26 @@ export default async function buildCurrent(
 ) {
   // get all 3-translated files
   // is exists translated files folder
-  let domains: string[] = [];
+  let siteIdentifiers: string[] = [];
 
   for await (const dirEntry of Deno.readDir(getDataTranslatedPath())) {
     if (dirEntry.isDirectory && !dirEntry.name.startsWith(".")) {
-      domains.push(pathToDomain(dirEntry.name));
+      siteIdentifiers.push(pathToSiteIdentifier(dirEntry.name));
     }
   }
-  const sites = options.domains;
+  const sites = options.siteIdentifiers;
   if (sites && Array.isArray(sites)) {
-    domains = domains.filter((domain) => {
-      return (sites as string[]).includes(domain);
+    siteIdentifiers = siteIdentifiers.filter((siteIdentifier) => {
+      return (sites as string[]).includes(siteIdentifier);
     });
   }
 
-  for (const domain of domains) {
+  for (const siteIdentifier of siteIdentifiers) {
     const files: string[] = [];
     try {
       for await (
         const entry of fs.walk(
-          getDataTranslatedPath() + "/" + domainToPath(domain),
+          getDataTranslatedPath() + "/" + siteIdentifierToPath(siteIdentifier),
         )
       ) {
         if (entry.isFile) {
@@ -50,7 +51,7 @@ export default async function buildCurrent(
       throw e;
     }
     if (files.length > 0) {
-      log.info(`get ${files.length} translated items for ${domain}`);
+      log.info(`get ${files.length} translated items for ${siteIdentifier}`);
       // move items to current items folder
       // get all json
       // TODO tryGetSiteByFolderPath
@@ -62,7 +63,7 @@ export default async function buildCurrent(
       }
       const items = await Promise.all(promises);
       // get current items
-      const currentItemsPath = getCurrentItemsFilePath(domain);
+      const currentItemsPath = getCurrentItemsFilePath(siteIdentifier);
       let currentItemsJson: Record<string, FormatedItem> = {};
       try {
         currentItemsJson = await readJSONFile(currentItemsPath);
@@ -72,7 +73,7 @@ export default async function buildCurrent(
       }
 
       const currentToBeArchivedFilePath = getCurrentToBeArchivedItemsFilePath(
-        domain,
+        siteIdentifier,
       );
       let currentToBeArchivedItemsJson: Record<
         string,
@@ -96,10 +97,24 @@ export default async function buildCurrent(
         // handle tags
         const tags = item["tags"];
         if (tags && Array.isArray(tags) && tags.length > 0) {
+          let currentTags: string[] = [];
+          try {
+            currentTags = await readJSONFile(
+              getCurrentTagsFilePath(siteIdentifier),
+            );
+          } catch (e) {
+            // ignore
+            log.debug(`read json file error: ${e}`);
+          }
+          let isTagsChanged = false;
           // look for tags
           for (const tag of tags) {
+            if (!currentTags.includes(tag)) {
+              currentTags.push(tag);
+              isTagsChanged = true;
+            }
             const tagFilePath = getArchivedFilePath(
-              domain,
+              siteIdentifier,
               // @ts-ignore: npm module
               `tags/${slug(tag)}/items.json`,
             );
@@ -118,6 +133,12 @@ export default async function buildCurrent(
               tagFileJson[id] = item;
               tagFiles[tagFilePath] = tagFileJson;
             }
+          }
+          if (isTagsChanged) {
+            await writeJSONFile(
+              getCurrentTagsFilePath(siteIdentifier),
+              currentTags,
+            );
           }
         }
       }
@@ -153,7 +174,7 @@ export default async function buildCurrent(
 
       // delete translated folder
       const translatedPath = getDataTranslatedPath() + "/" +
-        domainToPath(domain);
+        siteIdentifierToPath(siteIdentifier);
       await Deno.remove(translatedPath, {
         recursive: true,
       });

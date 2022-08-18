@@ -1,10 +1,15 @@
 import { Config, FeedItem, Feedjson, FormatedItem } from "./interface.ts";
-import { formatHumanTime, getCurrentTranslations } from "./util.ts";
+import {
+  formatHumanTime,
+  getCurrentTranslations,
+  getItemTranslations,
+  siteIdentifierToUrl,
+} from "./util.ts";
 import { ARCHIVE_SITE_PREFIX, TARGET_SITE_LANGUAEGS } from "./constant.ts";
 import { slug } from "./deps.ts";
 export default function itemsToFeed(
   currentItemsJson: Record<string, FormatedItem>,
-  domain: string,
+  siteIdentifier: string,
   languageCode: string,
   config: Config,
 ): Feedjson {
@@ -20,13 +25,13 @@ export default function itemsToFeed(
   }
   const currentItemsJsonKeysSorted = currentItemsJsonKeys
     .sort((a, b) => {
-      const aModified = currentItemsJson[a]["date_modified"]!;
-      const bModified = currentItemsJson[b]["date_modified"]!;
+      const aModified = currentItemsJson[a]["date_published"]!;
+      const bModified = currentItemsJson[b]["date_published"]!;
       return new Date(aModified) > new Date(bModified) ? -1 : 1;
     });
 
   const currentTranslations = getCurrentTranslations(
-    domain,
+    siteIdentifier,
     language.code,
     config,
   );
@@ -34,13 +39,13 @@ export default function itemsToFeed(
   // check config
   if (!currentTranslations.title) {
     throw new Error(
-      `${domain} config missing title for language ${language.code}`,
+      `${siteIdentifier} config missing title for language ${language.code}`,
     );
   }
   // check description
   if (!currentTranslations.description) {
     throw new Error(
-      `${domain} config missing description for language ${language.code}`,
+      `${siteIdentifier} config missing description for language ${language.code}`,
     );
   }
 
@@ -49,7 +54,10 @@ export default function itemsToFeed(
     const item = currentItemsJson[key] as FormatedItem;
     const itemUrl = item["url"];
     const itemUrlObj = new URL(itemUrl);
-    const translationObj = item._translations[language.code];
+    const translationObj = getItemTranslations(
+      item._translations,
+      language.code,
+    );
 
     const translationFields = Object.keys(translationObj);
     for (const translationField of translationFields) {
@@ -59,44 +67,47 @@ export default function itemsToFeed(
 
     let summary = "";
 
-    let content_html =
-      `${item.title} - <a href="${itemUrlObj.protocol}//${itemUrlObj.hostname}">${itemUrlObj.hostname}</a>`;
-
-    if (
-      item.authors && Array.isArray(item.authors) &&
-      item.authors.length > 0
-    ) {
-      content_html += " by ";
-      for (const author of item.authors) {
-        content_html +=
-          ` <a class="p-author author h-card" rel="author" href="${author.url}">${author.name}</a>`;
-      }
+    let content_html = "";
+    if (item.image) {
+      content_html += `<img class="u-photo" src="${item.image}" alt="image">`;
     }
-
     content_html +=
-      `<br><time class="dt-published published" datetime="${item.date_published}">${
+      ` <time class="dt-published published" datetime="${item.date_published}">${
         formatHumanTime(
           new Date(item.date_published as string),
         )
-      }</time>`;
+      }</time> -`;
+    content_html +=
+      ` ${item.title} (<a href="${itemUrlObj.protocol}//${itemUrlObj.hostname}">${itemUrlObj.hostname}</a>)<br>`;
 
+    // add links
+    let index = 0;
     for (const link of item._links) {
+      const isGreaterFirst = index >= 1;
       const linkName = currentTranslations[link.name] ??
         link.name;
       summary += `${linkName}: ${link.url}\n`;
-      content_html += ` <a href="${link.url}">${linkName}</a>`;
+      content_html += `${
+        isGreaterFirst ? "&nbsp;&nbsp;" : ""
+      }<a href="${link.url}">${linkName}</a>`;
+      index++;
     }
-
     // add tags
     if (item.tags && Array.isArray(item.tags)) {
       for (const tag of item.tags) {
+        const isGreaterFirst = index >= 1;
         summary += ` #${tag}`;
-        content_html +=
-          ` <a href="${ARCHIVE_SITE_PREFIX}/${language.prefix}${domain}/tags/${
-            // @ts-ignore: npm module
-            slug(tag)}">#${tag}</a>`;
+        content_html += `${
+          isGreaterFirst ? "&nbsp;&nbsp;" : ""
+        }<a href="${ARCHIVE_SITE_PREFIX}/${language.prefix}${siteIdentifier}/tags/${
+          // @ts-ignore: npm module
+          slug(tag)}">#${tag}</a>`;
+        index++;
       }
     }
+
+    // content_html +=
+    //   '<blockquote class="twitter-tweet"><p lang="en" dir="ltr">Sunsets don&#39;t get much better than this one over <a href="https://twitter.com/GrandTetonNPS?ref_src=twsrc%5Etfw">@GrandTetonNPS</a>. <a href="https://twitter.com/hashtag/nature?src=hash&amp;ref_src=twsrc%5Etfw">#nature</a> <a href="https://twitter.com/hashtag/sunset?src=hash&amp;ref_src=twsrc%5Etfw">#sunset</a> <a href="http://t.co/YuKy2rcjyU">pic.twitter.com/YuKy2rcjyU</a></p>&mdash; US Department of the Interior (@Interior) <a href="https://twitter.com/Interior/status/463440424141459456?ref_src=twsrc%5Etfw">May 5, 2014</a></blockquote> ';
     item.summary = summary;
     item.content_text = summary;
     item.content_html = content_html;
@@ -113,11 +124,19 @@ export default function itemsToFeed(
     "version": "https://jsonfeed.org/version/1",
     "title": currentTranslations.title,
     "description": currentTranslations.description,
-    "icon": `https://${domain}/icon.png`,
-    "favicon": `https://${domain}/favicon.ico`,
+    "icon": siteIdentifierToUrl(siteIdentifier, "/icon.png", config),
+    "favicon": siteIdentifierToUrl(siteIdentifier, "/favicon.ico", config),
     "language": language.code,
-    "home_page_url": `https://${domain}/`,
-    "feed_url": `https://${domain}/feed.json`,
+    "home_page_url": siteIdentifierToUrl(
+      siteIdentifier,
+      "/" + language.prefix,
+      config,
+    ),
+    "feed_url": siteIdentifierToUrl(
+      siteIdentifier,
+      `/${language.prefix}feed.json`,
+      config,
+    ),
     items,
   };
   return feedJson;

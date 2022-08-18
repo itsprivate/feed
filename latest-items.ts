@@ -3,12 +3,12 @@ import { MAX_ITEMS_PER_PAGE } from "./constant.ts";
 export default function getLatestItems(
   currentItemsJson: Record<string, FormatedItem>,
 ): FormatedItem[] {
-  // sort current items by date_modified
+  // sort current items by date_published
   // archive over max items
   const currentItemsKeys = Object.keys(currentItemsJson);
   const currentItemsKeysSorted = currentItemsKeys.sort((a, b) => {
-    const aModified = currentItemsJson[a]["date_modified"]!;
-    const bModified = currentItemsJson[b]["date_modified"]!;
+    const aModified = currentItemsJson[a]["date_published"]!;
+    const bModified = currentItemsJson[b]["date_published"]!;
     return new Date(aModified) > new Date(bModified) ? -1 : 1;
   });
 

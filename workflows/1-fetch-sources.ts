@@ -8,9 +8,9 @@ export default async function fetchSources(
 ) {
   const config = options.config;
   const sitesMap = config.sites;
-  const domains = options.domains;
-  for (const domain of domains) {
-    const siteConfig = sitesMap[domain];
+  const siteIdentifiers = options.siteIdentifiers;
+  for (const siteIdentifier of siteIdentifiers) {
+    const siteConfig = sitesMap[siteIdentifier];
     const sources = siteConfig.sources;
     for (const source of sources) {
       const sourceUrl = source.url;
@@ -27,13 +27,13 @@ export default async function fetchSources(
         unknown
       >[];
       log.info(
-        `fetched ${originalItems.length} items from ${sourceUrl} for ${domain}`,
+        `fetched ${originalItems.length} items from ${sourceUrl} for ${siteIdentifier}`,
       );
       for (const originalItem of originalItems) {
         // parse item to formated item
         const item = new (adapters[sourceType])(
           originalItem,
-          domain,
+          siteIdentifier,
         );
         // save original item to file
         await writeJSONFile(

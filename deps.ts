@@ -1,3 +1,5 @@
+import exports$1 from "https://jspm.dev/npm:trim-right@1.0.1!cjs";
+
 // std
 export * as YAML from "https://deno.land/std@0.151.0/encoding/yaml.ts";
 export * as TOML from "https://deno.land/std@0.151.0/encoding/toml.ts";
@@ -24,6 +26,7 @@ export {
   assertThrows,
 } from "https://deno.land/std@0.151.0/testing/asserts.ts";
 export { serve } from "https://deno.land/std@0.152.0/http/server.ts";
+export { contentType } from "https://deno.land/std@0.152.0/media_types/mod.ts";
 export {
   serveDir,
   serveFile,
@@ -37,6 +40,7 @@ export { default as OpenCC } from "https://jspm.dev/opencc-js@1.0.4";
 export { default as jsonfeedToAtom } from "https://jspm.dev/jsonfeed-to-atom@1.2.2";
 export { default as jsonfeedToRSS } from "https://jspm.dev/jsonfeed-to-rss@3.0.6";
 export { resize } from "https://deno.land/x/deno_image@0.0.4/mod.ts";
+export { config as dotenvConfig } from "https://deno.land/std@0.152.0/dotenv/mod.ts";
 export {
   DOMParser,
   Element,
@@ -52,3 +56,12 @@ export {
   Page,
 } from "https://deno.land/x/puppeteer@14.1.1/mod.ts";
 export { default as staticFiles } from "https://deno.land/x/static_files@1.1.6/mod.ts";
+
+export {
+  GetObjectCommand,
+  ListBucketsCommand,
+  ListObjectsV2Command,
+  PutObjectCommand,
+  S3Client,
+} from "https://deno.land/x/aws_sdk@v3.32.0-1/client-s3/mod.ts";
+export { getSignedUrl } from "https://deno.land/x/aws_sdk@v3.32.0-1/s3-request-presigner/mod.ts";

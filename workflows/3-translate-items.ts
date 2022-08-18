@@ -2,10 +2,10 @@ import { fs, path } from "../deps.ts";
 import { FormatedItem, RunOptions } from "../interface.ts";
 import Item from "../item.ts";
 import {
-  domainToPath,
   getDataFormatedPath,
   isDev,
-  pathToDomain,
+  pathToSiteIdentifier,
+  siteIdentifierToPath,
   writeJSONFile,
 } from "../util.ts";
 import log from "../log.ts";
@@ -19,33 +19,33 @@ export default async function translateItems(
   // is exists formated files folder
   await fs.ensureDir(getDataFormatedPath());
 
-  let domains: string[] = [];
+  let siteIdentifiers: string[] = [];
 
   for await (const dirEntry of Deno.readDir(getDataFormatedPath())) {
     if (dirEntry.isDirectory && !dirEntry.name.startsWith(".")) {
-      domains.push(pathToDomain(dirEntry.name));
+      siteIdentifiers.push(pathToSiteIdentifier(dirEntry.name));
     }
   }
-  const sites = options.domains;
+  const sites = options.siteIdentifiers;
   if (sites && Array.isArray(sites)) {
-    domains = domains.filter((domain) => {
-      return (sites as string[]).includes(domain);
+    siteIdentifiers = siteIdentifiers.filter((siteIdentifier) => {
+      return (sites as string[]).includes(siteIdentifier);
     });
   }
-  if (domains.length > 0) {
+  if (siteIdentifiers.length > 0) {
     // yes
     // start instance
     const translation = new Translation();
     await translation.init();
 
-    for (const domain of domains) {
+    for (const siteIdentifier of siteIdentifiers) {
       let total = 0;
       const files: string[] = [];
       try {
         let totalFiles = 0;
         for await (
           const entry of fs.walk(
-            getDataFormatedPath() + "/" + domainToPath(domain),
+            getDataFormatedPath() + "/" + siteIdentifierToPath(siteIdentifier),
           )
         ) {
           if (isDev()) {

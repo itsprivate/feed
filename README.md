@@ -24,10 +24,14 @@ make tr
 
 - [workers get started](https://developers.cloudflare.com/workers/get-started/guide/)
 
+```bash
+wrangler r2 bucket create feed
+```
+
 ## TODO
 
 - [ ] add more feeds
 - [ ] add score
 - [x] tags
 - [ ] check cors
-- [ ] support workers deploy
+- [x] support workers deploy

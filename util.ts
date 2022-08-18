@@ -7,6 +7,7 @@ import {
   slug,
   YAML,
 } from "./deps.ts";
+import { ROOT_DOMAIN } from "./constant.ts";
 import { Config, FormatedItem } from "./interface.ts";
 // @ts-ignore: npm module
 const zhHansToZhHant = OpenCC.Converter({ from: "cn", to: "tw" });
@@ -34,21 +35,28 @@ export const isDev = () => {
 export const isMock = () => {
   return !(Deno.env.get("MOCK") === "0");
 };
+export const isMockImage = () => {
+  return !(Deno.env.get("MOCK_IMAGE") === "0");
+};
 export const isDebug = () => {
   return Deno.env.get("DEBUG") === "1";
 };
 export const getDataPath = () => {
-  const dataPath = isDev() ? "dev-data" : "data";
+  const dataPath = isDev() ? "dev-current" : "current";
+  return dataPath;
+};
+export const getArchivePath = () => {
+  const dataPath = isDev() ? "dev-archive" : "archive";
   return dataPath;
 };
 export const getDistPath = () => {
-  return "dist";
+  return "public";
 };
-export const getDomainDistPath = (domain: string) => {
-  return `${getDistPath()}/${domainToPath(domain)}`;
+export const getSiteIdentifierDistPath = (siteIdentifier: string) => {
+  return `${getDistPath()}/${siteIdentifierToPath(siteIdentifier)}`;
 };
-export const getDistFilePath = (domain: string, file: string) => {
-  return path.join(getDistPath(), domainToPath(domain), file);
+export const getDistFilePath = (siteIdentifier: string, file: string) => {
+  return path.join(getDistPath(), siteIdentifierToPath(siteIdentifier), file);
 };
 export const getDataRawPath = () => {
   return `${getDataPath()}/1-raw`;
@@ -68,17 +76,29 @@ export const getDataTranslatedPath = () => {
   return `${getDataPath()}/3-translated`;
 };
 export const getDataCurrentItemsPath = () => {
-  return `${getDataPath()}/4-current`;
+  return `${getDataPath()}/4-data`;
 };
 export const getDataArchivePath = () => {
-  return `${getDataPath()}/5-archive`;
+  return `${getArchivePath()}`;
 };
 export const getCurrentItemsFilePath = (targetSite: string) => {
-  return `${getDataCurrentItemsPath()}/${domainToPath(targetSite)}/items.json`;
+  return `${getDataCurrentItemsPath()}/${
+    siteIdentifierToPath(targetSite)
+  }/items.json`;
+};
+export const getCurrentTagsFilePath = (targetSite: string) => {
+  return `${getDataCurrentItemsPath()}/${
+    siteIdentifierToPath(targetSite)
+  }/tags.json`;
+};
+export const getCurrentArchiveFilePath = (targetSite: string) => {
+  return `${getDataCurrentItemsPath()}/${
+    siteIdentifierToPath(targetSite)
+  }/archive.json`;
 };
 export const getCurrentToBeArchivedItemsFilePath = (targetSite: string) => {
   return `${getDataCurrentItemsPath()}/${
-    domainToPath(targetSite)
+    siteIdentifierToPath(targetSite)
   }/to-be-archived-items.json`;
 };
 
@@ -152,17 +172,19 @@ export const formatHumanTime = (date: Date) => {
   }
 };
 
-export const generateIcons = async function (domain: string) {
-  const icon = await Deno.readFile(`./static/${domainToPath(domain)}/icon.png`);
+export const generateIcons = async function (siteIdentifier: string) {
+  const icon = await Deno.readFile(
+    `./assets/icon.png`,
+  );
   // copy icon to dist
-  await Deno.writeFile(getDistFilePath(domain, "icon.png"), icon);
+  // await Deno.writeFile(getDistFilePath(siteIdentifier, "icon.png"), icon);
   // generate apple-touch-icon
   const appleTouchIcon = await resize(icon, {
     width: 180,
     height: 180,
   });
   await Deno.writeFile(
-    getDistFilePath(domain, "apple-touch-icon.png"),
+    getDistFilePath(siteIdentifier, "icon.png"),
     appleTouchIcon,
   );
   const favicon32 = await resize(icon, {
@@ -172,16 +194,17 @@ export const generateIcons = async function (domain: string) {
   // write to file
 
   await Deno.writeFile(
-    getDistFilePath(domain, "favicon.ico"),
+    getDistFilePath(siteIdentifier, "favicon.ico"),
     favicon32,
   );
 };
 
 export const getArchivedFilePath = function (
-  domain: string,
+  siteIdentifier: string,
   relativePath: string,
 ): string {
-  let filePath = getDataArchivePath() + "/" + domainToPath(domain);
+  let filePath = getDataArchivePath() + "/" +
+    siteIdentifierToPath(siteIdentifier);
   // remove relative path slashes
   if (relativePath.startsWith("/")) {
     relativePath = relativePath.substring(1);
@@ -190,12 +213,52 @@ export const getArchivedFilePath = function (
   return filePath;
 };
 
-export const domainToPath = (domain: string) => {
-  // return domain.replace(/\./g, "_");
-  return domain;
+export const siteIdentifierToPath = (siteIdentifier: string) => {
+  // return siteIdentifier.replace(/\./g, "_");
+  //
+  return siteIdentifier;
 };
-export const pathToDomain = (path: string) => {
-  // return path.replace(/_/g, ".");
+export const siteIdentifierToDomain = (siteIdentifier: string) => {
+  if (siteIdentifier.includes(".")) {
+    return siteIdentifier;
+  }
+  return `${siteIdentifier}.${ROOT_DOMAIN}`;
+};
+export const urlToSiteIdentifier = (url: string, config: Config) => {
+  const urlObj = new URL(url);
+
+  if (urlObj.hostname === "localhost") {
+    for (const siteDdentifier in config.sites) {
+      const siteConfig = config.sites[siteDdentifier];
+      if (Number(siteConfig.port) === Number(urlObj.port)) {
+        return siteDdentifier;
+      }
+    }
+    throw new Error("Cannot find siteIdentifier for " + url);
+  } else {
+    let hostname = urlObj.hostname;
+    if (urlObj.hostname.startsWith("dev-")) {
+      hostname = hostname.substring(4);
+    }
+    return hostname.replace(`.${ROOT_DOMAIN}`, "");
+  }
+};
+export const siteIdentifierToUrl = (
+  siteIdentifier: string,
+  pathname: string,
+  config: Config,
+): string => {
+  const siteConfig = config.sites[siteIdentifier];
+  const isWorkersDev = Deno.env.get("WORKERS_DEV") === "1";
+  if (isWorkersDev) {
+    return `https://dev-${siteIdentifierToDomain(siteIdentifier)}${pathname}`;
+  } else if (isDev()) {
+    return `http://localhost:${siteConfig.port}${pathname}`;
+  } else {
+    return `https://${siteIdentifierToDomain(siteIdentifier)}${pathname}`;
+  }
+};
+export const pathToSiteIdentifier = (path: string) => {
   return path;
 };
 export const arrayToObj = <T>(
@@ -208,15 +271,30 @@ export const arrayToObj = <T>(
   }
   return obj;
 };
+export const getItemTranslations = function (
+  translations: Record<string, Record<string, string>>,
+  languageCode: string,
+): Record<string, string> {
+  if (languageCode === "zh-Hant") {
+    const currentTranslations = { ...translations["zh-Hans"] };
+    for (const key in currentTranslations) {
+      currentTranslations[key] = toZhHant(currentTranslations[key]);
+    }
+    return currentTranslations;
+  } else {
+    return translations[languageCode];
+  }
+};
+
 export const getCurrentTranslations = function (
-  domain: string,
+  siteIdentifier: string,
   languageCode: string,
   config: Config,
 ): Record<string, string> {
   let currentTranslations: Record<string, string> = {};
   const translations = config.translations;
   const sitesMap = config.sites;
-  const siteConfig = sitesMap[domain];
+  const siteConfig = sitesMap[siteIdentifier];
   if (languageCode === "zh-Hant") {
     const generalTranslations = translations["zh-Hans"] ?? {};
     currentTranslations = {
@@ -237,4 +315,31 @@ export const getCurrentTranslations = function (
     };
   }
   return currentTranslations;
+};
+export const urlToFilePath = (url: string): string => {
+  const urlObj = new URL(url);
+  const pathname = urlObj.pathname;
+
+  let filepath = pathname;
+
+  if (pathname === "/") {
+    filepath = "index.html";
+  } else {
+    filepath = pathname.slice(1);
+  }
+  if (filepath.endsWith("/")) {
+    filepath += "index.html";
+  } else {
+    // check is has extension
+    const basename = path.basename(filepath);
+    if (!basename.includes(".")) {
+      if (filepath.endsWith("/")) {
+        filepath += "index.html";
+      } else {
+        filepath += "/index.html";
+      }
+    }
+  }
+
+  return filepath;
 };

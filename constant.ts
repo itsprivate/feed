@@ -13,7 +13,7 @@ export const TARGET_SITE_LANGUAEGS = [{
   name: "简体中文",
   prefix: "",
 }, {
-  code: "zh-Hans",
+  code: "zh-Hant",
   name: "繁体中文",
   prefix: "zh-Hant/",
   realtime: true,
@@ -22,3 +22,4 @@ export const TARGET_SITE_LANGUAEGS = [{
 export const ARCHIVE_SITE_PREFIX = isDev()
   ? "http://localhost:9000"
   : "https://archive.buzzing.cc";
+export const ROOT_DOMAIN = "buzzing.cc";
