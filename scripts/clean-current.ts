@@ -3,8 +3,12 @@ import {
   getCurrentDataS3Bucket,
   getDataPath,
 } from "../util.ts";
+import { dotenvConfig } from "../deps.ts";
 import log from "../log.ts";
 async function cleanRemoteCurrentData() {
+  await dotenvConfig({
+    export: true,
+  });
   const bucket = await getCurrentDataS3Bucket(getCurrentBucketName());
   const currentDataPath = getDataPath();
   const list = await bucket.listObjects({
@@ -12,7 +16,7 @@ async function cleanRemoteCurrentData() {
   });
   if (list && list.contents && list.contents.length > 0) {
     log.info(
-      `There are ${list.contents.length} objects in ${bucket} to delete, confirm?`,
+      `There are ${list.contents.length} objects in ${getCurrentBucketName()} to delete, confirm?`,
     );
     const input = prompt("Please enter y to confirm");
     if (input && input.trim() === "y") {

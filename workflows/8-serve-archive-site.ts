@@ -7,7 +7,7 @@ import {
   getArchivedBucketName,
   getArchivedFilePath,
   getArchiveS3Bucket,
-  getConfigSync,
+  getConfig,
   isDev,
   readJSONFile,
   writeJSONFile,
@@ -17,9 +17,12 @@ import { TARGET_SITE_LANGUAEGS } from "../constant.ts";
 import feedToHTML from "../feed-to-html.ts";
 import itemsToFeed from "../items-to-feed.ts";
 import { ItemsJson } from "../interface.ts";
-export default function serveSite() {
-  const config = getConfigSync();
-
+export default async function serveSite() {
+  const config = await getConfig();
+  // build index.html
+  const indexTemplateString = await Deno.readTextFile(
+    "./templates/index.html",
+  );
   const handler = async (request: Request): Promise<Response> => {
     const url = new URL(request.url);
     // get language code
@@ -151,7 +154,7 @@ export default function serveSite() {
           }),
         );
       }
-      const html = feedToHTML(feedjson, config);
+      const html = feedToHTML(feedjson, config, indexTemplateString);
       return new Response(html, {
         status: 200,
         headers: {

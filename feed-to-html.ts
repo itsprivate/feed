@@ -13,6 +13,7 @@ import { mustache } from "./deps.ts";
 export default function feedToHTML(
   feedJson: Feedjson,
   config: Config,
+  indexTemplateString: string,
 ): string {
   const sitesMap = config.sites;
   const homepage = feedJson.home_page_url;
@@ -114,10 +115,7 @@ export default function feedToHTML(
   //   "/" + language.prefix + "atom.xml",
   //   config,
   // );
-  // build index.html
-  const indexTemplateString = Deno.readTextFileSync(
-    "./templates/index.html",
-  );
+
   // build index.html
   // @ts-ignore: js package does not have type for mustache
   const output = mustache.render(indexTemplateString, feedJson);

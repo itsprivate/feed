@@ -21,7 +21,9 @@ export default async function buildSite(options: RunOptions) {
   const config = options.config;
   const currentDataPath = getDataCurrentItemsPath();
   let siteIdentifiers: string[] = [];
-
+  const indexTemplateString = await Deno.readTextFile(
+    "./templates/index.html",
+  );
   for await (const dirEntry of Deno.readDir(currentDataPath)) {
     if (dirEntry.isDirectory && !dirEntry.name.startsWith(".")) {
       siteIdentifiers.push(pathToSiteIdentifier(dirEntry.name));
@@ -106,7 +108,11 @@ export default async function buildSite(options: RunOptions) {
           siteIdentifier,
           `${language.prefix}index.html`,
         );
-        const indexHTML = await feedToHTML(feedJson, config);
+        const indexHTML = await feedToHTML(
+          feedJson,
+          config,
+          indexTemplateString,
+        );
         await writeTextFile(indexPath, indexHTML);
 
         // copy static files

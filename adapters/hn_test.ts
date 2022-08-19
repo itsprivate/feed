@@ -1,6 +1,6 @@
 import { assertEquals } from "../deps.ts";
 import HnItem from "./hn.ts";
-import hnExampleJson from "../example/current/1-raw/hn/2022/08/10/2022-08-10-en-hn-hackernews.buzzing.cc_32407873.json" assert {
+import hnExampleJson from "../example/current/1-raw/hackernews/2022/08/10/2022_08_10_en_hn_hackernews_32407873.json" assert {
   type: "json",
 };
 

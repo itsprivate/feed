@@ -150,12 +150,7 @@ export const getConfig = async function (): Promise<Config> {
   ) as Config;
   return config;
 };
-export const getConfigSync = function (): Config {
-  const config = YAML.parse(
-    Deno.readTextFileSync("config.yml"),
-  ) as Config;
-  return config;
-};
+
 const formatBeijing = (date: Date, formatString: string) => {
   date = new Date(date.getTime() + 8 * 60 * 60 * 1000);
   const formatter = new DateTimeFormatter(formatString);
