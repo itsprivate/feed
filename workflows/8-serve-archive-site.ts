@@ -1,4 +1,4 @@
-import { jsonfeedToRSS, serve } from "../deps.ts";
+import { jsonfeedToRSS, path, serve } from "../deps.ts";
 import {
   getArchivedBucketName,
   getArchivedFilePath,
@@ -13,7 +13,6 @@ import { TARGET_SITE_LANGUAEGS } from "../constant.ts";
 import feedToHTML from "../feed-to-html.ts";
 import itemsToFeed from "../items-to-feed.ts";
 import { ItemsJson } from "../interface.ts";
-import path from "https://deno.land/std@0.119.0/node/path.ts";
 export default function serveSite() {
   const config = getConfigSync();
 
