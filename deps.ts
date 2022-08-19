@@ -52,11 +52,11 @@ export { default as staticFiles } from "https://deno.land/x/static_files@1.1.6/m
 //   S3Client,
 // } from "https://deno.land/x/aws_sdk@v3.32.0-1/client-s3/mod.ts";
 // export { S3, S3Bucket } from "https://deno.land/x/s3@0.5.0/mod.ts";
-// export {
-//   Browser,
-//   default as puppeteer,
-//   Page,
-// } from "https://deno.land/x/puppeteer@14.1.1/mod.ts";
+export {
+  Browser,
+  default as puppeteer,
+  Page,
+} from "https://deno.land/x/puppeteer@14.1.1/mod.ts";
 
 // npm modules
 // export { getMetadata } from "https://jspm.dev/page-metadata-parser@1.1.4";
