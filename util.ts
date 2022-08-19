@@ -2,7 +2,7 @@ import {
   DateTimeFormatter,
   dotenvConfig,
   fs,
-  OpenCC,
+  // OpenCC,
   path,
   resize,
   S3Bucket,
@@ -12,9 +12,10 @@ import {
 import { ROOT_DOMAIN, TARGET_SITE_LANGUAEGS } from "./constant.ts";
 import { Config, Language, PageMeta } from "./interface.ts";
 export const toZhHant = (text: string): string => {
+  return text;
   // @ts-ignore: npm module
-  const zhHansToZhHant = OpenCC.Converter({ from: "cn", to: "tw" });
-  return zhHansToZhHant(text);
+  // const zhHansToZhHant = OpenCC.Converter({ from: "cn", to: "tw" });
+  // return zhHansToZhHant(text);
 };
 export const get = (obj: unknown, path: string, defaultValue = undefined) => {
   const travel = (regexp: RegExp) =>
