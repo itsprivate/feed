@@ -86,8 +86,8 @@ export default function serveSite() {
       relativeItemsPath = relativeItemsPath + "items.json";
     }
     let itemsJson: ItemsJson | null = null;
-    // const filePath = getArchivedFilePath(siteIdentifier, relativeItemsPath);
-    const filePath = relativeItemsPath;
+    const filePath = getArchivedFilePath(siteIdentifier, relativeItemsPath);
+    // const filePath = relativeItemsPath;
     // return Promise.resolve(
     //   new Response("file path" + filePath, {
     //     status: 200,
