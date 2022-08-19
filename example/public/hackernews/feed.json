@@ -1,0 +1,23 @@
+{
+  "version": "https://jsonfeed.org/version/1.1",
+  "title": "My Example Feed",
+  "description": "",
+  "icon": "",
+  "favicon": "",
+  "language": "",
+  "home_page_url": "https://example.org/",
+  "feed_url": "https://example.org/feed.json",
+  "items": [
+    {
+      "id": "2",
+      "title": "中文标题",
+      "summary": "source title This is a second item.",
+      "content_text": "HN 讨论: test",
+      "content_html": "<a href=\"\">hn讨论</a>source content This is a second item.",
+      "image": "",
+      "url": "https://example.org/second-item",
+      "date_published": "",
+      "date_modified": ""
+    }
+  ]
+}

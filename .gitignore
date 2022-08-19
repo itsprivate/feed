@@ -1,11 +1,11 @@
 # custom
-dev-current/
-current/
-dev-archive/
-archive/
-wrangler.toml
+/dev-current/
+/current/
+/dev-archive/
+/archive/
+/wrangler.toml
 temp.json
-public/
+/public/
 # Logs
 logs
 *.log
