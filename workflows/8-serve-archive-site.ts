@@ -100,6 +100,7 @@ export default function serveSite() {
     } else {
       // read from remote
       const bucket = getArchivedBucketName();
+      console.log("bucket", bucket);
       const s3Bucket = await getArchiveS3Bucket(bucket);
       const s3Object = await s3Bucket.getObject(filePath);
       if (s3Object) {
@@ -118,8 +119,9 @@ export default function serveSite() {
           isArchive: true,
         },
       );
+      let type = "feedjson";
       // TODO: write temp json
-      await writeJSONFile("temp.json", feedjson);
+      // await writeJSONFile("temp.json", feedjson);
       if (type === "feedjson") {
         return Promise.resolve(
           new Response(JSON.stringify(feedjson), {
