@@ -43,14 +43,14 @@ export type {
 
 export { default as staticFiles } from "https://deno.land/x/static_files@1.1.6/mod.ts";
 
-// export {
-//   GetObjectCommand,
-//   HeadObjectCommand,
-//   ListBucketsCommand,
-//   ListObjectsV2Command,
-//   PutObjectCommand,
-//   S3Client,
-// } from "https://deno.land/x/aws_sdk@v3.32.0-1/client-s3/mod.ts";
+export {
+  GetObjectCommand,
+  HeadObjectCommand,
+  ListBucketsCommand,
+  ListObjectsV2Command,
+  PutObjectCommand,
+  S3Client,
+} from "https://deno.land/x/aws_sdk@v3.32.0-1/client-s3/mod.ts";
 export { S3, S3Bucket } from "https://deno.land/x/s3@0.5.0/mod.ts";
 export {
   Browser,
