@@ -110,4 +110,4 @@ deletearchive:
 
 .Phony: serveprodarchive
 serveprodarchive:
-	deno run -A --unstable ./dev-archive-site.ts
+	deno run -A ./dev-archive-site.ts
