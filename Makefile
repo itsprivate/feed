@@ -111,3 +111,11 @@ deletearchive:
 .Phony: serveprodarchive
 serveprodarchive:
 	deno run -A ./dev-archive-site.ts
+
+.Phony: check-fmt
+check-fmt:
+	deno fmt --check
+
+.Phony: fmt
+fmt:
+	deno fmt
