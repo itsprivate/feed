@@ -167,7 +167,7 @@ export default function serveSite() {
     // }
   };
   const port = Number(Deno.env.get("PORT") || 8000);
-  console.info(
+  log.info(
     `HTTP webserver running. Access it at: http://localhost:${port}/`,
   );
   serve(handler);
