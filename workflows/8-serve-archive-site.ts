@@ -3,15 +3,15 @@
 import { serve } from "https://deno.land/std@0.152.0/http/server.ts";
 import * as path from "https://deno.land/std@0.151.0/path/mod.ts";
 
-import {
-  // getArchivedBucketName,
-  getArchivedFilePath,
-  // getArchiveS3Bucket,
-  // getConfigSync,
-  // isDev,
-  // readJSONFile,
-  // writeJSONFile,
-} from "../util.ts";
+// import {
+// getArchivedBucketName,
+// getArchivedFilePath,
+// getArchiveS3Bucket,
+// getConfigSync,
+// isDev,
+// readJSONFile,
+// writeJSONFile,
+// } from "../util.ts";
 import log from "../log.ts";
 import { TARGET_SITE_LANGUAEGS } from "../constant.ts";
 // import feedToHTML from "../feed-to-html.ts";
@@ -86,7 +86,8 @@ export default function serveSite() {
       relativeItemsPath = relativeItemsPath + "items.json";
     }
     let itemsJson: ItemsJson | null = null;
-    const filePath = getArchivedFilePath(siteIdentifier, relativeItemsPath);
+    // const filePath = getArchivedFilePath(siteIdentifier, relativeItemsPath);
+    const filePath = relativeItemsPath;
     return Promise.resolve(
       new Response("file path" + filePath, {
         status: 200,
