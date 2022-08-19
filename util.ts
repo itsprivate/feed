@@ -6,7 +6,6 @@ import {
   path,
   resize,
   S3Bucket,
-  S3Client,
   YAML,
 } from "./deps.ts";
 import { ROOT_DOMAIN, TARGET_SITE_LANGUAEGS } from "./constant.ts";
@@ -475,12 +474,9 @@ export const getArchiveS3Bucket = (bucket: string): S3Bucket => {
   );
   return s3Bucket;
 };
-export const getCurrentDataS3Bucket = async (
+export const getCurrentDataS3Bucket = (
   bucket: string,
-): Promise<S3Bucket> => {
-  await dotenvConfig({
-    export: true,
-  });
+): S3Bucket => {
   const s3Bucket = new S3Bucket(
     {
       accessKeyID: Deno.env.get("R2_ACCESS_KEY_ID")!,
@@ -492,17 +488,7 @@ export const getCurrentDataS3Bucket = async (
   );
   return s3Bucket;
 };
-export const getCurrentDataS3Client = () => {
-  const s3Client = new S3Client({
-    region: Deno.env.get("R2_REGION") || "auto",
-    endpoint: Deno.env.get("R2_ENDPOINT"),
-    credentials: {
-      accessKeyId: Deno.env.get("R2_ACCESS_KEY_ID")!,
-      secretAccessKey: Deno.env.get("R2_SECRET_ACCESS_KEY")!,
-    },
-  });
-  return s3Client;
-};
+
 export const loadS3ArchiveFile = async (fileRelativePath: string) => {
   const R2_BUCKET = getArchivedBucketName();
   const s3Bucket = getArchiveS3Bucket(R2_BUCKET);

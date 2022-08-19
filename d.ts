@@ -1,4 +1,4 @@
-import { Page } from "./deps.ts";
+import { Page } from "./bad-deps.ts";
 import log from "./log.ts";
 export default async (
   page: Page,

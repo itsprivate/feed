@@ -43,26 +43,12 @@ export type {
 
 export { default as staticFiles } from "https://deno.land/x/static_files@1.1.6/mod.ts";
 
-// export {
-//   GetObjectCommand,
-//   HeadObjectCommand,
-//   ListBucketsCommand,
-//   ListObjectsV2Command,
-//   PutObjectCommand,
-//   S3Client,
-// } from "https://deno.land/x/aws_sdk@v3.32.0-1/client-s3/mod.ts";
 export { S3, S3Bucket } from "https://deno.land/x/s3@0.5.0/mod.ts";
-// export {
-//   Browser,
-//   default as puppeteer,
-//   Page,
-// } from "https://deno.land/x/puppeteer@14.1.1/mod.ts";
 
 // npm modules
 export { getMetadata } from "https://jspm.dev/page-metadata-parser@1.1.4";
 export { default as slug } from "https://jspm.dev/slug@6.0.0";
 
 export { default as mustache } from "https://jspm.dev/mustache@4.2.0";
-// export { default as OpenCC } from "https://jspm.dev/opencc-js@1.0.4";
 export { default as jsonfeedToAtom } from "https://jspm.dev/jsonfeed-to-atom@1.2.2";
 export { default as jsonfeedToRSS } from "https://jspm.dev/jsonfeed-to-rss@3.0.6";

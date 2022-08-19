@@ -1,7 +1,7 @@
-import { contentType, fs, path, PutObjectCommand } from "../deps.ts";
+import { contentType, fs, path } from "../deps.ts";
 import {
   getCurrentBucketName,
-  getCurrentDataS3Client,
+  getCurrentDataS3Bucket,
   getDataPath,
 } from "../util.ts";
 import { RunOptions } from "../interface.ts";
@@ -9,7 +9,7 @@ import log from "../log.ts";
 export default async function uploadCurrentData(_options: RunOptions) {
   const R2_BUCKET = getCurrentBucketName();
   log.info(`start upload current data to ${R2_BUCKET}`);
-  const s3Client = await getCurrentDataS3Client();
+  const s3Bucket = await getCurrentDataS3Bucket(R2_BUCKET);
 
   // walk current folder
   await fs.ensureDir(getDataPath());
@@ -20,17 +20,11 @@ export default async function uploadCurrentData(_options: RunOptions) {
       const relativePath = entry.path;
       const ext = path.extname(entry.path);
       const contentTypeString = contentType(ext);
-      const object_upload_params = {
-        Bucket: R2_BUCKET,
-        // Specify the name of the new object. For example, 'test.html'.
-        // To create a directory for the object, use '/'. For example, 'myApp/package.json'.
-        ContentType: contentTypeString,
-        Key: relativePath,
-        // Content of the new object.
-        Body: await Deno.readTextFile(entry.path),
-      };
       // Create and upload the object to the first S3 bucket.
-      await s3Client.send(new PutObjectCommand(object_upload_params)), total++;
+      await s3Bucket.putObject(relativePath, await Deno.readFile(entry.path), {
+        contentType: contentTypeString,
+      });
+      total++;
     }
   }
   log.info(
