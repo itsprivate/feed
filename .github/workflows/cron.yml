@@ -57,7 +57,10 @@ jobs:
           ARCHIVE_ENDPOINT: ${{secrets.ARCHIVE_ENDPOINT}}
           ARCHIVE_REGION: ${{secrets.ARCHIVE_REGION}}
       - name: load wrangler.toml from secrets.WRANGLER
-        run: echo "${{secrets.WRANGLER}}" > wrangler.toml
+        run: |
+          cat <<EOT >> wrangler.toml
+          ${{secrets.WRANGLER}}
+          EOT
       - name: Publish wrangler
         uses: cloudflare/wrangler-action@2.0.0
         with:
