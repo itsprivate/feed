@@ -123,3 +123,4 @@ fmt:
 .Phony: uploadprod
 uploadprod:
 	deno run -A main.ts --stage "upload_current,upload_archive"
+
