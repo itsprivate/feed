@@ -126,4 +126,4 @@ uploadprod:
 
 .Phony: test-file
 test-file:
-	touch current/4-data/prodhackernews/test.json && touch archive/prodhackernews/tags/job/test.json
+	mkdir -p current/4-data/prodhackernews/ && touch current/4-data/prodhackernews/test.json && mkdir -p archive/prodhackernews/tags/job/ && touch archive/prodhackernews/tags/job/test.json
