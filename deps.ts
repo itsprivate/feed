@@ -1,5 +1,3 @@
-import exports$1 from "https://jspm.dev/npm:trim-right@1.0.1!cjs";
-
 // std
 export * as YAML from "https://deno.land/std@0.151.0/encoding/yaml.ts";
 export * as TOML from "https://deno.land/std@0.151.0/encoding/toml.ts";

@@ -1,5 +1,7 @@
 // import { jsonfeedToRSS, path, serve } from "../deps.ts";
-import { path, serve } from "../deps.ts";
+// import { path, serve } from "../deps.ts";
+import { serve } from "https://deno.land/std@0.152.0/http/server.ts";
+import * as path from "https://deno.land/std@0.151.0/path/mod.ts";
 
 import {
   // getArchivedBucketName,
@@ -167,7 +169,7 @@ export default function serveSite() {
   log.info(
     `HTTP webserver running. Access it at: http://localhost:${port}/`,
   );
-  serve(handler, { port });
+  serve(handler);
 }
 
 if (import.meta.main) {
