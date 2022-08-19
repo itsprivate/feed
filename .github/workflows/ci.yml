@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        deno-version: [v1.23]
+        deno-version: [v1.24]
 
     steps:
       - name: Git Checkout Deno Module
