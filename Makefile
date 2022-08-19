@@ -124,3 +124,6 @@ fmt:
 uploadprod:
 	deno run -A main.ts --stage "upload_current,upload_archive"
 
+.Phony: test-file
+test-file:
+	touch current/4-data/prodhackernews/test.json && touch archive/prodhackernews/tags/job/test.json

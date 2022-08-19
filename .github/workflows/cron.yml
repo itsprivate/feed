@@ -28,8 +28,10 @@ jobs:
       - uses: denoland/setup-deno@v1
         with:
           deno-version: v1.x
-      - run: make install
+      # - run: make install
+      - run: make test-file
       - run: make buildprod
+        if: false
         env:
           R2_ACCESS_KEY_ID: ${{secrets.R2_ACCESS_KEY_ID}}
           R2_SECRET_ACCESS_KEY: ${{secrets.R2_SECRET_ACCESS_KEY}}
@@ -45,3 +47,14 @@ jobs:
 
       - name: upload files
         run: make uploadprod
+        env:
+          R2_ACCESS_KEY_ID: ${{secrets.R2_ACCESS_KEY_ID}}
+          R2_SECRET_ACCESS_KEY: ${{secrets.R2_SECRET_ACCESS_KEY}}
+          R2_REGION: ${{secrets.R2_REGION}}
+          R2_ENDPOINT: ${{secrets.R2_ENDPOINT}}
+          ARCHIVE_ACCESS_KEY_ID: ${{secrets.ARCHIVE_ACCESS_KEY_ID}}
+          ARCHIVE_SECRET_ACCESS_KEY: ${{secrets.ARCHIVE_SECRET_ACCESS_KEY}}
+          ARCHIVE_ENDPOINT: ${{secrets.ARCHIVE_ENDPOINT}}
+          ARCHIVE_REGION: ${{secrets.ARCHIVE_REGION}}
+      - name: build site
+        run: make publish
