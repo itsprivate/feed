@@ -1,15 +1,18 @@
-import { serve } from "../deps.ts";
+import { jsonfeedToRSS, serve } from "../deps.ts";
 import {
   getArchivedFilePath,
   getConfigSync,
+  getDataArchivePath,
   isDev,
   readJSONFile,
+  writeJSONFile,
 } from "../util.ts";
 import log from "../log.ts";
 import { TARGET_SITE_LANGUAEGS } from "../constant.ts";
 import feedToHTML from "../feed-to-html.ts";
 import itemsToFeed from "../items-to-feed.ts";
-import { FormatedItem } from "../interface.ts";
+import { FormatedItem, ItemsJson } from "../interface.ts";
+import path from "https://deno.land/std@0.119.0/node/path.ts";
 export default function serveSite() {
   const config = getConfigSync();
   const handler = async (request: Request): Promise<Response> => {
@@ -46,22 +49,43 @@ export default function serveSite() {
 
     const relativePathname = fields.slice(2).join("/");
     let relativeItemsPath = relativePathname;
-
+    let type = "index";
     if (!relativeItemsPath.endsWith("/")) {
-      relativeItemsPath = relativeItemsPath + "/";
-    } else if (relativeItemsPath.startsWith("/")) {
+      const basename = path.basename(relativeItemsPath);
+      if (!basename.includes(".")) {
+        relativeItemsPath = relativeItemsPath + "/items.json";
+      } else {
+        if (basename === "feed.json") {
+          type = "feedjson";
+          relativeItemsPath = path.dirname(relativeItemsPath) + "/items.json";
+        } else if (basename === "rss.xml") {
+          type = "rssxml";
+          relativeItemsPath = path.dirname(relativeItemsPath) + "/items.json";
+        } else {
+          // not found
+          return Promise.resolve(
+            new Response("Not Found", {
+              status: 404,
+            }),
+          );
+        }
+      }
+    } else if (
+      relativeItemsPath.startsWith("/")
+    ) {
       relativeItemsPath = relativeItemsPath.slice(1);
     }
-    relativeItemsPath = relativeItemsPath + "items.json";
-    let itemsJson: Record<string, FormatedItem> | null = null;
+
+    const relativeBasename = path.basename(relativeItemsPath);
+    if (!relativeBasename.includes(".")) {
+      relativeItemsPath = relativeItemsPath + "items.json";
+    }
+    let itemsJson: ItemsJson | null = null;
     if (isDev()) {
       const filePath = getArchivedFilePath(siteIdentifier, relativeItemsPath);
       // get file
       try {
-        itemsJson = await readJSONFile(filePath) as Record<
-          string,
-          FormatedItem
-        >;
+        itemsJson = await readJSONFile(filePath);
       } catch (_e) {
         // 404
         return Promise.resolve(
@@ -73,11 +97,38 @@ export default function serveSite() {
     }
     if (itemsJson) {
       const feedjson = itemsToFeed(
+        relativeItemsPath,
         itemsJson,
         siteIdentifier,
         language.code,
         config,
+        {
+          isArchive: true,
+        },
       );
+      // TODO: write temp json
+      await writeJSONFile("temp.json", feedjson);
+      if (type === "feedjson") {
+        return Promise.resolve(
+          new Response(JSON.stringify(feedjson), {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }),
+        );
+      } else if (type === "rssxml") {
+        // @ts-ignore: npm module
+        const rssOutput = jsonfeedToRSS(feedjson, {
+          language: feedjson.language,
+        });
+        return Promise.resolve(
+          new Response(rssOutput, {
+            headers: {
+              "Content-Type": "application/xml",
+            },
+          }),
+        );
+      }
       const html = feedToHTML(feedjson, config);
       return new Response(html, {
         status: 200,

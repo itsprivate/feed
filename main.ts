@@ -1,7 +1,7 @@
 import { flags } from "./deps.ts";
 
 import log from "./log.ts";
-import { getConfig, isDebug, isDev } from "./util.ts";
+import { getConfig, getFeedSiteIdentifiers, isDebug, isDev } from "./util.ts";
 
 import fetchSources from "./workflows/1-fetch-sources.ts";
 import formatItems from "./workflows/2-format-items.ts";
@@ -41,7 +41,7 @@ export default async function main() {
   }
   const config = await getConfig();
   const sitesMap = config.sites;
-  let siteIdentifiers = Object.keys(sitesMap);
+  let siteIdentifiers = getFeedSiteIdentifiers(config);
   if (sites && Array.isArray(sites)) {
     siteIdentifiers = siteIdentifiers.filter((siteIdentifier) => {
       return (sites as string[]).includes(siteIdentifier);

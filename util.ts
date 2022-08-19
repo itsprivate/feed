@@ -7,8 +7,8 @@ import {
   slug,
   YAML,
 } from "./deps.ts";
-import { ROOT_DOMAIN } from "./constant.ts";
-import { Config, FormatedItem } from "./interface.ts";
+import { ROOT_DOMAIN, TARGET_SITE_LANGUAEGS } from "./constant.ts";
+import { Config, Language, PageMeta } from "./interface.ts";
 // @ts-ignore: npm module
 const zhHansToZhHant = OpenCC.Converter({ from: "cn", to: "tw" });
 export const toZhHant = (text: string): string => {
@@ -44,6 +44,10 @@ export const isDebug = () => {
 export const getDataPath = () => {
   const dataPath = isDev() ? "dev-current" : "current";
   return dataPath;
+};
+export const getFeedSiteIdentifiers = (config: Config) => {
+  const sitesMap = config.sites;
+  return Object.keys(sitesMap);
 };
 export const getArchivePath = () => {
   const dataPath = isDev() ? "dev-archive" : "archive";
@@ -228,13 +232,17 @@ export const urlToSiteIdentifier = (url: string, config: Config) => {
   const urlObj = new URL(url);
 
   if (urlObj.hostname === "localhost") {
-    for (const siteDdentifier in config.sites) {
-      const siteConfig = config.sites[siteDdentifier];
-      if (Number(siteConfig.port) === Number(urlObj.port)) {
-        return siteDdentifier;
+    if (config.archive.port.toString() === urlObj.port) {
+      return config.archive.siteIdentifier!;
+    } else {
+      for (const siteDdentifier in config.sites) {
+        const siteConfig = config.sites[siteDdentifier];
+        if (Number(siteConfig.port) === Number(urlObj.port)) {
+          return siteDdentifier;
+        }
       }
+      throw new Error("Cannot find siteIdentifier for " + url);
     }
-    throw new Error("Cannot find siteIdentifier for " + url);
   } else {
     let hostname = urlObj.hostname;
     if (urlObj.hostname.startsWith("dev-")) {
@@ -248,15 +256,55 @@ export const siteIdentifierToUrl = (
   pathname: string,
   config: Config,
 ): string => {
-  const siteConfig = config.sites[siteIdentifier];
+  let port: number;
+  if (siteIdentifier === "i") {
+    // archive site
+    port = config.archive.port;
+  } else {
+    const siteConfig = config.sites[siteIdentifier];
+    port = siteConfig.port;
+  }
   const isWorkersDev = Deno.env.get("WORKERS_DEV") === "1";
   if (isWorkersDev) {
     return `https://dev-${siteIdentifierToDomain(siteIdentifier)}${pathname}`;
   } else if (isDev()) {
-    return `http://localhost:${siteConfig.port}${pathname}`;
+    return `http://localhost:${port}${pathname}`;
   } else {
     return `https://${siteIdentifierToDomain(siteIdentifier)}${pathname}`;
   }
+};
+export const feedjsonUrlToRssUrl = (url: string) => {
+  return url.replace("/feed.json", "/rss.xml");
+};
+export const urlToLanguageUrl = (url: string, languagePrefix: string) => {
+  const urlInfo = getUrlLanguage(url);
+  const urlObj = new URL(url);
+  // check if url has a prefix
+  urlObj.pathname = `/${languagePrefix}${urlInfo[1].slice(1)}`;
+  return urlObj.toString();
+};
+export const getUrlLanguage = (
+  url: string,
+): [Language, string] => {
+  const urlObj = new URL(url);
+  // get language code
+  const langField = urlObj.pathname.split("/")[1];
+  // check if language code is valid
+  let language = TARGET_SITE_LANGUAEGS[0];
+  let pathname = urlObj.pathname;
+  for (const targetLang of TARGET_SITE_LANGUAEGS) {
+    let prefix = targetLang.prefix;
+    // remove trailing slash
+    if (prefix.endsWith("/")) {
+      prefix = prefix.slice(0, -1);
+    }
+    if (prefix === langField) {
+      language = targetLang;
+      pathname = urlObj.pathname.slice(targetLang.prefix.length);
+      break;
+    }
+  }
+  return [language, pathname];
 };
 export const pathToSiteIdentifier = (path: string) => {
   return path;
@@ -284,6 +332,31 @@ export const getItemTranslations = function (
   } else {
     return translations[languageCode];
   }
+};
+export const getGeneralTranslations = function (
+  languageCode: string,
+  config: Config,
+) {
+  let currentTranslations: Record<string, string> = {};
+  const translations = config.translations;
+  if (languageCode === "zh-Hant") {
+    const generalTranslations = translations["zh-Hans"] ?? {};
+    currentTranslations = {
+      ...generalTranslations,
+    };
+    // translate to traditional chinese
+    for (const key in currentTranslations) {
+      currentTranslations[key] = toZhHant(currentTranslations[key]);
+    }
+  } else {
+    // merge site translations
+    const generalTranslations = translations[languageCode] ?? {};
+
+    currentTranslations = {
+      ...generalTranslations,
+    };
+  }
+  return currentTranslations;
 };
 
 export const getCurrentTranslations = function (
@@ -316,6 +389,50 @@ export const getCurrentTranslations = function (
   }
   return currentTranslations;
 };
+// item.json -> /
+// tags/show-hn/item.json -> /tags/show-hn/
+export const itemsPathToURLPath = function (itemsPath: string) {
+  const removedPath = itemsPath.replace(/items\.json$/, "");
+  if (!removedPath.endsWith("/")) {
+    return removedPath + "/";
+  }
+  if (!removedPath.startsWith("/")) {
+    return "/" + removedPath;
+  }
+  return removedPath;
+};
+
+export const getPageMeta = (itemsRelativePath: string): PageMeta => {
+  const pathArr = itemsRelativePath.split("/");
+  let pageType = "index";
+  let meta: Record<string, string> = {};
+  if (pathArr.length >= 1) {
+    const rootField = pathArr[0];
+    if (rootField === "tags") {
+      pageType = "tag";
+      meta = {
+        tagIdentifier: pathArr[1],
+      };
+    } else if (rootField === "archive") {
+      pageType = "archive";
+      meta = {
+        year: pathArr[1],
+        week: pathArr[2],
+      };
+    } else if (rootField === "issue") {
+      pageType = "issue";
+      meta = {
+        year: pathArr[1],
+        week: pathArr[2],
+      };
+    }
+  }
+  return {
+    type: pageType,
+    meta: meta,
+  };
+};
+
 export const urlToFilePath = (url: string): string => {
   const urlObj = new URL(url);
   const pathname = urlObj.pathname;

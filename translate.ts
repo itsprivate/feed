@@ -75,7 +75,7 @@ export default class Translation {
     if (this.isMock) {
       const translatedObj: Record<string, string> = {};
       for (const targetLanguage of TARGET_SITE_LANGUAEGS) {
-        if (!targetLanguage.realtime) {
+        if (targetLanguage.code !== "zh-Hant") {
           translatedObj[targetLanguage.code] = sentence;
         }
       }
@@ -94,7 +94,7 @@ export default class Translation {
     }
     const translatedObj: Record<string, string> = {};
     for (const targetLanguage of TARGET_SITE_LANGUAEGS) {
-      if (!targetLanguage.realtime) {
+      if (targetLanguage.code !== "zh-Hant") {
         let translated = await d(
           this.page!,
           sentence,

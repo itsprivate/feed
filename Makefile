@@ -20,7 +20,8 @@ runfromformat:
 .Phony: runfromtr
 runfromtr:
 	DEV=1 deno run -A --unstable --watch=main.ts,templates/,config.yml,static/ main.ts --stage build_current,archive,build_site,serve_site --site hackernews
-
+runtoarchive:
+	DEV=1 deno run -A --unstable --watch=main.ts,templates/,config.yml,static/ main.ts --stage format,translate,build_current,archive,build_site,serve_site,server_archive_site --site hackernews
 .Phony: start
 start:
 	DEV=1 deno run -A --unstable --watch=main.ts,templates/,config.yml,static/ main.ts --stage build_current,archive,build_site,serve_site --site hackernews

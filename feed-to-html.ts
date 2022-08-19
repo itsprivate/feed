@@ -1,12 +1,19 @@
 import {
+  feedjsonUrlToRssUrl,
   getCurrentTranslations,
+  getFeedSiteIdentifiers,
+  getGeneralTranslations,
   siteIdentifierToUrl,
+  urlToLanguageUrl,
   urlToSiteIdentifier,
 } from "./util.ts";
 import { Config, Feedjson } from "./interface.ts";
 import { TARGET_SITE_LANGUAEGS } from "./constant.ts";
 import { mustache } from "./deps.ts";
-export default function feedToHTML(feedJson: Feedjson, config: Config): string {
+export default function feedToHTML(
+  feedJson: Feedjson,
+  config: Config,
+): string {
   const sitesMap = config.sites;
   const homepage = feedJson.home_page_url;
   if (!homepage) {
@@ -17,14 +24,12 @@ export default function feedToHTML(feedJson: Feedjson, config: Config): string {
   if (!languageCode) {
     throw new Error(`language code not found for feedjson`);
   }
-  const siteConfig = sitesMap[siteIdentifier];
   const languages = TARGET_SITE_LANGUAEGS;
   const language = languages.find((lang) => lang.code === languageCode);
   if (!language) {
     throw new Error(`language code ${languageCode} not found`);
   }
-  const currentTranslations = getCurrentTranslations(
-    siteIdentifier,
+  const currentTranslations = getGeneralTranslations(
     languageCode,
     config,
   );
@@ -38,18 +43,15 @@ export default function feedToHTML(feedJson: Feedjson, config: Config): string {
     // @ts-ignore: add meta data
     newItem.active = item.code === language.code;
     // @ts-ignore: add meta data
-    newItem.url = `/${item.prefix}`;
-    console.log("newItem", newItem);
+    newItem.url = urlToLanguageUrl(homepage, item.prefix);
     return newItem;
   });
   // related sites is has common tags sites
   const otherSites: string[] = [];
-  const relatedSites = Object.keys(sitesMap).filter((site) => {
+  const relatedSites = getFeedSiteIdentifiers(config).filter((site) => {
     const siteTags = sitesMap[site].tags;
-    const currentSiteTags = siteConfig.tags;
-    console.log("siteTags", siteTags);
-    console.log("siteIdentifier", siteIdentifier);
-    console.log("site", site);
+    const currentSiteTags = feedJson._tags;
+
     // ignore self
     if (site === siteIdentifier) {
       return false;
@@ -67,7 +69,6 @@ export default function feedToHTML(feedJson: Feedjson, config: Config): string {
       return false;
     }
   });
-  console.log("otherSites", otherSites);
   //@ts-ignore: add meta data
   feedJson._related_sites = relatedSites.map(
     (item, index) => {
@@ -106,11 +107,7 @@ export default function feedToHTML(feedJson: Feedjson, config: Config): string {
     },
   );
   // @ts-ignore: add meta data
-  feedJson._rss_url = siteIdentifierToUrl(
-    siteIdentifier,
-    "/" + language.prefix + "rss.xml",
-    config,
-  );
+  feedJson._rss_url = feedjsonUrlToRssUrl(feedJson.feed_url);
   // @ts-ignore: add meta data
   // feedJson._atom_url = siteIdentifierToUrl(
   //   siteIdentifier,

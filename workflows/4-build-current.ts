@@ -1,5 +1,5 @@
 import { fs, slug } from "../deps.ts";
-import { FormatedItem, RunOptions } from "../interface.ts";
+import { FormatedItem, ItemsJson, RunOptions } from "../interface.ts";
 import getLatestItems from "../latest-items.ts";
 import {
   arrayToObj,
@@ -65,7 +65,9 @@ export default async function buildCurrent(
       const items = await Promise.all(promises);
       // get current items
       const currentItemsPath = getCurrentItemsFilePath(siteIdentifier);
-      let currentItemsJson: Record<string, FormatedItem> = {};
+      let currentItemsJson: ItemsJson = {
+        items: {},
+      };
       try {
         currentItemsJson = await readJSONFile(currentItemsPath);
       } catch (e) {
@@ -76,10 +78,7 @@ export default async function buildCurrent(
       const currentToBeArchivedFilePath = getCurrentToBeArchivedItemsFilePath(
         siteIdentifier,
       );
-      let currentToBeArchivedItemsJson: Record<
-        string,
-        FormatedItem
-      > = {};
+      let currentToBeArchivedItemsJson: ItemsJson = { items: {} };
       try {
         currentToBeArchivedItemsJson = await readJSONFile(
           currentToBeArchivedFilePath,
@@ -90,11 +89,11 @@ export default async function buildCurrent(
       }
 
       // merge items to current itemsJson
-      const tagFiles: Record<string, Record<string, FormatedItem>> = {};
+      const tagFiles: Record<string, ItemsJson> = {};
       for (const item of items) {
         const id = item["id"];
-        currentItemsJson[id] = item;
-        currentToBeArchivedItemsJson[id] = item;
+        currentItemsJson.items[id] = item;
+        currentToBeArchivedItemsJson.items[id] = item;
         // handle tags
         const tags = item["tags"];
         if (tags && Array.isArray(tags) && tags.length > 0) {
@@ -120,9 +119,14 @@ export default async function buildCurrent(
               `tags/${slug(tag)}/items.json`,
             );
             if (tagFiles[tagFilePath]) {
-              tagFiles[tagFilePath][id] = item;
+              tagFiles[tagFilePath].items[id] = item;
             } else {
-              let tagFileJson: Record<string, FormatedItem> = {};
+              let tagFileJson: ItemsJson = {
+                meta: {
+                  name: tag,
+                },
+                items: {},
+              };
               try {
                 tagFileJson = await readJSONFile(tagFilePath);
               } catch (e) {
@@ -131,7 +135,7 @@ export default async function buildCurrent(
                   `can not found tag file: ${tagFilePath}, will create ${e}`,
                 );
               }
-              tagFileJson[id] = item;
+              tagFileJson.items[id] = item;
               tagFiles[tagFilePath] = tagFileJson;
             }
           }
@@ -150,14 +154,19 @@ export default async function buildCurrent(
         // only write max 1000 items
         await writeJSONFile(
           tagFilePath,
-          arrayToObj(getLatestItems(tagFiles[tagFilePath])),
+          {
+            meta: tagFiles[tagFilePath].meta,
+            items: arrayToObj(getLatestItems(tagFiles[tagFilePath].items)),
+          },
         );
       }
       // write new current items to file
 
       await writeJSONFile(
         currentItemsPath,
-        arrayToObj(getLatestItems(currentItemsJson)),
+        {
+          items: arrayToObj(getLatestItems(currentItemsJson.items)),
+        },
       );
 
       // for garbage collection

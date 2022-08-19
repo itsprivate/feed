@@ -4,6 +4,7 @@ current/
 dev-archive/
 archive/
 wrangler.toml
+temp.json
 public/
 # Logs
 logs

@@ -1,9 +1,9 @@
 translations:
   "zh-Hans":
-    "about_label": "关于此站"
+    "about_label": "关于此页面"
     "subscription_label": "订阅地址"
     "powered_by_label": "背后的人❤️"
-    "languages_label": "所有语言"
+    "languages_label": "该页面其他语言"
     "more_label": "更多"
     "less_label": "收起"
 sites:
@@ -59,3 +59,7 @@ sites:
       - url: https://hn.algolia.com/api/v1/search_by_date?tags=(show_hn)&hitsPerPage=50
         itemsPath: hits
         type: hn
+archive:
+  port: 9000
+  siteIdentifier: i
+  tags: []

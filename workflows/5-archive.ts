@@ -9,7 +9,7 @@ import {
   writeJSONFile,
 } from "../util.ts";
 import log from "../log.ts";
-import { FormatedItem, RunOptions } from "../interface.ts";
+import { FormatedItem, ItemsJson, RunOptions } from "../interface.ts";
 
 export default async function archive(options: RunOptions) {
   const now = new Date();
@@ -33,10 +33,7 @@ export default async function archive(options: RunOptions) {
     const currentToBeArchivedFilePath = getCurrentToBeArchivedItemsFilePath(
       siteIdentifier,
     );
-    let currentToBeArchivedItemsJson: Record<
-      string,
-      FormatedItem
-    > = {};
+    let currentToBeArchivedItemsJson: ItemsJson = { items: {} };
     try {
       currentToBeArchivedItemsJson = await readJSONFile(
         currentToBeArchivedFilePath,
@@ -47,19 +44,21 @@ export default async function archive(options: RunOptions) {
 
     //check if need to archive items
     const currentToBeArchivedItemsKeys = Object.keys(
-      currentToBeArchivedItemsJson,
+      currentToBeArchivedItemsJson.items,
     );
     const currentToBeArchivedItemsKeysSorted = currentToBeArchivedItemsKeys
       .sort((a, b) => {
-        const aModified = currentToBeArchivedItemsJson[a]["date_published"]!;
-        const bModified = currentToBeArchivedItemsJson[b]["date_published"]!;
+        const aModified = currentToBeArchivedItemsJson
+          .items[a]["date_published"]!;
+        const bModified = currentToBeArchivedItemsJson
+          .items[b]["date_published"]!;
         return new Date(aModified) > new Date(bModified) ? -1 : 1;
       });
 
     if (currentToBeArchivedItemsKeysSorted.length > 0) {
       // yes check to be archived
 
-      const oldestToBeArchivedItem = currentToBeArchivedItemsJson[
+      const oldestToBeArchivedItem = currentToBeArchivedItemsJson.items[
         currentToBeArchivedItemsKeysSorted[
           currentToBeArchivedItemsKeysSorted.length - 1
         ]
@@ -95,7 +94,7 @@ export default async function archive(options: RunOptions) {
           i--
         ) {
           const key = currentToBeArchivedItemsKeysSorted[i];
-          const item = currentToBeArchivedItemsJson[key];
+          const item = currentToBeArchivedItemsJson.items[key];
           // check date_published
           const itemDate = new Date(item.date_published);
           const weekOfItem = datetime.weekOfYear(itemDate);
@@ -108,7 +107,7 @@ export default async function archive(options: RunOptions) {
               archiedGroups[archivedFolder] = {};
             }
             archiedGroups[archivedFolder][key] = item;
-            delete currentToBeArchivedItemsJson[key];
+            delete currentToBeArchivedItemsJson.items[key];
           }
         }
 

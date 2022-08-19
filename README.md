@@ -35,3 +35,4 @@ wrangler r2 bucket create feed
 - [x] tags
 - [ ] check cors
 - [x] support workers deploy
+- [ ] change archive lang to hackernews/en/

@@ -1,5 +1,5 @@
-import { jsonfeedToAtom, jsonfeedToRSS } from "../deps.ts";
-import { FormatedItem, RunOptions } from "../interface.ts";
+import { jsonfeedToRSS, path } from "../deps.ts";
+import { FormatedItem, ItemsJson, RunOptions } from "../interface.ts";
 import itemsToFeed from "../items-to-feed.ts";
 import {
   generateIcons,
@@ -9,6 +9,7 @@ import {
   getDistPath,
   pathToSiteIdentifier,
   readJSONFile,
+  siteIdentifierToPath,
   writeJSONFile,
   writeTextFile,
 } from "../util.ts";
@@ -42,10 +43,11 @@ export default async function buildSite(options: RunOptions) {
     const currentItemsFilePath = getCurrentItemsFilePath(
       siteIdentifier,
     );
-    let currentItemsJson: Record<
-      string,
-      FormatedItem
-    > = {};
+    const itemsRelativePath = path.relative(
+      `${getDataCurrentItemsPath()}/${siteIdentifierToPath(siteIdentifier)}`,
+      currentItemsFilePath,
+    );
+    let currentItemsJson: ItemsJson = { items: {} };
     try {
       currentItemsJson = await readJSONFile(
         currentItemsFilePath,
@@ -63,7 +65,8 @@ export default async function buildSite(options: RunOptions) {
       // multiple languages support
       const languages = TARGET_SITE_LANGUAEGS;
       for (const language of languages) {
-        const feedJson = await itemsToFeed(
+        const feedJson = itemsToFeed(
+          itemsRelativePath,
           currentItemsJson,
           siteIdentifier,
           language.code,

@@ -3,20 +3,39 @@ export interface Source {
   type: string;
   itemsPath?: string;
 }
+export interface Language {
+  code: string;
+  name: string;
+  prefix: string;
+}
+export interface PageMeta {
+  type: string;
+  meta: Record<string, string>;
+}
 export interface RunOptions {
   siteIdentifiers: string[];
   config: Config;
 }
-
-export interface SiteConfig {
+export interface ItemsToFeedOptions {
+  isArchive?: boolean;
+}
+export interface GeneralSiteConfig {
+  port: number;
+  tags: string[];
+}
+export interface SiteConfig extends GeneralSiteConfig {
   port: number;
   sources: Source[];
-  tags: string[];
   translations: Record<string, Record<string, string>>;
 }
+export interface ArchiveSiteConfig extends GeneralSiteConfig {
+  siteIdentifier: string;
+}
+
 export interface Config {
   sites: Record<string, SiteConfig>;
   translations: Record<string, Record<string, string>>;
+  archive: ArchiveSiteConfig;
 }
 export interface Link {
   url: string;
@@ -76,6 +95,11 @@ export interface Feedjson {
   home_page_url: string;
   feed_url: string;
   items: FeedItem[];
+  _tags: string[];
+}
+export interface ItemsJson {
+  meta?: Record<string, string>;
+  items: Record<string, FormatedItem>;
 }
 
 export interface FeedItem extends FormatedItem {

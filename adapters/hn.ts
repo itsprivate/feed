@@ -34,14 +34,14 @@ export default class hn extends Item {
       return [
         {
           url: this.getExternalUrl(),
-          name: `HN ${this.getPoints()} points`,
+          name: `&rarr; HN ${this.getPoints()} points`,
         },
       ];
     } else {
       return [
         {
           url: this.getExternalUrl(),
-          name: `HN Link`,
+          name: `&rarr; HN Link`,
         },
       ];
     }
