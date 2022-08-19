@@ -1,33 +1,16 @@
+import { contentType, fs, path, PutObjectCommand } from "../deps.ts";
 import {
-  contentType,
-  dotenvConfig,
-  fs,
-  path,
-  PutObjectCommand,
-  S3Client,
-} from "../deps.ts";
-import {
+  getCurrentBucketName,
+  getCurrentDataS3Client,
   getDistPath,
-  isDev,
   pathToSiteIdentifier,
   siteIdentifierToPath,
 } from "../util.ts";
 import { RunOptions } from "../interface.ts";
 import log from "../log.ts";
 export default async function deployToR2(options: RunOptions) {
-  const env = await dotenvConfig();
-  const R2_ACCESS_KEY_ID = env.R2_ACCESS_KEY_ID;
-  const R2_SECRET_ACCESS_KEY = env.R2_SECRET_ACCESS_KEY;
-  const CLOUDFLARE_ACCOUNT_ID = env.CLOUDFLARE_ACCOUNT_ID;
-  const R2_BUCKET = isDev() ? "feed-dev" : "feed";
-  const s3Client = new S3Client({
-    region: "auto",
-    endpoint: `https://${CLOUDFLARE_ACCOUNT_ID}.r2.cloudflarestorage.com`,
-    credentials: {
-      accessKeyId: R2_ACCESS_KEY_ID,
-      secretAccessKey: R2_SECRET_ACCESS_KEY,
-    },
-  });
+  const R2_BUCKET = getCurrentBucketName();
+  const s3Client = await getCurrentDataS3Client();
 
   // walk dist folder
   await fs.ensureDir(getDistPath());

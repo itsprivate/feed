@@ -31,7 +31,6 @@ export {
   serveDir,
   serveFile,
 } from "https://deno.land/x/std@0.152.0/http/file_server.ts";
-
 // third party modules
 
 // export { colors } from "https://deno.land/x/cliffy@v0.24.2/ansi/colors.ts";
@@ -59,9 +58,11 @@ export { default as staticFiles } from "https://deno.land/x/static_files@1.1.6/m
 
 export {
   GetObjectCommand,
+  HeadObjectCommand,
   ListBucketsCommand,
   ListObjectsV2Command,
   PutObjectCommand,
   S3Client,
 } from "https://deno.land/x/aws_sdk@v3.32.0-1/client-s3/mod.ts";
 export { getSignedUrl } from "https://deno.land/x/aws_sdk@v3.32.0-1/s3-request-presigner/mod.ts";
+export { S3, S3Bucket } from "https://deno.land/x/s3@0.5.0/mod.ts";

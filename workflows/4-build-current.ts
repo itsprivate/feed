@@ -1,14 +1,14 @@
 import { fs, slug } from "../deps.ts";
-import { FormatedItem, ItemsJson, RunOptions } from "../interface.ts";
+import { ItemsJson, RunOptions } from "../interface.ts";
 import getLatestItems from "../latest-items.ts";
 import {
   arrayToObj,
   getArchivedFilePath,
-  getCurrentArchiveFilePath,
   getCurrentItemsFilePath,
   getCurrentTagsFilePath,
   getCurrentToBeArchivedItemsFilePath,
   getDataTranslatedPath,
+  loadS3ArchiveFile,
   pathToSiteIdentifier,
   readJSONFile,
   siteIdentifierToPath,
@@ -98,6 +98,7 @@ export default async function buildCurrent(
         const tags = item["tags"];
         if (tags && Array.isArray(tags) && tags.length > 0) {
           let currentTags: string[] = [];
+
           try {
             currentTags = await readJSONFile(
               getCurrentTagsFilePath(siteIdentifier),
@@ -127,6 +128,8 @@ export default async function buildCurrent(
                 },
                 items: {},
               };
+              // load remote tag files
+              await loadS3ArchiveFile(tagFilePath);
               try {
                 tagFileJson = await readJSONFile(tagFilePath);
               } catch (e) {

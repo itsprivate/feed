@@ -1,10 +1,12 @@
 import {
   DateTimeFormatter,
+  dotenvConfig,
   fs,
   OpenCC,
   path,
   resize,
-  slug,
+  S3Bucket,
+  S3Client,
   YAML,
 } from "./deps.ts";
 import { ROOT_DOMAIN, TARGET_SITE_LANGUAEGS } from "./constant.ts";
@@ -460,3 +462,74 @@ export const urlToFilePath = (url: string): string => {
 
   return filepath;
 };
+export const getArchiveS3Bucket = async (bucket: string): Promise<S3Bucket> => {
+  await dotenvConfig({
+    export: true,
+  });
+  const s3Bucket = new S3Bucket(
+    {
+      accessKeyID: Deno.env.get("ARCHIVE_ACCESS_KEY_ID")!,
+      secretKey: Deno.env.get("ARCHIVE_SECRET_ACCESS_KEY")!,
+      bucket: bucket,
+      region: Deno.env.get("ARCHIVE_REGION")!,
+      endpointURL: Deno.env.get("ARCHIVE_ENDPOINT")!,
+    },
+  );
+  return s3Bucket;
+};
+export const getCurrentDataS3Bucket = async (
+  bucket: string,
+): Promise<S3Bucket> => {
+  await dotenvConfig({
+    export: true,
+  });
+  const s3Bucket = new S3Bucket(
+    {
+      accessKeyID: Deno.env.get("R2_ACCESS_KEY_ID")!,
+      secretKey: Deno.env.get("R2_SECRET_ACCESS_KEY")!,
+      bucket: bucket,
+      region: Deno.env.get("R2_REGION")!,
+      endpointURL: Deno.env.get("R2_ENDPOINT")!,
+    },
+  );
+  return s3Bucket;
+};
+export const getCurrentDataS3Client = async () => {
+  await dotenvConfig({
+    export: true,
+  });
+
+  const s3Client = new S3Client({
+    region: Deno.env.get("R2_REGION") || "auto",
+    endpoint: Deno.env.get("R2_ENDPOINT"),
+    credentials: {
+      accessKeyId: Deno.env.get("R2_ACCESS_KEY_ID")!,
+      secretAccessKey: Deno.env.get("R2_SECRET_ACCESS_KEY")!,
+    },
+  });
+  return s3Client;
+};
+export const loadS3ArchiveFile = async (fileRelativePath: string) => {
+  const R2_BUCKET = getArchiveBucketName();
+  const s3Bucket = await getArchiveS3Bucket(R2_BUCKET);
+  const object = await s3Bucket.headObject(fileRelativePath);
+  if (object && object.etag) {
+    const getObject = await s3Bucket.getObject(fileRelativePath);
+    if (getObject) {
+      const { body } = getObject;
+      const data = await new Response(body).text();
+      await writeTextFile(fileRelativePath, data);
+    } else {
+      throw new Error(`loadS3ArchiveFile: getObject is null`);
+    }
+  }
+};
+
+export function getCurrentBucketName() {
+  const R2_BUCKET = isDev() ? "dev-feed" : "feed";
+  return R2_BUCKET;
+}
+export function getArchiveBucketName() {
+  const R2_BUCKET = isDev() ? "dev-feedarchive" : "feedarchive";
+  return R2_BUCKET;
+}

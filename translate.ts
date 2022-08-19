@@ -107,6 +107,7 @@ export default class Translation {
         // remove end newline
         translated = translated.replace(/\n$/, "");
         translatedObj[targetLanguage.code] = translated;
+        log.info(`translate ${sentence} to ${translated} success`);
         this.currentTranslated++;
       }
     }

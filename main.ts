@@ -2,7 +2,7 @@ import { flags } from "./deps.ts";
 
 import log from "./log.ts";
 import { getConfig, getFeedSiteIdentifiers, isDebug, isDev } from "./util.ts";
-
+import loadCurrentData from "./workflows/0-load-current.ts";
 import fetchSources from "./workflows/1-fetch-sources.ts";
 import formatItems from "./workflows/2-format-items.ts";
 import translateItems from "./workflows/3-translate-items.ts";
@@ -11,7 +11,8 @@ import archive from "./workflows/5-archive.ts";
 import buildSite from "./workflows/6-build-site.ts";
 import serveSite from "./workflows/7-serve-site.ts";
 import serveArchiveSite from "./workflows/8-serve-archive-site.ts";
-import deployToR2 from "./workflows/9-deploy-to-r2.ts";
+import uploadCurrent from "./workflows/9-upload-current.ts";
+import uploadArchive from "./workflows/10-upload-archive.ts";
 import { RunOptions } from "./interface.ts";
 export default async function main() {
   let stage = [
@@ -25,7 +26,9 @@ export default async function main() {
   if (isDev()) {
     stage.push("serve_site");
   } else {
-    stage.push("deploy");
+    stage.unshift("load_current");
+    stage.push("upload_current");
+    stage.push("upload_archive");
   }
   if (isDebug()) {
     log.setLevel("debug");
@@ -35,6 +38,10 @@ export default async function main() {
   const args = flags.parse(Deno.args);
   if (args.stage) {
     stage = (args.stage).split(",");
+  }
+  if (args["extra-stage"]) {
+    const extraStages = (args["extra-stage"]).split(",");
+    stage = stage.concat(extraStages);
   }
   if (args.site) {
     sites = args.site.split(",");
@@ -49,6 +56,13 @@ export default async function main() {
   }
   log.info("start build ", siteIdentifiers);
   const runOptions: RunOptions = { siteIdentifiers: siteIdentifiers, config };
+
+  // 0. load current data from s3
+  if (stage.includes("load_current")) {
+    await loadCurrentData(runOptions);
+  } else {
+    log.info("skip load current data from remote stage");
+  }
 
   // 1. fetch sources
   if (stage.includes("fetch")) {
@@ -109,9 +123,18 @@ export default async function main() {
     log.info("skip serve_site stage");
   }
 
-  // 9. deploy to r2
-  if (stage.includes("deploy")) {
-    await deployToR2(runOptions);
+  // 9. upload current data to s3
+  if (stage.includes("upload_current")) {
+    await uploadCurrent(runOptions);
+  } else {
+    log.info("skip upload_current stage");
+  }
+
+  // 10. upload archive data to s3
+  if (stage.includes("upload_archive")) {
+    await uploadArchive(runOptions);
+  } else {
+    log.info("skip upload_archive stage");
   }
 }
 

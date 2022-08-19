@@ -7,7 +7,7 @@ translations:
     "more_label": "更多"
     "less_label": "收起"
 sites:
-  hackernews:
+  prodhackernews:
     port: 8000
     tags:
       - hn
@@ -20,7 +20,7 @@ sites:
       - url: https://hn.algolia.com/api/v1/search_by_date?tags=front_page&hitsPerPage=50
         itemsPath: hits
         type: hn
-  hn:
+  prodhn:
     port: 8001
     tags:
       - hn
@@ -33,7 +33,7 @@ sites:
       - url: http://hn.algolia.com/api/v1/search_by_date?tags=(story,poll,show_hn,ask_hn)&numericFilters=points>=200&hitsPerPage=50
         itemsPath: hits
         type: hn
-  askhn:
+  prodaskhn:
     port: 8002
     tags:
       - hn
@@ -46,7 +46,7 @@ sites:
       - url: https://hn.algolia.com/api/v1/search_by_date?tags=(ask_hn)&hitsPerPage=50
         itemsPath: hits
         type: hn
-  showhn:
+  prodshowhn:
     port: 8003
     tags:
       - reddit

@@ -179,21 +179,26 @@ export default class Item {
       this.image = null;
       return null;
     }
-
-    const doc = new DOMParser().parseFromString(
-      resource.text,
-      "text/html",
-    );
-
-    const metadata = getMetadata(doc, url);
-    if (metadata.image) {
-      this.image = metadata.image;
-      log.info(`found image ${this.image} for ${url}`);
-      return metadata.image;
-    } else {
+    try {
+      const doc = new DOMParser().parseFromString(
+        resource.text,
+        "text/html",
+      );
+      const metadata = getMetadata(doc, url);
+      if (metadata.image) {
+        this.image = metadata.image;
+        log.info(`found image ${this.image} for ${url}`);
+        return metadata.image;
+      } else {
+        this.image = null;
+      }
+      return null;
+    } catch (_e) {
+      log.debug(`parse ${url} html failed`);
+      log.debug(_e);
       this.image = null;
+      return null;
     }
-    return null;
   }
   getLinks(): Link[] {
     return [];
