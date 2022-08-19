@@ -107,3 +107,7 @@ deletedata:
 .Phony: deletearchive
 deletearchive:
 	DEV=1 deno run -A --unstable ./scripts/clean-current.ts
+
+.Phony: serveprodarchive
+serveprodarchive:
+	deno run -A --unstable ./dev-archive-site.ts

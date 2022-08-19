@@ -1,13 +1,13 @@
 import { contentType, fs, path } from "../deps.ts";
 import {
-  getArchiveBucketName,
+  getArchivedBucketName,
   getArchivePath,
   getArchiveS3Bucket,
 } from "../util.ts";
 import { RunOptions } from "../interface.ts";
 import log from "../log.ts";
 export default async function uploadCurrentData(_options: RunOptions) {
-  const R2_BUCKET = getArchiveBucketName();
+  const R2_BUCKET = getArchivedBucketName();
   const s3Bucket = await getArchiveS3Bucket(R2_BUCKET);
 
   // walk current folder

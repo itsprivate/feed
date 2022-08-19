@@ -50,7 +50,7 @@ Deno.test("parseItemIdentifier #10", () => {
   assertEquals(parsed, {
     type: "hn",
     targetSite: "example-com.buzzing.cc",
-    targetSitePath: "example-com",
+    targetSiteIdentifier: "example-com",
     id: "32407873",
     year: "2022",
     month: "08",
@@ -65,7 +65,7 @@ Deno.test("parseItemIdentifier #11", () => {
   assertEquals(parsed, {
     type: "hn",
     targetSite: "example-com.buzzing.cc",
-    targetSitePath: "example-com",
+    targetSiteIdentifier: "example-com",
     id: "_32407873_-1223",
     year: "2022",
     month: "08",

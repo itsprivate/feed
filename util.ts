@@ -462,10 +462,7 @@ export const urlToFilePath = (url: string): string => {
 
   return filepath;
 };
-export const getArchiveS3Bucket = async (bucket: string): Promise<S3Bucket> => {
-  await dotenvConfig({
-    export: true,
-  });
+export const getArchiveS3Bucket = (bucket: string): S3Bucket => {
   const s3Bucket = new S3Bucket(
     {
       accessKeyID: Deno.env.get("ARCHIVE_ACCESS_KEY_ID")!,
@@ -494,11 +491,7 @@ export const getCurrentDataS3Bucket = async (
   );
   return s3Bucket;
 };
-export const getCurrentDataS3Client = async () => {
-  await dotenvConfig({
-    export: true,
-  });
-
+export const getCurrentDataS3Client = () => {
   const s3Client = new S3Client({
     region: Deno.env.get("R2_REGION") || "auto",
     endpoint: Deno.env.get("R2_ENDPOINT"),
@@ -510,8 +503,8 @@ export const getCurrentDataS3Client = async () => {
   return s3Client;
 };
 export const loadS3ArchiveFile = async (fileRelativePath: string) => {
-  const R2_BUCKET = getArchiveBucketName();
-  const s3Bucket = await getArchiveS3Bucket(R2_BUCKET);
+  const R2_BUCKET = getArchivedBucketName();
+  const s3Bucket = getArchiveS3Bucket(R2_BUCKET);
   const object = await s3Bucket.headObject(fileRelativePath);
   if (object && object.etag) {
     const getObject = await s3Bucket.getObject(fileRelativePath);
@@ -529,7 +522,14 @@ export function getCurrentBucketName() {
   const R2_BUCKET = isDev() ? "dev-feed" : "feed";
   return R2_BUCKET;
 }
-export function getArchiveBucketName() {
+export function getArchivedBucketName() {
   const R2_BUCKET = isDev() ? "dev-feedarchive" : "feedarchive";
   return R2_BUCKET;
+}
+export function getArchiveSitePrefix(config: Config) {
+  if (isDev()) {
+    return `http://localhost:${config.archive.port}`;
+  } else {
+    return `https://${config.archive.siteIdentifier}.${ROOT_DOMAIN}`;
+  }
 }

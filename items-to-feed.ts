@@ -9,16 +9,14 @@ import {
 } from "./interface.ts";
 import {
   formatHumanTime,
-  getCurrentTagsFilePath,
+  getArchiveSitePrefix,
   getCurrentTranslations,
   getItemTranslations,
   getPageMeta,
   itemsPathToURLPath,
-  readJSONFile,
   siteIdentifierToUrl,
 } from "./util.ts";
-import log from "./log.ts";
-import { ARCHIVE_SITE_PREFIX, TARGET_SITE_LANGUAEGS } from "./constant.ts";
+import { TARGET_SITE_LANGUAEGS } from "./constant.ts";
 import { slug } from "./deps.ts";
 export default function itemsToFeed(
   relativePath: string,
@@ -117,9 +115,9 @@ export default function itemsToFeed(
       for (const tag of item.tags) {
         const isGreaterFirst = index >= 1;
         summary += ` #${tag}`;
-        content_html += `${
-          isGreaterFirst ? "&nbsp;&nbsp;" : ""
-        }<a href="${ARCHIVE_SITE_PREFIX}/${language.prefix}${siteIdentifier}/tags/${
+        content_html += `${isGreaterFirst ? "&nbsp;&nbsp;" : ""}<a href="${
+          getArchiveSitePrefix(config)
+        }/${language.prefix}${siteIdentifier}/tags/${
           // @ts-ignore: npm module
           slug(tag)}">#${tag}</a>`;
         index++;

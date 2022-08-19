@@ -1,11 +1,11 @@
 import {
-  getArchiveBucketName,
+  getArchivedBucketName,
   getArchiveS3Bucket,
   getDataPath,
 } from "../util.ts";
 import log from "../log.ts";
 async function cleanRemoteCurrentData() {
-  const bucket = await getArchiveS3Bucket(getArchiveBucketName());
+  const bucket = getArchiveS3Bucket(getArchivedBucketName());
   console.log("bucket", bucket);
   const currentDataPath = getDataPath();
   const list = await bucket.listObjects({

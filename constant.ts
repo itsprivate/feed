@@ -19,7 +19,4 @@ export const TARGET_SITE_LANGUAEGS: Language[] = [{
   prefix: "zh-Hant/",
 }];
 
-export const ARCHIVE_SITE_PREFIX = isDev()
-  ? "http://localhost:9000"
-  : "https://archive.buzzing.cc";
 export const ROOT_DOMAIN = "buzzing.cc";

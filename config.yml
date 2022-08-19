@@ -8,7 +8,7 @@ translations:
     "less_label": "收起"
 sites:
   prodhackernews:
-    port: 8000
+    port: 9000
     tags:
       - hn
     translations:
@@ -21,7 +21,7 @@ sites:
         itemsPath: hits
         type: hn
   prodhn:
-    port: 8001
+    port: 9001
     tags:
       - hn
     translations:
@@ -34,7 +34,7 @@ sites:
         itemsPath: hits
         type: hn
   prodaskhn:
-    port: 8002
+    port: 9002
     tags:
       - hn
     translations:
@@ -47,7 +47,7 @@ sites:
         itemsPath: hits
         type: hn
   prodshowhn:
-    port: 8003
+    port: 9003
     tags:
       - reddit
     translations:
@@ -60,6 +60,6 @@ sites:
         itemsPath: hits
         type: hn
 archive:
-  port: 9000
+  port: 8000
   siteIdentifier: i
   tags: []

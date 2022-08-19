@@ -1,8 +1,9 @@
 import { jsonfeedToRSS, serve } from "../deps.ts";
 import {
+  getArchivedBucketName,
   getArchivedFilePath,
+  getArchiveS3Bucket,
   getConfigSync,
-  getDataArchivePath,
   isDev,
   readJSONFile,
   writeJSONFile,
@@ -11,10 +12,11 @@ import log from "../log.ts";
 import { TARGET_SITE_LANGUAEGS } from "../constant.ts";
 import feedToHTML from "../feed-to-html.ts";
 import itemsToFeed from "../items-to-feed.ts";
-import { FormatedItem, ItemsJson } from "../interface.ts";
+import { ItemsJson } from "../interface.ts";
 import path from "https://deno.land/std@0.119.0/node/path.ts";
 export default function serveSite() {
   const config = getConfigSync();
+
   const handler = async (request: Request): Promise<Response> => {
     const url = new URL(request.url);
     // get language code
@@ -81,8 +83,9 @@ export default function serveSite() {
       relativeItemsPath = relativeItemsPath + "items.json";
     }
     let itemsJson: ItemsJson | null = null;
+    const filePath = getArchivedFilePath(siteIdentifier, relativeItemsPath);
+
     if (isDev()) {
-      const filePath = getArchivedFilePath(siteIdentifier, relativeItemsPath);
       // get file
       try {
         itemsJson = await readJSONFile(filePath);
@@ -93,6 +96,15 @@ export default function serveSite() {
             status: 404,
           }),
         );
+      }
+    } else {
+      // read from remote
+      const bucket = getArchivedBucketName();
+      const s3Bucket = await getArchiveS3Bucket(bucket);
+      const s3Object = await s3Bucket.getObject(filePath);
+      if (s3Object) {
+        const { body } = s3Object;
+        itemsJson = await new Response(body).json();
       }
     }
     if (itemsJson) {
@@ -144,9 +156,13 @@ export default function serveSite() {
       );
     }
   };
-  const port = Number(Deno.env.get("PORT") || 9000);
+  const port = Number(Deno.env.get("PORT") || 8000);
   log.info(
     `HTTP webserver running. Access it at: http://localhost:${port}/`,
   );
   serve(handler, { port });
+}
+
+if (import.meta.main) {
+  serveSite();
 }

@@ -1,4 +1,4 @@
-import { flags } from "./deps.ts";
+import { dotenvConfig, flags } from "./deps.ts";
 
 import log from "./log.ts";
 import { getConfig, getFeedSiteIdentifiers, isDebug, isDev } from "./util.ts";
@@ -15,6 +15,9 @@ import uploadCurrent from "./workflows/9-upload-current.ts";
 import uploadArchive from "./workflows/10-upload-archive.ts";
 import { RunOptions } from "./interface.ts";
 export default async function main() {
+  await dotenvConfig({
+    export: true,
+  });
   let stage = [
     "fetch",
     "format",
