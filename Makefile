@@ -119,3 +119,7 @@ check-fmt:
 .Phony: fmt
 fmt:
 	deno fmt
+
+.Phony: uploadprod
+uploadprod:
+	deno run -A --unstable main.ts --stage "upload_current,upload_archive"

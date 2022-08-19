@@ -1,6 +1,5 @@
 import {
   DateTimeFormatter,
-  dotenvConfig,
   fs,
   // OpenCC,
   path,
@@ -87,24 +86,29 @@ export const getDataCurrentItemsPath = () => {
 export const getDataArchivePath = () => {
   return `${getArchivePath()}`;
 };
-export const getCurrentItemsFilePath = (targetSite: string) => {
+export const getCurrentItemsFilePath = (siteIdentifier: string) => {
   return `${getDataCurrentItemsPath()}/${
-    siteIdentifierToPath(targetSite)
+    siteIdentifierToPath(siteIdentifier)
   }/items.json`;
 };
-export const getCurrentTagsFilePath = (targetSite: string) => {
+export const getCurrentTagsFilePath = (siteIdentifier: string) => {
   return `${getDataCurrentItemsPath()}/${
-    siteIdentifierToPath(targetSite)
+    siteIdentifierToPath(siteIdentifier)
   }/tags.json`;
 };
-export const getCurrentArchiveFilePath = (targetSite: string) => {
+export const getCurrentKeysFilePath = (siteIdentifier: string) => {
   return `${getDataCurrentItemsPath()}/${
-    siteIdentifierToPath(targetSite)
+    siteIdentifierToPath(siteIdentifier)
+  }/keys.json`;
+};
+export const getCurrentArchiveFilePath = (siteIdentifier: string) => {
+  return `${getDataCurrentItemsPath()}/${
+    siteIdentifierToPath(siteIdentifier)
   }/archive.json`;
 };
-export const getCurrentToBeArchivedItemsFilePath = (targetSite: string) => {
+export const getCurrentToBeArchivedItemsFilePath = (siteIdentifier: string) => {
   return `${getDataCurrentItemsPath()}/${
-    siteIdentifierToPath(targetSite)
+    siteIdentifierToPath(siteIdentifier)
   }/to-be-archived-items.json`;
 };
 

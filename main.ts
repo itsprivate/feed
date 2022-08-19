@@ -30,8 +30,8 @@ export default async function main() {
     stage.push("serve_site");
   } else {
     stage.unshift("load_current");
-    stage.push("upload_current");
-    stage.push("upload_archive");
+    // stage.push("upload_current");
+    // stage.push("upload_archive");
   }
   if (isDebug()) {
     log.setLevel("debug");
