@@ -12,7 +12,7 @@ import * as path from "https://deno.land/std@0.151.0/path/mod.ts";
 // readJSONFile,
 // writeJSONFile,
 // } from "../util.ts";
-// import log from "../log.ts";
+import log from "../log.ts";
 import { TARGET_SITE_LANGUAEGS } from "../constant.ts";
 // import feedToHTML from "../feed-to-html.ts";
 // import itemsToFeed from "../items-to-feed.ts";
