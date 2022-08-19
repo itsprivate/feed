@@ -1,4 +1,4 @@
-import { datetime } from "../deps.ts";
+import { datetime, fs } from "../deps.ts";
 import {
   getArchivedFilePath,
   getCurrentArchiveFilePath,
@@ -15,6 +15,8 @@ export default async function archive(options: RunOptions) {
   const now = new Date();
 
   let siteIdentifiers: string[] = [];
+  // ensure folder exists
+  await fs.ensureDir(getDataCurrentItemsPath());
 
   for await (const dirEntry of Deno.readDir(getDataCurrentItemsPath())) {
     if (dirEntry.isDirectory && !dirEntry.name.startsWith(".")) {

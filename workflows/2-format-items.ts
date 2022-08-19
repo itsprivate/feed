@@ -68,7 +68,7 @@ export default async function formatItems(
           >;
           const item = new (adapters[parsedFilename.type])(
             originalItem,
-            parsedFilename.targetSite,
+            parsedFilename.targetSiteIdentifier,
           );
 
           const itemJson = await item.getFormatedItem();

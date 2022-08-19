@@ -22,7 +22,8 @@ export default async function buildCurrent(
   // get all 3-translated files
   // is exists translated files folder
   let siteIdentifiers: string[] = [];
-
+  // ensure folder exists
+  await fs.ensureDir(getDataTranslatedPath());
   for await (const dirEntry of Deno.readDir(getDataTranslatedPath())) {
     if (dirEntry.isDirectory && !dirEntry.name.startsWith(".")) {
       siteIdentifiers.push(pathToSiteIdentifier(dirEntry.name));

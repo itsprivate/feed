@@ -15,7 +15,7 @@ import { DOMParser, getMetadata } from "./deps.ts";
 import log from "./log.ts";
 export default class Item {
   originalItem: Record<string, unknown>;
-  private targetSite: string;
+  private siteIdentifier: string;
   private image: string | null | undefined;
   static parseItemIdentifier(fileBasename: string): ParsedFilename {
     // remove extension
@@ -32,8 +32,8 @@ export default class Item {
     const day = symParts[2];
     const language = symParts[3];
     const type = symParts[4];
-    const targetSitePath = symParts[5];
-    const targetSite = siteIdentifierToDomain(targetSitePath);
+    const targetSiteIdentifier = symParts[5];
+    const targetSite = siteIdentifierToDomain(targetSiteIdentifier);
     const idParts = parts.slice(1);
     const id = idParts.join("__");
     return {
@@ -44,26 +44,26 @@ export default class Item {
       language,
       type,
       targetSite,
-      targetSitePath,
+      targetSiteIdentifier,
     };
   }
   static getTranslatedPath(filename: string): string {
     const parsed = Item.parseItemIdentifier(filename);
     const now = new Date();
-    return `${getDataTranslatedPath()}/${parsed.targetSitePath}/${
+    return `${getDataTranslatedPath()}/${parsed.targetSiteIdentifier}/${
       getFullYear(now)
     }/${getFullMonth(now)}/${getFullDay(now)}/${filename}`;
   }
 
-  constructor(originalItem: Record<string, unknown>, targetSite: string) {
+  constructor(originalItem: Record<string, unknown>, siteIdentifier: string) {
     this.originalItem = originalItem;
-    this.targetSite = targetSite;
+    this.siteIdentifier = siteIdentifier;
   }
   getTargetSite(): string {
-    return this.targetSite;
+    return siteIdentifierToDomain(this.siteIdentifier);
   }
   getTargetSitePath(): string {
-    return siteIdentifierToPath(this.targetSite);
+    return siteIdentifierToPath(this.siteIdentifier);
   }
   getType(): string {
     return this.constructor.name;

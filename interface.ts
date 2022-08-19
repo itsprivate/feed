@@ -35,7 +35,7 @@ export interface ParsedFilename {
   language: string;
   type: string;
   targetSite: string;
-  targetSitePath: string;
+  targetSiteIdentifier: string;
 }
 export interface FormatedItem {
   id: string;

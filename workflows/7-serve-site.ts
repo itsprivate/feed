@@ -15,7 +15,7 @@ export default function serveSite(siteIdentifier: string, port: number) {
         finalPath = localPath;
       }
     } catch (e) {
-      log.error(e);
+      log.warn(e);
     }
     if (finalPath) {
       return serveFile(request, localPath);
