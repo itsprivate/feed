@@ -14,6 +14,8 @@ export default class Translation {
   private currentTranslated = 0;
   private isMock = isMock();
   private countPerPage = TRANSLATED_ITEMS_PER_PAGE;
+  private currentSourceLanguage = "";
+  private currentTargetLanguage = "";
   constructor(options: TranslationOptions = {}) {
     if (options.isMock !== undefined) {
       this.isMock = options.isMock;
@@ -28,6 +30,8 @@ export default class Translation {
       log.info("mock mode: init puppeteer page success");
       return;
     }
+    this.currentSourceLanguage = "";
+    this.currentTargetLanguage = "";
     // init puppeteer
     const isHeadless = !(Deno.env.get("HEADLESS") === "0");
     if (!this.browser) {
@@ -95,14 +99,11 @@ export default class Translation {
     const translatedObj: Record<string, string> = {};
     for (const targetLanguage of TARGET_SITE_LANGUAEGS) {
       if (targetLanguage.code !== "zh-Hant") {
-        let translated = await d(
+        let translated = await this.doTranslate(
           this.page!,
           sentence,
           sourceLanguage,
           targetLanguage.code,
-          {
-            mock: this.page === null,
-          },
         );
         // remove end newline
         translated = translated.replace(/\n$/, "");
@@ -114,6 +115,124 @@ export default class Translation {
 
     return translatedObj;
   }
+  async doTranslate(
+    page: Page,
+    sentence: string,
+    sourceLanguage = "auto",
+    targetLanguage: string,
+  ): Promise<string> {
+    if (this.isMock) {
+      return sentence;
+    }
+    if (targetLanguage.startsWith("zh")) {
+      targetLanguage = "zh";
+    }
+    // max 5000
+    if (sentence.length > 4500) {
+      sentence = sentence.substring(0, 4500);
+    }
+    if (!/^(auto|[a-z]{2})$/.test(sourceLanguage)) {
+      throw new Error("INVALID_SOURCE_LANGUAGE");
+    }
+    if (!/^[a-z]{2}$/.test(targetLanguage)) {
+      throw new Error("INVALID_TARGET_LANGUAGE");
+    }
+
+    const sourceLangSelect = "button[dl-test=translator-source-lang-btn]",
+      targetLangSelect = "button[dl-test=translator-target-lang-btn]",
+      sourceLangMenu = "div[dl-test=translator-source-lang-list]",
+      targetLangMenu = "div[dl-test=translator-target-lang-list]",
+      sourceLangButton =
+        `button[dl-test=translator-lang-option-${sourceLanguage}]`,
+      targetLangButton =
+        `button[dl-test=translator-lang-option-${targetLanguage}]`,
+      originalSentenceField = "textarea[dl-test=translator-source-input]",
+      targetSentenceField = "textarea[dl-test=translator-target-input]"; /*,
+       targetSentencesContainer = '.lmt__translations_as_text'*/
+
+    if (this.currentSourceLanguage !== sourceLanguage) {
+      // click  black
+      // await page.screenshot({ path: "data/1.png" });
+      // console.log("click");
+      await page.waitForSelector(sourceLangSelect, { visible: true });
+
+      await page.click(sourceLangSelect);
+      await page.waitForTimeout(500);
+
+      await page.waitForSelector(sourceLangMenu, { visible: true });
+      await page.waitForTimeout(500);
+
+      try {
+        await page.click(sourceLangButton);
+      } catch (_) {
+        throw new Error("UNSUPPORTED_SOURCE_LANGUAGE");
+      }
+      // await page.screenshot({ path: "screens/3.png" });
+
+      await page.waitForSelector(sourceLangMenu, { hidden: true });
+      this.currentSourceLanguage = sourceLanguage;
+    }
+    if (this.currentTargetLanguage !== targetLanguage) {
+      await page.click(targetLangSelect);
+      await page.waitForTimeout(1000);
+
+      await page.waitForSelector(targetLangMenu, { visible: true });
+
+      await page.waitForTimeout(1000);
+      try {
+        await page.click(targetLangButton);
+      } catch (_) {
+        throw new Error("UNSUPPORTED_TARGET_LANGUAGE");
+      }
+      this.currentTargetLanguage = targetLanguage;
+    }
+    // console.log("wait original");
+
+    await page.waitForSelector(originalSentenceField);
+    // console.log("start type", sentence);
+    await page.$eval(
+      originalSentenceField,
+      (el, sentence) => (el.value = sentence),
+      sentence,
+    );
+    await page.waitForTimeout(1500);
+
+    // await page.keyboard.press("Enter");
+
+    const textInputElement = await page.$(originalSentenceField);
+    if (!textInputElement) {
+      throw new Error("CANNOT_FIND_ORIGINAL_SENTENCE_FIELD");
+    }
+    await textInputElement.press("Enter"); // Enter Key
+
+    try {
+      await page.waitForXPath(
+        '//textarea[@dl-test="translator-target-input"]/parent::*/child::*[position()=2]',
+      );
+    } catch (e) {
+      log.warn("can not detect .lmt--active_translation_request");
+      log.warn(e);
+    }
+    await page.waitForXPath(
+      '//textarea[@dl-test="translator-target-input"]/parent::*/child::*[position()=2]',
+      {
+        hidden: true,
+        timeout: 90000,
+      },
+    );
+
+    const result = await page.$eval(targetSentenceField, (el) => el.value);
+
+    const elements = await page.$x(
+      "//span[text()='Delete source text']/parent::button",
+    );
+    await elements[0].click();
+
+    await page.waitForTimeout(1500);
+
+    return result as unknown as string;
+  }
+
   async close() {
     if (this.page) {
       await this.page.close();

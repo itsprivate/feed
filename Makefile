@@ -64,6 +64,11 @@ format:
 tr:
 	DEV=1 deno run -A main.ts --stage translate --site prodhackernews
 
+.Phony: trtest
+trtest:
+	HEADLESS=0 MOCK=0 DEV=1 deno run -A main.ts --stage translate --site prodhackernews
+
+
 .Phony: trall
 trall:
 	DEV=1 deno run -A main.ts --stage translate
@@ -126,4 +131,4 @@ uploadprod:
 
 .Phony: test-file
 test-file:
-	mkdir -p current/4-data/prodhackernews/ && touch current/4-data/prodhackernews/test.json && mkdir -p archive/prodhackernews/tags/job/ && touch archive/prodhackernews/tags/job/test.json
+	mkdir -p current/4-data/prodhackernews/ && touch current/4-data/prodhackernews/test.json && mkdir -p archive/prodhackernews/tags/job/ && touch archive/prodhackernews/tags/job/test.json && mkdir -p public/prodhackernews && touch public/prodhackernews/index.html 

@@ -15,33 +15,33 @@ jobs:
       # - if: github.event_name!='workflow_dispatch'
       #   name: sleep for pr
       #   run: sleep 60
-      - run: |
-          sudo apt-get update \
-          && sudo apt-get install -y wget gnupg \
-          && wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add - \
-          && sudo sh -c 'sudo echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list' \
-          && sudo apt-get update \
-          && sudo apt-get install -y google-chrome-stable fonts-ipafont-gothic fonts-wqy-zenhei fonts-thai-tlwg fonts-kacst fonts-freefont-ttf libxss1 \
-            --no-install-recommends \
+      # - run: |
+      #     sudo apt-get update \
+      #     && sudo apt-get install -y wget gnupg \
+      #     && wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add - \
+      #     && sudo sh -c 'sudo echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list' \
+      #     && sudo apt-get update \
+      #     && sudo apt-get install -y google-chrome-stable fonts-ipafont-gothic fonts-wqy-zenhei fonts-thai-tlwg fonts-kacst fonts-freefont-ttf libxss1 \
+      #       --no-install-recommends \
       - name: Check out repository code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - uses: denoland/setup-deno@v1
         with:
           deno-version: v1.x
       # - run: make install
       - run: make test-file
-      - run: make buildprod
-        if: false
-        env:
-          R2_ACCESS_KEY_ID: ${{secrets.R2_ACCESS_KEY_ID}}
-          R2_SECRET_ACCESS_KEY: ${{secrets.R2_SECRET_ACCESS_KEY}}
-          R2_REGION: ${{secrets.R2_REGION}}
-          R2_ENDPOINT: ${{secrets.R2_ENDPOINT}}
-          ARCHIVE_ACCESS_KEY_ID: ${{secrets.ARCHIVE_ACCESS_KEY_ID}}
-          ARCHIVE_SECRET_ACCESS_KEY: ${{secrets.ARCHIVE_SECRET_ACCESS_KEY}}
-          ARCHIVE_ENDPOINT: ${{secrets.ARCHIVE_ENDPOINT}}
-          ARCHIVE_REGION: ${{secrets.ARCHIVE_REGION}}
-        continue-on-error: true
+      # - run: make buildprod
+      #   if: false
+      #   env:
+      #     R2_ACCESS_KEY_ID: ${{secrets.R2_ACCESS_KEY_ID}}
+      #     R2_SECRET_ACCESS_KEY: ${{secrets.R2_SECRET_ACCESS_KEY}}
+      #     R2_REGION: ${{secrets.R2_REGION}}
+      #     R2_ENDPOINT: ${{secrets.R2_ENDPOINT}}
+      #     ARCHIVE_ACCESS_KEY_ID: ${{secrets.ARCHIVE_ACCESS_KEY_ID}}
+      #     ARCHIVE_SECRET_ACCESS_KEY: ${{secrets.ARCHIVE_SECRET_ACCESS_KEY}}
+      #     ARCHIVE_ENDPOINT: ${{secrets.ARCHIVE_ENDPOINT}}
+      #     ARCHIVE_REGION: ${{secrets.ARCHIVE_REGION}}
+      #   continue-on-error: true
 
       - run: git status
 
@@ -56,5 +56,8 @@ jobs:
           ARCHIVE_SECRET_ACCESS_KEY: ${{secrets.ARCHIVE_SECRET_ACCESS_KEY}}
           ARCHIVE_ENDPOINT: ${{secrets.ARCHIVE_ENDPOINT}}
           ARCHIVE_REGION: ${{secrets.ARCHIVE_REGION}}
-      - name: build site
-        run: make publish
+      - name: Publish wrangler
+        uses: cloudflare/wrangler-action@2.0.0
+        with:
+          apiToken: ${{ secrets.CF_API_TOKEN }}
+          command: publish --env prod
