@@ -25,6 +25,14 @@ jobs:
       #       --no-install-recommends \
       - name: Check out repository code
         uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - name: Get npm cache directory
+        id: npm-cache-dir
+        run: |
+          echo "::set-output name=dir::$(npm config get cache)"
       - uses: denoland/setup-deno@v1
         with:
           deno-version: v1.x
@@ -34,13 +42,6 @@ jobs:
             ~/.deno
             ~/.cache/deno
           key: ${{ runner.os }}-deno-${{ hashFiles('**/deps.ts') }}
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 16
-      - name: Get npm cache directory
-        id: npm-cache-dir
-        run: |
-          echo "::set-output name=dir::$(npm config get cache)"
       - uses: actions/cache@v2
         id: npm-cache
         with:
