@@ -11,9 +11,9 @@ import {
 } from "./deps.ts";
 import { ROOT_DOMAIN, TARGET_SITE_LANGUAEGS } from "./constant.ts";
 import { Config, Language, PageMeta } from "./interface.ts";
-// @ts-ignore: npm module
-const zhHansToZhHant = OpenCC.Converter({ from: "cn", to: "tw" });
 export const toZhHant = (text: string): string => {
+  // @ts-ignore: npm module
+  const zhHansToZhHant = OpenCC.Converter({ from: "cn", to: "tw" });
   return zhHansToZhHant(text);
 };
 export const get = (obj: unknown, path: string, defaultValue = undefined) => {
