@@ -1,24 +1,24 @@
-// import { jsonfeedToRSS, path, serve } from "../deps.ts";
+import { jsonfeedToRSS, path, serve } from "../deps.ts";
 // import { path, serve } from "../deps.ts";
-import { serve } from "https://deno.land/std@0.152.0/http/server.ts";
-import * as path from "https://deno.land/std@0.151.0/path/mod.ts";
+// import { serve } from "https://deno.land/std@0.152.0/http/server.ts";
+// import * as path from "https://deno.land/std@0.151.0/path/mod.ts";
 
-// import {
-// getArchivedBucketName,
-// getArchivedFilePath,
-// getArchiveS3Bucket,
-// getConfigSync,
-// isDev,
-// readJSONFile,
-// writeJSONFile,
-// } from "../util.ts";
+import {
+  getArchivedBucketName,
+  getArchivedFilePath,
+  getArchiveS3Bucket,
+  getConfigSync,
+  isDev,
+  readJSONFile,
+  writeJSONFile,
+} from "../util.ts";
 import log from "../log.ts";
 import { TARGET_SITE_LANGUAEGS } from "../constant.ts";
-// import feedToHTML from "../feed-to-html.ts";
-// import itemsToFeed from "../items-to-feed.ts";
+import feedToHTML from "../feed-to-html.ts";
+import itemsToFeed from "../items-to-feed.ts";
 import { ItemsJson } from "../interface.ts";
 export default function serveSite() {
-  // const config = getConfigSync();
+  const config = getConfigSync();
 
   const handler = async (request: Request): Promise<Response> => {
     const url = new URL(request.url);
