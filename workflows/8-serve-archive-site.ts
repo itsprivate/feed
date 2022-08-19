@@ -2,13 +2,13 @@
 import { path, serve } from "../deps.ts";
 
 import {
-  getArchivedBucketName,
+  // getArchivedBucketName,
   getArchivedFilePath,
-  getArchiveS3Bucket,
-  getConfigSync,
-  isDev,
-  readJSONFile,
-  writeJSONFile,
+  // getArchiveS3Bucket,
+  // getConfigSync,
+  // isDev,
+  // readJSONFile,
+  // writeJSONFile,
 } from "../util.ts";
 import log from "../log.ts";
 import { TARGET_SITE_LANGUAEGS } from "../constant.ts";
@@ -16,7 +16,7 @@ import { TARGET_SITE_LANGUAEGS } from "../constant.ts";
 // import itemsToFeed from "../items-to-feed.ts";
 import { ItemsJson } from "../interface.ts";
 export default function serveSite() {
-  const config = getConfigSync();
+  // const config = getConfigSync();
 
   const handler = async (request: Request): Promise<Response> => {
     const url = new URL(request.url);
