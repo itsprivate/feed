@@ -92,6 +92,6 @@ jobs:
           CLOUDFLARE_API_TOKEN: ${{secrets.CF_API_TOKEN}}
 
       - name: Publish wrangler
-        run: make publishprod
+        run: make prod-publish
         env:
           CLOUDFLARE_API_TOKEN: ${{secrets.CF_API_TOKEN}}
