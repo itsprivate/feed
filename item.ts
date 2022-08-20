@@ -137,6 +137,9 @@ export default class Item {
     const disableImages = [
       "www.githubstatus.com",
       "news.ycombinator.com",
+      "github.com",
+      "gist.github.com",
+      "pypi.org",
     ];
     // ignore specific domain
     if (disableImages.includes(domain)) {
