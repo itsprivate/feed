@@ -52,12 +52,12 @@
         "zh-Hans": {
           "title": "Hacker News 热门",
           "short_title": "HN热门",
-          "description": "Hacker News上超过200 points"
+          "description": "Hacker News上超过200 points的帖子"
         },
         "zh-Hant": {
           "title": "Hacker News 熱門",
           "short_title": "HN熱門",
-          "description": "Hacker News上超過200 points"
+          "description": "Hacker News上超過200 points的帖子"
         }
       },
       "sources": [

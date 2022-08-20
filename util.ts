@@ -124,7 +124,7 @@ export const writeJSONFile = async (filePath: string, data: unknown) => {
   // ensure dir exists
   const dir = path.dirname(filePath);
   await fs.ensureDir(dir);
-  await Deno.writeTextFile(filePath, file);
+  await Deno.writeTextFile(filePath, file + "\n");
 };
 export const getFullYear = (date: Date): string => {
   return date.getUTCFullYear().toString();
