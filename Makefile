@@ -73,8 +73,8 @@ trtest:
 trall:
 	DEV=1 deno run -A main.ts --stage translate
 
-.Phony: current
-current:
+.Phony: build-current
+build-current:
 	DEV=1 deno run -A main.ts --stage build_current --site prodhackernews
 
 .Phony: site

@@ -63,7 +63,6 @@ export interface Task {
 export interface FormatedItem {
   id: string;
   image?: string;
-  title: string;
   url: string;
   date_published: string;
   date_modified: string;

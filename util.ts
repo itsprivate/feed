@@ -321,8 +321,9 @@ export const arrayToObj = <T>(
 export const getItemTranslations = function (
   translations: Record<string, Record<string, string>>,
   languageCode: string,
+  originalLanguageCode: string,
 ): Record<string, string> {
-  return translations[languageCode] || {};
+  return translations[languageCode] || translations[originalLanguageCode] || {};
 };
 
 // item.json -> /

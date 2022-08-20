@@ -16,6 +16,7 @@
   "test": {
     "files": {
       "exclude": [
+        "s3",
         "node_modules/",
         "public/",
         "example",

@@ -75,10 +75,12 @@ export default function itemsToFeed(
     const translationObj = getItemTranslations(
       item._translations,
       language.code,
+      item._original_language,
     );
 
     const originalTranslationObj = getItemTranslations(
       item._translations,
+      item._original_language,
       item._original_language,
     );
 
