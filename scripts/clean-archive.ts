@@ -1,7 +1,7 @@
 import {
   getArchivedBucketName,
+  getArchivePath,
   getArchiveS3Bucket,
-  getDataPath,
 } from "../util.ts";
 import log from "../log.ts";
 import { dotenvConfig } from "../deps.ts";
@@ -10,7 +10,7 @@ async function cleanRemoteCurrentData() {
     export: true,
   });
   const bucket = getArchiveS3Bucket(getArchivedBucketName());
-  const currentDataPath = getDataPath();
+  const currentDataPath = getArchivePath();
   const list = await bucket.listObjects({
     prefix: currentDataPath + "/",
   });
