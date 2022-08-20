@@ -1,0 +1,127 @@
+{
+  "translations": {
+    "zh-Hans": {
+      "about_label": "关于此页面",
+      "subscription_label": "订阅地址",
+      "powered_by_label": "背后的人❤️",
+      "languages_label": "该页面其他语言",
+      "more_label": "更多",
+      "less_label": "收起"
+    },
+    "zh-Hant": {
+      "about_label": "關於此頁面",
+      "subscription_label": "訂閱地址",
+      "powered_by_label": "背後的人❤️",
+      "languages_label": "該頁面其他語言",
+      "more_label": "更多",
+      "less_label": "收起"
+    }
+  },
+  "sites": {
+    "prodhackernews": {
+      "port": 9000,
+      "tags": [
+        "hn"
+      ],
+      "translations": {
+        "zh-Hans": {
+          "title": "Hacker News 首页",
+          "short_title": "HN首页",
+          "description": "Hacker News 首页文章"
+        },
+        "zh-Hant": {
+          "title": "Hacker News 首頁",
+          "short_title": "HN首頁",
+          "description": "Hacker News 首頁文章"
+        }
+      },
+      "sources": [
+        {
+          "url": "https://hn.algolia.com/api/v1/search_by_date?tags=front_page&hitsPerPage=50",
+          "itemsPath": "hits",
+          "type": "hn"
+        }
+      ]
+    },
+    "prodhn": {
+      "port": 9001,
+      "tags": [
+        "hn"
+      ],
+      "translations": {
+        "zh-Hans": {
+          "title": "Hacker News 热门",
+          "short_title": "HN热门",
+          "description": "Hacker News上超过200 points"
+        },
+        "zh-Hant": {
+          "title": "Hacker News 熱門",
+          "short_title": "HN熱門",
+          "description": "Hacker News上超過200 points"
+        }
+      },
+      "sources": [
+        {
+          "url": "http://hn.algolia.com/api/v1/search_by_date?tags=(story,poll,show_hn,ask_hn)&numericFilters=points>=200&hitsPerPage=50",
+          "itemsPath": "hits",
+          "type": "hn"
+        }
+      ]
+    },
+    "prodaskhn": {
+      "port": 9002,
+      "tags": [
+        "hn"
+      ],
+      "translations": {
+        "zh-Hans": {
+          "title": "Hacker News 问答",
+          "short_title": "HN问答",
+          "description": "Hacker News上的问答"
+        },
+        "zh-Hant": {
+          "title": "Hacker News 問答",
+          "short_title": "HN問答",
+          "description": "Hacker News上的問答"
+        }
+      },
+      "sources": [
+        {
+          "url": "https://hn.algolia.com/api/v1/search_by_date?tags=(ask_hn)&hitsPerPage=50",
+          "itemsPath": "hits",
+          "type": "hn"
+        }
+      ]
+    },
+    "prodshowhn": {
+      "port": 9003,
+      "tags": [
+        "reddit"
+      ],
+      "translations": {
+        "zh-Hans": {
+          "title": "Show HN",
+          "short_title": "Show HN",
+          "description": "Hacker News上的项目展示"
+        },
+        "zh-Hant": {
+          "title": "Show HN",
+          "short_title": "Show HN",
+          "description": "Hacker News上的項目展示"
+        }
+      },
+      "sources": [
+        {
+          "url": "https://hn.algolia.com/api/v1/search_by_date?tags=(show_hn)&hitsPerPage=50",
+          "itemsPath": "hits",
+          "type": "hn"
+        }
+      ]
+    }
+  },
+  "archive": {
+    "port": 8000,
+    "siteIdentifier": "i",
+    "tags": []
+  }
+}

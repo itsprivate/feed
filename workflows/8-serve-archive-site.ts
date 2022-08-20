@@ -1,24 +1,19 @@
 import { jsonfeedToRSS, path, serve } from "../deps.ts";
-// import { path, serve } from "../deps.ts";
-// import { serve } from "https://deno.land/std@0.152.0/http/server.ts";
-// import * as path from "https://deno.land/std@0.151.0/path/mod.ts";
 
 import {
   getArchivedBucketName,
   getArchivedFilePath,
   getArchiveS3Bucket,
-  getConfig,
   isDev,
   readJSONFile,
-  writeJSONFile,
 } from "../util.ts";
 import log from "../log.ts";
 import { TARGET_SITE_LANGUAEGS } from "../constant.ts";
 import feedToHTML from "../feed-to-html.ts";
 import itemsToFeed from "../items-to-feed.ts";
 import { ItemsJson } from "../interface.ts";
+import config from "../config.gen.json" assert { type: "json" };
 export default async function serveSite() {
-  const config = await getConfig();
   // build index.html
   const indexTemplateString = await Deno.readTextFile(
     "./templates/index.html",

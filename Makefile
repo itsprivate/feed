@@ -136,3 +136,7 @@ uploadprod:
 .Phony: test-file
 test-file:
 	mkdir -p current/4-data/prodhackernews/ && touch current/4-data/prodhackernews/test.json && mkdir -p archive/prodhackernews/tags/job/ && touch archive/prodhackernews/tags/job/test.json && mkdir -p public/prodhackernews && touch public/prodhackernews/index.html 
+
+.Phony: config
+config:
+	deno run -A ./build-config.ts

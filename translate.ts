@@ -1,5 +1,4 @@
 import { Browser, Page, puppeteer } from "./bad-deps.ts";
-import d from "./d.ts";
 import { isMock } from "./util.ts";
 import log from "./log.ts";
 import { TranslationOptions } from "./interface.ts";
@@ -7,6 +6,7 @@ import {
   TARGET_SITE_LANGUAEGS,
   TRANSLATED_ITEMS_PER_PAGE,
 } from "./constant.ts";
+import { toZhHant } from "./to-zh-hant.ts";
 const homepage = "https://www.deepl.com/en/translator-mobile";
 export default class Translation {
   browser: Browser | null = null;
@@ -79,9 +79,7 @@ export default class Translation {
     if (this.isMock) {
       const translatedObj: Record<string, string> = {};
       for (const targetLanguage of TARGET_SITE_LANGUAEGS) {
-        if (targetLanguage.code !== "zh-Hant") {
-          translatedObj[targetLanguage.code] = sentence;
-        }
+        translatedObj[targetLanguage.code] = sentence;
       }
       return translatedObj;
     }
@@ -110,6 +108,9 @@ export default class Translation {
         translatedObj[targetLanguage.code] = translated;
         log.info(`translate ${sentence} to ${translated} success`);
         this.currentTranslated++;
+      } else {
+        const translated = toZhHant(sentence);
+        translatedObj[targetLanguage.code] = translated;
       }
     }
 

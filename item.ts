@@ -240,6 +240,7 @@ export default class Item {
     const item: FormatedItem = {
       id: this.getItemIdentifier(),
       url: this.getUrl(),
+      title: this.getTitle(),
       date_published: this.getModified(),
       date_modified: this.getModified(),
       tags: this.getTags(),

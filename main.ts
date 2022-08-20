@@ -2,8 +2,8 @@ import { dotenvConfig, flags } from "./deps.ts";
 
 import log from "./log.ts";
 import {
-  getConfig,
   getFeedSiteIdentifiers,
+  getGenConfig,
   isDebug,
   isDev,
   writeTextFile,
@@ -20,10 +20,13 @@ import serveArchiveSite from "./workflows/8-serve-archive-site.ts";
 import uploadCurrent from "./workflows/9-upload-current.ts";
 import uploadArchive from "./workflows/10-upload-archive.ts";
 import { RunOptions, Task } from "./interface.ts";
+import buildConfig from "./build-config.ts";
 export default async function main() {
   await dotenvConfig({
     export: true,
   });
+  await buildConfig();
+
   let stage = [
     "fetch",
     "format",
@@ -55,7 +58,7 @@ export default async function main() {
   if (args.site) {
     sites = args.site.split(",");
   }
-  const config = await getConfig();
+  const config = await getGenConfig();
   const sitesMap = config.sites;
   let siteIdentifiers = getFeedSiteIdentifiers(config);
   if (sites && Array.isArray(sites)) {

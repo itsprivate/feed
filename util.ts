@@ -9,14 +9,7 @@ import {
 } from "./deps.ts";
 import { ROOT_DOMAIN, TARGET_SITE_LANGUAEGS } from "./constant.ts";
 import { Config, Language, PageMeta } from "./interface.ts";
-import { default as OpenCC } from "https://jspm.dev/opencc-js@1.0.4";
 
-export const toZhHant = (text: string): string => {
-  // return text;
-  // @ts-ignore: npm module
-  const zhHansToZhHant = OpenCC.Converter({ from: "cn", to: "tw" });
-  return zhHansToZhHant(text);
-};
 export const get = (obj: unknown, path: string, defaultValue = undefined) => {
   const travel = (regexp: RegExp) =>
     String.prototype.split
@@ -152,7 +145,10 @@ export const getConfig = async function (): Promise<Config> {
   ) as Config;
   return config;
 };
-
+export const getGenConfig = async function (): Promise<Config> {
+  const config = await readJSONFile("./config.gen.json") as Config;
+  return config;
+};
 const formatBeijing = (date: Date, formatString: string) => {
   date = new Date(date.getTime() + 8 * 60 * 60 * 1000);
   const formatter = new DateTimeFormatter(formatString);
@@ -326,72 +322,9 @@ export const getItemTranslations = function (
   translations: Record<string, Record<string, string>>,
   languageCode: string,
 ): Record<string, string> {
-  if (languageCode === "zh-Hant") {
-    const currentTranslations = { ...translations["zh-Hans"] };
-    for (const key in currentTranslations) {
-      currentTranslations[key] = toZhHant(currentTranslations[key]);
-    }
-    return currentTranslations;
-  } else {
-    return translations[languageCode];
-  }
-};
-export const getGeneralTranslations = function (
-  languageCode: string,
-  config: Config,
-) {
-  let currentTranslations: Record<string, string> = {};
-  const translations = config.translations;
-  if (languageCode === "zh-Hant") {
-    const generalTranslations = translations["zh-Hans"] ?? {};
-    currentTranslations = {
-      ...generalTranslations,
-    };
-    // translate to traditional chinese
-    for (const key in currentTranslations) {
-      currentTranslations[key] = toZhHant(currentTranslations[key]);
-    }
-  } else {
-    // merge site translations
-    const generalTranslations = translations[languageCode] ?? {};
-
-    currentTranslations = {
-      ...generalTranslations,
-    };
-  }
-  return currentTranslations;
+  return translations[languageCode] || {};
 };
 
-export const getCurrentTranslations = function (
-  siteIdentifier: string,
-  languageCode: string,
-  config: Config,
-): Record<string, string> {
-  let currentTranslations: Record<string, string> = {};
-  const translations = config.translations;
-  const sitesMap = config.sites;
-  const siteConfig = sitesMap[siteIdentifier];
-  if (languageCode === "zh-Hant") {
-    const generalTranslations = translations["zh-Hans"] ?? {};
-    currentTranslations = {
-      ...generalTranslations,
-      ...siteConfig.translations["zh-Hans"],
-    };
-    // translate to traditional chinese
-    for (const key in currentTranslations) {
-      currentTranslations[key] = toZhHant(currentTranslations[key]);
-    }
-  } else {
-    // merge site translations
-    const generalTranslations = translations[languageCode] ?? {};
-
-    currentTranslations = {
-      ...generalTranslations,
-      ...siteConfig.translations[languageCode],
-    };
-  }
-  return currentTranslations;
-};
 // item.json -> /
 // tags/show-hn/item.json -> /tags/show-hn/
 export const itemsPathToURLPath = function (itemsPath: string) {
@@ -521,3 +454,39 @@ export function getArchiveSitePrefix(config: Config) {
     return `https://${config.archive.siteIdentifier}.${ROOT_DOMAIN}`;
   }
 }
+export const getCurrentTranslations = function (
+  siteIdentifier: string,
+  languageCode: string,
+  config: Config,
+): Record<string, string> {
+  let currentTranslations: Record<string, string> = {};
+  const translations = config.translations;
+  const sitesMap = config.sites;
+  const siteConfig = sitesMap[siteIdentifier];
+
+  // merge site translations
+  const generalTranslations = translations[languageCode] ?? {};
+
+  currentTranslations = {
+    ...generalTranslations,
+    ...siteConfig.translations[languageCode],
+  };
+
+  return currentTranslations;
+};
+export const getGeneralTranslations = function (
+  languageCode: string,
+  config: Config,
+) {
+  let currentTranslations: Record<string, string> = {};
+  const translations = config.translations;
+
+  // merge site translations
+  const generalTranslations = translations[languageCode] ?? {};
+
+  currentTranslations = {
+    ...generalTranslations,
+  };
+
+  return currentTranslations;
+};
