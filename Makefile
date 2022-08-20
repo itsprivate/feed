@@ -94,6 +94,10 @@ dev:
 publish:
 	wrangler publish
 
+.Phony: publishprod
+publishprod:
+	wrangler publish --env prod
+
 
 .Phony: test
 test:

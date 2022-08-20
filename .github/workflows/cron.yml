@@ -29,14 +29,25 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 16
+          cache: "npm"
+
       - name: Get npm cache directory
         id: npm-cache-dir
         run: |
           echo "::set-output name=dir::$(npm config get cache)"
+      - uses: actions/cache@v3
+        id: npm-cache # use this to check for `cache-hit` ==> if: steps.npm-cache.outputs.cache-hit != 'true'
+        with:
+          path: ${{ steps.npm-cache-dir.outputs.dir }}
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+      - name: install wrangler
+        run: npm install -g wrangler
       - uses: denoland/setup-deno@v1
         with:
           deno-version: v1.x
-      - uses: actions/cache@v2
+      - uses: actions/cache@v3
         with:
           path: |
             ~/.deno
@@ -83,8 +94,7 @@ jobs:
           cat <<EOT >> wrangler.toml
           ${{secrets.WRANGLER}}
           EOT
-      # - name: Publish wrangler
-      #   uses: cloudflare/wrangler-action@2.0.0
-      #   with:
-      #     apiToken: ${{ secrets.CF_API_TOKEN }}
-      #     command: publish --env prod
+      - name: Publish wrangler
+        run: make publishprod
+        env:
+          CLOUDFLARE_API_TOKEN: ${{secrets.CF_API_TOKEN}}
