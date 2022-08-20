@@ -1,8 +1,7 @@
 import { jsonfeedToRSS, path } from "../deps.ts";
-import { FormatedItem, ItemsJson, RunOptions } from "../interface.ts";
+import { ItemsJson, RunOptions } from "../interface.ts";
 import itemsToFeed from "../items-to-feed.ts";
 import {
-  generateIcons,
   getCurrentItemsFilePath,
   getDataCurrentItemsPath,
   getDistFilePath,
@@ -13,6 +12,7 @@ import {
   writeJSONFile,
   writeTextFile,
 } from "../util.ts";
+import generateIcons from "../generate-icons.ts";
 import log from "../log.ts";
 import { TARGET_SITE_LANGUAEGS } from "../constant.ts";
 import feedToHTML from "../feed-to-html.ts";

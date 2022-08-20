@@ -1,12 +1,4 @@
-import {
-  DateTimeFormatter,
-  fs,
-  // OpenCC,
-  path,
-  resize,
-  S3Bucket,
-  YAML,
-} from "./deps.ts";
+import { DateTimeFormatter, fs, path, S3Bucket, YAML } from "./deps.ts";
 import { ROOT_DOMAIN, TARGET_SITE_LANGUAEGS } from "./constant.ts";
 import { Config, Language, PageMeta } from "./interface.ts";
 
@@ -173,33 +165,6 @@ export const formatHumanTime = (date: Date) => {
   } else {
     return formatBeijing(date, "yy-MM-dd");
   }
-};
-
-export const generateIcons = async function (siteIdentifier: string) {
-  const icon = await Deno.readFile(
-    `./assets/icon.png`,
-  );
-  // copy icon to dist
-  // await Deno.writeFile(getDistFilePath(siteIdentifier, "icon.png"), icon);
-  // generate apple-touch-icon
-  const appleTouchIcon = await resize(icon, {
-    width: 180,
-    height: 180,
-  });
-  await Deno.writeFile(
-    getDistFilePath(siteIdentifier, "icon.png"),
-    appleTouchIcon,
-  );
-  const favicon32 = await resize(icon, {
-    width: 32,
-    height: 32,
-  });
-  // write to file
-
-  await Deno.writeFile(
-    getDistFilePath(siteIdentifier, "favicon.ico"),
-    favicon32,
-  );
 };
 
 export const getArchivedFilePath = function (

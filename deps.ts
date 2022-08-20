@@ -31,7 +31,6 @@ export {
 } from "https://deno.land/x/std@0.152.0/http/file_server.ts";
 // third party modules
 
-export { resize } from "https://deno.land/x/deno_image@0.0.4/mod.ts";
 export { config as dotenvConfig } from "https://deno.land/std@0.152.0/dotenv/mod.ts";
 export {
   DOMParser,

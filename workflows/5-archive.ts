@@ -9,7 +9,7 @@ import {
   writeJSONFile,
 } from "../util.ts";
 import log from "../log.ts";
-import { FormatedItem, ItemsJson, RunOptions } from "../interface.ts";
+import { ItemsJson, RunOptions } from "../interface.ts";
 
 export default async function archive(options: RunOptions) {
   const now = new Date();
