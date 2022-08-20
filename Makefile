@@ -12,7 +12,7 @@ build:
 
 .Phony: prod-build
 prod-build:
-	make prod-loadcurrent && MOCK=0 MOCK_IMAGE=0 deno run -A main.ts
+	 MOCK=0 MOCK_IMAGE=0 deno run -A main.ts
 
 .Phony: build-full
 build-full:
