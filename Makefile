@@ -20,7 +20,7 @@ build_for_workders_dev:
 run:
 	DEV=1 deno run -A main.ts --site prodhackernews 
 buildprod:
-	MOCK=0 MOCK_IMAGE=0 deno run -A main.ts --site prodhackernews
+	MOCK=0 MOCK_IMAGE=0 deno run -A main.ts
 .Phony: buildprodfromformat
 buildprodfromformat:
 	HEADLESS=0 MOCK=0 MOCK_IMAGE=0 deno run -A main.ts --stage format,translate,build_current,archive,build_site,upload_current,upload_archive --site prodhackernews

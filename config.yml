@@ -28,7 +28,7 @@ sites:
       "zh-Hans":
         title: "Hacker News 热门"
         short_title: "HN热门"
-        description: "Hacker News上超过200 points"
+        description: "Hacker News上超过200 points的帖子"
     sources:
       - url: http://hn.algolia.com/api/v1/search_by_date?tags=(story,poll,show_hn,ask_hn)&numericFilters=points>=200&hitsPerPage=50
         itemsPath: hits
