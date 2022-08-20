@@ -69,9 +69,11 @@ export default async function translateItems(
           ) as FormatedItem;
           const filename = path.basename(file);
           const parsedFilename = Item.parseItemIdentifier(filename);
-
-          const originalTranslations =
-            item._translations[item._original_language];
+          console.log("item._translations", item._translations);
+          const originalTranslations = (item._translations
+            ? item
+              ._translations[item._original_language]
+            : {}) as Record<string, string>;
           const originalTranslationKeys = Object.keys(originalTranslations);
           const translations = {
             ...item._translations,

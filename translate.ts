@@ -235,20 +235,10 @@ export default class Translation {
     }
     await textInputElement.press("Enter"); // Enter Key
 
-    try {
-      await page.waitForXPath(
-        '//textarea[@dl-test="translator-target-input"]/parent::*/child::*[position()=2]',
-      );
-    } catch (e) {
-      log.warn("can not detect .lmt--active_translation_request");
-      log.warn(e);
-    }
-    await page.waitForXPath(
-      '//textarea[@dl-test="translator-target-input"]/parent::*/child::*[position()=2]',
-      {
-        hidden: true,
-        timeout: 90000,
-      },
+    // wait for copy button
+    await page.waitForSelector(
+      "button[aria-label='Copy to clipboard']",
+      { visible: true },
     );
 
     const result = await page.$eval(targetSentenceField, (el) => el.value);
