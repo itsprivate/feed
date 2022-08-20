@@ -12,10 +12,10 @@ import { Config, Language, PageMeta } from "./interface.ts";
 import { default as OpenCC } from "https://jspm.dev/opencc-js@1.0.4";
 
 export const toZhHant = (text: string): string => {
-  return text;
+  // return text;
   // @ts-ignore: npm module
-  // const zhHansToZhHant = OpenCC.Converter({ from: "cn", to: "tw" });
-  // return zhHansToZhHant(text);
+  const zhHansToZhHant = OpenCC.Converter({ from: "cn", to: "tw" });
+  return zhHansToZhHant(text);
 };
 export const get = (obj: unknown, path: string, defaultValue = undefined) => {
   const travel = (regexp: RegExp) =>
