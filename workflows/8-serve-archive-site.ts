@@ -85,12 +85,7 @@ export default async function serveSite() {
     }
     let itemsJson: ItemsJson | null = null;
     const filePath = getArchivedFilePath(siteIdentifier, relativeItemsPath);
-    // const filePath = relativeItemsPath;
-    // return Promise.resolve(
-    //   new Response("file path" + filePath, {
-    //     status: 200,
-    //   }),
-    // );
+
     if (isDev()) {
       // get file
       try {
