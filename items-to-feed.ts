@@ -77,6 +77,11 @@ export default function itemsToFeed(
       language.code,
     );
 
+    const originalTranslationObj = getItemTranslations(
+      item._translations,
+      item._original_language,
+    );
+
     const translationFields = Object.keys(translationObj);
     for (const translationField of translationFields) {
       const translationValue = translationObj[translationField];
@@ -96,7 +101,7 @@ export default function itemsToFeed(
         )
       }</time> -`;
     content_html +=
-      ` ${item.title} (<a href="${itemUrlObj.protocol}//${itemUrlObj.hostname}">${itemUrlObj.hostname}</a>)<br>`;
+      ` ${originalTranslationObj.title} (<a href="${itemUrlObj.protocol}//${itemUrlObj.hostname}">${itemUrlObj.hostname}</a>)<br>`;
 
     // add links
     let index = 0;

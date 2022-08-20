@@ -1,7 +1,13 @@
 import { dotenvConfig, flags } from "./deps.ts";
 
 import log from "./log.ts";
-import { getConfig, getFeedSiteIdentifiers, isDebug, isDev } from "./util.ts";
+import {
+  getConfig,
+  getFeedSiteIdentifiers,
+  isDebug,
+  isDev,
+  writeTextFile,
+} from "./util.ts";
 import loadCurrentData from "./workflows/0-load-current.ts";
 import fetchSources from "./workflows/1-fetch-sources.ts";
 import formatItems from "./workflows/2-format-items.ts";
@@ -13,7 +19,7 @@ import serveSite from "./workflows/7-serve-site.ts";
 import serveArchiveSite from "./workflows/8-serve-archive-site.ts";
 import uploadCurrent from "./workflows/9-upload-current.ts";
 import uploadArchive from "./workflows/10-upload-archive.ts";
-import { RunOptions } from "./interface.ts";
+import { RunOptions, Task } from "./interface.ts";
 export default async function main() {
   await dotenvConfig({
     export: true,
@@ -59,7 +65,7 @@ export default async function main() {
   }
   log.info("start build ", siteIdentifiers);
   const runOptions: RunOptions = { siteIdentifiers: siteIdentifiers, config };
-
+  let allPostTasks: Task[] = [];
   // 0. load current data from s3
   if (stage.includes("load_current")) {
     await loadCurrentData(runOptions);
@@ -69,7 +75,10 @@ export default async function main() {
 
   // 1. fetch sources
   if (stage.includes("fetch")) {
-    await fetchSources(runOptions);
+    const { postTasks } = await fetchSources(runOptions);
+    if (postTasks && Array.isArray(postTasks) && postTasks.length > 0) {
+      allPostTasks = allPostTasks.concat(postTasks);
+    }
   } else {
     log.info("skip fetch stage");
   }
@@ -138,6 +147,14 @@ export default async function main() {
     await uploadArchive(runOptions);
   } else {
     log.info("skip upload_archive stage");
+  }
+  if (allPostTasks.length > 0) {
+    for (const task of allPostTasks) {
+      if (task.type === "write") {
+        await writeTextFile(task.meta.path, task.meta.content);
+      }
+    }
+    log.info(`run ${allPostTasks.length} post tasks success`);
   }
 }
 

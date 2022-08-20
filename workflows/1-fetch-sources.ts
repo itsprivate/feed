@@ -1,4 +1,4 @@
-import { RunOptions } from "../interface.ts";
+import { RunOptions, Task } from "../interface.ts";
 import adapters from "../adapters/mod.ts";
 import {
   get,
@@ -10,10 +10,11 @@ import log from "../log.ts";
 
 export default async function fetchSources(
   options: RunOptions,
-) {
+): Promise<{ postTasks: Task[] }> {
   const config = options.config;
   const sitesMap = config.sites;
   const siteIdentifiers = options.siteIdentifiers;
+  const postTasks: Task[] = [];
   for (const siteIdentifier of siteIdentifiers) {
     const siteConfig = sitesMap[siteIdentifier];
     const sources = siteConfig.sources;
@@ -67,10 +68,17 @@ export default async function fetchSources(
       if (currentKeysJson.length > 1000) {
         currentKeysJson = currentKeysJson.slice(0, 1000);
       }
-      await writeJSONFile(currentKeysPath, currentKeysJson);
+      postTasks.push({
+        type: "write",
+        meta: {
+          path: currentKeysPath,
+          content: JSON.stringify(currentKeysJson, null, 2),
+        },
+      });
       log.info(
         `saved ${total} items from ${sourceUrl} for ${siteIdentifier}`,
       );
     }
   }
+  return { postTasks };
 }
