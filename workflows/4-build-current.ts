@@ -52,7 +52,9 @@ export default async function buildCurrent(
       throw e;
     }
     if (files.length > 0) {
-      log.info(`get ${files.length} translated items for ${siteIdentifier}`);
+      log.info(
+        `start build items, got ${files.length} translated items for ${siteIdentifier}`,
+      );
       // move items to current items folder
       // get all json
       // TODO tryGetSiteByFolderPath

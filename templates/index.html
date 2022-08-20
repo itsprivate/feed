@@ -52,61 +52,37 @@
         max-width: 45em;
         margin: 0 auto;
         padding: 0 2%;
-        font-size: 1.1em;
         line-height: 1.5em;
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-          Helvetica, Arial, "Palatino Linotype", "Palatino LT STD",
-          "Book Antiqua", Georgia, "SF Pro SC", "SF Pro Text", "SF Pro Icons",
-          "PingFang SC", "Helvetica Neue", "Helvetica", "Arial", sans-serif,
-          "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", Palatino,
-          sans-serif;
+          Helvetica, sans-serif;
       }
       img {
-        max-width: 90%;
-        max-height: 16rem;
-        border-radius: 0.3rem;
-        display: block;
-        margin: 0.5rem 0;
+        max-width: 95%;
+        max-height: 32em;
+        border-radius: 0.3em;
+        height: auto;
+      }
+      video {
+        max-width: 95%;
+        max-height: 32em;
         height: auto;
       }
       a:link,
       a:hover {
         color: rgb(0, 102, 204);
       }
-
-      nav {
-        background-color: #f0f0f0;
-      }
-      .h-entry {
-        margin-bottom: 1rem;
-      }
-
-      .pl-1-5 {
-        padding-left: 1.5rem;
-      }
-
-      .small {
-        font-size: smaller;
-      }
-      .muted {
-        color: #828282;
-      }
-      .primary-content a {
-        color: initial;
-      }
-      .secondary-content {
-        font-style: italic;
-      }
-      .secondary-content a {
-        color: #828282;
-      }
       a:hover {
         text-decoration: underline;
       }
-      a.initial-color {
-        color: initial;
+
+      article {
+        margin-bottom: 2em;
       }
-      a.initial-color:link {
+      .secondary a {
+        color: #828282;
+      }
+      .contrast a:link,
+      .contrast a:visited {
         color: initial;
       }
       .no-underline {
@@ -115,60 +91,18 @@
       .no-underline:hover {
         text-decoration: underline;
       }
-      .no-visited:visited {
-        color: initial;
-      }
-      .px {
-        padding-left: 0.5rem;
-        padding-right: 0.5rem;
-      }
-      .details,
-      .less,
-      .more:target {
-        display: none;
-      }
-      .more:target ~ .details {
-        display: block;
-      }
-      .more:target ~ .less {
-        display: inline;
-      }
     </style>
   </head>
   <body>
-    <header class="small">
-      <nav class="px">
-        {{#_related_sites}}
-        <a class="no-underline no-visited initial-color" href="{{{url}}}"
-          >{{name}}</a
-        >{{^is_last}}<span> · </span>{{/is_last}} {{/_related_sites}}
-        {{#_other_sites.0}}
+    <header>
+      <h2 class="contrast">
         <a
-          id="more"
-          href="#more"
-          class="initial-color no-underline no-visited more"
-          >+ {{more_label}}</a
-        >
-        <a id="less" href="#" class="initial-color no-underline no-visited less"
-          >- {{less_label}}</a
-        >
-        <div class="details">
-          {{/_other_sites.0}} {{#_other_sites}}
-          <a class="no-underline no-visited initial-color" href="{{{url}}}"
-            >{{name}}</a
-          >{{^is_last}}<span> · </span>{{/is_last}} {{/_other_sites}}
-          {{#_other_sites.0}}
-        </div>
-        {{/_other_sites.0}}
-      </nav>
-      <h2>
-        <a
-          class="p-name site-title no-underline no-visited initial-color"
+          class="p-name site-title no-underline"
           href="{{{home_page_url}}}{{{}}}"
           >👋 {{title}}</a
         >
       </h2>
-      <details class="primary-content pl-1-5">
+      <details class="contrast">
         <summary>{{about_label}}</summary>
         <p class="p-summary site-description">{{description}}</p>
         <p>
@@ -179,30 +113,40 @@
           {{/active}} {{/_languages}}
           <br />
           {{subscription_label}}: {{#_rss_url}}
-          <a class="no-visited" href="{{{_rss_url}}}">RSS</a>
+          <a href="{{{_rss_url}}}">RSS</a>
           {{/_rss_url}} {{#_atom_url}}
-          <a class="no-visited" href="{{{_atom_url}}}">Atom</a>
+          <a href="{{{_atom_url}}}">Atom</a>
           {{/_atom_url}} {{#feed_url}}
-          <a class="no-visited" href="{{{feed_url}}}">JSON Feed</a>
+          <a href="{{{feed_url}}}">JSON Feed</a>
           {{/feed_url}}
           <br />
           {{powered_by_label}}:
-          <a class="no-visited" href="https://www.owenyoung.com">Owen</a>
+          <a href="https://www.owenyoung.com">Owen</a>
         </p>
       </details>
+      {{#_other_sites.0}}
+      <details class="contrast">
+        <summary>{{more_sites_label}}</summary>
+        {{#_related_sites}}
+        <a href="{{{url}}}">{{name}}</a>{{^is_last}}<span> · </span>{{/is_last}}
+        {{/_related_sites}} {{#_other_sites.0}} {{#_related_sites.0}}<span>
+          · </span
+        >{{/_related_sites.0}} {{/_other_sites.0}} {{#_other_sites}}
+        <a href="{{{url}}}">{{name}}</a>{{^is_last}}<span> · </span>{{/is_last}}
+        {{/_other_sites}}
+      </details>
+      {{/_other_sites.0}}
     </header>
-    <ol>
-      {{#items}}
-      <li class="h-entry hentry">
+    {{#items}}
+    <article class="h-entry hentry">
+      <h3>
         <a class="u-url p-name entry-title no-underline" href="{{{url}}}"
-          >{{title}}</a
+          ><span>{{order}}. </span>{{title}}</a
         >
+      </h3>
 
-        <div class="p-summary entry-summary secondary-content small">
-          {{{content_html}}}
-        </div>
-      </li>
-      {{/items}}
-    </ol>
+      <div class="p-summary entry-summary secondary">{{{content_html}}}</div>
+    </article>
+    {{/items}}
   </body>
 </html>

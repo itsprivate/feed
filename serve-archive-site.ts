@@ -13,7 +13,7 @@ import feedToHTML from "./feed-to-html.ts";
 import itemsToFeed from "./items-to-feed.ts";
 import { ItemsJson } from "./interface.ts";
 import config from "./config.gen.json" assert { type: "json" };
-export default async function serveSite() {
+export default async function serveSite(port = 8000) {
   // build index.html
   const indexTemplateString = await Deno.readTextFile(
     "./templates/index.html",
@@ -159,7 +159,6 @@ export default async function serveSite() {
       );
     }
   };
-  const port = Number(Deno.env.get("PORT") || 8000);
   log.info(
     `HTTP webserver running. Access it at: http://localhost:${port}/`,
   );

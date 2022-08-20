@@ -73,13 +73,13 @@ export default function itemsToFeed(
     const itemUrl = item["url"];
     const itemUrlObj = new URL(itemUrl);
     const translationObj = getItemTranslations(
-      item._translations,
+      item._translations || {},
       language.code,
       item._original_language,
     );
 
     const originalTranslationObj = getItemTranslations(
-      item._translations,
+      item._translations || {},
       item._original_language,
       item._original_language,
     );
@@ -99,30 +99,57 @@ export default function itemsToFeed(
     let summary = "";
 
     let content_html = "";
-    if (item.image) {
+    if (item._video) {
+      const sources = item._video.sources;
+      const height = item._video.height;
+      const width = item._video.width;
+      const poster = item._video.poster;
+      content_html = `<video controls`;
+      if (width) {
+        content_html += ` width="${width}"`;
+      }
+      if (height) {
+        content_html += ` height="${height}"`;
+      }
+      if (poster) {
+        content_html += ` poster="${poster}"`;
+      }
+
+      content_html += `>`;
+      for (const source of sources) {
+        content_html += `<source src="${source.url}"`;
+        if (source.type) {
+          content_html += ` type="${source.type}"`;
+        }
+        content_html += `>`;
+      }
+      content_html += "your browser does not support the video tag.</video>";
+    } else if (item.image) {
       content_html += `<img class="u-photo" src="${item.image}" alt="image">`;
     }
+    content_html += `<div>`;
     content_html +=
-      ` <time class="dt-published published" datetime="${item._original_published}">${
+      ` ${originalTranslationObj.title} (<a href="${itemUrlObj.protocol}//${itemUrlObj.hostname}">${itemUrlObj.hostname}</a>)<p><cite><a href="${itemUrl}"><time class="dt-published published" datetime="${item._original_published}">${
         formatHumanTime(
           new Date(item._original_published as string),
         )
-      }</time> -`;
-    content_html +=
-      ` ${originalTranslationObj.title} (<a href="${itemUrlObj.protocol}//${itemUrlObj.hostname}">${itemUrlObj.hostname}</a>)<br>`;
+      }</time></a>&nbsp;&nbsp;`;
+    let index = 0;
 
     // add links
-    let index = 0;
-    for (const link of item._links) {
-      const isGreaterFirst = index >= 1;
-      const linkName = currentTranslations[link.name] ??
-        link.name;
-      summary += `${linkName}: ${link.url}\n`;
-      content_html += `${
-        isGreaterFirst ? "&nbsp;&nbsp;" : ""
-      }<a href="${link.url}">${linkName}</a>`;
-      index++;
+    if (item._links) {
+      for (const link of item._links) {
+        const isGreaterFirst = index >= 1;
+        const linkName = currentTranslations[link.name] ??
+          link.name;
+        summary += `${linkName}: ${link.url}\n`;
+        content_html += `${
+          isGreaterFirst ? "&nbsp;&nbsp;" : ""
+        }<a href="${link.url}">${linkName}</a>`;
+        index++;
+      }
     }
+
     // add tags
     if (item.tags && Array.isArray(item.tags)) {
       for (const tag of item.tags) {
@@ -136,6 +163,7 @@ export default function itemsToFeed(
         index++;
       }
     }
+    content_html += "</cite></p></div>";
 
     item.summary = summary;
     item.content_text = summary;

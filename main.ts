@@ -109,6 +109,7 @@ export default async function main() {
 
   // 5. archive items
   if (stage.includes("archive")) {
+    log.info(`start archive items`);
     await archive(runOptions);
   } else {
     log.info("skip archive stage");
@@ -116,6 +117,7 @@ export default async function main() {
 
   // 6. build site
   if (stage.includes("build_site")) {
+    log.info(`start build site`);
     await buildSite(runOptions);
   } else {
     log.info("skip build_site stage");

@@ -161,9 +161,9 @@ export const formatHumanTime = (date: Date) => {
   if (isToday) {
     return formatBeijing(date, "HH:mm");
   } else if (isThisYear) {
-    return formatBeijing(date, "MM.dd");
+    return formatBeijing(date, "MM-dd");
   } else {
-    return formatBeijing(date, "yy.MM.dd");
+    return formatBeijing(date, "yy-MM-dd");
   }
 };
 

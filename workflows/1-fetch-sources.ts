@@ -23,7 +23,7 @@ export default async function fetchSources(
       const sourceUrl = source.url;
       const sourceType = source.type;
       const itemsPath = source.itemsPath || "";
-
+      const rules = source.rules || [];
       // fetch source, and parse it to item;
       const originItemResult = await fetch(sourceUrl);
       const originalJson = await originItemResult.json();
@@ -44,6 +44,61 @@ export default async function fetchSources(
         log.debug(`read current keys file failed, ${e.message}`);
       }
       for (const originalItem of originalItems) {
+        // check rules
+        for (const rule of rules) {
+          const { key, value, type } = rule;
+          const originalValue = get(originalItem, key);
+          if (type === "greater") {
+            if (Number(originalValue) <= Number(value)) {
+              continue;
+            }
+          } else if (type === "equal") {
+            if (originalValue !== value) {
+              continue;
+            }
+          } else if (type === "notEqual") {
+            if (originalValue === value) {
+              continue;
+            }
+          } else if (type === "include") {
+            if (!(originalValue as string[]).includes(value)) {
+              continue;
+            }
+          } else if (type === "notInclude") {
+            if ((originalValue as string[]).includes(value)) {
+              continue;
+            }
+          } else if (type === "notExist") {
+            if (originalValue) {
+              continue;
+            }
+          } else if (type === "exist") {
+            if (!originalValue) {
+              continue;
+            }
+          } else if (type === "notMatch") {
+            if ((originalValue as string).match(value)) {
+              continue;
+            }
+          } else if (type === "match") {
+            if (!(originalValue as string).match(value)) {
+              continue;
+            }
+          } else if (type === "greaterEqual") {
+            if (Number(originalValue) < Number(value)) {
+              continue;
+            }
+          } else if (type === "less") {
+            if (Number(originalValue) >= Number(value)) {
+              continue;
+            }
+          } else if (type === "lessEqual") {
+            if (Number(originalValue) > Number(value)) {
+              continue;
+            }
+          }
+        }
+
         // parse item to formated item
         const item = new (adapters[sourceType])(
           originalItem,

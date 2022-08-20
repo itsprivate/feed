@@ -4,7 +4,7 @@ async function main() {
   await dotenvConfig({
     export: true,
   });
-  serveArchiveSite();
+  serveArchiveSite(9000);
 }
 
 if (import.meta.main) {

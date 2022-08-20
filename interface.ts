@@ -1,7 +1,13 @@
+export interface Rule {
+  type: string;
+  key: string;
+  value: string;
+}
 export interface Source {
   url: string;
   type: string;
   itemsPath?: string;
+  rules?: Rule[];
 }
 export interface Language {
   code: string;
@@ -24,6 +30,7 @@ export interface GeneralSiteConfig {
   tags: string[];
 }
 export interface SiteConfig extends GeneralSiteConfig {
+  indexed?: boolean;
   port: number;
   sources: Source[];
   translations: Record<string, Record<string, string>>;
@@ -60,19 +67,32 @@ export interface Task {
   meta: Record<string, string>;
   type: string;
 }
+export interface VideoSource {
+  url: string;
+  type?: string;
+}
+export interface Video {
+  sources: VideoSource[];
+  poster?: string;
+  width?: number;
+  height?: number;
+}
 export interface FormatedItem {
   id: string;
   image?: string;
   url: string;
   date_published: string;
   date_modified: string;
-  tags: string[];
-  authors: Author[];
+  tags?: string[];
+  authors?: Author[];
+  _score?: number;
+  _video?: Video;
+  _sensitive?: boolean;
   _original_published: string;
   _original_language: string;
   _title_prefix?: string;
-  _links: Link[];
-  _translations: Record<string, Record<string, string>>;
+  _links?: Link[];
+  _translations?: Record<string, Record<string, string>>;
   [key: string]: unknown;
 }
 export type LevelName = "debug" | "info" | "warn" | "error" | "fatal";
@@ -111,4 +131,7 @@ export interface FeedItem extends FormatedItem {
   summary: string;
   content_text: string;
   content_html: string;
+}
+export interface Type<T> extends Function {
+  new (...args: unknown[]): T;
 }

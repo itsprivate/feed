@@ -1,6 +1,7 @@
 import { Browser, Page, puppeteer } from "./bad-deps.ts";
 import { isMock } from "./util.ts";
 import log from "./log.ts";
+import { YAML } from "./deps.ts";
 import { TranslationOptions } from "./interface.ts";
 import {
   TARGET_SITE_LANGUAEGS,
@@ -16,6 +17,7 @@ export default class Translation {
   private countPerPage = TRANSLATED_ITEMS_PER_PAGE;
   private currentSourceLanguage = "";
   private currentTargetLanguage = "";
+  private localTranslations: Record<string, Record<string, string>> = {};
   constructor(options: TranslationOptions = {}) {
     if (options.isMock !== undefined) {
       this.isMock = options.isMock;
@@ -30,6 +32,20 @@ export default class Translation {
       log.info("mock mode: init puppeteer page success");
       return;
     }
+    // try to load i18n local translation files
+
+    for await (const dirEntry of Deno.readDir("./i18n")) {
+      if (dirEntry.isFile) {
+        const filename = dirEntry.name;
+        const language = filename.replace(/\.yml$/, "");
+        const fileContent = await Deno.readTextFile(`./i18n/${filename}`);
+        this.localTranslations[language] = YAML.parse(fileContent) as Record<
+          string,
+          string
+        >;
+      }
+    }
+
     this.currentSourceLanguage = "";
     this.currentTargetLanguage = "";
     // init puppeteer
@@ -97,6 +113,19 @@ export default class Translation {
     const translatedObj: Record<string, string> = {};
     for (const targetLanguage of TARGET_SITE_LANGUAEGS) {
       if (targetLanguage.code !== "zh-Hant") {
+        // check local translate
+
+        const localTranslation = this.localTranslations[targetLanguage.code];
+        if (localTranslation && localTranslation[sentence]) {
+          translatedObj[targetLanguage.code] = localTranslation[sentence];
+          log.info(
+            `local translate ${sentence} to ${targetLanguage.code} ${
+              localTranslation[sentence]
+            } success`,
+          );
+          continue;
+        }
+
         let translated = await this.doTranslate(
           this.page!,
           sentence,

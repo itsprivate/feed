@@ -24,20 +24,20 @@ build_for_workders_dev:
 
 .Phony: run
 run:
-	DEV=1 deno run -A main.ts --site prodhackernews 
+	DEV=1 FILES=50 deno run -A main.ts --site prodhn 
 
 
 .Phony: prod-buildfromformat
 prod-buildfromformat:
-	HEADLESS=0 MOCK=0 MOCK_IMAGE=0 deno run -A main.ts --stage format,translate,build_current,archive,build_site --site prodhackernews
+	HEADLESS=0 MOCK=0 MOCK_IMAGE=0 deno run -A main.ts --stage format,translate,build_current,archive,build_site --site devfeed
 
 
 .Phony: runfromformat
 runfromformat:
-	DEV=1 deno run -A --watch=main.ts,templates/,config.yml,static/ main.ts --stage format,translate,build_current,archive,build_site,serve_site --site prodhackernews
+	DEV=1 deno run -A --watch=main.ts,templates/,config.yml,static/ main.ts --stage format,translate,build_current,archive,build_site,serve_site --site prodhn
 .Phony: runfromtr
 runfromtr:
-	DEV=1 deno run -A --watch=main.ts,templates/,config.yml,static/ main.ts --stage build_current,archive,build_site,serve_site --site prodhackernews
+	DEV=1 deno run -A --watch=main.ts,templates/,config.yml,static/ main.ts --stage build_current,archive,build_site,serve_site --site devfeed
 
 .Phony: start
 start:
@@ -62,7 +62,13 @@ prod-loadarchive:
 .Phony: compresscurrent
 compresscurrent:
 	DEV=1 deno run -A main.ts --stage compress_current
+.Phony: prod-compresscurrent
+prod-compresscurrent:
+	deno run -A main.ts --stage compress_current
 
+.Phony: prod-decompresscurrent
+prod-decompresscurrent:
+	deno run -A main.ts --stage decompress_current
 .Phony: uploadcurrent
 uploadcurrent:
 # DEV=1 deno run -A main.ts --stage upload_current
@@ -93,7 +99,7 @@ prod-upload:
 
 .Phony: fetch
 fetch:
-	DEV=1 deno run -A main.ts --stage fetch --site prodhackernews
+	DEV=1 deno run -A main.ts --stage fetch --site devfeed
 
 .Phony: fetchall
 fetchall:
@@ -101,15 +107,15 @@ fetchall:
 
 .Phony: format
 format:
-	DEV=1 deno run -A main.ts --stage format --site prodhackernews
+	DEV=1 deno run -A main.ts --stage format --site devfeed
 
 .Phony: tr
 tr:
-	DEV=1 deno run -A main.ts --stage translate --site prodhackernews
+	DEV=1 deno run -A main.ts --stage translate --site devfeed
 
 .Phony: trtest
 trtest:
-	HEADLESS=0 MOCK=0 DEV=1 deno run -A main.ts --stage translate --site prodhackernews
+	HEADLESS=0 MOCK=0 DEV=1 deno run -A main.ts --stage translate --site devfeed
 
 
 .Phony: trall
@@ -118,11 +124,11 @@ trall:
 
 .Phony: build-current
 build-current:
-	DEV=1 deno run -A main.ts --stage build_current --site prodhackernews
+	DEV=1 deno run -A main.ts --stage build_current --site devfeed
 
 .Phony: site
 site:
-	DEV=1 deno run -A main.ts --stage build_site,serve_site --site prodhackernews
+	DEV=1 deno run -A main.ts --stage build_site,serve_site --site devfeed
 
 .Phony: deploy
 deploy:
@@ -180,7 +186,7 @@ fmt:
 
 .Phony: test-file
 test-file:
-	mkdir -p current/4-data/prodhackernews/ && touch current/4-data/prodhackernews/test.json && mkdir -p archive/prodhackernews/tags/job/ && touch archive/prodhackernews/tags/job/test.json && mkdir -p public/prodhackernews && touch public/prodhackernews/index.html 
+	mkdir -p current/4-data/devfeed/ && touch current/4-data/devfeed/test.json && mkdir -p archive/devfeed/tags/job/ && touch archive/devfeed/tags/job/test.json && mkdir -p public/devfeed && touch public/devfeed/index.html 
 
 .Phony: config
 config:

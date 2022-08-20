@@ -5,21 +5,49 @@
       "subscription_label": "订阅地址",
       "powered_by_label": "背后的人❤️",
       "languages_label": "该页面其他语言",
-      "more_label": "更多",
-      "less_label": "收起"
+      "more_sites_label": "姊妹站点"
     },
     "zh-Hant": {
       "about_label": "關於此頁面",
       "subscription_label": "訂閱地址",
       "powered_by_label": "背後的人❤️",
       "languages_label": "該頁面其他語言",
-      "more_label": "更多",
-      "less_label": "收起"
+      "more_sites_label": "姊妹站點"
     }
   },
   "sites": {
+    "devfeed": {
+      "port": 8000,
+      "indexed": false,
+      "translations": {
+        "zh-Hans": {
+          "title": "Reddit 热门",
+          "short_title": "Reddit 热门",
+          "description": "用中文浏览Reddit热门内容"
+        },
+        "zh-Hant": {
+          "title": "Reddit 熱門",
+          "short_title": "Reddit 熱門",
+          "description": "用中文瀏覽Reddit熱門內容"
+        }
+      },
+      "sources": [
+        {
+          "url": "https://www.reddit.com/r/all/top/.json?raw_json=1",
+          "itemsPath": "data.children",
+          "type": "reddit",
+          "rules": [
+            {
+              "type": "greaterEqual",
+              "key": "data.score",
+              "value": 75000
+            }
+          ]
+        }
+      ]
+    },
     "prodhackernews": {
-      "port": 9000,
+      "port": 8001,
       "tags": [
         "hn"
       ],
@@ -44,7 +72,7 @@
       ]
     },
     "prodhn": {
-      "port": 9001,
+      "port": 8002,
       "tags": [
         "hn"
       ],
@@ -69,7 +97,7 @@
       ]
     },
     "prodaskhn": {
-      "port": 9002,
+      "port": 8003,
       "tags": [
         "hn"
       ],
@@ -94,9 +122,9 @@
       ]
     },
     "prodshowhn": {
-      "port": 9003,
+      "port": 8004,
       "tags": [
-        "reddit"
+        "hn"
       ],
       "translations": {
         "zh-Hans": {
@@ -117,10 +145,35 @@
           "type": "hn"
         }
       ]
+    },
+    "prodreddit": {
+      "port": 8005,
+      "tags": [
+        "reddit"
+      ],
+      "translations": {
+        "zh-Hans": {
+          "title": "Reddit 热门",
+          "short_title": "Reddit 热门",
+          "description": "用中文浏览Reddit热门内容"
+        },
+        "zh-Hant": {
+          "title": "Reddit 熱門",
+          "short_title": "Reddit 熱門",
+          "description": "用中文瀏覽Reddit熱門內容"
+        }
+      },
+      "sources": [
+        {
+          "url": "https://www.reddit.com/r/all/top/.json",
+          "itemsPath": "data.children",
+          "type": "reddit"
+        }
+      ]
     }
   },
   "archive": {
-    "port": 8000,
+    "port": 9000,
     "siteIdentifier": "i",
     "tags": []
   }

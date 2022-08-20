@@ -28,6 +28,10 @@ make tr
 wrangler r2 bucket create feed
 ```
 
+## Tools
+
+- [QuickType](https://app.quicktype.io/) - JSON to TypeScript
+
 ## TODO
 
 - [ ] add more feeds
@@ -36,3 +40,4 @@ wrangler r2 bucket create feed
 - [ ] check cors
 - [x] support workers deploy
 - [ ] change archive lang to hackernews/en/
+- [ ] cache image to imgur?

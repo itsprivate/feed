@@ -1,4 +1,10 @@
-import { Author, FormatedItem, Link, ParsedFilename } from "./interface.ts";
+import {
+  Author,
+  FormatedItem,
+  Link,
+  ParsedFilename,
+  Video,
+} from "./interface.ts";
 import {
   getDataFormatedPath,
   getDataRawPath,
@@ -13,8 +19,8 @@ import {
 } from "./util.ts";
 import { DOMParser, getMetadata } from "./deps.ts";
 import log from "./log.ts";
-export default class Item {
-  originalItem: Record<string, unknown>;
+export default class Item<T> {
+  originalItem: T;
   private siteIdentifier: string;
   private now: Date = new Date();
   private image: string | null | undefined;
@@ -56,14 +62,16 @@ export default class Item {
     }/${getFullMonth(now)}/${getFullDay(now)}/${filename}`;
   }
 
-  constructor(originalItem: Record<string, unknown>, siteIdentifier: string) {
+  constructor(originalItem: T, siteIdentifier: string) {
     this.originalItem = originalItem;
     this.siteIdentifier = siteIdentifier;
   }
   getTargetSite(): string {
     return siteIdentifierToDomain(this.siteIdentifier);
   }
-
+  getSensitive(): boolean {
+    return false;
+  }
   getTargetSitePath(): string {
     return siteIdentifierToPath(this.siteIdentifier);
   }
@@ -221,9 +229,15 @@ export default class Item {
   getLanguage(): string {
     return "en";
   }
+  getVideo(): Video | undefined {
+    return undefined;
+  }
   getRawPath(): string {
     return `${getDataRawPath()}/${(this
       .getTargetSitePath())}/${this.getModifiedYear()}/${this.getModifiedMonth()}/${this.getModifiedDay()}/${this.getItemIdentifier()}.json`;
+  }
+  getScore(): number {
+    return 0;
   }
   getFormatedPath(): string {
     return `${getDataFormatedPath()}/${(this
@@ -251,18 +265,38 @@ export default class Item {
       url: this.getUrl(),
       date_published: this.getModified(),
       date_modified: this.getModified(),
-      tags: this.getTags(),
-      authors: this.getAuthors(),
       _original_published: this.getOriginalPublished(),
       _original_language: this.getLanguage(),
-      _links: this.getLinks(),
       _translations: translations,
     };
+    const tags = this.getTags();
+    if (tags && Array.isArray(tags) && tags.length > 0) {
+      item.tags = tags;
+    }
+    const authors = this.getAuthors();
+    if (authors && Array.isArray(authors) && authors.length > 0) {
+      item.authors = authors;
+    }
+    if (this.getScore()) {
+      item._score = this.getScore();
+    }
     if (this.getTitlePrefix()) {
       item._title_prefix = this.getTitlePrefix();
     }
+    const links = this.getLinks();
+    if (links && Array.isArray(links) && links.length > 0) {
+      item._links = links;
+    }
+    if (this.getSensitive()) {
+      item._sensitive = true;
+    }
+
     if (image) {
       item.image = image;
+    }
+    const video = this.getVideo();
+    if (video) {
+      item._video = video;
     }
     if (externalUrl) {
       item.external_url = externalUrl;

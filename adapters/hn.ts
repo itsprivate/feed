@@ -1,7 +1,7 @@
 import { Author, Link } from "../interface.ts";
 import Item from "../item.ts";
 const prefixies = ["Show HN: ", "Ask HN: ", "Tell HN: ", "Poll: "];
-export default class hn extends Item {
+export default class hn extends Item<HnItem> {
   getOriginalPublishedDate(): Date {
     return new Date(this.originalItem.created_at as string);
   }
@@ -50,7 +50,7 @@ export default class hn extends Item {
       return [
         {
           url: this.getExternalUrl(),
-          name: `&rarr; HN ${this.getPoints()} points`,
+          name: `&uarr;${this.getPoints()} points`,
         },
       ];
     } else {
@@ -66,7 +66,7 @@ export default class hn extends Item {
     // check if specific tags are present in the item
     // like Show HN, Ask HN, etc.
     const tags: string[] = [];
-    const originalItem = this.originalItem as Record<string, unknown>;
+    const originalItem = this.originalItem;
     if (originalItem._tags && Array.isArray(originalItem._tags)) {
       if (originalItem._tags.includes("show_hn")) {
         tags.push("Show HN");
@@ -83,4 +83,34 @@ export default class hn extends Item {
 
     return tags;
   }
+}
+export interface HnItem {
+  created_at: string;
+  title: string;
+  url: string;
+  author: string;
+  points: number;
+  story_text: null;
+  comment_text: null;
+  num_comments: number;
+  story_id: null;
+  story_title: null;
+  story_url: null;
+  parent_id: null;
+  created_at_i: number;
+  _tags: string[];
+  objectID: string;
+  _highlightResult: HighlightResult;
+}
+
+export interface HighlightResult {
+  title: HighlightResultItem;
+  url: HighlightResultItem;
+  author: HighlightResultItem;
+}
+
+export interface HighlightResultItem {
+  value: string;
+  matchLevel: string;
+  matchedWords: any[];
 }

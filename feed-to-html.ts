@@ -38,6 +38,14 @@ export default function feedToHTML(
     ...currentTranslations,
     ...feedJson,
   };
+
+  feedJson.items = feedJson.items.map((item, index) => {
+    const newItem = { ...item };
+    const order = index + 1;
+    newItem.order = order;
+    return newItem;
+  });
+
   // @ts-ignore: add meta data
   feedJson._languages = languages.map((item) => {
     const newItem = { ...item };
@@ -52,7 +60,9 @@ export default function feedToHTML(
   const relatedSites = getFeedSiteIdentifiers(config).filter((site) => {
     const siteTags = sitesMap[site].tags;
     const currentSiteTags = feedJson._tags;
-
+    if (sitesMap[site].indexed === false) {
+      return false;
+    }
     // ignore self
     if (site === siteIdentifier) {
       return false;

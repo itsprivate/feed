@@ -79,7 +79,9 @@ export default async function formatItems(
             itemJson,
           );
           // then delete raw file
-          await Deno.remove(file);
+          if (!isDev()) {
+            await Deno.remove(file);
+          }
           total += 1;
           log.debug(
             `formated item to ${item.getFormatedPath()}`,
