@@ -9,6 +9,8 @@ import {
 } from "./deps.ts";
 import { ROOT_DOMAIN, TARGET_SITE_LANGUAEGS } from "./constant.ts";
 import { Config, Language, PageMeta } from "./interface.ts";
+import { default as OpenCC } from "https://jspm.dev/opencc-js@1.0.4";
+
 export const toZhHant = (text: string): string => {
   return text;
   // @ts-ignore: npm module
