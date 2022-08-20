@@ -109,7 +109,7 @@ export default class Translation {
         log.info(`translate ${sentence} to ${translated} success`);
         this.currentTranslated++;
       } else {
-        const translated = toZhHant(sentence);
+        const translated = toZhHant(translatedObj["zh-Hans"]);
         translatedObj[targetLanguage.code] = translated;
       }
     }
