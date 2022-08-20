@@ -136,8 +136,8 @@ dev:
 publish:
 	wrangler publish
 
-.Phony: publishprod
-publishprod:
+.Phony: prod-publish
+prod-publish:
 	wrangler publish --env prod
 
 

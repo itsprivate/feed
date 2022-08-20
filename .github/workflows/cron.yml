@@ -15,14 +15,14 @@ jobs:
       # - if: github.event_name!='workflow_dispatch'
       #   name: sleep for pr
       #   run: sleep 60
-      - run: |
-          sudo apt-get update \
-          && sudo apt-get install -y wget gnupg \
-          && wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add - \
-          && sudo sh -c 'sudo echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list' \
-          && sudo apt-get update \
-          && sudo apt-get install -y google-chrome-stable fonts-ipafont-gothic fonts-wqy-zenhei fonts-thai-tlwg fonts-kacst fonts-freefont-ttf libxss1 \
-            --no-install-recommends \
+      # - run: |
+      #     sudo apt-get update \
+      #     && sudo apt-get install -y wget gnupg \
+      #     && wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add - \
+      #     && sudo sh -c 'sudo echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list' \
+      #     && sudo apt-get update \
+      #     && sudo apt-get install -y google-chrome-stable fonts-ipafont-gothic fonts-wqy-zenhei fonts-thai-tlwg fonts-kacst fonts-freefont-ttf libxss1 \
+      #       --no-install-recommends \
       - name: Check out repository code
         uses: actions/checkout@v3
 
@@ -66,6 +66,7 @@ jobs:
           ARCHIVE_SECRET_ACCESS_KEY: ${{secrets.ARCHIVE_SECRET_ACCESS_KEY}}
           ARCHIVE_ENDPOINT: ${{secrets.ARCHIVE_ENDPOINT}}
           ARCHIVE_REGION: ${{secrets.ARCHIVE_REGION}}
+          CLOUDFLARE_API_TOKEN: ${{secrets.CF_API_TOKEN}}
         continue-on-error: true
 
       - run: git status
@@ -81,6 +82,7 @@ jobs:
           ARCHIVE_SECRET_ACCESS_KEY: ${{secrets.ARCHIVE_SECRET_ACCESS_KEY}}
           ARCHIVE_ENDPOINT: ${{secrets.ARCHIVE_ENDPOINT}}
           ARCHIVE_REGION: ${{secrets.ARCHIVE_REGION}}
+          CLOUDFLARE_API_TOKEN: ${{secrets.CF_API_TOKEN}}
       - name: load wrangler.toml from secrets.WRANGLER
         run: |
           cat <<EOT >> wrangler.toml
