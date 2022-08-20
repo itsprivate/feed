@@ -9,7 +9,9 @@
         "current/",
         "dev-current/",
         "dev-archive/",
-        "archive/"
+        "archive/",
+        "s3/",
+        "zip/"
       ]
     }
   },
