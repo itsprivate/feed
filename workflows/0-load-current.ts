@@ -22,12 +22,12 @@ export default async function loadCurrentData(_options: RunOptions) {
     // download all objects
     for (const object of objects.contents) {
       if (object.key) {
-        console.log("object.Key", object.key);
         const objectData = await s3Bucket.getObject(object.key);
         if (objectData) {
           const { body } = objectData;
           const data = await new Response(body).text();
           await writeTextFile(object.key, data);
+          log.info(`downloaded ${object.key}`);
         }
       }
     }

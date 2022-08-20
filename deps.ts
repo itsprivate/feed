@@ -42,8 +42,10 @@ export type {
 } from "https://deno.land/x/deno_dom@v0.1.33-alpha/deno-dom-wasm.ts";
 
 export { default as staticFiles } from "https://deno.land/x/static_files@1.1.6/mod.ts";
-
-export { S3, S3Bucket } from "https://deno.land/x/s3@0.5.0/mod.ts";
+export { S3, S3Bucket } from "./s3/mod.ts";
+// export { S3, S3Bucket } from "https://deno.land/x/s3@0.5.0/mod.ts";
+// export { S3Client } from "https://deno.land/x/s3_lite_client@0.2.0/mod.ts";
+// export { S3Client } from "../inbox/deno-s3-lite-client/mod.ts";
 
 // npm modules
 export { getMetadata } from "https://jspm.dev/page-metadata-parser@1.1.4";
