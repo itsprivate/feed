@@ -8,7 +8,7 @@ import {
   isDev,
   writeTextFile,
 } from "./util.ts";
-import loadCurrentData from "./workflows/0-load-current.ts";
+import decompressCurrentData from "./workflows/0-decompress-current.ts";
 import fetchSources from "./workflows/1-fetch-sources.ts";
 import formatItems from "./workflows/2-format-items.ts";
 import translateItems from "./workflows/3-translate-items.ts";
@@ -16,6 +16,7 @@ import buildCurrent from "./workflows/4-build-current.ts";
 import archive from "./workflows/5-archive.ts";
 import buildSite from "./workflows/6-build-site.ts";
 import serveSite from "./workflows/7-serve-site.ts";
+import compressCurrent from "./workflows/8-compress-current.ts";
 import uploadCurrent from "./workflows/9-upload-current.ts";
 import uploadArchive from "./workflows/10-upload-archive.ts";
 import { RunOptions, Task } from "./interface.ts";
@@ -37,9 +38,9 @@ export default async function main() {
   if (isDev()) {
     stage.push("serve_site");
   } else {
-    stage.unshift("load_current");
-    // stage.push("upload_current");
+    stage.unshift("decompress_current");
     // stage.push("upload_archive");
+    stage.push("compress_current");
   }
   if (isDebug()) {
     log.setLevel("debug");
@@ -68,11 +69,11 @@ export default async function main() {
   log.info("start build ", siteIdentifiers);
   const runOptions: RunOptions = { siteIdentifiers: siteIdentifiers, config };
   let allPostTasks: Task[] = [];
-  // 0. load current data from s3
-  if (stage.includes("load_current")) {
-    await loadCurrentData(runOptions);
+  // 0. decompress current data from zip
+  if (stage.includes("decompress_current")) {
+    await decompressCurrentData(runOptions);
   } else {
-    log.info("skip load current data from remote stage");
+    log.info("skip decompress current data from zip stage");
   }
 
   // 1. fetch sources
@@ -133,6 +134,13 @@ export default async function main() {
     }
   } else {
     log.info("skip serve_site stage");
+  }
+
+  // 8. zip current data
+  if (stage.includes("compress_current")) {
+    await compressCurrent(runOptions);
+  } else {
+    log.info("skip compress_current stage");
   }
 
   // 9. upload current data to s3

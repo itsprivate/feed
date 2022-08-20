@@ -1,3 +1,6 @@
+/**
+ * @deprecated
+ */
 import {
   getCurrentBucketName,
   getCurrentDataS3Bucket,
@@ -6,7 +9,9 @@ import {
 } from "../util.ts";
 import { RunOptions } from "../interface.ts";
 import log from "../log.ts";
-export default async function loadCurrentData(_options: RunOptions) {
+import { dotenvConfig } from "../deps.ts";
+
+export default async function loadCurrentData(_options?: RunOptions) {
   const R2_BUCKET = getCurrentBucketName();
   log.info(`start load current data from ${R2_BUCKET}`);
   const s3Bucket = getCurrentDataS3Bucket(R2_BUCKET);
@@ -35,4 +40,9 @@ export default async function loadCurrentData(_options: RunOptions) {
       `load current data ${objects.contents.length} files from ${R2_BUCKET} success`,
     );
   }
+}
+
+if (import.meta.main) {
+  await dotenvConfig({ export: true });
+  loadCurrentData();
 }
