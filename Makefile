@@ -24,23 +24,24 @@ build_for_workders_dev:
 
 .Phony: run
 run:
-	DEV=1 deno run -A main.ts --site prodshowhn 
+	DEV=1 deno run -A main.ts --site prodhackernews 
 
 
 .Phony: prod-buildfromformat
 prod-buildfromformat:
 	HEADLESS=0 MOCK=0 MOCK_IMAGE=0 deno run -A main.ts --stage format,translate,build_current,archive,build_site --site prodhackernews
 
+
 .Phony: runfromformat
 runfromformat:
-	DEV=1 deno run -A --watch=main.ts,templates/,config.yml,static/ main.ts --stage format,translate,build_current,archive,build_site,serve_site --site prodshowhn
+	DEV=1 deno run -A --watch=main.ts,templates/,config.yml,static/ main.ts --stage format,translate,build_current,archive,build_site,serve_site --site prodhackernews
 .Phony: runfromtr
 runfromtr:
 	DEV=1 deno run -A --watch=main.ts,templates/,config.yml,static/ main.ts --stage build_current,archive,build_site,serve_site --site prodhackernews
 
 .Phony: start
 start:
-	DEV=1 deno run -A --watch=main.ts,templates/,config.yml,static/ main.ts --stage build_current,archive,build_site,serve_site --site prodhackernews
+	make runfromformat
 
 .Phony: loadcurrent
 loadcurrent:

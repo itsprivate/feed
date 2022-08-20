@@ -1,5 +1,6 @@
 import { Author, Link } from "../interface.ts";
 import Item from "../item.ts";
+const prefixies = ["Show HN: ", "Ask HN: ", "Tell HN: ", "Poll: "];
 export default class hn extends Item {
   getOriginalPublishedDate(): Date {
     return new Date(this.originalItem.created_at as string);
@@ -8,7 +9,22 @@ export default class hn extends Item {
     return this.originalItem.objectID as string;
   }
   getTitle(): string {
-    return this.originalItem.title as string;
+    const title = this.originalItem.title as string;
+    for (const prefix of prefixies) {
+      if (title.startsWith(prefix)) {
+        return title.slice(prefix.length);
+      }
+    }
+    return title;
+  }
+  getTitlePrefix(): string {
+    const title = this.originalItem.title as string;
+    for (const prefix of prefixies) {
+      if (title.startsWith(prefix)) {
+        return prefix;
+      }
+    }
+    return "";
   }
 
   getUrl(): string {
@@ -60,6 +76,8 @@ export default class hn extends Item {
         tags.push("Job");
       } else if (originalItem._tags.includes("poll")) {
         tags.push("Poll");
+      } else if (this.getTitlePrefix() === "Tell HN: ") {
+        tags.push("Tell HN");
       }
     }
 

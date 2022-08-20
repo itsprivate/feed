@@ -86,7 +86,13 @@ export default function itemsToFeed(
 
     const translationFields = Object.keys(translationObj);
     for (const translationField of translationFields) {
-      const translationValue = translationObj[translationField];
+      let translationValue = translationObj[translationField];
+      // is has prefix
+      if (item[`_${translationField}_prefix`]) {
+        translationValue = `${
+          item[`_${translationField}_prefix`]
+        }${translationValue}`;
+      }
       item[translationField] = translationValue;
     }
 

@@ -70,7 +70,7 @@ export interface FormatedItem {
   authors: Author[];
   _original_published: string;
   _original_language: string;
-
+  _title_prefix?: string;
   _links: Link[];
   _translations: Record<string, Record<string, string>>;
   [key: string]: unknown;

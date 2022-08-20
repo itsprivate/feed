@@ -63,6 +63,7 @@ export default class Item {
   getTargetSite(): string {
     return siteIdentifierToDomain(this.siteIdentifier);
   }
+
   getTargetSitePath(): string {
     return siteIdentifierToPath(this.siteIdentifier);
   }
@@ -120,6 +121,10 @@ export default class Item {
     return "";
   }
   getTitle(): string {
+    return "";
+  }
+  getTitlePrefix(): string {
+    // this will not be translated
     return "";
   }
   getUrl(): string {
@@ -253,6 +258,9 @@ export default class Item {
       _links: this.getLinks(),
       _translations: translations,
     };
+    if (this.getTitlePrefix()) {
+      item._title_prefix = this.getTitlePrefix();
+    }
     if (image) {
       item.image = image;
     }
