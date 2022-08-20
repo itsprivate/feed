@@ -16,6 +16,7 @@ import log from "./log.ts";
 export default class Item {
   originalItem: Record<string, unknown>;
   private siteIdentifier: string;
+  private now: Date = new Date();
   private image: string | null | undefined;
   static parseItemIdentifier(fileBasename: string): ParsedFilename {
     // remove extension
@@ -88,7 +89,7 @@ export default class Item {
     return this.getPublishedDate().toISOString();
   }
   getPublishedDate(): Date {
-    return new Date();
+    return this.now;
   }
 
   getPublishedYear(): string {
@@ -101,7 +102,7 @@ export default class Item {
     return getFullDay(this.getPublishedDate());
   }
   getModifiedDate(): Date {
-    return new Date();
+    return this.now;
   }
   getModified(): string {
     return this.getModifiedDate().toISOString();
@@ -244,7 +245,7 @@ export default class Item {
       date_modified: this.getModified(),
       tags: this.getTags(),
       authors: this.getAuthors(),
-      _original_published: this.getPublished(),
+      _original_published: this.getOriginalPublished(),
       _original_language: this.getLanguage(),
       _links: this.getLinks(),
       _translations: translations,

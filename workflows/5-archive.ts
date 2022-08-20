@@ -126,7 +126,7 @@ export default async function archive(options: RunOptions) {
             archivedItemsPath,
             archiedGroups[archivedFolder],
           );
-          currentArchive.push(archivedFolder);
+          currentArchive.unshift(archivedFolder);
           log.info(
             `archived ${
               Object.keys(archiedGroups[archivedFolder]).length

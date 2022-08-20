@@ -18,7 +18,12 @@ for (const testItem of list) {
     });
     // published must initial
     await t.step(`${item.getType()} published must initial`, () => {
-      assertNotEquals(item.getPublishedDate(), new Date(0));
+      assertNotEquals(item.getOriginalPublishedDate(), new Date(0));
+    });
+
+    // published modified must equal
+    await t.step(`${item.getType()} published modified must equal`, () => {
+      assertEquals(item.getPublished(), item.getModified());
     });
 
     // title mush not empty

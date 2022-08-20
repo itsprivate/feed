@@ -111,7 +111,13 @@ export default async function buildCurrent(
           // look for tags
           for (const tag of tags) {
             if (!currentTags.includes(tag)) {
-              currentTags.push(tag);
+              currentTags.unshift(tag);
+              isTagsChanged = true;
+            } else {
+              // move to first
+              const index = currentTags.indexOf(tag);
+              currentTags.splice(index, 1);
+              currentTags.unshift(tag);
               isTagsChanged = true;
             }
             const tagFilePath = getArchivedFilePath(

@@ -16,7 +16,6 @@ import buildCurrent from "./workflows/4-build-current.ts";
 import archive from "./workflows/5-archive.ts";
 import buildSite from "./workflows/6-build-site.ts";
 import serveSite from "./workflows/7-serve-site.ts";
-import serveArchiveSite from "./workflows/8-serve-archive-site.ts";
 import uploadCurrent from "./workflows/9-upload-current.ts";
 import uploadArchive from "./workflows/10-upload-archive.ts";
 import { RunOptions, Task } from "./interface.ts";
@@ -132,8 +131,6 @@ export default async function main() {
       const siteConfig = sitesMap[siteIdentifier];
       serveSite(siteIdentifier, siteConfig.port);
     }
-    // serve archive
-    serveArchiveSite();
   } else {
     log.info("skip serve_site stage");
   }

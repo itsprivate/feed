@@ -18,7 +18,7 @@ build_for_workders_dev:
 	WORKERS_DEV=1 DEV=1 NO_SERVE=1 deno run -A  main.ts
 .Phony: run
 run:
-	DEV=1 deno run -A main.ts --site prodhackernews 
+	DEV=1 deno run -A main.ts --site prodshowhn 
 buildprod:
 	MOCK=0 MOCK_IMAGE=0 deno run -A main.ts
 .Phony: buildprodfromformat
@@ -27,18 +27,31 @@ buildprodfromformat:
 
 .Phony: runfromformat
 runfromformat:
-	DEV=1 deno run -A --watch=main.ts,templates/,config.yml,static/ main.ts --stage format,translate,build_current,archive,build_site,serve_site --site prodhackernews
+	DEV=1 deno run -A --watch=main.ts,templates/,config.yml,static/ main.ts --stage format,translate,build_current,archive,build_site,serve_site --site prodshowhn
 .Phony: runfromtr
 runfromtr:
 	DEV=1 deno run -A --watch=main.ts,templates/,config.yml,static/ main.ts --stage build_current,archive,build_site,serve_site --site prodhackernews
 runtoarchive:
-	DEV=1 deno run -A --watch=main.ts,templates/,config.yml,static/ main.ts --stage format,translate,build_current,archive,build_site,serve_site,server_archive_site --site prodhackernews
+	DEV=1 deno run -A --watch=main.ts,templates/,config.yml,static/ main.ts --stage format,translate,build_current,archive,build_site,serve_site --site prodhackernews
 .Phony: start
 start:
 	DEV=1 deno run -A --watch=main.ts,templates/,config.yml,static/ main.ts --stage build_current,archive,build_site,serve_site --site prodhackernews
+
 .Phony: load
 load:
 	DEV=1 deno run -A main.ts --stage load_current
+	
+.Phony: loadprod
+loadprod:
+	deno run -A main.ts --stage load_current
+
+.Phony: loadarchive
+loadarchive:
+	DEV=1 deno run -A scripts/load-archive.ts
+	
+.Phony: loadarchiveprod
+loadarchiveprod:
+	deno run -A scripts/load-archive.ts
 
 .Phony: upload
 upload:
@@ -117,10 +130,12 @@ deletedata:
 deletearchive:
 	DEV=1 deno run -A ./scripts/clean-current.ts
 
-.Phony: serveprodarchive
-serveprodarchive:
+.Phony: archivesiteprod
+archivesiteprod:
 	deno run -A ./dev-archive-site.ts
-
+.Phony: archivesite
+archivesite:
+	DEV=1 deno run -A ./dev-archive-site.ts
 .Phony: check-fmt
 check-fmt:
 	deno fmt --check

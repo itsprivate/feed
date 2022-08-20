@@ -97,9 +97,9 @@ export default function itemsToFeed(
       content_html += `<img class="u-photo" src="${item.image}" alt="image">`;
     }
     content_html +=
-      ` <time class="dt-published published" datetime="${item.date_published}">${
+      ` <time class="dt-published published" datetime="${item._original_published}">${
         formatHumanTime(
-          new Date(item.date_published as string),
+          new Date(item._original_published as string),
         )
       }</time> -`;
     content_html +=

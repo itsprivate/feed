@@ -106,6 +106,9 @@
       a.initial-color {
         color: initial;
       }
+      a.initial-color:link {
+        color: initial;
+      }
       .no-underline {
         text-decoration: none;
       }
@@ -139,19 +142,24 @@
         <a class="no-underline no-visited initial-color" href="{{{url}}}"
           >{{name}}</a
         >{{^is_last}}<span> · </span>{{/is_last}} {{/_related_sites}}
-        {{#_other_sites}}
-        <a id="more" href="#more" class="no-underline no-visited more"
+        {{#_other_sites.0}}
+        <a
+          id="more"
+          href="#more"
+          class="initial-color no-underline no-visited more"
           >+ {{more_label}}</a
         >
-        <a id="less" href="#" class="no-underline no-visited less"
+        <a id="less" href="#" class="initial-color no-underline no-visited less"
           >- {{less_label}}</a
         >
         <div class="details">
+          {{/_other_sites.0}} {{#_other_sites}}
           <a class="no-underline no-visited initial-color" href="{{{url}}}"
             >{{name}}</a
-          >{{^is_last}}<span> · </span>{{/is_last}}
+          >{{^is_last}}<span> · </span>{{/is_last}} {{/_other_sites}}
+          {{#_other_sites.0}}
         </div>
-        {{/_other_sites}}
+        {{/_other_sites.0}}
       </nav>
       <h2>
         <a

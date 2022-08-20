@@ -1,8 +1,107 @@
 {
-  "items": {
-    "id": {}
-  },
   "meta": {
-    "name": "Job"
+    "name": "Show HN"
+  },
+  "items": {
+    "2022_08_20_en_hn_prodhackernews__32529604": {
+      "id": "2022_08_20_en_hn_prodhackernews__32529604",
+      "url": "https://euporie.readthedocs.io/en/latest/apps/console.html",
+      "date_published": "2022-08-20T09:30:43.524Z",
+      "date_modified": "2022-08-20T09:30:43.524Z",
+      "tags": ["Show HN"],
+      "authors": [
+        {
+          "name": "joouha",
+          "url": "https://news.ycombinator.com/user?id=joouha"
+        }
+      ],
+      "_original_published": "2022-08-20T09:30:43.524Z",
+      "_original_language": "en",
+      "_links": [
+        {
+          "url": "https://news.ycombinator.com/item?id=32529604",
+          "name": "&rarr; HN 5 points"
+        }
+      ],
+      "_translations": {
+        "en": {
+          "title": "Show HN: Euporie Console – a terminal console for Jupyter kernels"
+        },
+        "zh-Hans": {
+          "title": "Show HN: Euporie Console - Jupyter内核的终端控制台"
+        },
+        "zh-Hant": {
+          "title": "Show HN: Euporie Console - Jupyter內核的終端控制檯"
+        }
+      },
+      "external_url": "https://news.ycombinator.com/item?id=32529604"
+    },
+    "2022_08_19_en_hn_prodhackernews__32521395": {
+      "id": "2022_08_19_en_hn_prodhackernews__32521395",
+      "url": "https://sinerider.com/",
+      "date_published": "2022-08-20T02:47:58.162Z",
+      "date_modified": "2022-08-20T02:47:58.162Z",
+      "tags": ["Show HN"],
+      "authors": [
+        {
+          "name": "ClaireBookworm",
+          "url": "https://news.ycombinator.com/user?id=ClaireBookworm"
+        }
+      ],
+      "_original_published": "2022-08-20T02:47:58.162Z",
+      "_original_language": "en",
+      "_links": [
+        {
+          "url": "https://news.ycombinator.com/item?id=32521395",
+          "name": "&rarr; HN 196 points"
+        }
+      ],
+      "_translations": {
+        "en": {
+          "title": "Show HN: SineRider - A game about love, math, and graphing built by teenagers"
+        },
+        "zh-Hans": {
+          "title": "Show HN: SineRider - 一个由青少年打造的关于爱情、数学和图形的游戏"
+        },
+        "zh-Hant": {
+          "title": "Show HN: SineRider - 一個由青少年打造的關於愛情、數學和圖形的遊戲"
+        }
+      },
+      "external_url": "https://news.ycombinator.com/item?id=32521395"
+    },
+    "2022_08_17_en_hn_prodhackernews__32500572": {
+      "id": "2022_08_17_en_hn_prodhackernews__32500572",
+      "url": "https://github.com/compiler-devel/llvm-project/commit/cfd497fadb8bae4c5428f40ea50cfc760649afa4",
+      "date_published": "2022-08-20T02:47:44.211Z",
+      "date_modified": "2022-08-20T02:47:44.211Z",
+      "tags": ["Show HN"],
+      "authors": [
+        {
+          "name": "compiler-devel",
+          "url": "https://news.ycombinator.com/user?id=compiler-devel"
+        }
+      ],
+      "_original_published": "2022-08-20T02:47:44.211Z",
+      "_original_language": "en",
+      "_links": [
+        {
+          "url": "https://news.ycombinator.com/item?id=32500572",
+          "name": "&rarr; HN 56 points"
+        }
+      ],
+      "_translations": {
+        "en": {
+          "title": "Show HN: Modifying Clang for a Safer, More Explicit C++"
+        },
+        "zh-Hans": {
+          "title": "展示HN：修改Clang以实现更安全、更明确的C++"
+        },
+        "zh-Hant": {
+          "title": "展示HN：修改Clang以實現更安全、更明確的C++"
+        }
+      },
+      "image": "https://opengraph.githubassets.com/0fde583ab15aec122380b790129daaaa7cf142111389c75eb642a86b79d6d3f4/compiler-devel/llvm-project/commit/cfd497fadb8bae4c5428f40ea50cfc760649afa4",
+      "external_url": "https://news.ycombinator.com/item?id=32500572"
+    }
   }
 }

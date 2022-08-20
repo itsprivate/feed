@@ -1,4 +1,4 @@
-import serveArchiveSite from "./workflows/8-serve-archive-site.ts";
+import serveArchiveSite from "./serve-archive-site.ts";
 import { dotenvConfig } from "./deps.ts";
 async function main() {
   await dotenvConfig({
