@@ -59,11 +59,10 @@ jobs:
           ${{secrets.WRANGLER}}
           EOT
       - run: npm ci
-      - run: make install
-      - run: make test-file
       - run: make prod-loadcurrent
         env:
           CLOUDFLARE_API_TOKEN: ${{secrets.CF_API_TOKEN}}
+      - run: make install
       - run: make prod-build
         env:
           R2_ACCESS_KEY_ID: ${{secrets.R2_ACCESS_KEY_ID}}
