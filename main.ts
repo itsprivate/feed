@@ -123,6 +123,15 @@ export default async function main() {
     log.info("skip build_site stage");
   }
 
+  if (allPostTasks.length > 0) {
+    for (const task of allPostTasks) {
+      if (task.type === "write") {
+        await writeTextFile(task.meta.path, task.meta.content);
+      }
+    }
+    log.info(`run ${allPostTasks.length} post tasks success`);
+  }
+
   // 7. serve site
   const isServer = !(Deno.env.get("NO_SERVE") === "1");
   if (
@@ -157,14 +166,6 @@ export default async function main() {
     await uploadArchive(runOptions);
   } else {
     log.info("skip upload_archive stage");
-  }
-  if (allPostTasks.length > 0) {
-    for (const task of allPostTasks) {
-      if (task.type === "write") {
-        await writeTextFile(task.meta.path, task.meta.content);
-      }
-    }
-    log.info(`run ${allPostTasks.length} post tasks success`);
   }
 }
 

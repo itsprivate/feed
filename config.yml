@@ -10,6 +10,7 @@ sites:
   devfeed:
     port: 8000
     indexed: false
+    tags: []
     translations:
       "zh-Hans":
         title: "Reddit 热门"
@@ -22,7 +23,7 @@ sites:
         rules:
           - type: greaterEqual
             key: data.score
-            value: 75000
+            value: "75000"
       # - url: https://hn.algolia.com/api/v1/search_by_date?tags=front_page&hitsPerPage=50
       #   itemsPath: hits
       #   type: hn

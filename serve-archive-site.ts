@@ -101,7 +101,6 @@ export default async function serveSite(port = 8000) {
     } else {
       // read from remote
       const bucket = getArchivedBucketName();
-      console.log("bucket", bucket);
       const s3Bucket = await getArchiveS3Bucket(bucket);
       const s3Object = await s3Bucket.getObject(filePath);
       if (s3Object) {

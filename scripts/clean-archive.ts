@@ -20,7 +20,6 @@ async function cleanRemoteCurrentData() {
     );
     const input = prompt("Please enter y to confirm");
     if (input && input.trim() === "y") {
-      console.log("yes");
       // again
       const input = prompt("Please enter again y to confirm!");
       if (input && input.trim() === "y") {

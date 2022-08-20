@@ -19,6 +19,7 @@
     "devfeed": {
       "port": 8000,
       "indexed": false,
+      "tags": [],
       "translations": {
         "zh-Hans": {
           "title": "Reddit 热门",
@@ -40,7 +41,7 @@
             {
               "type": "greaterEqual",
               "key": "data.score",
-              "value": 75000
+              "value": "75000"
             }
           ]
         }

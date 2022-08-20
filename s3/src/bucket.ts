@@ -295,7 +295,6 @@ export class S3Bucket {
     }
     if (res.status !== 200) {
       const text = await res.text();
-      console.log(text);
       throw new S3Error(
         `Failed to get object: ${res.status} ${res.statusText}`,
         text,

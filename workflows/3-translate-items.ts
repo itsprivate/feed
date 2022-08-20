@@ -69,7 +69,6 @@ export default async function translateItems(
           ) as FormatedItem;
           const filename = path.basename(file);
           const parsedFilename = Item.parseItemIdentifier(filename);
-          console.log("item._translations", item._translations);
           const originalTranslations = (item._translations
             ? item
               ._translations[item._original_language]
