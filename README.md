@@ -32,6 +32,16 @@ wrangler r2 bucket create feed
 
 - [QuickType](https://app.quicktype.io/) - JSON to TypeScript
 
+## Init
+
+```bash
+# init current.zip folder in s3
+make prod-initcurrentzip
+make prod-build
+```
+
+See `.github/workflows/cron.yml`
+
 ## TODO
 
 - [ ] add more feeds
