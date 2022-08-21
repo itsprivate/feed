@@ -2,7 +2,7 @@ import { getDataPath } from "../util.ts";
 import { RunOptions } from "../interface.ts";
 import log from "../log.ts";
 import { compress } from "../bad-deps.ts";
-export default async function compressCurrentData(_options: RunOptions) {
+export default async function compressCurrentData(_options?: RunOptions) {
   const zipName = getDataPath() + ".zip";
   await compress(getDataPath(), zipName, {
     overwrite: true,

@@ -195,3 +195,7 @@ config:
 .Phony: clean
 clean:
 	rm -rf current/ archive/ public/ dev-current.zip current.zip dev-current/ dev-archive/
+
+.Phony: prod-initcurrentzip
+prod-initcurrentzip:
+	deno run -A ./scripts/init-current-zip.ts && make prod-uploadcurrent
