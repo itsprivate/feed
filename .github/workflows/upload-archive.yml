@@ -26,6 +26,8 @@ jobs:
           key: ${{ runner.os }}-deno-${{ hashFiles('**/deps.ts') }}
       - name: download archive zip file
         run: wget http://bashupload.com/bVpT7/archive.zip
+      - name: unzip archive.zip
+        run: unzip -o -q archive.zip
       - name: upload files
         run: make prod-uploadarchive
         env:
