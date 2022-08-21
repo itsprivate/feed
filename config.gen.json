@@ -183,9 +183,16 @@
       },
       "sources": [
         {
-          "url": "https://www.reddit.com/r/all/top/.json",
+          "url": "https://www.reddit.com/r/all/top/.json?raw_json=1",
           "itemsPath": "data.children",
-          "type": "reddit"
+          "type": "reddit",
+          "rules": [
+            {
+              "type": "greaterEqual",
+              "key": "data.score",
+              "value": "75000"
+            }
+          ]
         }
       ]
     }

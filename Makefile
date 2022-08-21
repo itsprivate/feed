@@ -35,6 +35,7 @@ prod-buildfromformat:
 .Phony: runfromformat
 runfromformat:
 	DEV=1 deno run -A --watch=main.ts,templates/,config.yml,static/ main.ts --stage format,translate,build_current,archive,build_site,serve_site --site prodhn
+
 .Phony: runfromtr
 runfromtr:
 	DEV=1 deno run -A --watch=main.ts,templates/,config.yml,static/ main.ts --stage build_current,archive,build_site,serve_site --site devfeed
@@ -100,6 +101,9 @@ prod-upload:
 .Phony: fetch
 fetch:
 	DEV=1 deno run -A main.ts --stage fetch --site devfeed
+.Phony: prod-fetch
+prod-fetch:
+	deno run -A main.ts --stage fetch --site devfeed
 
 .Phony: fetchall
 fetchall:
@@ -108,14 +112,17 @@ fetchall:
 .Phony: format
 format:
 	DEV=1 deno run -A main.ts --stage format --site devfeed
+.Phony: prod-format
+prod-format:
+	deno run -A main.ts --stage format --site devfeed
 
 .Phony: tr
 tr:
 	DEV=1 deno run -A main.ts --stage translate --site devfeed
 
-.Phony: trtest
-trtest:
-	HEADLESS=0 MOCK=0 DEV=1 deno run -A main.ts --stage translate --site devfeed
+.Phony: prod-tr
+prod-tr:
+	HEADLESS=0 MOCK=0 FILES=4 deno run -A main.ts --stage translate --site devfeed
 
 
 .Phony: trall

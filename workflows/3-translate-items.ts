@@ -10,7 +10,7 @@ import {
 } from "../util.ts";
 import log from "../log.ts";
 import Translation from "../translate.ts";
-import { DEV_MODE_HANDLED_ITEMS } from "../constant.ts";
+import { DEV_MODE_HANDLED_ITEMS, TARGET_SITE_LANGUAEGS } from "../constant.ts";
 
 export default async function translateItems(
   options: RunOptions,
@@ -81,23 +81,49 @@ export default async function translateItems(
             ...item,
           } as Record<string, unknown>;
           for (const field of originalTranslationKeys) {
-            const value = originalTranslations[field];
-            log.debug(
-              `translating ${parsedFilename.type} ${parsedFilename.language} ${field}: ${value} for ${parsedFilename.targetSite}`,
-            );
-            const translated = await translation.translate(
-              value,
-              item._original_language,
-            );
-
-            log.debug("translated", translated);
-
-            const translatedKeys = Object.keys(translated);
-            for (const key of translatedKeys) {
-              if (!translations[key]) {
-                translations[key] = {};
+            // first check if this field is translated
+            // TODO
+            for (const language of TARGET_SITE_LANGUAEGS) {
+              if (language.code === item._original_language) {
+                continue;
               }
-              translations[key][field] = translated[key];
+
+              if (
+                translations[language.code] &&
+                translations[language.code][field] !== undefined
+              ) {
+                // yes already translated
+                log.info(`field ${field} already translated, skip`);
+                continue;
+              }
+
+              const value = originalTranslations[field];
+              log.debug(
+                `translating ${parsedFilename.type} ${parsedFilename.language} ${field}: ${value} for ${parsedFilename.targetSite}`,
+              );
+              let translated = "";
+              if (language.code === "zh-Hant") {
+                // look up zh-Hants, and to translate
+                if (!translations["zh-Hans"][field]) {
+                  throw new Error(`field ${field} not found in zh-Hans`);
+                }
+                translated = await translation.translate(
+                  translations["zh-Hans"][field],
+                  "zh-Hans",
+                  "zh-Hant",
+                );
+              } else {
+                translated = await translation.translate(
+                  value,
+                  item._original_language,
+                  language.code,
+                );
+              }
+
+              if (!translations[language.code]) {
+                translations[language.code] = {};
+              }
+              translations[language.code][field] = translated;
             }
           }
           translatedJson._translations = translations;

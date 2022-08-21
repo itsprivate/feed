@@ -90,14 +90,11 @@ export default class Translation {
   async translate(
     sentence: string,
     sourceLanguage: string,
-  ): Promise<Record<string, string>> {
+    targetLanguage: string,
+  ): Promise<string> {
     // if mock
     if (this.isMock) {
-      const translatedObj: Record<string, string> = {};
-      for (const targetLanguage of TARGET_SITE_LANGUAEGS) {
-        translatedObj[targetLanguage.code] = sentence;
-      }
-      return translatedObj;
+      return sentence;
     }
     if (!this.page) {
       throw new Error("page not init, must call init() first");
@@ -110,45 +107,39 @@ export default class Translation {
       await this.init();
       this.currentTranslated = 0;
     }
-    const translatedObj: Record<string, string> = {};
-    for (const targetLanguage of TARGET_SITE_LANGUAEGS) {
-      if (targetLanguage.code !== "zh-Hant") {
-        // check is orginal language, if so, not translate
+    if (targetLanguage !== "zh-Hant") {
+      // check is orginal language, if so, not translate
 
-        if (sourceLanguage === targetLanguage.code) {
-          continue;
-        }
-
-        // check local translate
-        const localTranslation = this.localTranslations[targetLanguage.code];
-        if (localTranslation && localTranslation[sentence]) {
-          translatedObj[targetLanguage.code] = localTranslation[sentence];
-          log.info(
-            `local translate ${sentence} to ${targetLanguage.code} ${
-              localTranslation[sentence]
-            } success`,
-          );
-          continue;
-        }
-
-        let translated = await this.doTranslate(
-          this.page!,
-          sentence,
-          sourceLanguage,
-          targetLanguage.code,
-        );
-        // remove end newline
-        translated = translated.replace(/\n$/, "");
-        translatedObj[targetLanguage.code] = translated;
-        log.info(`translate ${sentence} to ${translated} success`);
-        this.currentTranslated++;
-      } else {
-        const translated = toZhHant(translatedObj["zh-Hans"]);
-        translatedObj[targetLanguage.code] = translated;
+      if (sourceLanguage === targetLanguage) {
+        return sentence;
       }
-    }
 
-    return translatedObj;
+      // check local translate
+      const localTranslation = this.localTranslations[targetLanguage];
+      if (localTranslation && localTranslation[sentence]) {
+        log.info(
+          `local translate ${sentence} to ${targetLanguage} ${
+            localTranslation[sentence]
+          } success`,
+        );
+        return localTranslation[sentence];
+      }
+
+      let translated = await this.doTranslate(
+        this.page!,
+        sentence,
+        sourceLanguage,
+        targetLanguage,
+      );
+      // remove end newline
+      translated = translated.replace(/\n$/, "");
+
+      log.info(`translate ${sentence} to ${translated} success`);
+      this.currentTranslated++;
+      return translated;
+    } else {
+      return toZhHant(sentence);
+    }
   }
   async doTranslate(
     page: Page,
