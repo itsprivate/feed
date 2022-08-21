@@ -159,7 +159,7 @@ export default function itemsToFeed(
           getArchiveSitePrefix(config)
         }/${language.prefix}${siteIdentifier}/tags/${
           // @ts-ignore: npm module
-          slug(tag)}">#${tag}</a>`;
+          slug(tag)}/">#${tag}</a>`;
         index++;
       }
     }
