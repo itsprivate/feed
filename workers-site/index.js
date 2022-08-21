@@ -122,7 +122,6 @@ const customKeyModifier = (request) => {
   const url = request.url;
   //custom key mapping optional
   const subsiteIdentifier = getSubsiteIdentifier(url);
-
   const urlObj = new URL(url);
   urlObj.pathname = "/" + subsiteIdentifier + urlObj.pathname;
   return mapRequestToAsset(new Request(urlObj.href, request));

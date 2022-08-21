@@ -24,21 +24,24 @@ build_for_workders_dev:
 
 .Phony: run
 run:
-	DEV=1 FILES=50 deno run -A main.ts --site reddit 
+	DEV=1 FILES=50 deno run -A main.ts --site devfeed 
 .Phony: prod-start
 prod-start:
-	deno run -A main.ts --stage build_site,serve_site --site reddit
+	deno run -A main.ts --stage build_site,serve_site --site devfeed
 
 
 
 .Phony: prod-buildfromformat
 prod-buildfromformat:
-	MOCK=0 MOCK_IMAGE=0 deno run -A main.ts --stage format,translate,build_current,archive,build_site --site reddit
+	MOCK=0 MOCK_IMAGE=0 deno run -A main.ts --stage format,translate,build_current,archive,build_site --site devfeed
 
+.Phony: prod-buildsite
+prod-buildsite:
+	deno run -A main.ts --stage decompress_current,build_site
 
 .Phony: runfromformat
 runfromformat:
-	DEV=1 deno run -A --watch=main.ts,templates/,config.yml,static/ main.ts --stage format,translate,build_current,archive,build_site,serve_site --site reddit
+	DEV=1 deno run -A --watch=main.ts,templates/,config.yml,static/ main.ts --stage format,translate,build_current,archive,build_site,serve_site --site devfeed
 
 .Phony: runfromtr
 runfromtr:
@@ -125,7 +128,7 @@ archive:
 	DEV=1 deno run -A main.ts --stage archive --site devfeed
 .Phony: prod-archive
 prod-archive:
-	deno run -A main.ts --stage archive --site reddit
+	deno run -A main.ts --stage archive --site devfeed
 
 
 .Phony: tr

@@ -43,7 +43,6 @@ sites:
       #   type: hn
   hackernews:
     port: 8001
-    domain: prodhackernews.buzzing.cc
     tags:
       - hn
     translations:
@@ -91,7 +90,6 @@ sites:
         type: hn
   showhn:
     port: 8004
-    domain: prodshowhn.buzzing.cc
     tags:
       - hn
     translations:
@@ -105,7 +103,6 @@ sites:
         type: hn
   reddit:
     port: 8005
-    domain: prodreddit.buzzing.cc
     tags:
       - reddit
     translations:

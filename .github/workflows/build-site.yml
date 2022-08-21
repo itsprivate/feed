@@ -1,4 +1,4 @@
-name: cron tasks
+name: Build Site
 on:
   repository_dispatch:
   workflow_dispatch:
@@ -57,8 +57,7 @@ jobs:
       - run: make prod-loadcurrent
         env:
           CLOUDFLARE_API_TOKEN: ${{secrets.CF_API_TOKEN}}
-      - run: make install
-      - run: make prod-build
+      - run: make prod-buildsite
         env:
           R2_ACCESS_KEY_ID: ${{secrets.R2_ACCESS_KEY_ID}}
           R2_SECRET_ACCESS_KEY: ${{secrets.R2_SECRET_ACCESS_KEY}}
@@ -70,21 +69,6 @@ jobs:
           ARCHIVE_REGION: ${{secrets.ARCHIVE_REGION}}
           CLOUDFLARE_API_TOKEN: ${{secrets.CF_API_TOKEN}}
         continue-on-error: true
-
-      - run: git status
-
-      - name: upload files
-        run: make prod-upload
-        env:
-          R2_ACCESS_KEY_ID: ${{secrets.R2_ACCESS_KEY_ID}}
-          R2_SECRET_ACCESS_KEY: ${{secrets.R2_SECRET_ACCESS_KEY}}
-          R2_REGION: ${{secrets.R2_REGION}}
-          R2_ENDPOINT: ${{secrets.R2_ENDPOINT}}
-          ARCHIVE_ACCESS_KEY_ID: ${{secrets.ARCHIVE_ACCESS_KEY_ID}}
-          ARCHIVE_SECRET_ACCESS_KEY: ${{secrets.ARCHIVE_SECRET_ACCESS_KEY}}
-          ARCHIVE_ENDPOINT: ${{secrets.ARCHIVE_ENDPOINT}}
-          ARCHIVE_REGION: ${{secrets.ARCHIVE_REGION}}
-          CLOUDFLARE_API_TOKEN: ${{secrets.CF_API_TOKEN}}
 
       - name: Publish wrangler
         run: make prod-publish

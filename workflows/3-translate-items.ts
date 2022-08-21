@@ -63,6 +63,7 @@ export default async function translateItems(
         throw e;
       }
       if (files.length > 0) {
+        log.info(`start translate ${files.length} items for ${siteIdentifier}`);
         for (const file of files) {
           const item = JSON.parse(
             await Deno.readTextFile(file),

@@ -7,7 +7,6 @@ dev-archive.zip
 /current/
 /dev-archive/
 /archive/
-/wrangler.toml
 temp.json
 /public/
 # Logs

@@ -1,0 +1,44 @@
+name = "dev-feed"
+main = "workers-site/index.js"
+compatibility_date = "2022-08-17"
+workers_dev = true
+
+[[routes]]
+pattern = "dev-prodhackernews.buzzing.cc"
+custom_domain = true
+[[routes]]
+pattern = "dev-prodhn.buzzing.cc"
+custom_domain = true
+[[routes]]
+pattern = "devfeed.buzzing.cc"
+custom_domain = true
+
+[site]
+bucket = "./public" # <-- Add your build directory name here.
+
+
+[dev]
+port = 8000
+host = "devfeed.buzzing.cc"
+
+[env.prod]
+name = "feed"
+[[env.prod.routes]]
+pattern = "hackernews.buzzing.cc"
+custom_domain = true
+
+[[env.prod.routes]]
+pattern = "prodhn.buzzing.cc"
+custom_domain = true
+
+[[env.prod.routes]]
+pattern = "prodaskhn.buzzing.cc"
+custom_domain = true
+
+[[env.prod.routes]]
+pattern = "showhn.buzzing.cc"
+custom_domain = true
+
+[[env.prod.routes]]
+pattern = "reddit.buzzing.cc"
+custom_domain = true
