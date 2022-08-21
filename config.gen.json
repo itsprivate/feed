@@ -210,6 +210,35 @@
           ]
         }
       ]
+    },
+    "news": {
+      "port": 8006,
+      "tags": [
+        "news"
+      ],
+      "translations": {
+        "zh-Hans": {
+          "title": "国外新闻头条 - 全球新闻头条 - 美国新闻头条",
+          "short_title": "国外新闻",
+          "description": "用中文浏览国外新闻头条，美国新闻头条，全球新闻(西方媒体)头条"
+        },
+        "en": {
+          "title": "Buzzing on World News",
+          "description": "See what's buzzing on the news in your native language",
+          "keywords": "Buzzing News, Buzzing News Feed"
+        },
+        "zh-Hant": {
+          "title": "國外新聞頭條 - 全球新聞頭條 - 美國新聞頭條",
+          "short_title": "國外新聞",
+          "description": "用中文瀏覽國外新聞頭條，美國新聞頭條，全球新聞(西方媒體)頭條"
+        }
+      },
+      "sources": [
+        {
+          "url": "https://news.google.com/rss/topics/CAAqJggKIiBDQkFTRWdvSUwyMHZNRGx1YlY4U0FtVnVHZ0pWVXlnQVAB?hl=en-US&gl=US&ceid=US:en",
+          "type": "rss"
+        }
+      ]
     }
   },
   "archive": {

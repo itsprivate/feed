@@ -45,58 +45,78 @@ export default async function fetchSources(
       }
       for (const originalItem of originalItems) {
         // check rules
+        let isAllRulesFine = true;
         for (const rule of rules) {
           const { key, value, type } = rule;
           const originalValue = get(originalItem, key);
           if (type === "greater") {
             if (Number(originalValue) <= Number(value)) {
-              continue;
+              isAllRulesFine = false;
+              break;
             }
           } else if (type === "equal") {
             if (originalValue !== value) {
-              continue;
+              isAllRulesFine = false;
+              break;
             }
           } else if (type === "notEqual") {
             if (originalValue === value) {
-              continue;
+              isAllRulesFine = false;
+              break;
             }
           } else if (type === "include") {
             if (!(originalValue as string[]).includes(value)) {
-              continue;
+              isAllRulesFine = false;
+              break;
             }
           } else if (type === "notInclude") {
             if ((originalValue as string[]).includes(value)) {
-              continue;
+              isAllRulesFine = false;
+              break;
             }
           } else if (type === "notExist") {
             if (originalValue) {
-              continue;
+              isAllRulesFine = false;
+              break;
             }
           } else if (type === "exist") {
             if (!originalValue) {
-              continue;
+              isAllRulesFine = false;
+              break;
             }
           } else if (type === "notMatch") {
             if ((originalValue as string).match(value)) {
-              continue;
+              isAllRulesFine = false;
+              break;
             }
           } else if (type === "match") {
             if (!(originalValue as string).match(value)) {
-              continue;
+              isAllRulesFine = false;
+              break;
             }
           } else if (type === "greaterEqual") {
+            console.log("originalValue", originalValue);
+            console.log("value", value);
             if (Number(originalValue) < Number(value)) {
-              continue;
+              isAllRulesFine = false;
+              break;
             }
           } else if (type === "less") {
             if (Number(originalValue) >= Number(value)) {
-              continue;
+              isAllRulesFine = false;
+              break;
             }
           } else if (type === "lessEqual") {
             if (Number(originalValue) > Number(value)) {
-              continue;
+              isAllRulesFine = false;
+              break;
             }
+          } else {
+            throw new Error(`unknown rule type ${type}`);
           }
+        }
+        if (!isAllRulesFine) {
+          continue;
         }
 
         // parse item to formated item

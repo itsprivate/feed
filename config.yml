@@ -38,9 +38,6 @@ sites:
           - type: greaterEqual
             key: data.score
             value: "75000"
-      # - url: https://hn.algolia.com/api/v1/search_by_date?tags=front_page&hitsPerPage=50
-      #   itemsPath: hits
-      #   type: hn
   hackernews:
     port: 8001
     tags:
@@ -101,6 +98,7 @@ sites:
       - url: https://hn.algolia.com/api/v1/search_by_date?tags=(show_hn)&hitsPerPage=50
         itemsPath: hits
         type: hn
+
   reddit:
     port: 8005
     tags:
@@ -122,6 +120,22 @@ sites:
           - type: greaterEqual
             key: data.score
             value: "75000"
+  news:
+    port: 8006
+    tags:
+      - news
+    translations:
+      "zh-Hans":
+        title: "国外新闻头条 - 全球新闻头条 - 美国新闻头条"
+        short_title: "国外新闻"
+        description: "用中文浏览国外新闻头条，美国新闻头条，全球新闻(西方媒体)头条"
+      "en":
+        title: "Buzzing on World News"
+        description: "See what's buzzing on the news in your native language"
+        keywords: "Buzzing News, Buzzing News Feed"
+    sources:
+      - url: https://news.google.com/rss/topics/CAAqJggKIiBDQkFTRWdvSUwyMHZNRGx1YlY4U0FtVnVHZ0pWVXlnQVAB?hl=en-US&gl=US&ceid=US:en
+        type: rss
 archive:
   port: 9000
   siteIdentifier: i
