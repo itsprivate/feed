@@ -24,7 +24,7 @@ build_for_workders_dev:
 
 .Phony: run
 run:
-	DEV=1 FILES=50 deno run -A main.ts --site devfeed 
+	DEV=1 FILES=50 deno run -A main.ts --site reddit 
 .Phony: prod-start
 prod-start:
 	deno run -A main.ts --stage build_site,serve_site --site reddit
@@ -193,7 +193,7 @@ prod-servearchive:
 
 .Phony: servearchive
 servearchive:
-	DEV=1 deno run -A ./dev-archive-site.ts
+	DEV=1 deno run -A --watch ./dev-archive-site.ts
 
 .Phony: check-fmt
 check-fmt:

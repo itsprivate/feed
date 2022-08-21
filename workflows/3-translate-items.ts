@@ -110,7 +110,8 @@ export default async function translateItems(
               todoLanguages.map((item) => item.code),
             );
             log.info(
-              `${total}/${files.length} translated ${value} to ${translated}`,
+              `${total}/${files.length} translated ${value} to`,
+              translated,
             );
             for (const languageCode of Object.keys(translated)) {
               if (!translations[languageCode]) {

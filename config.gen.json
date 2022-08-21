@@ -188,6 +188,11 @@
           "short_title": "Reddit 热门",
           "description": "用中文浏览Reddit热门内容"
         },
+        "en": {
+          "title": "Buzzing on Reddit",
+          "description": "See what's buzzing on Reddit in your native language",
+          "keywords": "Reddit Hot, Reddit Hot Feed"
+        },
         "zh-Hant": {
           "title": "Reddit 熱門",
           "short_title": "Reddit 熱門",
