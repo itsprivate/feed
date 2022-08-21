@@ -102,9 +102,13 @@ sites:
         short_title: "Reddit 热门"
         description: "用中文浏览Reddit热门内容"
     sources:
-      - url: https://www.reddit.com/r/all/top/.json
+      - url: https://www.reddit.com/r/all/top/.json?raw_json=1
         itemsPath: data.children
         type: reddit
+        rules:
+          - type: greaterEqual
+            key: data.score
+            value: "75000"
 archive:
   port: 9000
   siteIdentifier: i
