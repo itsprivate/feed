@@ -67,20 +67,18 @@ export default async function moveIssues() {
         const originalCreated = new Date(
           Number(json.original_created_utc) * 1000,
         );
-        const newFilename = `${getFullYear(originalCreated)}_${
+        const weekInfo = weekOfYear(originalCreated);
+        const newIdentifier = `${getFullYear(originalCreated)}_${
           getFullMonth(originalCreated)
         }_${getFullDay(originalCreated)}_en_${type}_${siteIdentifier}__${
           getId(json.permalink as string)
-        }.json`;
-        const newPath = `archive/${siteIdentifier}/posts/${
-          getFullYear(originalCreated)
-        }/${getFullMonth(originalCreated)}/${
-          getFullDay(originalCreated)
-        }/${newFilename}`;
-        console.log("newPath", newPath);
+        }`;
+        const newPath =
+          `archive/${siteIdentifier}/archive/${weekInfo.path}/items.json`;
         try {
-          const newJson = await readJSONFile(newPath) as FormatedItem;
-          newItems.items[newJson.id] = newJson;
+          const newJson = await readJSONFile(newPath) as ItemsJson;
+          // find items
+          newItems.items[newIdentifier] = newJson.items[newIdentifier];
         } catch (e) {
           log.warn("ignore error when format item", e);
         }

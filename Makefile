@@ -223,3 +223,8 @@ prod-initcurrentzip:
 .Phony: movereddit
 movereddit:
 	deno run -A ./migrates/move-reddit.ts
+
+
+.Phony: temp-uploadarchive
+temp-uploadarchive:
+	curl bashupload.com -T ./archive.zip

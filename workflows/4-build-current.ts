@@ -1,4 +1,4 @@
-import { fs, path, slug } from "../deps.ts";
+import { fs, slug } from "../deps.ts";
 import { FormatedItem, ItemsJson, RunOptions } from "../interface.ts";
 import getLatestItems from "../latest-items.ts";
 import {
@@ -9,9 +9,6 @@ import {
   getCurrentTagsFilePath,
   getCurrentToBeArchivedItemsFilePath,
   getDataTranslatedPath,
-  getFullDay,
-  getFullMonth,
-  getFullYear,
   loadS3ArchiveFile,
   pathToSiteIdentifier,
   readJSONFile,
@@ -233,24 +230,8 @@ export default async function buildCurrent(
             );
           }
         }
-        // write to posts archive
-        // mv
-        const itemDate = new Date(item._original_published);
-        const targetPostFile = getArchivedFilePath(
-          siteIdentifier,
-          `posts/${getFullYear(itemDate)}/${getFullMonth(itemDate)}/${
-            getFullDay(itemDate)
-          }/${item.id}.json`,
-        );
-        // ensure folder exists
-        await fs.ensureDir(path.dirname(targetPostFile));
-        await fs.move(
-          file,
-          targetPostFile,
-          {
-            overwrite: true,
-          },
-        );
+        // delete old file
+        await Deno.remove(file);
       }
       if (siteConfig.archive !== false) {
         // write currentArchive file
