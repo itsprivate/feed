@@ -3,6 +3,7 @@ import {
   isWeekBiggerThan,
   loadS3ArchiveFile,
   resortArchiveKeys,
+  slug,
   weekOfYear,
 } from "./util.ts";
 
@@ -168,4 +169,19 @@ Deno.test("weekOfYear #12", () => {
     number: 202152,
     path: "2021/52",
   });
+});
+
+Deno.test("weekOfYear #13", () => {
+  const date = new Date("2022-05-12T14:20:28.000Z");
+  assertEquals(weekOfYear(date), {
+    year: 2022,
+    week: 19,
+    number: 202219,
+    path: "2022/19",
+  });
+});
+
+Deno.test("slug #14", () => {
+  assertEquals(slug("Hello World"), "hello-world");
+  assertEquals(slug("KidsAreFuckingStupid"), "kids-are-fucking-stupid");
 });

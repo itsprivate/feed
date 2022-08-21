@@ -38,6 +38,13 @@ export default async function serveSite(port = 8000) {
       }
     }
 
+    const newUrl = new URL(request.url);
+    newUrl.pathname = pathname;
+
+    // const pattern = new URLPattern({ pathname: '/:siteIdentifier/:scope' });
+
+    // pattern.test(newUrl.pathname);
+
     // get siteIdentifier
     const fields = pathname.split("/");
 

@@ -13,6 +13,12 @@ translations:
     "powered_by_label": "Made by ❤️"
     "languages_label": "Other languages"
     "more_sites_label": "More feeds"
+  "ja":
+    "about_label": "このページについて"
+    "subscription_label": "購読"
+    "powered_by_label": "製作者 ❤️"
+    "languages_label": "他の言語"
+    "more_sites_label": "他のフィード"
 sites:
   devfeed:
     port: 8000

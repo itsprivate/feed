@@ -48,6 +48,7 @@ export { S3, S3Bucket } from "./s3/mod.ts";
 // npm modules
 export { getMetadata } from "https://jspm.dev/page-metadata-parser@1.1.4";
 export { default as slug } from "https://jspm.dev/slug@6.0.0";
+export { default as kebabCase } from "https://jspm.dev/lodash@4.17.21/kebabCase";
 
 export { default as mustache } from "https://jspm.dev/mustache@4.2.0";
 export { default as jsonfeedToAtom } from "https://jspm.dev/jsonfeed-to-atom@1.2.2";

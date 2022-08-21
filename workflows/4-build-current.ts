@@ -1,4 +1,4 @@
-import { fs, slug } from "../deps.ts";
+import { fs } from "../deps.ts";
 import { FormatedItem, ItemsJson, RunOptions } from "../interface.ts";
 import getLatestItems from "../latest-items.ts";
 import {
@@ -14,6 +14,7 @@ import {
   readJSONFile,
   resortArchiveKeys,
   siteIdentifierToPath,
+  slug,
   weekOfYear,
   writeJSONFile,
 } from "../util.ts";
@@ -60,8 +61,6 @@ export default async function buildCurrent(
       log.info(
         `start build items, got ${files.length} translated items for ${siteIdentifier}`,
       );
-      // TODO
-      // files = files.slice(1, 200);
 
       // move items to current items folder
       // get all json
@@ -102,8 +101,8 @@ export default async function buildCurrent(
       let total = 0;
       // merge items to current itemsJson
       const tagFiles: Record<string, ItemsJson> = {};
-      let tagItemsCount = 0;
       let archiveItemsCount = 0;
+      const newTagItemsCountMap: Record<string, number> = {};
       for (const file of files) {
         const item = await readJSONFile(file) as FormatedItem;
         const id = item["id"];
@@ -135,7 +134,12 @@ export default async function buildCurrent(
             let isTagsChanged = false;
             // look for tags
             for (const tag of tags) {
-              if (tagItemsCount < MAX_ITEMS_PER_PAGE) {
+              if (!newTagItemsCountMap[tag]) {
+                newTagItemsCountMap[tag] = 1;
+              } else {
+                newTagItemsCountMap[tag] += 1;
+              }
+              if (newTagItemsCountMap[tag] <= MAX_ITEMS_PER_PAGE) {
                 const tagFilePath = getArchivedFilePath(
                   siteIdentifier,
                   // @ts-ignore: npm module
@@ -163,7 +167,6 @@ export default async function buildCurrent(
                   tagFileJson.items[id] = item;
                   tagFiles[tagFilePath] = tagFileJson;
                 }
-                tagItemsCount++;
               }
 
               if (!currentTags.includes(tag)) {

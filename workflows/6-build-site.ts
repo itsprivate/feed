@@ -12,7 +12,7 @@ import {
   writeJSONFile,
   writeTextFile,
 } from "../util.ts";
-// import generateIcons from "../generate-icons.ts";
+import generateIcons from "../generate-icons.ts";
 import log from "../log.ts";
 import { TARGET_SITE_LANGUAEGS } from "../constant.ts";
 import feedToHTML from "../feed-to-html.ts";
@@ -116,12 +116,12 @@ export default async function buildSite(options: RunOptions) {
         await writeTextFile(indexPath, indexHTML);
 
         // copy static files
-        // try {
-        //   await generateIcons(siteIdentifier);
-        // } catch (e) {
-        //   log.error("can not generate icons for ", siteIdentifier);
-        //   throw e;
-        // }
+        try {
+          await generateIcons(siteIdentifier);
+        } catch (e) {
+          log.error("can not generate icons for ", siteIdentifier);
+          throw e;
+        }
       }
       log.info(`${siteIdentifier} build success`);
     } else {

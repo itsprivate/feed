@@ -17,7 +17,7 @@ export default async function fetchSources(
   const postTasks: Task[] = [];
   for (const siteIdentifier of siteIdentifiers) {
     const siteConfig = sitesMap[siteIdentifier];
-    const sources = siteConfig.sources;
+    const sources = siteConfig.sources || [];
     let total = 0;
     for (const source of sources) {
       const sourceUrl = source.url;

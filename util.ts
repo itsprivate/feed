@@ -1,9 +1,10 @@
 import {
-  datetime,
   DateTimeFormatter,
   fs,
+  kebabCase,
   path,
   S3Bucket,
+  slug as slugFn,
   YAML,
 } from "./deps.ts";
 import { ROOT_DOMAIN, TARGET_SITE_LANGUAEGS } from "./constant.ts";
@@ -571,4 +572,9 @@ export const isWeekBiggerThan = function (aDate: Date, bDate: Date): boolean {
     return true;
   }
   return false;
+};
+
+export const slug = function (tag: string): string {
+  // @ts-ignore: npm module
+  return slugFn(kebabCase(tag));
 };

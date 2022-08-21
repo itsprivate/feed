@@ -15,9 +15,9 @@ import {
   getPageMeta,
   itemsPathToURLPath,
   siteIdentifierToUrl,
+  slug,
 } from "./util.ts";
 import { TARGET_SITE_LANGUAEGS } from "./constant.ts";
-import { slug } from "./deps.ts";
 export default function itemsToFeed(
   relativePath: string,
   currentItemsJson: ItemsJson,

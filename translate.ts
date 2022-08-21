@@ -3,10 +3,7 @@ import { isMock } from "./util.ts";
 import log from "./log.ts";
 import { YAML } from "./deps.ts";
 import { TranslationOptions } from "./interface.ts";
-import {
-  TARGET_SITE_LANGUAEGS,
-  TRANSLATED_ITEMS_PER_PAGE,
-} from "./constant.ts";
+import { TRANSLATED_ITEMS_PER_PAGE } from "./constant.ts";
 import { toZhHant } from "./to-zh-hant.ts";
 const homepage = "https://www.deepl.com/en/translator-mobile";
 export default class Translation {

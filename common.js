@@ -14,4 +14,9 @@ export const TARGET_SITE_LANGUAEGS = [
     name: "English",
     prefix: "en/",
   },
+  {
+    code: "ja",
+    name: "日本語",
+    prefix: "ja/",
+  },
 ];

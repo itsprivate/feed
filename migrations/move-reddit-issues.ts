@@ -96,7 +96,7 @@ export default async function moveIssues() {
       // write to issue files
       const issuePath =
         `${getArchivePath()}/${siteIdentifier}/issues/${weekInfo.path}/items.json`;
-      // await writeJSONFile(issuePath, newItems);
+      await writeJSONFile(issuePath, newItems);
       issues.push(weekInfo.path);
 
       oldAndNewMap[siteIdentifier][originalItem.issueNumber] = weekInfo.path;
@@ -108,7 +108,7 @@ export default async function moveIssues() {
   const issueIndexPath = getCurrentIssuesFilePath(siteIdentifier);
   issues = resortArchiveKeys(issues);
   await writeJSONFile(getMigratedIssueMapPath(), oldAndNewMap);
-  // await writeJSONFile(issueIndexPath, issues);
+  await writeJSONFile(issueIndexPath, issues);
   log.info(
     `formated ${total} items`,
   );
