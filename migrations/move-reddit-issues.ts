@@ -5,6 +5,7 @@ import {
   getFullDay,
   getFullMonth,
   getFullYear,
+  getMigratedIssueMapPath,
   isDev,
   readJSONFile,
   resortArchiveKeys,
@@ -21,7 +22,15 @@ export default async function moveIssues() {
   const type = "reddit";
   const files: string[] = [];
   let issues: string[] = [];
-
+  let oldAndNewMap: Record<string, Record<string, string>> = {};
+  try {
+    oldAndNewMap = await readJSONFile(getMigratedIssueMapPath());
+  } catch (_e) {
+    // ignore
+  }
+  if (!oldAndNewMap[siteIdentifier]) {
+    oldAndNewMap[siteIdentifier] = {};
+  }
   try {
     let totalFiles = 0;
     for await (
@@ -87,8 +96,10 @@ export default async function moveIssues() {
       // write to issue files
       const issuePath =
         `${getArchivePath()}/${siteIdentifier}/issues/${weekInfo.path}/items.json`;
-      await writeJSONFile(issuePath, newItems);
+      // await writeJSONFile(issuePath, newItems);
       issues.push(weekInfo.path);
+
+      oldAndNewMap[siteIdentifier][originalItem.issueNumber] = weekInfo.path;
       // write to issue index
 
       total++;
@@ -96,7 +107,8 @@ export default async function moveIssues() {
   }
   const issueIndexPath = getCurrentIssuesFilePath(siteIdentifier);
   issues = resortArchiveKeys(issues);
-  await writeJSONFile(issueIndexPath, issues);
+  await writeJSONFile(getMigratedIssueMapPath(), oldAndNewMap);
+  // await writeJSONFile(issueIndexPath, issues);
   log.info(
     `formated ${total} items`,
   );

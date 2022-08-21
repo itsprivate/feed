@@ -222,7 +222,7 @@ prod-initcurrentzip:
 
 .Phony: movereddit
 movereddit:
-	deno run -A ./migrates/move-reddit.ts
+	deno run -A ./migrations/move-reddit.ts
 
 
 .Phony: temp-uploadarchive

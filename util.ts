@@ -104,7 +104,9 @@ export const getDataTranslatedPath = () => {
 export const getDataCurrentItemsPath = () => {
   return `${getDataPath()}/4-data`;
 };
-
+export const getMigratedIssueMapPath = () => {
+  return `./migrations/issue-map.json`;
+};
 export const getCurrentItemsFilePath = (siteIdentifier: string) => {
   return `${getDataCurrentItemsPath()}/${
     siteIdentifierToPath(siteIdentifier)
