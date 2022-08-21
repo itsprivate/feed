@@ -49,7 +49,7 @@ export default {
         // return new Response(newUrl, {
         //   status: 200,
         // });
-        return Response.redirect(newUrl.href, 302);
+        return Response.redirect(newUrl.href, 301);
       } else if (subpath === "issues") {
         const issueNumber = fields[2];
         const issueMap = getIssueMap(subsiteIdentifier);
@@ -129,7 +129,7 @@ const customKeyModifier = (request) => {
 
 function getIssueMap(subsiteIdentifier) {
   const issueMap = {
-    hackernews: {
+    reddit: {
       1: "2020/47",
       2: "2020/48",
       3: "2020/49",
