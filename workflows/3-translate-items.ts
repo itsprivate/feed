@@ -74,7 +74,7 @@ export default async function translateItems(
               ._translations[item._original_language]
             : {}) as Record<string, string>;
           const originalTranslationKeys = Object.keys(originalTranslations);
-          let translations = {
+          const translations = {
             ...item._translations,
           };
           const translatedJson = {
@@ -108,6 +108,9 @@ export default async function translateItems(
               value,
               item._original_language,
               todoLanguages.map((item) => item.code),
+            );
+            log.info(
+              `${total}/${files.length} translated ${value} to ${translated}`,
             );
             for (const languageCode of Object.keys(translated)) {
               if (!translations[languageCode]) {

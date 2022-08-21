@@ -9,9 +9,9 @@ if (!isMock()) {
       const result = await translation.translate(
         "Hello World",
         "en",
-        "zh-Hans",
+        ["zh-Hans"],
       );
-      assertEquals(result, "你好，世界");
+      assertEquals(result["zh-Hans"], "你好，世界");
     });
     await translation.close();
   });
@@ -22,9 +22,9 @@ if (!isMock()) {
       const result = await translation.translate(
         "Hello World",
         "en",
-        "zh-Hans",
+        ["zh-Hans"],
       );
-      assertEquals(result, "Hello World");
+      assertEquals(result["zh-Hans"], "Hello World");
     });
     await translation.close();
   });
