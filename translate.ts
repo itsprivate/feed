@@ -175,7 +175,7 @@ export default class Translation {
             sentence,
             sourceLanguage,
             todoLanguages,
-            false,
+            isNeedInit,
             finalTranslatedResult,
           ),
         };
@@ -202,7 +202,7 @@ export default class Translation {
             sentence,
             sourceLanguage,
             todoLanguages,
-            false,
+            isNeedInit,
             finalTranslatedResult,
           ),
         };
@@ -225,6 +225,7 @@ export default class Translation {
     const sourceLangButton =
       `button[dl-test=translator-lang-option-${sourceLanguage}]`;
     if (isNeedInit) {
+      isNeedInit = false;
       if (this.currentSourceLanguage !== sourceLanguage) {
         // click  black
         // await page.screenshot({ path: "data/1.png" });
@@ -294,7 +295,7 @@ export default class Translation {
           sentence,
           sourceLanguage,
           todoLanguages,
-          false,
+          isNeedInit,
           finalTranslatedResult,
         ),
       };
