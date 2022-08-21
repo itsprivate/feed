@@ -192,13 +192,6 @@ export default async function buildCurrent(
       // for garbage collection
       // @ts-ignore: type is not assignable
       currentToBeArchivedItemsJson = null;
-
-      // delete translated folder
-      const translatedPath = getDataTranslatedPath() + "/" +
-        siteIdentifierToPath(siteIdentifier);
-      await Deno.remove(translatedPath, {
-        recursive: true,
-      });
     }
   }
 }

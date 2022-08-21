@@ -24,7 +24,7 @@ build_for_workders_dev:
 
 .Phony: run
 run:
-	DEV=1 FILES=50 deno run -A main.ts --site prodhn 
+	DEV=1 FILES=50 deno run -A main.ts --site devfeed 
 
 
 .Phony: prod-buildfromformat

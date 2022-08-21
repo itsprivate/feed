@@ -7,7 +7,12 @@ translations:
     "powered_by_label": "背后的人❤️"
     "languages_label": "该页面其他语言"
     "more_sites_label": "姊妹站点"
-
+  "en":
+    "about_label": "About this page"
+    "subscription_label": "Subscription"
+    "powered_by_label": "Made by ❤️"
+    "languages_label": "Other languages"
+    "more_sites_label": "More feeds"
 sites:
   devfeed:
     port: 8000
@@ -37,7 +42,13 @@ sites:
       "zh-Hans":
         title: "Hacker News 首页"
         short_title: "HN首页"
-        description: "Hacker News 首页文章"
+        description: "用中文浏览Hacker News 首页最新文章"
+        keywords: "HackerNews 头条, Hacker News 中文, Hacker News Story"
+      "en":
+        title: "Hacker News Front Page"
+        short_title: "HN Front Page"
+        description: "Hacker News Front Page Feed"
+        keywords: "HackerNews 头条, Hacker News 中文, Hacker News Story"
     sources:
       - url: https://hn.algolia.com/api/v1/search_by_date?tags=front_page&hitsPerPage=50
         itemsPath: hits

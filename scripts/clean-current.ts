@@ -12,7 +12,7 @@ async function cleanRemoteCurrentData() {
   const bucket = await getCurrentDataS3Bucket(getCurrentBucketName());
   const currentDataPath = getDataPath();
   const list = await bucket.listObjects({
-    prefix: currentDataPath + "/",
+    prefix: currentDataPath + ".zip",
   });
   if (list && list.contents && list.contents.length > 0) {
     log.info(

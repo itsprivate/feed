@@ -9,6 +9,13 @@
       "languages_label": "该页面其他语言",
       "more_sites_label": "姊妹站点"
     },
+    "en": {
+      "about_label": "About this page",
+      "subscription_label": "Subscription",
+      "powered_by_label": "Made by ❤️",
+      "languages_label": "Other languages",
+      "more_sites_label": "More feeds"
+    },
     "zh-Hant": {
       "about_label": "關於此頁面",
       "subscription_label": "訂閱地址",
@@ -58,12 +65,20 @@
         "zh-Hans": {
           "title": "Hacker News 首页",
           "short_title": "HN首页",
-          "description": "Hacker News 首页文章"
+          "description": "用中文浏览Hacker News 首页最新文章",
+          "keywords": "HackerNews 头条, Hacker News 中文, Hacker News Story"
+        },
+        "en": {
+          "title": "Hacker News Front Page",
+          "short_title": "HN Front Page",
+          "description": "Hacker News Front Page Feed",
+          "keywords": "HackerNews 头条, Hacker News 中文, Hacker News Story"
         },
         "zh-Hant": {
           "title": "Hacker News 首頁",
           "short_title": "HN首頁",
-          "description": "Hacker News 首頁文章"
+          "description": "用中文瀏覽Hacker News 首頁最新文章",
+          "keywords": "HackerNews 頭條, Hacker News 中文, Hacker News Story"
         }
       },
       "sources": [

@@ -128,12 +128,22 @@ export default function itemsToFeed(
       content_html += `<img class="u-photo" src="${item.image}" alt="image">`;
     }
     content_html += `<div>`;
+    if (item._original_language !== language.code) {
+      content_html +=
+        ` ${originalTranslationObj.title} (<a href="${itemUrlObj.protocol}//${itemUrlObj.hostname}">${itemUrlObj.hostname}</a>)`;
+      summary += `${
+        formatHumanTime(
+          new Date(item._original_published as string),
+        )
+      } - ${originalTranslationObj.title}`;
+    }
     content_html +=
-      ` ${originalTranslationObj.title} (<a href="${itemUrlObj.protocol}//${itemUrlObj.hostname}">${itemUrlObj.hostname}</a>)<p><cite><a href="${itemUrl}"><time class="dt-published published" datetime="${item._original_published}">${
+      `<p><cite><a href="${itemUrl}"><time class="dt-published published" datetime="${item._original_published}">${
         formatHumanTime(
           new Date(item._original_published as string),
         )
       }</time></a>&nbsp;&nbsp;`;
+
     let index = 0;
 
     // add links

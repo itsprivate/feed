@@ -1,4 +1,9 @@
 {
+  "lint": {
+    "files": {
+      "exclude": ["workers-site/"]
+    }
+  },
   "fmt": {
     "files": {
       "exclude": [

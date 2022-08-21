@@ -54,12 +54,10 @@ export default class Item<T> {
       targetSiteIdentifier,
     };
   }
+
   static getTranslatedPath(filename: string): string {
     const parsed = Item.parseItemIdentifier(filename);
-    const now = new Date();
-    return `${getDataTranslatedPath()}/${parsed.targetSiteIdentifier}/${
-      getFullYear(now)
-    }/${getFullMonth(now)}/${getFullDay(now)}/${filename}`;
+    return `${getDataTranslatedPath()}/${parsed.targetSiteIdentifier}/${parsed.year}/${parsed.month}/${parsed.day}/${filename}`;
   }
 
   constructor(originalItem: T, siteIdentifier: string) {
@@ -223,6 +221,7 @@ export default class Item<T> {
   getAuthors(): Author[] {
     return [];
   }
+
   getItemIdentifier(): string {
     return `${this.getOriginalPublishedYear()}_${this.getOriginalPublishedMonth()}_${this.getOriginalPublishedDay()}_${this.getLanguage()}_${this.getType()}_${this.getTargetSitePath()}__${this.getId()}`;
   }

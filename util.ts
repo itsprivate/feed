@@ -65,10 +65,10 @@ export const getDataFormatedPath = () => {
   return `${getDataPath()}/2-formated`;
 };
 export const getDataTranslatedPath = () => {
-  return `${getDataPath()}/3-translated`;
+  return `${getArchivePath()}/posts`;
 };
 export const getDataCurrentItemsPath = () => {
-  return `${getDataPath()}/4-data`;
+  return `${getDataPath()}/3-data`;
 };
 export const getDataArchivePath = () => {
   return `${getArchivePath()}`;
@@ -432,10 +432,11 @@ export const getCurrentTranslations = function (
 
   // merge site translations
   const generalTranslations = translations[languageCode] ?? {};
-
+  const siteTranslations = siteConfig.translations[languageCode] ??
+    siteConfig.translations["zh-Hans"] ?? {};
   currentTranslations = {
     ...generalTranslations,
-    ...siteConfig.translations[languageCode],
+    ...siteTranslations,
   };
 
   return currentTranslations;

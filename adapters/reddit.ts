@@ -7,7 +7,9 @@ export default class reddit extends Item<RedditItem> {
     return new Date(this.originalItem.data.created * 1000);
   }
   getId(): string {
-    return this.originalItem.data.id as string;
+    const id = this.originalItem.data.permalink;
+    // replace / to -- to avoid conflict with path
+    return id.slice(1, -1).replace(/\//g, "--");
   }
   getTitle(): string {
     const title = this.originalItem.data.title as string;

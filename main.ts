@@ -17,7 +17,7 @@ import archive from "./workflows/5-archive.ts";
 import buildSite from "./workflows/6-build-site.ts";
 import serveSite from "./workflows/7-serve-site.ts";
 import compressCurrent from "./workflows/8-compress-current.ts";
-import uploadCurrent from "./workflows/9-upload-current.ts";
+// import uploadCurrent from "./workflows/9-upload-current.ts";
 import uploadArchive from "./workflows/10-upload-archive.ts";
 import { RunOptions, Task } from "./interface.ts";
 import buildConfig from "./build-config.ts";
@@ -155,11 +155,11 @@ export default async function main() {
   }
 
   // 9. upload current data to s3
-  if (stage.includes("upload_current")) {
-    await uploadCurrent(runOptions);
-  } else {
-    log.info("skip upload_current stage");
-  }
+  // if (stage.includes("upload_current")) {
+  //   await uploadCurrent(runOptions);
+  // } else {
+  //   log.info("skip upload_current stage");
+  // }
 
   // 10. upload archive data to s3
   if (stage.includes("upload_archive")) {

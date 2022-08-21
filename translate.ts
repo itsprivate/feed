@@ -113,8 +113,13 @@ export default class Translation {
     const translatedObj: Record<string, string> = {};
     for (const targetLanguage of TARGET_SITE_LANGUAEGS) {
       if (targetLanguage.code !== "zh-Hant") {
-        // check local translate
+        // check is orginal language, if so, not translate
 
+        if (sourceLanguage === targetLanguage.code) {
+          continue;
+        }
+
+        // check local translate
         const localTranslation = this.localTranslations[targetLanguage.code];
         if (localTranslation && localTranslation[sentence]) {
           translatedObj[targetLanguage.code] = localTranslation[sentence];
