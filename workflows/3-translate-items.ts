@@ -74,7 +74,7 @@ export default async function translateItems(
               ._translations[item._original_language]
             : {}) as Record<string, string>;
           const originalTranslationKeys = Object.keys(originalTranslations);
-          const translations = {
+          let translations = {
             ...item._translations,
           };
           const translatedJson = {
@@ -82,6 +82,7 @@ export default async function translateItems(
           } as Record<string, unknown>;
           for (const field of originalTranslationKeys) {
             // first check if this field is translated
+            const todoLanguages = [];
             for (const language of TARGET_SITE_LANGUAEGS) {
               if (language.code === item._original_language) {
                 continue;
@@ -96,33 +97,23 @@ export default async function translateItems(
                 continue;
               }
 
-              const value = originalTranslations[field];
-              log.debug(
-                `translating ${parsedFilename.type} ${parsedFilename.language} ${field}: ${value} for ${parsedFilename.targetSite}`,
-              );
-              let translated = "";
-              if (language.code === "zh-Hant") {
-                // look up zh-Hants, and to translate
-                if (!translations["zh-Hans"][field]) {
-                  throw new Error(`field ${field} not found in zh-Hans`);
-                }
-                translated = await translation.translate(
-                  translations["zh-Hans"][field],
-                  "zh-Hans",
-                  "zh-Hant",
-                );
-              } else {
-                translated = await translation.translate(
-                  value,
-                  item._original_language,
-                  language.code,
-                );
-              }
+              todoLanguages.push(language);
+            }
 
-              if (!translations[language.code]) {
-                translations[language.code] = {};
+            const value = originalTranslations[field];
+            log.debug(
+              `translating ${parsedFilename.type} ${parsedFilename.language} ${field}: ${value} for ${parsedFilename.targetSite}`,
+            );
+            const translated = await translation.translate(
+              value,
+              item._original_language,
+              todoLanguages.map((item) => item.code),
+            );
+            for (const languageCode of Object.keys(translated)) {
+              if (!translations[languageCode]) {
+                translations[languageCode] = {};
               }
-              translations[language.code][field] = translated;
+              translations[languageCode][field] = translated[languageCode];
             }
           }
           translatedJson._translations = translations;

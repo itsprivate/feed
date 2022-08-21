@@ -130,7 +130,7 @@ prod-archive:
 
 .Phony: tr
 tr:
-	DEV=1 deno run -A main.ts --stage translate --site reddit
+	DEV=1 deno run -A main.ts --stage translate --site devfeed
 
 .Phony: prod-tr
 prod-tr:
