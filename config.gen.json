@@ -1,4 +1,6 @@
 {
+  "icon": "https://www.buzzing.cc/icon.png",
+  "favicon": "https://www.buzzing.cc/favicon.ico",
   "translations": {
     "zh-Hans": {
       "about_label": "关于此页面",

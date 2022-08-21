@@ -40,6 +40,8 @@ export interface ArchiveSiteConfig extends GeneralSiteConfig {
 }
 
 export interface Config {
+  icon: string;
+  favicon: string;
   sites: Record<string, SiteConfig>;
   translations: Record<string, Record<string, string>>;
   archive: ArchiveSiteConfig;

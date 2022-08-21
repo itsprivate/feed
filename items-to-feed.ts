@@ -204,12 +204,8 @@ export default function itemsToFeed(
     "version": "https://jsonfeed.org/version/1",
     "title": siteTitle,
     "description": currentTranslations.description,
-    "icon": siteIdentifierToUrl(homepageIdentifier, "/icon.png", config),
-    "favicon": siteIdentifierToUrl(
-      homepageIdentifier,
-      "/favicon.ico",
-      config,
-    ),
+    "icon": config.icon,
+    "favicon": config.favicon,
     "language": language.code,
     "home_page_url": siteIdentifierToUrl(
       homepageIdentifier,
