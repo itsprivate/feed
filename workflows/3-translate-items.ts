@@ -18,7 +18,7 @@ export default async function translateItems(
   // get all 2-formated files
   // is exists formated files folder
   await fs.ensureDir(getDataFormatedPath());
-
+  const config = options.config;
   let siteIdentifiers: string[] = [];
 
   for await (const dirEntry of Deno.readDir(getDataFormatedPath())) {
@@ -54,7 +54,7 @@ export default async function translateItems(
               break;
             }
           }
-          if (entry.isFile) {
+          if (entry.isFile && entry.path.endsWith(".json")) {
             files.push(entry.path);
             totalFiles += 1;
           }
@@ -68,7 +68,7 @@ export default async function translateItems(
             await Deno.readTextFile(file),
           ) as FormatedItem;
           const filename = path.basename(file);
-          const parsedFilename = Item.parseItemIdentifier(filename);
+          const parsedFilename = Item.parseItemIdentifier(filename, config);
           const originalTranslations = (item._translations
             ? item
               ._translations[item._original_language]
@@ -82,7 +82,6 @@ export default async function translateItems(
           } as Record<string, unknown>;
           for (const field of originalTranslationKeys) {
             // first check if this field is translated
-            // TODO
             for (const language of TARGET_SITE_LANGUAEGS) {
               if (language.code === item._original_language) {
                 continue;
@@ -93,7 +92,7 @@ export default async function translateItems(
                 translations[language.code][field] !== undefined
               ) {
                 // yes already translated
-                log.info(`field ${field} already translated, skip`);
+                log.debug(`field ${field} already translated, skip`);
                 continue;
               }
 
@@ -129,7 +128,7 @@ export default async function translateItems(
           translatedJson._translations = translations;
 
           // write translated item to file
-          const translatedPath = Item.getTranslatedPath(filename);
+          const translatedPath = Item.getTranslatedPath(filename, config);
 
           await writeJSONFile(
             translatedPath,

@@ -15,7 +15,7 @@ export default async function uploadCurrentData(_options: RunOptions) {
   await fs.ensureDir(getDataPath());
   let total = 0;
   for await (const entry of fs.walk(getDataPath())) {
-    if (entry.isFile) {
+    if (entry.isFile && entry.path.endsWith(".json")) {
       // Set the parameters for the object to upload.
       const relativePath = entry.path;
       const ext = path.extname(entry.path);

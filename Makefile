@@ -25,16 +25,20 @@ build_for_workders_dev:
 .Phony: run
 run:
 	DEV=1 FILES=50 deno run -A main.ts --site devfeed 
+.Phony: prod-start
+prod-start:
+	deno run -A main.ts --stage build_site,serve_site --site reddit
+
 
 
 .Phony: prod-buildfromformat
 prod-buildfromformat:
-	HEADLESS=0 MOCK=0 MOCK_IMAGE=0 deno run -A main.ts --stage format,translate,build_current,archive,build_site --site devfeed
+	MOCK=0 MOCK_IMAGE=0 deno run -A main.ts --stage format,translate,build_current,archive,build_site --site reddit
 
 
 .Phony: runfromformat
 runfromformat:
-	DEV=1 deno run -A --watch=main.ts,templates/,config.yml,static/ main.ts --stage format,translate,build_current,archive,build_site,serve_site --site prodhn
+	DEV=1 deno run -A --watch=main.ts,templates/,config.yml,static/ main.ts --stage format,translate,build_current,archive,build_site,serve_site --site reddit
 
 .Phony: runfromtr
 runfromtr:
@@ -116,9 +120,17 @@ format:
 prod-format:
 	deno run -A main.ts --stage format --site devfeed
 
+.Phony: archive
+archive:
+	DEV=1 deno run -A main.ts --stage archive --site devfeed
+.Phony: prod-archive
+prod-archive:
+	deno run -A main.ts --stage archive --site reddit
+
+
 .Phony: tr
 tr:
-	DEV=1 deno run -A main.ts --stage translate --site devfeed
+	DEV=1 deno run -A main.ts --stage translate --site reddit
 
 .Phony: prod-tr
 prod-tr:
@@ -206,3 +218,8 @@ clean:
 .Phony: prod-initcurrentzip
 prod-initcurrentzip:
 	deno run -A ./scripts/init-current-zip.ts && make prod-uploadcurrent
+
+
+.Phony: movereddit
+movereddit:
+	deno run -A ./migrates/move-reddit.ts

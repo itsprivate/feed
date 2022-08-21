@@ -26,14 +26,22 @@ export interface ItemsToFeedOptions {
   isArchive?: boolean;
 }
 export interface GeneralSiteConfig {
-  port: number;
-  tags: string[];
+  port?: number;
+  tags?: string[];
 }
 export interface SiteConfig extends GeneralSiteConfig {
-  indexed?: boolean;
-  port: number;
-  sources: Source[];
-  translations: Record<string, Record<string, string>>;
+  test?: boolean;
+  port?: number;
+  domain?: string;
+  sources?: Source[];
+  archive?: boolean;
+  translations?: Record<string, Record<string, string>>;
+}
+export interface WeekOfYear {
+  year: number;
+  week: number;
+  number: number;
+  path: string;
 }
 export interface ArchiveSiteConfig extends GeneralSiteConfig {
   siteIdentifier: string;
@@ -122,7 +130,7 @@ export interface Feedjson {
   home_page_url: string;
   feed_url: string;
   items: FeedItem[];
-  _tags: string[];
+  _tags?: string[];
 }
 export interface ItemsJson {
   meta?: Record<string, string>;

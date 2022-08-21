@@ -16,8 +16,9 @@ translations:
 sites:
   devfeed:
     port: 8000
-    indexed: false
+    test: true
     tags: []
+    archive: false
     translations:
       "zh-Hans":
         title: "Reddit 热门"
@@ -34,8 +35,9 @@ sites:
       # - url: https://hn.algolia.com/api/v1/search_by_date?tags=front_page&hitsPerPage=50
       #   itemsPath: hits
       #   type: hn
-  prodhackernews:
+  hackernews:
     port: 8001
+    domain: prodhackernews.buzzing.cc
     tags:
       - hn
     translations:
@@ -53,47 +55,51 @@ sites:
       - url: https://hn.algolia.com/api/v1/search_by_date?tags=front_page&hitsPerPage=50
         itemsPath: hits
         type: hn
-  prodhn:
+  hn:
     port: 8002
+    domain: prodhn.buzzing.cc
     tags:
       - hn
     translations:
       "zh-Hans":
         title: "Hacker News 热门"
         short_title: "HN热门"
-        description: "Hacker News上超过200 points的帖子"
+        description: "追踪Hacker News上超过 200 points的帖子"
     sources:
       - url: http://hn.algolia.com/api/v1/search_by_date?tags=(story,poll,show_hn,ask_hn)&numericFilters=points>=200&hitsPerPage=50
         itemsPath: hits
         type: hn
-  prodaskhn:
+  askhn:
     port: 8003
+    domain: prodaskhn.buzzing.cc
     tags:
       - hn
     translations:
       "zh-Hans":
         title: "Hacker News 问答"
         short_title: "HN问答"
-        description: "Hacker News上的问答"
+        description: "追踪 Hacker News 上的问答"
     sources:
       - url: https://hn.algolia.com/api/v1/search_by_date?tags=(ask_hn)&hitsPerPage=50
         itemsPath: hits
         type: hn
-  prodshowhn:
+  showhn:
     port: 8004
+    domain: prodshowhn.buzzing.cc
     tags:
       - hn
     translations:
       "zh-Hans":
         title: "Show HN"
         short_title: "Show HN"
-        description: "Hacker News上的项目展示"
+        description: "追踪 Hacker News 上的项目展示"
     sources:
       - url: https://hn.algolia.com/api/v1/search_by_date?tags=(show_hn)&hitsPerPage=50
         itemsPath: hits
         type: hn
-  prodreddit:
+  reddit:
     port: 8005
+    domain: prodreddit.buzzing.cc
     tags:
       - reddit
     translations:

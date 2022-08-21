@@ -1,11 +1,15 @@
-import { datetime, fs } from "../deps.ts";
+import { fs } from "../deps.ts";
 import {
   getArchivedFilePath,
   getCurrentArchiveFilePath,
   getCurrentToBeArchivedItemsFilePath,
   getDataCurrentItemsPath,
+  isWeekBiggerThan,
+  loadS3ArchiveFile,
   pathToSiteIdentifier,
   readJSONFile,
+  resortArchiveKeys,
+  weekOfYear,
   writeJSONFile,
 } from "../util.ts";
 import log from "../log.ts";
@@ -30,6 +34,13 @@ export default async function archive(options: RunOptions) {
     });
   }
   for (const siteIdentifier of siteIdentifiers) {
+    const siteConfig = options.config.sites[siteIdentifier];
+    if (siteConfig.archive === false) {
+      log.info(
+        `Skipping archive ${siteIdentifier} as it is configured not archived`,
+      );
+      continue;
+    }
     const currentToBeArchivedFilePath = getCurrentToBeArchivedItemsFilePath(
       siteIdentifier,
     );
@@ -68,13 +79,8 @@ export default async function archive(options: RunOptions) {
       const oldestToBeArchivedItemDate = new Date(
         oldestToBeArchivedItem.date_published,
       );
-      const currentWeek = datetime.weekOfYear(now);
 
-      const currentWeekNumber = now.getUTCFullYear() + currentWeek;
-      const WeekNumberOfOldestToBeArchivedItem =
-        oldestToBeArchivedItemDate.getUTCFullYear() +
-        datetime.weekOfYear(oldestToBeArchivedItemDate);
-      if (currentWeekNumber > WeekNumberOfOldestToBeArchivedItem) {
+      if (isWeekBiggerThan(now, oldestToBeArchivedItemDate)) {
         let currentArchive: string[] = [];
         try {
           currentArchive = await readJSONFile(
@@ -97,14 +103,32 @@ export default async function archive(options: RunOptions) {
           const item = currentToBeArchivedItemsJson.items[key];
           // check date_published
           const itemDate = new Date(item.date_published);
-          const weekOfItem = datetime.weekOfYear(itemDate);
-          const weekNumberOfItem = itemDate.getUTCFullYear() + weekOfItem;
-
-          if (weekNumberOfItem < currentWeekNumber) {
+          const weekOfItem = weekOfYear(itemDate);
+          if (isWeekBiggerThan(now, itemDate)) {
             // archived
-            const archivedFolder = `${itemDate.getUTCFullYear()}/${weekOfItem}`;
+            const archivedFolder = weekOfItem.path;
+            const archiveFilePath = getArchivedFilePath(
+              siteIdentifier,
+              // @ts-ignore: npm module
+              `archive/${archivedFolder}/items.json`,
+            );
+
             if (!archiedGroups[archivedFolder]) {
               archiedGroups[archivedFolder] = {};
+              // try to get current archived file, merge them
+              // load remote tag files
+              await loadS3ArchiveFile(archiveFilePath);
+              try {
+                const result = await readJSONFile(
+                  archiveFilePath,
+                );
+                archiedGroups[archivedFolder] = result.items;
+              } catch (e) {
+                // ignore
+                log.debug(
+                  `can not found tag file: ${archiveFilePath}, will create ${e}`,
+                );
+              }
             }
             archiedGroups[archivedFolder][key] = item;
             delete currentToBeArchivedItemsJson.items[key];
@@ -117,6 +141,9 @@ export default async function archive(options: RunOptions) {
           currentToBeArchivedItemsJson,
         );
         // write archived items to file
+
+        // generated issue items, try to get newer data to calculate more accurate data
+        // TODO
         for (const archivedFolder of Object.keys(archiedGroups)) {
           const archivedItemsPath = getArchivedFilePath(
             siteIdentifier,
@@ -124,15 +151,20 @@ export default async function archive(options: RunOptions) {
           );
           await writeJSONFile(
             archivedItemsPath,
-            archiedGroups[archivedFolder],
+            {
+              items: archiedGroups[archivedFolder],
+            },
           );
-          currentArchive.unshift(archivedFolder);
+          if (!currentArchive.includes(archivedFolder)) {
+            currentArchive.unshift(archivedFolder);
+          }
           log.info(
             `archived ${
               Object.keys(archiedGroups[archivedFolder]).length
             } items to ${archivedItemsPath}`,
           );
         }
+        currentArchive = resortArchiveKeys(currentArchive);
         // write to current archive file
         await writeJSONFile(
           getCurrentArchiveFilePath(siteIdentifier),

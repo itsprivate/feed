@@ -4,6 +4,7 @@ import hnExampleJson from "./example/current/1-raw/hackernews/2022/08/10/2022_08
   type: "json",
 };
 import Item from "./item.ts";
+import { getConfig } from "./util.ts";
 const list = [
   {
     class: HnItem,
@@ -48,9 +49,11 @@ for (const testItem of list) {
   });
 }
 
-Deno.test("parseItemIdentifier #10", () => {
+Deno.test("parseItemIdentifier #10", async () => {
+  const config = await getConfig();
   const parsed = Item.parseItemIdentifier(
     "2022_08_10_en_hn_example-com__32407873",
+    config,
   );
   assertEquals(parsed, {
     type: "hn",
@@ -63,9 +66,12 @@ Deno.test("parseItemIdentifier #10", () => {
     language: "en",
   });
 });
-Deno.test("parseItemIdentifier #11", () => {
+Deno.test("parseItemIdentifier #11", async () => {
+  const config = await getConfig();
+
   const parsed = Item.parseItemIdentifier(
     "2022_08_10_en_hn_example-com___32407873_-1223",
+    config,
   );
   assertEquals(parsed, {
     type: "hn",

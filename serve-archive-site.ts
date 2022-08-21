@@ -120,7 +120,7 @@ export default async function serveSite(port = 8000) {
         },
       );
       // let type = "feedjson";
-      // TODO: write temp json
+      //  write temp json
       // await writeJSONFile("temp.json", feedjson);
       if (type === "feedjson") {
         return Promise.resolve(

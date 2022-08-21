@@ -37,7 +37,7 @@ export default async function deployToR2(options: RunOptions) {
             getDistPath() + "/" + siteIdentifierToPath(siteIdentifier),
           )
         ) {
-          if (entry.isFile) {
+          if (entry.isFile && entry.path.endsWith(".json")) {
             files.push(entry.path);
           }
         }

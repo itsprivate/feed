@@ -18,7 +18,7 @@ export default async function formatItems(
   // get all 1-raw files
   // is exists raw files folder
   await fs.ensureDir(getDataRawPath());
-
+  const config = options.config;
   let siteIdentifiers: string[] = [];
 
   for await (const dirEntry of Deno.readDir(getDataRawPath())) {
@@ -48,7 +48,7 @@ export default async function formatItems(
               break;
             }
           }
-          if (entry.isFile) {
+          if (entry.isFile && entry.path.endsWith(".json")) {
             files.push(entry.path);
             totalFiles += 1;
           }
@@ -61,7 +61,7 @@ export default async function formatItems(
       if (files.length > 0) {
         for (const file of files) {
           const filenmae = path.basename(file);
-          const parsedFilename = Item.parseItemIdentifier(filenmae);
+          const parsedFilename = Item.parseItemIdentifier(filenmae, config);
           const originalItem = await readJSONFile(file) as Record<
             string,
             unknown

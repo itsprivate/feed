@@ -60,7 +60,7 @@ export default function feedToHTML(
   const relatedSites = getFeedSiteIdentifiers(config).filter((site) => {
     const siteTags = sitesMap[site].tags;
     const currentSiteTags = feedJson._tags;
-    if (sitesMap[site].indexed === false) {
+    if (sitesMap[site].test === true) {
       return false;
     }
     // ignore self

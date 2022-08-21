@@ -60,7 +60,7 @@ export default async function main() {
   }
   const config = await getGenConfig();
   const sitesMap = config.sites;
-  let siteIdentifiers = getFeedSiteIdentifiers(config);
+  let siteIdentifiers = Object.keys(config.sites);
   if (sites && Array.isArray(sites)) {
     siteIdentifiers = siteIdentifiers.filter((siteIdentifier) => {
       return (sites as string[]).includes(siteIdentifier);
@@ -141,7 +141,7 @@ export default async function main() {
   ) {
     for (const siteIdentifier of siteIdentifiers) {
       const siteConfig = sitesMap[siteIdentifier];
-      serveSite(siteIdentifier, siteConfig.port);
+      serveSite(siteIdentifier, siteConfig.port || 8000);
     }
   } else {
     log.info("skip serve_site stage");

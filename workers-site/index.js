@@ -91,6 +91,8 @@ function getSubsiteIdentifier(url) {
   let subsiteIdentifier = urlObj.hostname.split(".")[0];
   if (subsiteIdentifier.startsWith("dev-")) {
     subsiteIdentifier = subsiteIdentifier.slice(4);
+  } else if (subsiteIdentifier.startsWith("prod")) {
+    subsiteIdentifier = subsiteIdentifier.slice(4);
   }
   return subsiteIdentifier;
 }

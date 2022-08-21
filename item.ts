@@ -1,8 +1,10 @@
 import {
   Author,
+  Config,
   FormatedItem,
   Link,
   ParsedFilename,
+  SiteConfig,
   Video,
 } from "./interface.ts";
 import {
@@ -24,7 +26,11 @@ export default class Item<T> {
   private siteIdentifier: string;
   private now: Date = new Date();
   private image: string | null | undefined;
-  static parseItemIdentifier(fileBasename: string): ParsedFilename {
+  private siteConfig: SiteConfig | undefined;
+  static parseItemIdentifier(
+    fileBasename: string,
+    config: Config,
+  ): ParsedFilename {
     // remove extension
     let filename = fileBasename;
     if (filename.endsWith(".json")) {
@@ -40,7 +46,10 @@ export default class Item<T> {
     const language = symParts[3];
     const type = symParts[4];
     const targetSiteIdentifier = symParts[5];
-    const targetSite = siteIdentifierToDomain(targetSiteIdentifier);
+    const targetSite = siteIdentifierToDomain(
+      targetSiteIdentifier,
+      config.sites[targetSiteIdentifier],
+    );
     const idParts = parts.slice(1);
     const id = idParts.join("__");
     return {
@@ -55,17 +64,21 @@ export default class Item<T> {
     };
   }
 
-  static getTranslatedPath(filename: string): string {
-    const parsed = Item.parseItemIdentifier(filename);
-    return `${getDataTranslatedPath()}/${parsed.targetSiteIdentifier}/${parsed.year}/${parsed.month}/${parsed.day}/${filename}`;
+  static getTranslatedPath(filename: string, config: Config): string {
+    const parsed = Item.parseItemIdentifier(filename, config);
+    const now = new Date();
+    return `${getDataTranslatedPath()}/${parsed.targetSiteIdentifier}/${
+      getFullYear(now)
+    }/${getFullMonth(now)}/${getFullDay(now)}/${filename}`;
   }
 
-  constructor(originalItem: T, siteIdentifier: string) {
+  constructor(originalItem: T, siteIdentifier: string, config?: SiteConfig) {
     this.originalItem = originalItem;
     this.siteIdentifier = siteIdentifier;
+    this.siteConfig = config;
   }
   getTargetSite(): string {
-    return siteIdentifierToDomain(this.siteIdentifier);
+    return siteIdentifierToDomain(this.siteIdentifier, this.siteConfig);
   }
   getSensitive(): boolean {
     return false;
@@ -250,10 +263,18 @@ export default class Item<T> {
       "title": this.getTitle(),
     };
   }
+  getFullTranslations(): Record<string, Record<string, string>> | undefined {
+    return undefined;
+  }
   async getFormatedItem(): Promise<FormatedItem> {
     const externalUrl = this.getExternalUrl();
-    const translations: Record<string, Record<string, string>> = {};
-    translations[this.getLanguage()] = this.getTranslations();
+    let translations: Record<string, Record<string, string>> = {};
+
+    if (this.getFullTranslations()) {
+      translations = this.getFullTranslations()!;
+    } else {
+      translations[this.getLanguage()] = this.getTranslations();
+    }
     let image = this.getImage();
     if (image === undefined) {
       await this.tryToLoadImage();

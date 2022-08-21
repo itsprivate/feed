@@ -6,8 +6,12 @@ if (!isMock()) {
     const translation = new Translation();
     await translation.init();
     await t.step("translate Hello World", async () => {
-      const result = await translation.translate("Hello World", "en");
-      assertEquals(result["zh-Hans"], "你好，世界");
+      const result = await translation.translate(
+        "Hello World",
+        "en",
+        "zh-Hans",
+      );
+      assertEquals(result, "你好，世界");
     });
     await translation.close();
   });
@@ -15,8 +19,12 @@ if (!isMock()) {
   Deno.test("translate #2", async (t) => {
     const translation = new Translation();
     await t.step("translate Hello World", async () => {
-      const result = await translation.translate("Hello World", "en");
-      assertEquals(result["zh-Hans"], "Hello World");
+      const result = await translation.translate(
+        "Hello World",
+        "en",
+        "zh-Hans",
+      );
+      assertEquals(result, "Hello World");
     });
     await translation.close();
   });

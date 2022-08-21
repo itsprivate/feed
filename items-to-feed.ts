@@ -104,7 +104,7 @@ export default function itemsToFeed(
       const height = item._video.height;
       const width = item._video.width;
       const poster = item._video.poster;
-      content_html = `<video controls`;
+      content_html = `<video controls preload="none"`;
       if (width) {
         content_html += ` width="${width}"`;
       }
@@ -228,7 +228,9 @@ export default function itemsToFeed(
       config,
     ),
     items,
-    _tags: siteConfig.tags,
   };
+  if (siteConfig.tags) {
+    feedJson._tags = siteConfig.tags;
+  }
   return feedJson;
 }

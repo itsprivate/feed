@@ -1,7 +1,34 @@
-import { DateTimeFormatter, fs, path, S3Bucket, YAML } from "./deps.ts";
+import {
+  datetime,
+  DateTimeFormatter,
+  fs,
+  path,
+  S3Bucket,
+  YAML,
+} from "./deps.ts";
 import { ROOT_DOMAIN, TARGET_SITE_LANGUAEGS } from "./constant.ts";
-import { Config, Language, PageMeta } from "./interface.ts";
-
+import {
+  Config,
+  Language,
+  PageMeta,
+  SiteConfig,
+  WeekOfYear,
+} from "./interface.ts";
+export const SECOND = 1e3;
+export const MINUTE = SECOND * 60;
+export const HOUR = MINUTE * 60;
+export const DAY = HOUR * 24;
+export const WEEK = DAY * 7;
+const DAYS_PER_WEEK = 7;
+enum Day {
+  Sun,
+  Mon,
+  Tue,
+  Wed,
+  Thu,
+  Fri,
+  Sat,
+}
 export const get = (obj: unknown, path: string, defaultValue = undefined) => {
   const travel = (regexp: RegExp) =>
     String.prototype.split
@@ -35,7 +62,12 @@ export const getDataPath = () => {
 };
 export const getFeedSiteIdentifiers = (config: Config) => {
   const sitesMap = config.sites;
-  return Object.keys(sitesMap);
+  const keys = Object.keys(sitesMap);
+  const siteIdentifiers = keys.filter((key) => {
+    const site = sitesMap[key];
+    return !(site.test);
+  });
+  return siteIdentifiers;
 };
 export const getArchivePath = () => {
   const dataPath = isDev() ? "dev-archive" : "archive";
@@ -64,15 +96,15 @@ export const tryGetSiteByFolderPath = (folderPath: string): string | null => {
 export const getDataFormatedPath = () => {
   return `${getDataPath()}/2-formated`;
 };
+
 export const getDataTranslatedPath = () => {
-  return `${getArchivePath()}/posts`;
+  return `${getDataPath()}/3-translated`;
 };
+
 export const getDataCurrentItemsPath = () => {
-  return `${getDataPath()}/3-data`;
+  return `${getDataPath()}/4-data`;
 };
-export const getDataArchivePath = () => {
-  return `${getArchivePath()}`;
-};
+
 export const getCurrentItemsFilePath = (siteIdentifier: string) => {
   return `${getDataCurrentItemsPath()}/${
     siteIdentifierToPath(siteIdentifier)
@@ -82,6 +114,12 @@ export const getCurrentTagsFilePath = (siteIdentifier: string) => {
   return `${getDataCurrentItemsPath()}/${
     siteIdentifierToPath(siteIdentifier)
   }/tags.json`;
+};
+
+export const getCurrentIssuesFilePath = (siteIdentifier: string) => {
+  return `${getDataCurrentItemsPath()}/${
+    siteIdentifierToPath(siteIdentifier)
+  }/issues.json`;
 };
 export const getCurrentKeysFilePath = (siteIdentifier: string) => {
   return `${getDataCurrentItemsPath()}/${
@@ -171,7 +209,7 @@ export const getArchivedFilePath = function (
   siteIdentifier: string,
   relativePath: string,
 ): string {
-  let filePath = getDataArchivePath() + "/" +
+  let filePath = getArchivePath() + "/" +
     siteIdentifierToPath(siteIdentifier);
   // remove relative path slashes
   if (relativePath.startsWith("/")) {
@@ -186,7 +224,13 @@ export const siteIdentifierToPath = (siteIdentifier: string) => {
   //
   return siteIdentifier;
 };
-export const siteIdentifierToDomain = (siteIdentifier: string) => {
+export const siteIdentifierToDomain = (
+  siteIdentifier: string,
+  site?: SiteConfig,
+) => {
+  if (site && site.domain) {
+    return site.domain;
+  }
   if (siteIdentifier.includes(".")) {
     return siteIdentifier;
   }
@@ -196,7 +240,7 @@ export const urlToSiteIdentifier = (url: string, config: Config) => {
   const urlObj = new URL(url);
 
   if (urlObj.hostname === "localhost") {
-    if (config.archive.port.toString() === urlObj.port) {
+    if (Number(config.archive?.port) === Number(urlObj.port)) {
       return config.archive.siteIdentifier!;
     } else {
       for (const siteDdentifier in config.sites) {
@@ -223,18 +267,22 @@ export const siteIdentifierToUrl = (
   let port: number;
   if (siteIdentifier === "i") {
     // archive site
-    port = config.archive.port;
+    port = config.archive.port || 9000;
   } else {
     const siteConfig = config.sites[siteIdentifier];
-    port = siteConfig.port;
+    port = siteConfig.port || 8000;
   }
   const isWorkersDev = Deno.env.get("WORKERS_DEV") === "1";
   if (isWorkersDev) {
-    return `https://dev-${siteIdentifierToDomain(siteIdentifier)}${pathname}`;
+    return `https://dev-${
+      siteIdentifierToDomain(siteIdentifier, config.sites[siteIdentifier])
+    }${pathname}`;
   } else if (isDev()) {
     return `http://localhost:${port}${pathname}`;
   } else {
-    return `https://${siteIdentifierToDomain(siteIdentifier)}${pathname}`;
+    return `https://${
+      siteIdentifierToDomain(siteIdentifier, config.sites[siteIdentifier])
+    }${pathname}`;
   }
 };
 export const feedjsonUrlToRssUrl = (url: string) => {
@@ -432,8 +480,12 @@ export const getCurrentTranslations = function (
 
   // merge site translations
   const generalTranslations = translations[languageCode] ?? {};
-  const siteTranslations = siteConfig.translations[languageCode] ??
-    siteConfig.translations["zh-Hans"] ?? {};
+  let siteTranslations = {};
+  if (siteConfig.translations) {
+    siteTranslations = siteConfig.translations[languageCode] ??
+      siteConfig.translations["zh-Hans"] ?? {};
+  }
+
   currentTranslations = {
     ...generalTranslations,
     ...siteTranslations,
@@ -456,4 +508,65 @@ export const getGeneralTranslations = function (
   };
 
   return currentTranslations;
+};
+export const resortArchiveKeys = function (currentArchive: string[]): string[] {
+  // write currentArchive file
+  // resort currentArchive by time
+  currentArchive = currentArchive.sort((a, b) => {
+    const splited = a.split("/");
+    const aYear = splited[0];
+    const aWeek = addZero(Number(splited[1]));
+    const aNum = Number("" + aYear + aWeek);
+
+    const splited2 = b.split("/");
+    const bYear = splited2[0];
+    const bWeek = addZero(Number(splited2[1]));
+    const bNum = Number("" + bYear + bWeek);
+
+    return bNum - aNum;
+  });
+  return currentArchive;
+};
+export const addZero = function (num: number): string {
+  if (num < 10) {
+    return "0" + num;
+  } else {
+    return "" + num;
+  }
+};
+
+export function weekOfYear(date: Date): WeekOfYear {
+  const workingDate = new Date(
+    Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()),
+  );
+
+  const day = workingDate.getUTCDay();
+
+  const nearestThursday = workingDate.getUTCDate() +
+    Day.Thu -
+    (day === Day.Sun ? DAYS_PER_WEEK : day);
+
+  workingDate.setUTCDate(nearestThursday);
+
+  // Get first day of year
+  const yearStart = new Date(Date.UTC(workingDate.getUTCFullYear(), 0, 1));
+  const weekYear = workingDate.getUTCFullYear();
+  // return the calculated full weeks to nearest Thursday
+  const week = Math.ceil(
+    (workingDate.getTime() - yearStart.getTime() + DAY) / WEEK,
+  );
+  return {
+    year: weekYear,
+    week: week,
+    path: `${workingDate.getUTCFullYear()}/${week}`,
+    number: Number(`${weekYear}${addZero(week)}`),
+  };
+}
+export const isWeekBiggerThan = function (aDate: Date, bDate: Date): boolean {
+  const weekOfA = weekOfYear(aDate);
+  const weekOfB = weekOfYear(bDate);
+  if (weekOfA.number > weekOfB.number) {
+    return true;
+  }
+  return false;
 };

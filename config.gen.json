@@ -27,8 +27,9 @@
   "sites": {
     "devfeed": {
       "port": 8000,
-      "indexed": false,
+      "test": true,
       "tags": [],
+      "archive": false,
       "translations": {
         "zh-Hans": {
           "title": "Reddit 热门",
@@ -56,8 +57,9 @@
         }
       ]
     },
-    "prodhackernews": {
+    "hackernews": {
       "port": 8001,
+      "domain": "prodhackernews.buzzing.cc",
       "tags": [
         "hn"
       ],
@@ -89,8 +91,9 @@
         }
       ]
     },
-    "prodhn": {
+    "hn": {
       "port": 8002,
+      "domain": "prodhn.buzzing.cc",
       "tags": [
         "hn"
       ],
@@ -98,12 +101,12 @@
         "zh-Hans": {
           "title": "Hacker News 热门",
           "short_title": "HN热门",
-          "description": "Hacker News上超过200 points的帖子"
+          "description": "追踪Hacker News上超过 200 points的帖子"
         },
         "zh-Hant": {
           "title": "Hacker News 熱門",
           "short_title": "HN熱門",
-          "description": "Hacker News上超過200 points的帖子"
+          "description": "追蹤Hacker News上超過 200 points的帖子"
         }
       },
       "sources": [
@@ -114,8 +117,9 @@
         }
       ]
     },
-    "prodaskhn": {
+    "askhn": {
       "port": 8003,
+      "domain": "prodaskhn.buzzing.cc",
       "tags": [
         "hn"
       ],
@@ -123,12 +127,12 @@
         "zh-Hans": {
           "title": "Hacker News 问答",
           "short_title": "HN问答",
-          "description": "Hacker News上的问答"
+          "description": "追踪 Hacker News 上的问答"
         },
         "zh-Hant": {
           "title": "Hacker News 問答",
           "short_title": "HN問答",
-          "description": "Hacker News上的問答"
+          "description": "追蹤 Hacker News 上的問答"
         }
       },
       "sources": [
@@ -139,8 +143,9 @@
         }
       ]
     },
-    "prodshowhn": {
+    "showhn": {
       "port": 8004,
+      "domain": "prodshowhn.buzzing.cc",
       "tags": [
         "hn"
       ],
@@ -148,12 +153,12 @@
         "zh-Hans": {
           "title": "Show HN",
           "short_title": "Show HN",
-          "description": "Hacker News上的项目展示"
+          "description": "追踪 Hacker News 上的项目展示"
         },
         "zh-Hant": {
           "title": "Show HN",
           "short_title": "Show HN",
-          "description": "Hacker News上的項目展示"
+          "description": "追蹤 Hacker News 上的項目展示"
         }
       },
       "sources": [
@@ -164,8 +169,9 @@
         }
       ]
     },
-    "prodreddit": {
+    "reddit": {
       "port": 8005,
+      "domain": "prodreddit.buzzing.cc",
       "tags": [
         "reddit"
       ],

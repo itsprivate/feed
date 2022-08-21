@@ -1,0 +1,88 @@
+{
+  "author": "buba447",
+  "original_created_utc": 1629667435,
+  "title": "I designed and printed a working Simpsons TV. Plays the first 11 seasons at random without internet. Knobs work too!",
+  "created_utc": 1629708272,
+  "selftext_html": null,
+  "score": 75711,
+  "preview": {
+    "images": [
+      {
+        "source": {
+          "url": "https://external-preview.redd.it/_auVboyR_CdZBeiJMH_jRL3AoySgKAr20ELtjLPGT-c.png?format=pjpg&auto=webp&s=9a8cc4629a738d5c2fddd3c0382af3e63cee9b8b",
+          "width": 1080,
+          "height": 1920
+        },
+        "resolutions": [
+          {
+            "url": "https://external-preview.redd.it/_auVboyR_CdZBeiJMH_jRL3AoySgKAr20ELtjLPGT-c.png?width=108&crop=smart&format=pjpg&auto=webp&s=5ad6886acf6ba820b1aa914538a3bd3632f3aa35",
+            "width": 108,
+            "height": 192
+          },
+          {
+            "url": "https://external-preview.redd.it/_auVboyR_CdZBeiJMH_jRL3AoySgKAr20ELtjLPGT-c.png?width=216&crop=smart&format=pjpg&auto=webp&s=f409fad7f11205b71f196ac35a8c807eac46efd7",
+            "width": 216,
+            "height": 384
+          },
+          {
+            "url": "https://external-preview.redd.it/_auVboyR_CdZBeiJMH_jRL3AoySgKAr20ELtjLPGT-c.png?width=320&crop=smart&format=pjpg&auto=webp&s=b12d6025e9bb6263c355c69f7d98a5f9ea0e1be2",
+            "width": 320,
+            "height": 568
+          },
+          {
+            "url": "https://external-preview.redd.it/_auVboyR_CdZBeiJMH_jRL3AoySgKAr20ELtjLPGT-c.png?width=640&crop=smart&format=pjpg&auto=webp&s=b444e628e725a3e71f8f3d171a411f916145c067",
+            "width": 640,
+            "height": 1137
+          },
+          {
+            "url": "https://external-preview.redd.it/_auVboyR_CdZBeiJMH_jRL3AoySgKAr20ELtjLPGT-c.png?width=960&crop=smart&format=pjpg&auto=webp&s=dc596c56593a359fb042ede0c133bcd182cd9f76",
+            "width": 960,
+            "height": 1706
+          },
+          {
+            "url": "https://external-preview.redd.it/_auVboyR_CdZBeiJMH_jRL3AoySgKAr20ELtjLPGT-c.png?width=1080&crop=smart&format=pjpg&auto=webp&s=fb581af85ee647d0c3e9bd478b2b11fb860bbef7",
+            "width": 1080,
+            "height": 1920
+          }
+        ],
+        "variants": {},
+        "id": "WEqgG0UHw0PopCy7dUnBM_4RLqUMHOzvU-hwkeZrYeY"
+      }
+    ],
+    "enabled": false
+  },
+  "permalink": "/r/3Dprinting/comments/p9lasb/i_designed_and_printed_a_working_simpsons_tv/",
+  "subreddit": "3Dprinting",
+  "id": "p9lasb",
+  "is_self": false,
+  "media": {
+    "reddit_video": {
+      "bitrate_kbps": 4800,
+      "fallback_url": "https://v.redd.it/12qcrcsf8zi71/DASH_1080.mp4?source=fallback",
+      "height": 1080,
+      "width": 607,
+      "scrubber_media_url": "https://v.redd.it/12qcrcsf8zi71/DASH_96.mp4",
+      "dash_url": "https://v.redd.it/12qcrcsf8zi71/DASHPlaylist.mpd?a=1632300271%2CNDU0N2Y1ZjcyOGJmMzlmMjQ2ODkwZWRlMDk1MzIxZGUwNDdkZGRhYzg3OWU2M2IyNWI3NmJkODM2ZjQ4NmU1OQ%3D%3D&v=1&f=sd",
+      "duration": 39,
+      "hls_url": "https://v.redd.it/12qcrcsf8zi71/HLSPlaylist.m3u8?a=1632300271%2CN2I5MDRjYjljZTIxMDQ1NDc0NDU0MTcwODg2ODMxY2VmOGM1NzA3YTUzMTA0NWE4Zjk5OGYxY2UyZDQ1MGE1Mw%3D%3D&v=1&f=sd",
+      "is_gif": false,
+      "transcoding_status": "completed"
+    }
+  },
+  "is_video": true,
+  "the_new_excerpt": "",
+  "localize": [
+    {
+      "locale": "ja",
+      "title": "シンプソンズのテレビをデザインし、印刷しました。最初の11シーズンをインターネットなしでランダムに再生します。ノブも動きます。"
+    },
+    {
+      "locale": "zh",
+      "title": "我设计并打印了一个可以工作的辛普森一家的电视。在没有网络的情况下随机播放前11季的节目。旋钮也能工作!"
+    },
+    {
+      "locale": "zh-Hant",
+      "title": "我設計並打印了一個可以工作的辛普森一家的電視。在沒有網絡的情況下隨機播放前11季的節目。旋鈕也能工作!"
+    }
+  ]
+}

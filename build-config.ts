@@ -10,7 +10,7 @@ export default async function buildConfig() {
   const siteIdentifiers = Object.keys(sites);
   for (const siteIdentifier of siteIdentifiers) {
     const siteConfig = sites[siteIdentifier];
-    siteConfig.translations = getNewTranslations(siteConfig.translations);
+    siteConfig.translations = getNewTranslations(siteConfig.translations || {});
   }
   // translate site translations
   // test if equal
