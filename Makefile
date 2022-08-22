@@ -56,11 +56,7 @@ build-current:
 
 .Phony: dev
 dev:
-	wrangler dev
-
-
-
-
+	wrangler pages dev public/reddit
 
 .Phony: install
 install:

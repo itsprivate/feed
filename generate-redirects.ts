@@ -20,24 +20,24 @@ export default async function generateRedirects(
       `https://${archiveDomain}.${rootDomain}/${language.prefix}${siteIdentifier}`;
 
     // generate tags
-    redirects += `/${language.prefix}tags/* ${targetPrefix}/tags/:splat\n`;
+    redirects += `/${language.prefix}tags/* ${targetPrefix}/tags/:splat 302\n`;
 
     // generate issues
 
-    const issueSitesKyes = Object.keys(issueMap);
-    for (const issueSiteKey of issueSitesKyes) {
-      if (issueSiteKey === siteIdentifier) {
-        // @ts-ignore: json
-        const issueMaps = issueMap[issueSiteKey];
-        const issueKeys = Object.keys(issueMaps);
-        for (const issueKey of issueKeys) {
-          // @ts-ignore: json
-          const newIssue = issueMaps[issueKey];
-          redirects +=
-            `/${language.prefix}issues/${issueKey}/ ${targetPrefix}/issues/${newIssue}/\n`;
-        }
-      }
-    }
+    // const issueSitesKyes = Object.keys(issueMap);
+    // for (const issueSiteKey of issueSitesKyes) {
+    //   if (issueSiteKey === siteIdentifier) {
+    //     // @ts-ignore: json
+    //     const issueMaps = issueMap[issueSiteKey];
+    //     const issueKeys = Object.keys(issueMaps);
+    //     for (const issueKey of issueKeys) {
+    //       // @ts-ignore: json
+    //       const newIssue = issueMaps[issueKey];
+    //       redirects +=
+    //         `/${language.prefix}issues/${issueKey}/ ${targetPrefix}/issues/${newIssue}/\n`;
+    //     }
+    //   }
+    // }
   }
   // trim last new line
   if (redirects.endsWith(`\n`)) {

@@ -1,11 +1,11 @@
 name = "dev-feed"
-main = "workers-site/r2-index.js"
+# main = "workers-site/r2-index.js"
 compatibility_date = "2022-08-17"
 workers_dev = true
-[[r2_buckets]]
-binding = 'MY_BUCKET'        # <~ valid JavaScript variable name
-bucket_name = 'feed'
-preview_bucket_name = "feed"
+# [[r2_buckets]]
+# binding = 'MY_BUCKET'        # <~ valid JavaScript variable name
+# bucket_name = 'feed'
+# preview_bucket_name = "feed"
 [[routes]]
 pattern = "dev-prodhackernews.buzzing.cc"
 custom_domain = true
@@ -26,10 +26,10 @@ host = "reddit.buzzing.cc"
 
 [env.prod]
 name = "feed"
-[[env.prod.r2_buckets]]
-binding = 'MY_BUCKET'            # <~ valid JavaScript variable name
-bucket_name = 'feed'
-preview_bucket_name = "dev-feed"
+# [[env.prod.r2_buckets]]
+# binding = 'MY_BUCKET'            # <~ valid JavaScript variable name
+# bucket_name = 'feed'
+# preview_bucket_name = "dev-feed"
 
 [[env.prod.routes]]
 pattern = "hackernews.buzzing.cc"
