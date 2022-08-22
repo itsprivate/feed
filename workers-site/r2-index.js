@@ -5,7 +5,7 @@ export default {
     switch (request.method) {
       case "GET": {
         let subsiteIdentifier = getSubsiteIdentifier(request.url);
-        subsiteIdentifier = "reddit";
+        // subsiteIdentifier = "reddit";
         let bucketName = "MY_BUCKET";
         // check old url and redirect to new url
         const url = new URL(request.url);
