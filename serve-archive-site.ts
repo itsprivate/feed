@@ -14,6 +14,10 @@ import itemsToFeed from "./items-to-feed.ts";
 import { ItemsJson } from "./interface.ts";
 import config from "./config.gen.json" assert { type: "json" };
 export default async function serveSite(port = 8000) {
+  const local = Deno.env.get("LOCAL") === "1";
+  if (!local) {
+    Deno.env.set("PROD", "1");
+  }
   // build index.html
   const indexTemplateString = await Deno.readTextFile(
     "./templates/index.html",
@@ -92,7 +96,6 @@ export default async function serveSite(port = 8000) {
     }
     let itemsJson: ItemsJson | null = null;
     const filePath = getArchivedFilePath(siteIdentifier, relativeItemsPath);
-    const local = Deno.env.get("LOCAL") === "1";
     if (local) {
       // get file
       try {
