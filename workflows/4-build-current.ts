@@ -98,11 +98,23 @@ export default async function buildCurrent(
         // ignore
         log.debug(`read json file error: ${e}`);
       }
+      let currentTags: string[] = [];
+
+      try {
+        currentTags = await readJSONFile(
+          getCurrentTagsFilePath(siteIdentifier),
+        );
+      } catch (e) {
+        // ignore
+        log.debug(`read json file error: ${e}`);
+      }
       let total = 0;
       // merge items to current itemsJson
       const tagFiles: Record<string, ItemsJson> = {};
       let archiveItemsCount = 0;
       const newTagItemsCountMap: Record<string, number> = {};
+      let isTagsChanged = false;
+
       for (const file of files) {
         const item = await readJSONFile(file) as FormatedItem;
         const id = item["id"];
@@ -112,7 +124,7 @@ export default async function buildCurrent(
         if (total % 100 === 0) {
           log.info(`processed ${total} items`);
         }
-        // only add first 500 items
+        // only add first 500 items to archive list
         if (total <= MAX_ITEMS_PER_PAGE) {
           currentItemsJson.items[id] = item;
           if (siteConfig.archive !== false) {
@@ -120,74 +132,7 @@ export default async function buildCurrent(
           }
         } else {
           // other direct move to archive
-          if (tags && Array.isArray(tags) && tags.length > 0) {
-            let currentTags: string[] = [];
 
-            try {
-              currentTags = await readJSONFile(
-                getCurrentTagsFilePath(siteIdentifier),
-              );
-            } catch (e) {
-              // ignore
-              log.debug(`read json file error: ${e}`);
-            }
-            let isTagsChanged = false;
-            // look for tags
-            for (const tag of tags) {
-              if (!newTagItemsCountMap[tag]) {
-                newTagItemsCountMap[tag] = 1;
-              } else {
-                newTagItemsCountMap[tag] += 1;
-              }
-              if (newTagItemsCountMap[tag] <= MAX_ITEMS_PER_PAGE) {
-                const tagFilePath = getArchivedFilePath(
-                  siteIdentifier,
-                  // @ts-ignore: npm module
-                  `tags/${slug(tag)}/items.json`,
-                );
-                if (tagFiles[tagFilePath]) {
-                  tagFiles[tagFilePath].items[id] = item;
-                } else {
-                  let tagFileJson: ItemsJson = {
-                    meta: {
-                      name: tag,
-                    },
-                    items: {},
-                  };
-                  // load remote tag files
-                  await loadS3ArchiveFile(tagFilePath);
-                  try {
-                    tagFileJson = await readJSONFile(tagFilePath);
-                  } catch (e) {
-                    // ignore
-                    log.debug(
-                      `can not found tag file: ${tagFilePath}, will create ${e}`,
-                    );
-                  }
-                  tagFileJson.items[id] = item;
-                  tagFiles[tagFilePath] = tagFileJson;
-                }
-              }
-
-              if (!currentTags.includes(tag)) {
-                currentTags.unshift(tag);
-                isTagsChanged = true;
-              } else {
-                // move to first
-                const index = currentTags.indexOf(tag);
-                currentTags.splice(index, 1);
-                currentTags.unshift(tag);
-                isTagsChanged = true;
-              }
-            }
-
-            if (isTagsChanged) {
-              await writeJSONFile(
-                getCurrentTagsFilePath(siteIdentifier),
-                currentTags,
-              );
-            }
-          }
           if (siteConfig.archive !== false) {
             // move to archive
             const itemDate = new Date(item.date_published);
@@ -233,8 +178,65 @@ export default async function buildCurrent(
             );
           }
         }
+        if (tags && Array.isArray(tags) && tags.length > 0) {
+          isTagsChanged = true;
+          // look for tags
+          for (const tag of tags) {
+            if (!newTagItemsCountMap[tag]) {
+              newTagItemsCountMap[tag] = 1;
+            } else {
+              newTagItemsCountMap[tag] += 1;
+            }
+            if (newTagItemsCountMap[tag] <= MAX_ITEMS_PER_PAGE) {
+              const tagFilePath = getArchivedFilePath(
+                siteIdentifier,
+                // @ts-ignore: npm module
+                `tags/${slug(tag)}/items.json`,
+              );
+              if (tagFiles[tagFilePath]) {
+                tagFiles[tagFilePath].items[id] = item;
+              } else {
+                let tagFileJson: ItemsJson = {
+                  meta: {
+                    name: tag,
+                  },
+                  items: {},
+                };
+                // load remote tag files
+                await loadS3ArchiveFile(tagFilePath);
+                try {
+                  tagFileJson = await readJSONFile(tagFilePath);
+                } catch (e) {
+                  // ignore
+                  log.debug(
+                    `can not found tag file: ${tagFilePath}, will create ${e}`,
+                  );
+                }
+                tagFileJson.items[id] = item;
+                tagFiles[tagFilePath] = tagFileJson;
+              }
+            }
+
+            if (!currentTags.includes(tag)) {
+              currentTags.unshift(tag);
+              isTagsChanged = true;
+            } else {
+              // move to first
+              const index = currentTags.indexOf(tag);
+              currentTags.splice(index, 1);
+              currentTags.unshift(tag);
+              isTagsChanged = true;
+            }
+          }
+        }
         // delete old file
         await Deno.remove(file);
+      }
+      if (isTagsChanged) {
+        await writeJSONFile(
+          getCurrentTagsFilePath(siteIdentifier),
+          currentTags,
+        );
       }
       if (siteConfig.archive !== false) {
         // write currentArchive file

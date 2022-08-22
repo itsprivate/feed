@@ -20,6 +20,12 @@ make start
 make tr
 ```
 
+## New Site
+
+```bash
+make createsite name=site_name
+```
+
 ## Deploy to workers
 
 - [workers get started](https://developers.cloudflare.com/workers/get-started/guide/)

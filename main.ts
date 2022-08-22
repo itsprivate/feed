@@ -1,14 +1,7 @@
 import { dotenvConfig, flags } from "./deps.ts";
 
 import log from "./log.ts";
-import {
-  getFeedSiteIdentifiers,
-  getGenConfig,
-  isDebug,
-  isDev,
-  writeTextFile,
-} from "./util.ts";
-import decompressCurrentData from "./workflows/0-decompress-current.ts";
+import { getGenConfig, isDebug, isDev, writeTextFile } from "./util.ts";
 import fetchSources from "./workflows/1-fetch-sources.ts";
 import formatItems from "./workflows/2-format-items.ts";
 import translateItems from "./workflows/3-translate-items.ts";
@@ -16,10 +9,6 @@ import buildCurrent from "./workflows/4-build-current.ts";
 import archive from "./workflows/5-archive.ts";
 import buildSite from "./workflows/6-build-site.ts";
 import serveSite from "./workflows/7-serve-site.ts";
-import compressCurrent from "./workflows/8-compress-current.ts";
-// import uploadCurrent from "./workflows/9-upload-current.ts";
-import uploadArchive from "./workflows/10-upload-archive.ts";
-import uploadPublic from "./workflows/11-upload-public-to-r2.ts";
 import { RunOptions, Task } from "./interface.ts";
 import buildConfig from "./build-config.ts";
 export default async function main() {
@@ -27,28 +16,49 @@ export default async function main() {
     export: true,
   });
   await buildConfig();
+  const args = flags.parse(Deno.args);
 
-  let stage = [
-    "fetch",
-    "format",
-    "translate",
-    "build_current",
-    "archive",
-    "build_site",
-  ];
-  if (isDev()) {
-    stage.push("serve_site");
+  let stage: string[] = [];
+
+  if (args.source) {
+    // only source
+    stage = stage.concat([
+      "fetch",
+      "format",
+      "translate",
+      "build_current",
+      "archive",
+    ]);
+  } else if (args.build) {
+    // only build stage
+    stage = stage.concat([
+      "build_site",
+    ]);
+  } else if (args.serve) {
+    // only build stage
+    stage = stage.concat([
+      "build_site",
+      "serve_site",
+    ]);
   } else {
-    stage.unshift("decompress_current");
-    // stage.push("upload_archive");
-    stage.push("compress_current");
+    stage = stage.concat([
+      "fetch",
+      "format",
+      "translate",
+      "build_current",
+      "archive",
+      "build_site",
+    ]);
+    if (isDev()) {
+      stage.push("serve_site");
+    }
   }
+
   if (isDebug()) {
     log.setLevel("debug");
   }
 
   let sites: string[] | undefined;
-  const args = flags.parse(Deno.args);
   if (args.stage) {
     stage = (args.stage).split(",");
   }
@@ -70,12 +80,6 @@ export default async function main() {
   log.info("start build ", siteIdentifiers);
   const runOptions: RunOptions = { siteIdentifiers: siteIdentifiers, config };
   let allPostTasks: Task[] = [];
-  // 0. decompress current data from zip
-  if (stage.includes("decompress_current")) {
-    await decompressCurrentData(runOptions);
-  } else {
-    log.info("skip decompress current data from zip stage");
-  }
 
   // 1. fetch sources
   if (stage.includes("fetch")) {
@@ -134,9 +138,8 @@ export default async function main() {
   }
 
   // 7. serve site
-  const isServer = !(Deno.env.get("NO_SERVE") === "1");
   if (
-    isServer && stage.includes("serve_site") &&
+    stage.includes("serve_site") &&
     Array.isArray(siteIdentifiers) &&
     siteIdentifiers.length > 0
   ) {
@@ -146,34 +149,6 @@ export default async function main() {
     }
   } else {
     log.info("skip serve_site stage");
-  }
-
-  // 8. zip current data
-  if (stage.includes("compress_current")) {
-    await compressCurrent(runOptions);
-  } else {
-    log.info("skip compress_current stage");
-  }
-
-  // 9. upload current data to s3
-  // if (stage.includes("upload_current")) {
-  //   await uploadCurrent(runOptions);
-  // } else {
-  //   log.info("skip upload_current stage");
-  // }
-
-  // 10. upload archive data to s3
-  if (stage.includes("upload_archive")) {
-    await uploadArchive(runOptions);
-  } else {
-    log.info("skip upload_archive stage");
-  }
-
-  // 11. upload public data to r2
-  if (stage.includes("upload_public")) {
-    await uploadPublic(runOptions);
-  } else {
-    log.info("skip upload_public stage");
   }
 }
 

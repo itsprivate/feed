@@ -1,6 +1,6 @@
 export { TARGET_SITE_LANGUAEGS } from "./common.js";
 const isDev = () => {
-  return Deno.env.get("DEV") === "1";
+  return Deno.env.get("DEV") !== "0" && Deno.env.get("PROD") !== "1";
 };
 let handledItemsCount = 4;
 if (Deno.env.get("FILES")) {

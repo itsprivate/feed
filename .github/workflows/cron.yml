@@ -5,8 +5,8 @@ on:
   # push:
   #   branches:
   #     - main
-  schedule:
-    - cron: "*/30 * * * *"
+  # schedule:
+  #   - cron: "*/30 * * * *"
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -59,7 +59,7 @@ jobs:
           CLOUDFLARE_ACCOUNT_ID: ${{secrets.CLOUDFLARE_ACCOUNT_ID}}
           CLOUDFLARE_API_TOKEN: ${{secrets.CLOUDFLARE_API_TOKEN}}
       - run: make install
-      - run: make prod-build
+      - run: make prod-load
         env:
           R2_ACCESS_KEY_ID: ${{secrets.R2_ACCESS_KEY_ID}}
           R2_SECRET_ACCESS_KEY: ${{secrets.R2_SECRET_ACCESS_KEY}}
@@ -71,10 +71,8 @@ jobs:
           ARCHIVE_REGION: ${{secrets.ARCHIVE_REGION}}
           CLOUDFLARE_ACCOUNT_ID: ${{secrets.CLOUDFLARE_ACCOUNT_ID}}
           CLOUDFLARE_API_TOKEN: ${{secrets.CLOUDFLARE_API_TOKEN}}
+      - run: make prod-source
         continue-on-error: true
-
-      - run: git status
-
       - name: upload files
         run: make prod-upload
         env:
@@ -88,8 +86,10 @@ jobs:
           ARCHIVE_REGION: ${{secrets.ARCHIVE_REGION}}
           CLOUDFLARE_ACCOUNT_ID: ${{secrets.CLOUDFLARE_ACCOUNT_ID}}
           CLOUDFLARE_API_TOKEN: ${{secrets.CLOUDFLARE_API_TOKEN}}
+      - run: make prod-build
+      - run: git status
 
-      - name: Publish wrangler
+      - name: Publish pages
         run: make prod-publish
         env:
           CLOUDFLARE_ACCOUNT_ID: ${{secrets.CLOUDFLARE_ACCOUNT_ID}}

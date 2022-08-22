@@ -46,14 +46,16 @@ export const get = (obj: unknown, path: string, defaultValue = undefined) => {
   return result === undefined || result === obj ? defaultValue : result;
 };
 export const isDev = () => {
-  return Deno.env.get("DEV") === "1";
+  return Deno.env.get("PROD") !== "1";
 };
 export const isMock = () => {
-  return !(Deno.env.get("MOCK") === "0");
+  if (isDev()) {
+    return (Deno.env.get("MOCK") !== "0");
+  } else {
+    return false;
+  }
 };
-export const isMockImage = () => {
-  return !(Deno.env.get("MOCK_IMAGE") === "0");
-};
+
 export const isDebug = () => {
   return Deno.env.get("DEBUG") === "1";
 };

@@ -4,9 +4,8 @@ import {
   getCurrentDataS3Bucket,
   getDataPath,
 } from "../util.ts";
-import { RunOptions } from "../interface.ts";
 import log from "../log.ts";
-export default async function uploadCurrentData(_options: RunOptions) {
+export default async function uploadCurrentData() {
   const R2_BUCKET = getCurrentBucketName();
   log.info(`start upload current data to ${R2_BUCKET}`);
   const s3Bucket = await getCurrentDataS3Bucket(R2_BUCKET);
@@ -30,4 +29,8 @@ export default async function uploadCurrentData(_options: RunOptions) {
   log.info(
     `finish upload current data ${total} files to ${R2_BUCKET}`,
   );
+}
+
+if (import.meta.main) {
+  await uploadCurrentData();
 }

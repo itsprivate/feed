@@ -1,5 +1,7 @@
 import { assertEquals } from "https://deno.land/std@0.151.0/testing/asserts.ts";
 import {
+  isDev,
+  isMock,
   isWeekBiggerThan,
   loadS3ArchiveFile,
   resortArchiveKeys,
@@ -184,4 +186,24 @@ Deno.test("weekOfYear #13", () => {
 Deno.test("slug #14", () => {
   assertEquals(slug("Hello World"), "hello-world");
   assertEquals(slug("KidsAreFuckingStupid"), "kids-are-fucking-stupid");
+});
+
+Deno.test("isDev #15", () => {
+  assertEquals(isDev(), true);
+});
+
+Deno.test("isMock #17", () => {
+  assertEquals(isMock(), true);
+});
+Deno.test("isMock #171", () => {
+  Deno.env.set("MOCK", "0");
+  assertEquals(isMock(), false);
+});
+Deno.test("isMock #17", () => {
+  Deno.env.set("PROD", "1");
+  assertEquals(isMock(), false);
+});
+Deno.test("isDev #16", () => {
+  Deno.env.set("PROD", "1");
+  assertEquals(isDev(), false);
 });

@@ -16,7 +16,7 @@ import generateIcons from "../generate-icons.ts";
 import log from "../log.ts";
 import { TARGET_SITE_LANGUAEGS } from "../constant.ts";
 import feedToHTML from "../feed-to-html.ts";
-
+import generateRedirects from "../generate-redirects.ts";
 export default async function buildSite(options: RunOptions) {
   const config = options.config;
   const currentDataPath = getDataCurrentItemsPath();
@@ -129,6 +129,10 @@ export default async function buildSite(options: RunOptions) {
         `skip build ${siteIdentifier}, cause no items to be build`,
       );
     }
+
+    // generate redirects for old sites
+    await generateRedirects(siteIdentifier, config);
+
     // latest item date_modified is greater Monday
     // we will run archive task, try to archive all items of their week
   }

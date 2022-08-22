@@ -3,7 +3,7 @@ import { RunOptions } from "../interface.ts";
 import log from "../log.ts";
 import { compress } from "../bad-deps.ts";
 import { path } from "../deps.ts";
-export default async function compressCurrentData(_options?: RunOptions) {
+export default async function compressCurrentData() {
   const zipName = getDataPath() + ".zip";
   // remove all empty dir getDataPath() recursively
   await removeEmptyDirectories(getDataPath());
@@ -57,4 +57,8 @@ async function removeEmptyDirectories(directory: string) {
     console.log("Removing empty folder: ", directory);
     await Deno.remove(directory);
   }
+}
+
+if (import.meta.main) {
+  await compressCurrentData();
 }

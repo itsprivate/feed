@@ -105,7 +105,14 @@ export default {
     }
   },
 };
-
+const customKeyModifier = (request) => {
+  const url = request.url;
+  //custom key mapping optional
+  const subsiteIdentifier = getSubsiteIdentifier(url);
+  const urlObj = new URL(url);
+  urlObj.pathname = "/" + subsiteIdentifier + urlObj.pathname;
+  return mapRequestToAsset(new Request(urlObj.href, request));
+};
 function getSubsiteIdentifier(url) {
   const urlObj = new URL(url);
   let subsiteIdentifier = urlObj.hostname.split(".")[0];
@@ -117,14 +124,6 @@ function getSubsiteIdentifier(url) {
   }
   return subsiteIdentifier;
 }
-const customKeyModifier = (request) => {
-  const url = request.url;
-  //custom key mapping optional
-  const subsiteIdentifier = getSubsiteIdentifier(url);
-  const urlObj = new URL(url);
-  urlObj.pathname = "/" + subsiteIdentifier + urlObj.pathname;
-  return mapRequestToAsset(new Request(urlObj.href, request));
-};
 
 function getIssueMap(subsiteIdentifier) {
   const issueMap = {

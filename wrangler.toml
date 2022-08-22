@@ -22,7 +22,7 @@ custom_domain = true
 
 [dev]
 port = 8000
-host = "devfeed.buzzing.cc"
+host = "reddit.buzzing.cc"
 
 [env.prod]
 name = "feed"

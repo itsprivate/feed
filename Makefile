@@ -1,55 +1,88 @@
+
+.Phony: source
+source:
+	deno run -A main.ts --source --site devfeed
+
+.Phony: prod-source
+prod-source:
+	PROD=1 deno run -A main.ts --source
+
+# only build site
+.Phony: build
+build:
+	NO_SERVE=1 deno run -A main.ts --build
+
+# only build site
+.Phony: prod-build
+prod-build:
+	 PROD=1 deno run -A main.ts --build
+
+.Phony: all
+all:
+	FILES=50 deno run -A main.ts --site devfeed 
+
+.Phony: serve
+serve:
+	deno run -A --watch=main.ts,templates/,config.yml main.ts --serve --site devfeed
+
+.Phony: prod-serve
+prod-serve:
+	PROD=1 deno run -A --watch=main.ts,templates/,config.yml main.ts --serve
+
+.Phony: fetch
+fetch:
+	deno run -A main.ts --stage fetch --site devfeed
+
+.Phony: format
+format:
+	deno run -A main.ts --stage format --site devfeed
+
+.Phony: archive
+archive:
+	deno run -A main.ts --stage archive --site devfeed
+
+.Phony: tr
+tr:
+	deno run -A main.ts --stage translate --site devfeed
+
+.Phony: realtr
+realtr:
+	HEADLESS=0 MOCK=0 FILES=4 deno run -A main.ts --stage translate --site devfeed
+
+
+.Phony: build-current
+build-current:
+	deno run -A main.ts --stage build_current --site devfeed
+
+.Phony: dev
+dev:
+	wrangler dev
+
+
+
+
+
 .Phony: install
 install:
 	PUPPETEER_PRODUCT=chrome deno run -A https://deno.land/x/puppeteer@14.1.1/install.ts
 
-.Phony: all
-all:
-	DEV=1 deno run -A main.ts
+.Phony: load
+load:
+	make loadcurrent && make decompresscurrent
 
-.Phony: build
-build:
-	DEV=1 NO_SERVE=1 deno run -A main.ts
-
-.Phony: prod-build
-prod-build:
-	 MOCK=0 MOCK_IMAGE=0 deno run -A main.ts
-
-.Phony: build-full
-build-full:
-	make load && make DEV=1 NO_SERVE=1 deno run -A main.ts --stage "decompress_current,fetch,format,translate,build_current,archive,build_site,upload_archive" && make upload
-
-.Phony: build_for_workders_dev
-build_for_workders_dev:
-	WORKERS_DEV=1 DEV=1 NO_SERVE=1 deno run -A  main.ts
-
-.Phony: run
-run:
-	DEV=1 FILES=50 deno run -A main.ts --site devfeed 
-.Phony: prod-start
-prod-start:
-	deno run -A main.ts --stage build_site,serve_site --site devfeed
+.Phony: prod-load
+prod-load:
+	make prod-loadcurrent && make prod-decompresscurrent
 
 
+.Phony: upload
+upload:
+	make uploadcurrent && make uploadarchive
 
-.Phony: prod-buildfromformat
-prod-buildfromformat:
-	MOCK=0 MOCK_IMAGE=0 deno run -A main.ts --stage format,translate,build_current,archive,build_site --site devfeed
+.Phony: prod-upload
+prod-upload:
+	make prod-uploadcurrent && make prod-uploadarchive
 
-.Phony: prod-buildsite
-prod-buildsite:
-	deno run -A main.ts --stage decompress_current,build_site
-
-.Phony: runfromformat
-runfromformat:
-	DEV=1 deno run -A --watch=main.ts,templates/,config.yml,static/ main.ts --stage format,translate,build_current,archive,build_site,serve_site --site devfeed
-
-.Phony: runfromtr
-runfromtr:
-	DEV=1 deno run -A --watch=main.ts,templates/,config.yml,static/ main.ts --stage build_current,archive,build_site,serve_site --site devfeed
-
-.Phony: start
-start:
-	make runfromformat
 
 .Phony: loadcurrent
 loadcurrent:
@@ -61,153 +94,98 @@ prod-loadcurrent:
 
 .Phony: loadarchive
 loadarchive:
-	DEV=1 deno run -A scripts/load-archive.ts
+	deno run -A scripts/load-archive.ts
 	
 .Phony: prod-loadarchive
 prod-loadarchive:
-	deno run -A scripts/load-archive.ts
+	PROD=1 deno run -A scripts/load-archive.ts
 
-.Phony: compresscurrent
-compresscurrent:
-	DEV=1 deno run -A main.ts --stage compress_current
-.Phony: prod-compresscurrent
-prod-compresscurrent:
-	deno run -A main.ts --stage compress_current
 
-.Phony: prod-decompresscurrent
-prod-decompresscurrent:
-	deno run -A main.ts --stage decompress_current
 .Phony: uploadcurrent
 uploadcurrent:
-# DEV=1 deno run -A main.ts --stage upload_current
-	wrangler r2 object put dev-feed/dev-current.zip -f ./dev-current.zip
+	make compresscurrent && wrangler r2 object put dev-feed/dev-current.zip -f ./dev-current.zip
 
 .Phony: prod-uploadcurrent
 prod-uploadcurrent:
-# DEV=1 deno run -A main.ts --stage upload_current
-	wrangler r2 object put feed/current.zip -f ./current.zip
+	make prod-compresscurrent && wrangler r2 object put feed/current.zip -f ./current.zip
 
 .Phony: uploadpublic
 uploadpublic:
-	DEV=1 deno run -A main.ts --stage upload_public
+	deno run -A ./scripts/upload-public-to-r2.ts
 
 .Phony: prod-uploadpublic
 prod-uploadpublic:
-	deno run -A main.ts --stage upload_public
+	PROD=1 deno run -A ./scripts/upload-public-to-r2.ts
 
 
 .Phony: uploadarchive
 uploadarchive:
-	DEV=1 deno run -A main.ts --stage upload_archive
+	deno run -A ./scripts/upload-archive.ts
 
 .Phony: prod-uploadarchive
 prod-uploadarchive:
-	deno run -A main.ts --stage upload_archive
-
-.Phony: upload
-upload:
-	make uploadcurrent && make uploadarchive
-
-.Phony: prod-upload
-prod-upload:
-	make prod-uploadcurrent && make prod-uploadarchive && make prod-uploadpublic
+	PROD=1 deno run -A ./scripts/upload-archive.ts
 
 
-.Phony: fetch
-fetch:
-	DEV=1 deno run -A main.ts --stage fetch --site devfeed
-.Phony: prod-fetch
-prod-fetch:
-	deno run -A main.ts --stage fetch --site devfeed
 
-.Phony: fetchall
-fetchall:
-	DEV=1 deno run -A main.ts --stage fetch
-
-.Phony: format
-format:
-	DEV=1 deno run -A main.ts --stage format --site devfeed
-.Phony: prod-format
-prod-format:
-	deno run -A main.ts --stage format --site devfeed
-
-.Phony: archive
-archive:
-	DEV=1 deno run -A main.ts --stage archive --site devfeed
-.Phony: prod-archive
-prod-archive:
-	deno run -A main.ts --stage archive --site devfeed
+.Phony: compresscurrent
+compresscurrent:
+	deno run -A ./scripts/compress-current.ts
 
 
-.Phony: tr
-tr:
-	DEV=1 deno run -A main.ts --stage translate --site devfeed
-
-.Phony: prod-tr
-prod-tr:
-	HEADLESS=0 MOCK=0 FILES=4 deno run -A main.ts --stage translate --site devfeed
+.Phony: prod-compresscurrent
+prod-compresscurrent:
+	PROD=1 deno run -A ./scripts/compress-current.ts
 
 
-.Phony: trall
-trall:
-	DEV=1 deno run -A main.ts --stage translate
+.Phony: decompresscurrent
+decompresscurrent:
+	deno run -A ./scripts/decompress-current.ts
 
-.Phony: build-current
-build-current:
-	DEV=1 deno run -A main.ts --stage build_current --site devfeed
+.Phony: prod-decompresscurrent
+prod-decompresscurrent:
+	PROD=1 deno run -A ./scripts/decompress-current.ts
 
-.Phony: site
-site:
-	DEV=1 deno run -A main.ts --stage build_site,serve_site --site devfeed
-
-.Phony: deploy
-deploy:
-	DEV=1 deno run -A main.ts --stage deploy
-
-.Phony: dev
-dev:
-	wrangler dev
 
 
 .Phony: publish
 publish:
-	wrangler publish
+	wrangler pages publish public/$(name) --project-name $(name)
 
 .Phony: prod-publish
 prod-publish:
-	wrangler publish --env prod
-
+	PROD=1 deno run -A ./scripts/publish.ts
 
 .Phony: test
 test:
-	DEV=1 deno test -A
+	make checkfmt && deno test -A
 
 .Phony: prod-deletecurrent
 prod-deletecurrent:
-	deno run -A ./scripts/clean-current.ts
+	PROD=1 deno run -A ./scripts/clean-current.ts
 
 .Phony: prod-deletearchive
 prod-deletearchive:
-	deno run -A ./scripts/clean-archive.ts
+	PROD=1 deno run -A ./scripts/clean-archive.ts
 
 .Phony: deletecurrent
 deletecurrent:
-	DEV=1 deno run -A ./scripts/clean-current.ts
+	deno run -A ./scripts/clean-current.ts
 
 .Phony: deletearchive
 deletearchive:
-	DEV=1 deno run -A ./scripts/clean-current.ts
+	deno run -A ./scripts/clean-current.ts
 
 .Phony: prod-servearchive
 prod-servearchive:
-	deno run -A ./dev-archive-site.ts
+	PROD=1 deno run -A ./dev-archive-site.ts
 
 .Phony: servearchive
 servearchive:
-	DEV=1 deno run -A --watch ./dev-archive-site.ts
+	deno run -A --watch ./dev-archive-site.ts
 
-.Phony: check-fmt
-check-fmt:
+.Phony: checkfmt
+checkfmt:
 	deno fmt --check
 
 .Phony: fmt
@@ -228,14 +206,18 @@ clean:
 
 .Phony: prod-initcurrentzip
 prod-initcurrentzip:
-	deno run -A ./scripts/init-current-zip.ts && make prod-uploadcurrent
+	PROD=1 deno run -A ./scripts/init-current-zip.ts && make prod-uploadcurrent
 
 
-.Phony: movereddit
-movereddit:
-	deno run -A ./migrations/move-reddit.ts
+.Phony: prod-movereddit
+prod-movereddit:
+	PROD=1 deno run -A ./migrations/move-reddit.ts
 
 
 .Phony: temp-uploadarchive
 temp-uploadarchive:
 	curl bashupload.com -T ./archive.zip
+
+.Phony: createsite
+createsite:
+	wrangler pages project create $(name) --production-branch main

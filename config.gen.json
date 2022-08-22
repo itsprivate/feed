@@ -1,6 +1,30 @@
 {
   "icon": "https://www.buzzing.cc/icon.png",
   "favicon": "https://www.buzzing.cc/favicon.ico",
+  "root_domain": "buzzing.cc",
+  "page_size": 200,
+  "languages": [
+    {
+      "code": "zh-Hans",
+      "name": "简体中文",
+      "prefix": ""
+    },
+    {
+      "code": "zh-Hant",
+      "name": "繁体中文",
+      "prefix": "zh-Hant/"
+    },
+    {
+      "code": "en",
+      "name": "English",
+      "prefix": "en/"
+    },
+    {
+      "code": "ja",
+      "name": "日本語",
+      "prefix": "ja/"
+    }
+  ],
   "translations": {
     "zh-Hans": {
       "about_label": "关于此页面",
@@ -31,8 +55,18 @@
       "more_sites_label": "姊妹站點"
     }
   },
+  "archive": {
+    "port": 9000,
+    "siteIdentifier": "i",
+    "tags": []
+  },
+  "dev": {
+    "files": 4,
+    "translate_items_per_page": 2
+  },
   "sites": {
     "devfeed": {
+      "redirect": true,
       "port": 8000,
       "test": true,
       "tags": [],
@@ -49,18 +83,7 @@
           "description": "用中文瀏覽Reddit熱門內容"
         }
       },
-      "sources": [
-        {
-          "url": "https://news.google.com/rss/topics/CAAqJggKIiBDQkFTRWdvSUwyMHZNRGx1YlY4U0FtVnVHZ0pWVXlnQVAB?hl=en-US&gl=US&ceid=US:en",
-          "type": "googlenews",
-          "rules": [
-            {
-              "type": "limit",
-              "value": 1
-            }
-          ]
-        }
-      ]
+      "sources": null
     },
     "hackernews": {
       "port": 8001,
@@ -98,6 +121,7 @@
     "hn": {
       "port": 8002,
       "domain": "prodhn.buzzing.cc",
+      "redirect": true,
       "tags": [
         "hn"
       ],
@@ -174,6 +198,7 @@
     },
     "reddit": {
       "port": 8005,
+      "redirect": true,
       "tags": [
         "reddit"
       ],
@@ -209,10 +234,5 @@
         }
       ]
     }
-  },
-  "archive": {
-    "port": 9000,
-    "siteIdentifier": "i",
-    "tags": []
   }
 }

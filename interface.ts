@@ -32,6 +32,7 @@ export interface GeneralSiteConfig {
 export interface SiteConfig extends GeneralSiteConfig {
   test?: boolean;
   port?: number;
+  redirect?: boolean;
   domain?: string;
   sources?: Source[];
   archive?: boolean;
@@ -50,6 +51,7 @@ export interface ArchiveSiteConfig extends GeneralSiteConfig {
 export interface Config {
   icon: string;
   favicon: string;
+  root_domain: string;
   sites: Record<string, SiteConfig>;
   translations: Record<string, Record<string, string>>;
   archive: ArchiveSiteConfig;

@@ -4,9 +4,8 @@ import {
   getArchivePath,
   getArchiveS3Bucket,
 } from "../util.ts";
-import { RunOptions } from "../interface.ts";
 import log from "../log.ts";
-export default async function uploadCurrentData(_options: RunOptions) {
+export default async function uploadArchive() {
   const R2_BUCKET = getArchivedBucketName();
   const s3Bucket = await getArchiveS3Bucket(R2_BUCKET);
 
@@ -32,4 +31,8 @@ export default async function uploadCurrentData(_options: RunOptions) {
   log.info(
     `finish upload archive data ${total} files to ${R2_BUCKET}`,
   );
+}
+
+if (import.meta.main) {
+  await uploadArchive();
 }

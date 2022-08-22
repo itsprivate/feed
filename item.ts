@@ -15,7 +15,6 @@ import {
   getFullMonth,
   getFullYear,
   isMock,
-  isMockImage,
   siteIdentifierToDomain,
   siteIdentifierToPath,
 } from "./util.ts";
@@ -176,7 +175,7 @@ export default class Item<T> {
     return undefined;
   }
   async tryToLoadImage(): Promise<string | null> {
-    if (isMock() && isMockImage()) {
+    if (isMock()) {
       this.image = null;
       return null;
     }
