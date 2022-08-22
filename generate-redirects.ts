@@ -1,6 +1,6 @@
 import issueMap from "./migrations/issue-map.json" assert { type: "json" };
 import { Config } from "./interface.ts";
-import { TARGET_SITE_LANGUAEGS } from "./common.js";
+import { TARGET_SITE_LANGUAEGS } from "./constant.ts";
 import log from "./log.ts";
 import { getDistFilePath, writeTextFile } from "./util.ts";
 export default async function generateRedirects(

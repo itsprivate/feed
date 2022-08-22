@@ -2,6 +2,11 @@ icon: https://www.buzzing.cc/icon.png
 favicon: https://www.buzzing.cc/favicon.ico
 root_domain: buzzing.cc
 page_size: 200
+translated_items_per_page: 100
+max_files_per_site: -1
+dev:
+  max_files_per_site: 4
+  translated_items_per_page: 2
 languages:
   [
     { code: "zh-Hans", name: "简体中文", prefix: "" },
@@ -32,9 +37,7 @@ archive:
   port: 9000
   siteIdentifier: i
   tags: []
-dev:
-  files: 4
-  translate_items_per_page: 2
+
 sites:
   devfeed:
     redirect: true
@@ -48,6 +51,7 @@ sites:
         short_title: "Reddit 热门"
         description: "用中文浏览Reddit热门内容"
     sources:
+      []
       # - url: https://news.google.com/rss/topics/CAAqJggKIiBDQkFTRWdvSUwyMHZNRGx1YlY4U0FtVnVHZ0pWVXlnQVAB?hl=en-US&gl=US&ceid=US:en
       #   type: googlenews
       #   rules:

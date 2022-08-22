@@ -3,6 +3,12 @@
   "favicon": "https://www.buzzing.cc/favicon.ico",
   "root_domain": "buzzing.cc",
   "page_size": 200,
+  "translated_items_per_page": 100,
+  "max_files_per_site": -1,
+  "dev": {
+    "max_files_per_site": 4,
+    "translated_items_per_page": 2
+  },
   "languages": [
     {
       "code": "zh-Hans",
@@ -60,10 +66,6 @@
     "siteIdentifier": "i",
     "tags": []
   },
-  "dev": {
-    "files": 4,
-    "translate_items_per_page": 2
-  },
   "sites": {
     "devfeed": {
       "redirect": true,
@@ -83,7 +85,7 @@
           "description": "用中文瀏覽Reddit熱門內容"
         }
       },
-      "sources": null
+      "sources": []
     },
     "hackernews": {
       "port": 8001,

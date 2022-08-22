@@ -178,7 +178,7 @@ prod-servearchive:
 
 .Phony: servearchive
 servearchive:
-	deno run -A --watch ./dev-archive-site.ts
+	LOCAL=0 PROD=1 deno run -A --watch=main.ts,templates/ ./dev-archive-site.ts
 
 .Phony: checkfmt
 checkfmt:
