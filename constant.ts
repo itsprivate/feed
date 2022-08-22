@@ -8,6 +8,6 @@ if (Deno.env.get("FILES")) {
 }
 export const DEV_MODE_HANDLED_ITEMS = handledItemsCount;
 export const TRANSLATED_ITEMS_PER_PAGE = isDev() ? 10 : 100;
-export const MAX_ITEMS_PER_PAGE = 500;
+export const MAX_ITEMS_PER_PAGE = 200;
 
 export const ROOT_DOMAIN = "buzzing.cc";

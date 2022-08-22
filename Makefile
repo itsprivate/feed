@@ -87,6 +87,14 @@ prod-uploadcurrent:
 # DEV=1 deno run -A main.ts --stage upload_current
 	wrangler r2 object put feed/current.zip -f ./current.zip
 
+.Phony: uploadpublic
+uploadpublic:
+	DEV=1 deno run -A main.ts --stage upload_public
+
+.Phony: prod-uploadpublic
+prod-uploadpublic:
+	deno run -A main.ts --stage upload_public
+
 
 .Phony: uploadarchive
 uploadarchive:
@@ -102,7 +110,7 @@ upload:
 
 .Phony: prod-upload
 prod-upload:
-	make prod-uploadcurrent && make prod-uploadarchive
+	make prod-uploadcurrent && make prod-uploadarchive && make prod-uploadpublic
 
 
 .Phony: fetch

@@ -12,8 +12,7 @@ export default {
   async fetch(request, env, ctx) {
     // check old url and redirect to new url
     const url = new URL(request.url);
-    const subsiteIdentifier = getSubsiteIdentifier(url);
-
+    let subsiteIdentifier = getSubsiteIdentifier(url);
     // get language code
     const langField = url.pathname.split("/")[1];
     // check if language code is valid

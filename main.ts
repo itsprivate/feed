@@ -19,6 +19,7 @@ import serveSite from "./workflows/7-serve-site.ts";
 import compressCurrent from "./workflows/8-compress-current.ts";
 // import uploadCurrent from "./workflows/9-upload-current.ts";
 import uploadArchive from "./workflows/10-upload-archive.ts";
+import uploadPublic from "./workflows/11-upload-public-to-r2.ts";
 import { RunOptions, Task } from "./interface.ts";
 import buildConfig from "./build-config.ts";
 export default async function main() {
@@ -166,6 +167,13 @@ export default async function main() {
     await uploadArchive(runOptions);
   } else {
     log.info("skip upload_archive stage");
+  }
+
+  // 11. upload public data to r2
+  if (stage.includes("upload_public")) {
+    await uploadPublic(runOptions);
+  } else {
+    log.info("skip upload_public stage");
   }
 }
 

@@ -37,7 +37,7 @@ export default async function uploadPublicToR2(options: RunOptions) {
             getDistPath() + "/" + siteIdentifierToPath(siteIdentifier),
           )
         ) {
-          if (entry.isFile && entry.path.endsWith(".json")) {
+          if (entry.isFile && !entry.path.startsWith(".")) {
             files.push(entry.path);
           }
         }
