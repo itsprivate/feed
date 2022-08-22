@@ -158,8 +158,9 @@ export default async function serveSite(port = 8000) {
         },
       });
     } else {
+      log.info(`Not found ${filePath}`);
       return Promise.resolve(
-        new Response("Not Found", {
+        new Response("Not Found " + filePath, {
           status: 404,
         }),
       );
