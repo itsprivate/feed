@@ -2,6 +2,7 @@ import { Author, Link, Video, VideoSource } from "../interface.ts";
 import Item from "../item.ts";
 import { contentType } from "../deps.ts";
 const prefixies: string[] = [];
+import log from "../log.ts";
 export default class reddit extends Item<RedditItem> {
   getOriginalPublishedDate(): Date {
     return new Date(this.originalItem.original_created_utc * 1000);
@@ -78,7 +79,7 @@ export default class reddit extends Item<RedditItem> {
         };
       }
     } else {
-      console.log("no locale", this.getId());
+      log.info("no locale", this.getId());
     }
 
     return translations;

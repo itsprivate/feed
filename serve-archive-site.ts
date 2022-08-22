@@ -42,9 +42,9 @@ export default async function serveSite(port = 8000) {
     newUrl.pathname = pathname;
 
     const pattern = new URLPattern({ pathname: "/:siteIdentifier/:scope/*" });
-    console.log("newUrl.pathname", newUrl.pathname);
+    // console.log("newUrl.pathname", newUrl.pathname);
     const result = pattern.test(newUrl.pathname);
-    console.log("result", result);
+    // console.log("result", result);
     // get siteIdentifier
     const fields = pathname.split("/");
 

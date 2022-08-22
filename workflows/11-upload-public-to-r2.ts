@@ -8,7 +8,7 @@ import {
 } from "../util.ts";
 import { RunOptions } from "../interface.ts";
 import log from "../log.ts";
-export default async function deployToR2(options: RunOptions) {
+export default async function uploadPublicToR2(options: RunOptions) {
   const R2_BUCKET = getCurrentBucketName();
   const s3Bucket = await getCurrentDataS3Bucket(R2_BUCKET);
 
@@ -48,14 +48,13 @@ export default async function deployToR2(options: RunOptions) {
         // upload files
         for (const file of files) {
           // Set the parameters for the object to upload.
-          const relativePath = path.relative(getDistPath(), file);
           const ext = path.extname(file);
           const contentTypeString = contentType(ext);
 
-          await s3Bucket.putObject(relativePath, await Deno.readFile(file), {
+          await s3Bucket.putObject(file, await Deno.readFile(file), {
             contentType: contentTypeString,
           });
-          log.info(`upload ${relativePath} to ${R2_BUCKET} success`);
+          log.info(`upload ${file} to ${R2_BUCKET} success`);
         }
 
         log.info(`uploaded ${files.length} files to ${siteIdentifier}`);

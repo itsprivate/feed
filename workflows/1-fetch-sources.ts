@@ -110,8 +110,6 @@ export default async function fetchSources(
                 break;
               }
             } else if (type === "greaterEqual") {
-              console.log("originalValue", originalValue);
-              console.log("value", value);
               if (Number(originalValue) < Number(value)) {
                 isAllRulesFine = false;
                 break;

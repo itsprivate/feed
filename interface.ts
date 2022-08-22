@@ -1,7 +1,7 @@
 export interface Rule {
   type: string;
-  key: string;
-  value: string;
+  key?: string;
+  value: string | number | boolean;
 }
 export interface Source {
   url: string;
