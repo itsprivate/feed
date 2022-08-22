@@ -77,6 +77,10 @@ export default class Item<T> {
     this.siteIdentifier = siteIdentifier;
     this.siteConfig = config;
   }
+  init(): Promise<void> {
+    // init you can do some async operations
+    return Promise.resolve();
+  }
   getTargetSite(): string {
     return siteIdentifierToDomain(this.siteIdentifier, this.siteConfig);
   }

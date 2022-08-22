@@ -51,14 +51,12 @@
       },
       "sources": [
         {
-          "url": "https://www.reddit.com/r/all/top/.json?raw_json=1",
-          "itemsPath": "data.children",
-          "type": "reddit",
+          "url": "https://news.google.com/rss/topics/CAAqJggKIiBDQkFTRWdvSUwyMHZNRGx1YlY4U0FtVnVHZ0pWVXlnQVAB?hl=en-US&gl=US&ceid=US:en",
+          "type": "googlenews",
           "rules": [
             {
-              "type": "greaterEqual",
-              "key": "data.score",
-              "value": "75000"
+              "type": "limit",
+              "value": 1
             }
           ]
         }
@@ -213,6 +211,7 @@
     },
     "news": {
       "port": 8006,
+      "archive": false,
       "tags": [
         "news"
       ],

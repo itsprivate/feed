@@ -6,6 +6,7 @@ import {
   readJSONFile,
   writeJSONFile,
 } from "../util.ts";
+import { parseFeed } from "../deps.ts";
 import log from "../log.ts";
 
 export default async function fetchSources(
@@ -22,11 +23,18 @@ export default async function fetchSources(
     for (const source of sources) {
       const sourceUrl = source.url;
       const sourceType = source.type;
-      const itemsPath = source.itemsPath || "";
+      let itemsPath = source.itemsPath || "";
       const rules = source.rules || [];
       // fetch source, and parse it to item;
       const originItemResult = await fetch(sourceUrl);
-      const originalJson = await originItemResult.json();
+      let originalJson;
+      if (sourceType === "rss" || sourceType === "googlenews") {
+        const xml = await originItemResult.text();
+        originalJson = await parseFeed(xml);
+        itemsPath = "entries";
+      } else {
+        originalJson = await originItemResult.json();
+      }
 
       // get items
       const originalItems = get(originalJson, itemsPath) as Record<
@@ -43,76 +51,84 @@ export default async function fetchSources(
       } catch (e) {
         log.debug(`read current keys file failed, ${e.message}`);
       }
+      let index = 0;
       for (const originalItem of originalItems) {
         // check rules
         let isAllRulesFine = true;
         for (const rule of rules) {
           const { key, value, type } = rule;
-          const originalValue = get(originalItem, key);
-          if (type === "greater") {
-            if (Number(originalValue) <= Number(value)) {
-              isAllRulesFine = false;
-              break;
-            }
-          } else if (type === "equal") {
-            if (originalValue !== value) {
-              isAllRulesFine = false;
-              break;
-            }
-          } else if (type === "notEqual") {
-            if (originalValue === value) {
-              isAllRulesFine = false;
-              break;
-            }
-          } else if (type === "include") {
-            if (!(originalValue as string[]).includes(value)) {
-              isAllRulesFine = false;
-              break;
-            }
-          } else if (type === "notInclude") {
-            if ((originalValue as string[]).includes(value)) {
-              isAllRulesFine = false;
-              break;
-            }
-          } else if (type === "notExist") {
-            if (originalValue) {
-              isAllRulesFine = false;
-              break;
-            }
-          } else if (type === "exist") {
-            if (!originalValue) {
-              isAllRulesFine = false;
-              break;
-            }
-          } else if (type === "notMatch") {
-            if ((originalValue as string).match(value)) {
-              isAllRulesFine = false;
-              break;
-            }
-          } else if (type === "match") {
-            if (!(originalValue as string).match(value)) {
-              isAllRulesFine = false;
-              break;
-            }
-          } else if (type === "greaterEqual") {
-            console.log("originalValue", originalValue);
-            console.log("value", value);
-            if (Number(originalValue) < Number(value)) {
-              isAllRulesFine = false;
-              break;
-            }
-          } else if (type === "less") {
-            if (Number(originalValue) >= Number(value)) {
-              isAllRulesFine = false;
-              break;
-            }
-          } else if (type === "lessEqual") {
-            if (Number(originalValue) > Number(value)) {
+          if (type === "limit") {
+            if ((index + 1) > Number(value)) {
               isAllRulesFine = false;
               break;
             }
           } else {
-            throw new Error(`unknown rule type ${type}`);
+            const originalValue = get(originalItem, key);
+            if (type === "greater") {
+              if (Number(originalValue) <= Number(value)) {
+                isAllRulesFine = false;
+                break;
+              }
+            } else if (type === "equal") {
+              if (originalValue !== value) {
+                isAllRulesFine = false;
+                break;
+              }
+            } else if (type === "notEqual") {
+              if (originalValue === value) {
+                isAllRulesFine = false;
+                break;
+              }
+            } else if (type === "include") {
+              if (!(originalValue as string[]).includes(value)) {
+                isAllRulesFine = false;
+                break;
+              }
+            } else if (type === "notInclude") {
+              if ((originalValue as string[]).includes(value)) {
+                isAllRulesFine = false;
+                break;
+              }
+            } else if (type === "notExist") {
+              if (originalValue) {
+                isAllRulesFine = false;
+                break;
+              }
+            } else if (type === "exist") {
+              if (!originalValue) {
+                isAllRulesFine = false;
+                break;
+              }
+            } else if (type === "notMatch") {
+              if ((originalValue as string).match(value)) {
+                isAllRulesFine = false;
+                break;
+              }
+            } else if (type === "match") {
+              if (!(originalValue as string).match(value)) {
+                isAllRulesFine = false;
+                break;
+              }
+            } else if (type === "greaterEqual") {
+              console.log("originalValue", originalValue);
+              console.log("value", value);
+              if (Number(originalValue) < Number(value)) {
+                isAllRulesFine = false;
+                break;
+              }
+            } else if (type === "less") {
+              if (Number(originalValue) >= Number(value)) {
+                isAllRulesFine = false;
+                break;
+              }
+            } else if (type === "lessEqual") {
+              if (Number(originalValue) > Number(value)) {
+                isAllRulesFine = false;
+                break;
+              }
+            } else {
+              throw new Error(`unknown rule type ${type}`);
+            }
           }
         }
         if (!isAllRulesFine) {
@@ -124,6 +140,9 @@ export default async function fetchSources(
           originalItem,
           siteIdentifier,
         );
+
+        // run init
+        await item.init();
 
         if (!currentKeysJson.includes(item.getItemIdentifier())) {
           // not exists
@@ -138,6 +157,7 @@ export default async function fetchSources(
           );
           total++;
         }
+        index++;
       }
       // if keys length > 1000
       if (currentKeysJson.length > 1000) {

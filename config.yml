@@ -31,13 +31,11 @@ sites:
         short_title: "Reddit 热门"
         description: "用中文浏览Reddit热门内容"
     sources:
-      - url: https://www.reddit.com/r/all/top/.json?raw_json=1
-        itemsPath: data.children
-        type: reddit
+      - url: https://news.google.com/rss/topics/CAAqJggKIiBDQkFTRWdvSUwyMHZNRGx1YlY4U0FtVnVHZ0pWVXlnQVAB?hl=en-US&gl=US&ceid=US:en
+        type: googlenews
         rules:
-          - type: greaterEqual
-            key: data.score
-            value: "75000"
+          - type: limit
+            value: 1
   hackernews:
     port: 8001
     tags:
@@ -120,22 +118,23 @@ sites:
           - type: greaterEqual
             key: data.score
             value: "75000"
-  news:
-    port: 8006
-    tags:
-      - news
-    translations:
-      "zh-Hans":
-        title: "国外新闻头条 - 全球新闻头条 - 美国新闻头条"
-        short_title: "国外新闻"
-        description: "用中文浏览国外新闻头条，美国新闻头条，全球新闻(西方媒体)头条"
-      "en":
-        title: "Buzzing on World News"
-        description: "See what's buzzing on the news in your native language"
-        keywords: "Buzzing News, Buzzing News Feed"
-    sources:
-      - url: https://news.google.com/rss/topics/CAAqJggKIiBDQkFTRWdvSUwyMHZNRGx1YlY4U0FtVnVHZ0pWVXlnQVAB?hl=en-US&gl=US&ceid=US:en
-        type: rss
+  # news:
+  #   port: 8006
+  #   archive: false
+  #   tags:
+  #     - news
+  #   translations:
+  #     "zh-Hans":
+  #       title: "国外新闻头条 - 全球新闻头条 - 美国新闻头条"
+  #       short_title: "国外新闻"
+  #       description: "用中文浏览国外新闻头条，美国新闻头条，全球新闻(西方媒体)头条"
+  #     "en":
+  #       title: "Buzzing on World News"
+  #       description: "See what's buzzing on the news in your native language"
+  #       keywords: "Buzzing News, Buzzing News Feed"
+  #   sources:
+  #     - url: https://news.google.com/rss/topics/CAAqJggKIiBDQkFTRWdvSUwyMHZNRGx1YlY4U0FtVnVHZ0pWVXlnQVAB?hl=en-US&gl=US&ceid=US:en
+  #       type: rss
 archive:
   port: 9000
   siteIdentifier: i

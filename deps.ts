@@ -29,6 +29,7 @@ export {
   serveDir,
   serveFile,
 } from "https://deno.land/x/std@0.152.0/http/file_server.ts";
+
 // third party modules
 export { config as dotenvConfig } from "https://deno.land/std@0.152.0/dotenv/mod.ts";
 export {
@@ -38,6 +39,7 @@ export {
 export type {
   DOMParserMimeType,
 } from "https://deno.land/x/deno_dom@v0.1.33-alpha/deno-dom-wasm.ts";
+export { parseFeed } from "https://deno.land/x/rss@0.5.6/mod.ts";
 
 export { default as staticFiles } from "https://deno.land/x/static_files@1.1.6/mod.ts";
 export { S3, S3Bucket } from "./s3/mod.ts";
