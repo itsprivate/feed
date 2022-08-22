@@ -1,4 +1,4 @@
-import { contentType, fs, path } from "../deps.ts";
+import { contentType, dotenvConfig, fs, path } from "../deps.ts";
 import {
   getCurrentBucketName,
   getCurrentDataS3Bucket,
@@ -32,5 +32,6 @@ export default async function uploadCurrentData() {
 }
 
 if (import.meta.main) {
+  await dotenvConfig({ export: true });
   await uploadCurrentData();
 }

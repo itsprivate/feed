@@ -1,4 +1,4 @@
-import { contentType, fs, path } from "../deps.ts";
+import { contentType, dotenvConfig, fs, path } from "../deps.ts";
 import {
   getArchivedBucketName,
   getArchivePath,
@@ -34,5 +34,7 @@ export default async function uploadArchive() {
 }
 
 if (import.meta.main) {
+  // init dotenv
+  await dotenvConfig({ export: true });
   await uploadArchive();
 }
