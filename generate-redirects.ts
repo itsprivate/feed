@@ -39,6 +39,10 @@ export default async function generateRedirects(
       }
     }
   }
+  // trim last new line
+  if (redirects.endsWith(`\n`)) {
+    redirects = redirects.slice(0, -1);
+  }
   // console.log("redirects", redirects);
   await writeTextFile(getDistFilePath(siteIdentifier, "_redirects"), redirects);
 }

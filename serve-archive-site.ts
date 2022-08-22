@@ -92,8 +92,8 @@ export default async function serveSite(port = 8000) {
     }
     let itemsJson: ItemsJson | null = null;
     const filePath = getArchivedFilePath(siteIdentifier, relativeItemsPath);
-
-    if (isDev()) {
+    const local = Deno.env.get("LOCAL") === "1";
+    if (local) {
       // get file
       try {
         itemsJson = await readJSONFile(filePath);
