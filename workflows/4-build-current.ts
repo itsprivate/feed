@@ -4,12 +4,9 @@ import getLatestItems from "../latest-items.ts";
 import {
   arrayToObj,
   getArchivedFilePath,
-  getCurrentArchiveFilePath,
   getCurrentItemsFilePath,
-  getCurrentTagsFilePath,
   getCurrentToBeArchivedItemsFilePath,
   getDataTranslatedPath,
-  isDebug,
   isDev,
   loadS3ArchiveFile,
   pathToSiteIdentifier,

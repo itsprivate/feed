@@ -5,8 +5,8 @@ on:
   # push:
   #   branches:
   #     - main
-  # schedule:
-  #   - cron: "*/30 * * * *"
+  schedule:
+    - cron: "*/15 * * * *"
 jobs:
   build:
     runs-on: ubuntu-latest

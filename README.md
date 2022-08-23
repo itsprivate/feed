@@ -75,3 +75,4 @@ aws s3 sync s3://mybucket . --endpoint-url https://example.com
 - [ ] show issues
 - [ ] show tags
 - [ ] show archives
+- [ ] fetch 的时候先 check 本地的数据

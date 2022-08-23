@@ -1,7 +1,6 @@
 import { fs } from "../deps.ts";
 import {
   getArchivedFilePath,
-  getCurrentArchiveFilePath,
   getCurrentItemsFilePath,
   getCurrentToBeArchivedItemsFilePath,
   getDataCurrentItemsPath,
