@@ -59,14 +59,16 @@ export default async function fetchSources(
         // check rules
         let isAllRulesFine = true;
         for (const rule of rules) {
-          const { key, value, type } = rule;
+          const { key: thekey, value: theValue, type } = rule;
           if (type === "limit") {
-            if ((index + 1) > Number(value)) {
+            if ((index + 1) > Number(theValue)) {
               isAllRulesFine = false;
               break;
             }
           } else {
+            const key = thekey!;
             const originalValue = get(originalItem, key);
+            const value = theValue as string;
             if (type === "greater") {
               if (Number(originalValue) <= Number(value)) {
                 isAllRulesFine = false;
@@ -164,13 +166,15 @@ export default async function fetchSources(
       if (currentKeysJson.length > 1000) {
         currentKeysJson = currentKeysJson.slice(0, 1000);
       }
-      postTasks.push({
-        type: "write",
-        meta: {
-          path: currentKeysPath,
-          content: JSON.stringify(currentKeysJson, null, 2),
-        },
-      });
+      // save current keys
+      // postTasks.push({
+      //   type: "write",
+      //   meta: {
+      //     path: currentKeysPath,
+      //     content: JSON.stringify(currentKeysJson, null, 2),
+      //   },
+      // });
+      await writeJSONFile(currentKeysPath, currentKeysJson);
       log.info(
         `saved ${total} items from ${sourceUrl} for ${siteIdentifier}`,
       );

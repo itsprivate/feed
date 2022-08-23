@@ -20,7 +20,7 @@ export default async function uploadArchive() {
       await s3Bucket.putObject(entry.path, await Deno.readFile(entry.path), {
         contentType: contentTypeString,
       });
-      if (total % 100 === 0) {
+      if (total % 100 === 0 && total > 0) {
         log.info(`uploaded ${total} archived files`);
       }
       // remove file

@@ -89,25 +89,9 @@ export default async function buildCurrent(
         log.debug(`read json file error: ${e}`);
       }
 
-      let currentArchive: string[] = [];
-      try {
-        currentArchive = await readJSONFile(
-          getCurrentArchiveFilePath(siteIdentifier),
-        );
-      } catch (e) {
-        // ignore
-        log.debug(`read json file error: ${e}`);
-      }
-      let currentTags: string[] = [];
+      let currentArchive: string[] = currentItemsJson.archive || [];
+      let currentTags: string[] = currentItemsJson.tags || [];
 
-      try {
-        currentTags = await readJSONFile(
-          getCurrentTagsFilePath(siteIdentifier),
-        );
-      } catch (e) {
-        // ignore
-        log.debug(`read json file error: ${e}`);
-      }
       let total = 0;
       // merge items to current itemsJson
       const tagFiles: Record<string, ItemsJson> = {};
@@ -233,19 +217,13 @@ export default async function buildCurrent(
         await Deno.remove(file);
       }
       if (isTagsChanged) {
-        await writeJSONFile(
-          getCurrentTagsFilePath(siteIdentifier),
-          currentTags,
-        );
+        currentItemsJson.tags = currentTags;
       }
       if (siteConfig.archive !== false) {
         // write currentArchive file
         // resort currentArchive by time
         currentArchive = resortArchiveKeys(currentArchive);
-        await writeJSONFile(
-          getCurrentArchiveFilePath(siteIdentifier),
-          currentArchive,
-        );
+        currentItemsJson.archive = currentArchive;
       }
 
       // write tagFiles
@@ -265,6 +243,7 @@ export default async function buildCurrent(
       await writeJSONFile(
         currentItemsPath,
         {
+          ...currentItemsJson,
           items: arrayToObj(getLatestItems(currentItemsJson.items)),
         },
       );

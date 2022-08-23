@@ -146,6 +146,9 @@ export interface Feedjson {
 export interface ItemsJson {
   meta?: Record<string, string>;
   items: Record<string, FormatedItem>;
+  tags?: string[];
+  archive?: string[];
+  issues?: string[];
 }
 
 export interface FeedItem extends FormatedItem {

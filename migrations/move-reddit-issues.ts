@@ -108,6 +108,7 @@ export default async function moveIssues() {
   const issueIndexPath = getCurrentIssuesFilePath(siteIdentifier);
   issues = resortArchiveKeys(issues);
   await writeJSONFile(getMigratedIssueMapPath(), oldAndNewMap);
+  console.log("issues", issues);
   await writeJSONFile(issueIndexPath, issues);
   log.info(
     `formated ${total} items`,

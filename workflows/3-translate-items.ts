@@ -2,6 +2,7 @@ import { fs, path } from "../deps.ts";
 import { FormatedItem, RunOptions } from "../interface.ts";
 import Item from "../item.ts";
 import {
+  callWithTimeout,
   getDataFormatedPath,
   isDev,
   pathToSiteIdentifier,
@@ -105,10 +106,16 @@ export default async function translateItems(
             log.debug(
               `translating ${parsedFilename.type} ${parsedFilename.language} ${field}: ${value} for ${parsedFilename.targetSite}`,
             );
-            const translated = await translation.translate(
-              value,
-              item._original_language,
-              todoLanguages.map((item) => item.code),
+            // set timeout, max 100s
+
+            const translated = await callWithTimeout<Record<string, string>>(
+              translation.translate.bind(
+                translation,
+                value,
+                item._original_language,
+                todoLanguages.map((item) => item.code),
+              ),
+              100000,
             );
             log.info(
               `${total}/${files.length} translated ${value} to`,

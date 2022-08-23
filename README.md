@@ -57,3 +57,8 @@ See `.github/workflows/cron.yml`
 - [x] support workers deploy
 - [ ] change archive lang to hackernews/en/
 - [ ] cache image to imgur?
+- [ ] add latest build
+- [ ] add lite version
+- [ ] show issues
+- [ ] show tags
+- [ ] show archives

@@ -590,3 +590,15 @@ export async function sha1(message: string) {
   ); // convert bytes to hex string
   return hashHex;
 }
+export function callWithTimeout<T>(func: unknown, timeout: number): Promise<T> {
+  return new Promise((resolve, reject) => {
+    const timer = setTimeout(() => reject(new Error("timeout")), timeout);
+    // @ts-ignore: hard to type
+    func().then(
+      // @ts-ignore: hard to type
+      (response) => resolve(response),
+      // @ts-ignore: hard to type
+      (err) => reject(new Error(err)),
+    ).finally(() => clearTimeout(timer));
+  });
+}

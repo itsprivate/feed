@@ -151,5 +151,16 @@
       <div class="p-summary entry-summary secondary">{{{content_html}}}</div>
     </article>
     {{/items}}
+    <footer>
+      {{#_tags.0}}
+
+      <details>
+        <summary>Tags</summary>
+        {{#_tags}}
+        <a href="{{{url}}}">{{name}}</a>{{^is_last}}<span> · </span>{{/is_last}}
+        {{/_tags}}
+      </details>
+      {{/_tags.0}}
+    </footer>
   </body>
 </html>
