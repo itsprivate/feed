@@ -34,7 +34,7 @@ export default async function generateRedirects(
           // @ts-ignore: json
           const newIssue = issueMaps[issueKey];
           redirects +=
-            `/${language.prefix}issues/${issueKey}/ ${targetPrefix}/issues/${newIssue}/\n`;
+            `/${language.prefix}issues/${issueKey}/ ${targetPrefix}/issues/${newIssue}/ 301\n`;
         }
       }
     }
