@@ -142,6 +142,9 @@ export interface Feedjson {
   feed_url: string;
   items: FeedItem[];
   _tags?: string[];
+  _site_tags?: string[];
+  _archive?: string[];
+  _issues?: string[];
 }
 export interface ItemsJson {
   meta?: Record<string, string>;

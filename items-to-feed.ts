@@ -230,7 +230,16 @@ export default function itemsToFeed(
     items,
   };
   if (siteConfig.tags) {
-    feedJson._tags = siteConfig.tags;
+    feedJson._site_tags = siteConfig.tags;
+  }
+  if (currentItemsJson.tags) {
+    feedJson._tags = currentItemsJson.tags;
+  }
+  if (currentItemsJson.archive) {
+    feedJson._archive = currentItemsJson.archive;
+  }
+  if (currentItemsJson.issues) {
+    feedJson._issues = currentItemsJson.issues;
   }
   return feedJson;
 }
