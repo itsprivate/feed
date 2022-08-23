@@ -1,6 +1,7 @@
 import { Author, Link } from "../interface.ts";
 import Item from "../item.ts";
 const prefixies = ["Show HN: ", "Ask HN: ", "Tell HN: ", "Poll: "];
+import { formatNumber } from "../util.ts";
 export default class hn extends Item<HnItem> {
   getOriginalPublishedDate(): Date {
     return new Date(this.originalItem.created_at as string);
@@ -50,7 +51,7 @@ export default class hn extends Item<HnItem> {
       return [
         {
           url: this.getExternalUrl(),
-          name: `&uarr;${this.getPoints()} points`,
+          name: `&uarr; ${formatNumber(this.getPoints())} HN Points`,
         },
       ];
     } else {

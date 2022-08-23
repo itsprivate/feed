@@ -1,6 +1,7 @@
 import { Author, Link, Video, VideoSource } from "../interface.ts";
 import Item from "../item.ts";
 import { contentType } from "../deps.ts";
+import { formatNumber } from "../util.ts";
 const prefixies: string[] = [];
 export default class reddit extends Item<RedditItem> {
   getOriginalPublishedDate(): Date {
@@ -156,7 +157,7 @@ export default class reddit extends Item<RedditItem> {
       return [
         {
           url: this.getExternalUrl(),
-          name: `&uarr;${this.getPoints()} votes`,
+          name: `&uarr; ${formatNumber(this.getPoints())} Reddit Upvotes`,
         },
       ];
     } else {

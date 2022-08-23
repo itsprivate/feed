@@ -37,6 +37,10 @@ serve:
 site:
 	deno run -A --watch=main.ts,templates/,config.yml main.ts --stage format,translate,build_current,archive,build_site,serve_site --site $(name)
 
+.Phony: start
+start:
+	deno run -A main.ts --site $(name)
+
 .Phony: prod-serve
 prod-serve:
 	PROD=1 deno run -A --watch=main.ts,templates/,config.yml main.ts --serve

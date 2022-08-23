@@ -1,5 +1,6 @@
 import { assertEquals } from "https://deno.land/std@0.151.0/testing/asserts.ts";
 import {
+  formatNumber,
   isDev,
   isMock,
   isWeekBiggerThan,
@@ -206,4 +207,19 @@ Deno.test("isMock #17", () => {
 Deno.test("isDev #16", () => {
   Deno.env.set("PROD", "1");
   assertEquals(isDev(), false);
+});
+
+Deno.test("formatNumber #17", () => {
+  const result = formatNumber(123422222);
+  assertEquals(result, "123M");
+});
+
+Deno.test("format Number #18", () => {
+  const result = formatNumber(222);
+  assertEquals(result, "222");
+});
+
+Deno.test("format Number #19", () => {
+  const result = formatNumber(4222);
+  assertEquals(result, "4.2K");
 });

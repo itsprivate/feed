@@ -72,7 +72,11 @@ aws s3 sync s3://mybucket . --endpoint-url https://example.com
 - [ ] cache image to imgur?
 - [ ] add latest build
 - [ ] add lite version
-- [ ] show issues
-- [ ] show tags
-- [ ] show archives
+- [x] show issues
+- [x] show tags
+- [x] show archives
 - [ ] fetch 的时候先 check 本地的数据
+- [ ] sitemap support
+- [ ] support search
+- [ ] archive backup
+- [ ] current backup
