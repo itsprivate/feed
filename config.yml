@@ -152,6 +152,7 @@ sites:
   news:
     port: 8006
     archive: true
+    redirect: true
     tags:
       - news
     translations:
