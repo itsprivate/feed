@@ -20,6 +20,7 @@ export default async function uploadArchive() {
       await s3Bucket.putObject(entry.path, await Deno.readFile(entry.path), {
         contentType: contentTypeString,
       });
+      log.info(`Uploaded ${entry.path} to ${R2_BUCKET} successfully`);
       if (total % 100 === 0 && total > 0) {
         log.info(`uploaded ${total} archived files`);
       }

@@ -40,7 +40,7 @@ const decompressProcess = async (
         "-DestinationPath",
         `"${destinationPath}"`,
       ]
-      : ["unzip", "-o", zipSourcePath, "-d", destinationPath],
+      : ["unzip","-q", "-o", zipSourcePath, "-d", destinationPath],
   });
   const processStatus = (await unzipCommandProcess.status()).success;
   Deno.close(unzipCommandProcess.rid);

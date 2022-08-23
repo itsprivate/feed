@@ -4,7 +4,7 @@ interface CompressOptions {
 }
 const compressProcess = async (
   files: string | string[],
-  archiveName: string = "./archive.zip",
+  archiveName = "./archive.zip",
   options?: CompressOptions,
 ): Promise<boolean> => {
   if (await exists(archiveName) && !(options?.overwrite)) {
@@ -26,7 +26,7 @@ const compressProcess = async (
         archiveName,
         options?.overwrite ? "-Force" : "",
       ]
-      : ["zip", "-r", archiveName, ...filesList.split(" ")],
+      : ["zip","-q", "-r", archiveName, ...filesList.split(" ")],
   });
   const processStatus = (await compressCommandProcess.status()).success;
   Deno.close(compressCommandProcess.rid);
