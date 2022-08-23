@@ -20,7 +20,7 @@ export default async function generateRedirects(
       `https://${archiveDomain}.${rootDomain}/${language.prefix}${siteIdentifier}`;
 
     // generate tags
-    redirects += `/${language.prefix}tags/* ${targetPrefix}/tags/:splat 302\n`;
+    redirects += `/${language.prefix}tags/* ${targetPrefix}/tags/:splat 301\n`;
 
     // generate issues
 
