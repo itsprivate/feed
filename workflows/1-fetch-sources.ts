@@ -143,10 +143,7 @@ export default async function fetchSources(
           originalItem,
           siteIdentifier,
         );
-
-        // run init
-        await item.init();
-
+        await item.afterFetchInit();
         if (!currentKeysJson.includes(item.getItemIdentifier())) {
           // not exists
           // save original item to file

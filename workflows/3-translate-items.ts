@@ -66,6 +66,9 @@ export default async function translateItems(
       if (files.length > 0) {
         log.info(`start translate ${files.length} items for ${siteIdentifier}`);
         for (const file of files) {
+          if (total % 100 === 0) {
+            log.info(`translated ${total} items for ${siteIdentifier}`);
+          }
           const item = JSON.parse(
             await Deno.readTextFile(file),
           ) as FormatedItem;
@@ -82,52 +85,67 @@ export default async function translateItems(
           const translatedJson = {
             ...item,
           } as Record<string, unknown>;
-          for (const field of originalTranslationKeys) {
-            // first check if this field is translated
-            const todoLanguages = [];
-            for (const language of TARGET_SITE_LANGUAEGS) {
-              if (language.code === item._original_language) {
-                continue;
-              }
 
-              if (
-                translations[language.code] &&
-                translations[language.code][field] !== undefined
-              ) {
-                // yes already translated
+          let isTranslated = true;
+          if (Deno.env.get("NO_TRANSLATE") === "1") {
+            isTranslated = false;
+          }
+          if (!isTranslated) {
+            // do nothing
+          } else {
+            for (const field of originalTranslationKeys) {
+              // first check if this field is translated
+              const todoLanguages = [];
+              for (const language of TARGET_SITE_LANGUAEGS) {
+                if (language.code === item._original_language) {
+                  continue;
+                }
+
+                if (
+                  translations[language.code] &&
+                  translations[language.code][field] !== undefined
+                ) {
+                  // yes already translated
+                  log.debug(`field ${field} already translated, skip`);
+                  continue;
+                }
+
+                todoLanguages.push(language);
+              }
+              // if todoLanguages is empty, skip
+              if (todoLanguages.length === 0) {
                 log.debug(`field ${field} already translated, skip`);
                 continue;
               }
 
-              todoLanguages.push(language);
-            }
+              const value = originalTranslations[field];
+              log.debug(
+                `translating ${parsedFilename.type} ${parsedFilename.language} ${field}: ${value} for ${parsedFilename.targetSite}`,
+              );
+              // set timeout, max 100s
 
-            const value = originalTranslations[field];
-            log.debug(
-              `translating ${parsedFilename.type} ${parsedFilename.language} ${field}: ${value} for ${parsedFilename.targetSite}`,
-            );
-            // set timeout, max 100s
-
-            const translated = await callWithTimeout<Record<string, string>>(
-              translation.translate.bind(
-                translation,
-                value,
-                item._original_language,
-                todoLanguages.map((item) => item.code),
-              ),
-              100000,
-            );
-            log.info(
-              `${total}/${files.length} translated ${value} to`,
-              translated,
-            );
-            for (const languageCode of Object.keys(translated)) {
-              if (!translations[languageCode]) {
-                translations[languageCode] = {};
+              const translated = await callWithTimeout<Record<string, string>>(
+                translation.translate.bind(
+                  translation,
+                  value,
+                  item._original_language,
+                  todoLanguages.map((item) => item.code),
+                ),
+                100000,
+              );
+              log.info(
+                `${total + 1}/${files.length} translated ${value} to`,
+                translated,
+              );
+              for (const languageCode of Object.keys(translated)) {
+                if (!translations[languageCode]) {
+                  translations[languageCode] = {};
+                }
+                translations[languageCode][field] = translated[languageCode];
               }
-              translations[languageCode][field] = translated[languageCode];
             }
           }
+
           translatedJson._translations = translations;
 
           // write translated item to file
@@ -138,8 +156,9 @@ export default async function translateItems(
             translatedJson,
           );
           // remove formated file
-          await Deno.remove(file);
-
+          if (!isDev()) {
+            await Deno.remove(file);
+          }
           total += 1;
         }
 

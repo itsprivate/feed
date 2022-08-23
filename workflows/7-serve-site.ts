@@ -24,7 +24,7 @@ export default function serveSite(siteIdentifier: string, port: number) {
     }
   };
   log.info(
-    `HTTP webserver running. Access it at: http://localhost:${port}/`,
+    `HTTP webserver for ${siteIdentifier} running. Access it at: http://localhost:${port}/`,
   );
   serve(handler, { port });
 }

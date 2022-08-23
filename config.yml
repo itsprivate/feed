@@ -64,7 +64,7 @@ sites:
         type: googlenews
         rules:
           - type: limit
-            value: 1
+            value: 2
   hackernews:
     port: 8001
     tags:
@@ -149,20 +149,23 @@ sites:
           - type: greaterEqual
             key: data.score
             value: "75000"
-  # news:
-  #   port: 8006
-  #   archive: false
-  #   tags:
-  #     - news
-  #   translations:
-  #     "zh-Hans":
-  #       title: "国外新闻头条 - 全球新闻头条 - 美国新闻头条"
-  #       short_title: "国外新闻"
-  #       description: "用中文浏览国外新闻头条，美国新闻头条，全球新闻(西方媒体)头条"
-  #     "en":
-  #       title: "Buzzing on World News"
-  #       description: "See what's buzzing on the news in your native language"
-  #       keywords: "Buzzing News, Buzzing News Feed"
-  #   sources:
-  #     - url: https://news.google.com/rss/topics/CAAqJggKIiBDQkFTRWdvSUwyMHZNRGx1YlY4U0FtVnVHZ0pWVXlnQVAB?hl=en-US&gl=US&ceid=US:en
-  #       type: rss
+  news:
+    port: 8006
+    archive: true
+    tags:
+      - news
+    translations:
+      "zh-Hans":
+        title: "国外新闻头条 - 全球新闻头条 - 美国新闻头条"
+        short_title: "国外新闻"
+        description: "用中文浏览国外新闻头条，美国新闻头条，全球新闻(西方媒体)头条"
+      "en":
+        title: "Buzzing on World News"
+        description: "See what's buzzing on the news in your native language"
+        keywords: "Buzzing News, Buzzing News Feed"
+    sources:
+      - url: https://news.google.com/rss/topics/CAAqJggKIiBDQkFTRWdvSUwyMHZNRGx1YlY4U0FtVnVHZ0pWVXlnQVAB?hl=en-US&gl=US&ceid=US:en
+        type: googlenews
+        rules:
+          - type: limit
+            value: 2

@@ -93,6 +93,13 @@ export default function itemsToFeed(
           item[`_${translationField}_prefix`]
         }${translationValue}`;
       }
+      // is has suffix
+      if (item[`_${translationField}_suffix`]) {
+        translationValue = `${translationValue}${
+          item[`_${translationField}_suffix`]
+        }`;
+      }
+
       item[translationField] = translationValue;
     }
 

@@ -21,13 +21,21 @@ prod-build:
 all:
 	FILES=50 deno run -A main.ts --site devfeed 
 
+.Phony: run
+run:
+	deno run -A --watch=main.ts,templates/,config.yml main.ts --stage format,translate,build_current,archive,build_site,serve_site --site news
+
+.Phony: prod-buildfromformat
+prod-buildfromformat:
+	PROD=1 deno run -A main.ts --stage format,translate,build_current,archive,build_site --site news
+
 .Phony: serve
 serve:
-	deno run -A --watch=main.ts,templates/,config.yml main.ts --serve --site devfeed
+	deno run -A --watch=main.ts,templates/,config.yml main.ts --stage build_site,serve_site --site news
 
 .Phony: site
 site:
-	deno run -A --watch=main.ts,templates/,config.yml main.ts --serve --site $(name)
+	deno run -A --watch=main.ts,templates/,config.yml main.ts --stage format,translate,build_current,archive,build_site,serve_site --site $(name)
 
 .Phony: prod-serve
 prod-serve:
@@ -54,8 +62,8 @@ realtr:
 	HEADLESS=0 MOCK=0 FILES=4 deno run -A main.ts --stage translate --site devfeed
 
 
-.Phony: build-current
-build-current:
+.Phony: buildcurrent
+buildcurrent:
 	deno run -A main.ts --stage build_current --site devfeed
 
 .Phony: dev

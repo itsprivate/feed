@@ -153,6 +153,9 @@ export default class Translation {
       return finalTranslatedResult;
     }
     if (targetLanguages.length < 1) {
+      log.warn(
+        `targetLanguages is empty, sentence: ${sentence}, sourceLanguage: ${sourceLanguage}`,
+      );
       throw new Error("targetLanguages must have at least one language");
     }
     const targetLanguage = targetLanguages[0];

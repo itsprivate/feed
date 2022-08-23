@@ -48,6 +48,19 @@ make prod-build
 
 See `.github/workflows/cron.yml`
 
+## AWS Cli Notes
+
+```bash
+# copy file
+aws s3 cp s3://mybucket/items.json items.json --endpoint-url https://example.com
+
+# download folder
+aws s3 cp s3://mybucket/items/test localtest --endpoint-url https://example.com --recursive
+
+# sync the whole folder
+aws s3 sync s3://mybucket . --endpoint-url https://example.com
+```
+
 ## TODO
 
 - [ ] add more feeds

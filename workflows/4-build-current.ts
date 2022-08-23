@@ -9,6 +9,8 @@ import {
   getCurrentTagsFilePath,
   getCurrentToBeArchivedItemsFilePath,
   getDataTranslatedPath,
+  isDebug,
+  isDev,
   loadS3ArchiveFile,
   pathToSiteIdentifier,
   readJSONFile,
@@ -214,7 +216,9 @@ export default async function buildCurrent(
           }
         }
         // delete old file
-        await Deno.remove(file);
+        if (!isDev()) {
+          await Deno.remove(file);
+        }
       }
       if (isTagsChanged) {
         currentItemsJson.tags = currentTags;

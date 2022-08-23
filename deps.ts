@@ -30,8 +30,9 @@ export {
   serveFile,
 } from "https://deno.land/x/std@0.152.0/http/file_server.ts";
 export * as posixPath from "https://deno.land/std@0.152.0/path/posix.ts";
-// third party modules
 export { config as dotenvConfig } from "https://deno.land/std@0.152.0/dotenv/mod.ts";
+// third party modules
+
 export {
   DOMParser,
   Element,

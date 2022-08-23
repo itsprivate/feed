@@ -5,6 +5,7 @@ current.zip
 archive.zip
 dev-archive.zip
 /current/
+private.txt
 /dev-archive/
 /archive/
 temp.json

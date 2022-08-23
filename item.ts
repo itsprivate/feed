@@ -76,8 +76,13 @@ export default class Item<T> {
     this.siteIdentifier = siteIdentifier;
     this.siteConfig = config;
   }
-  init(): Promise<void> {
-    // init you can do some async operations
+  afterFetchInit(): Promise<void> {
+    // after fetch init, so you can do some async operations
+    // use by googlenews, for format id, cause google id is too long
+    return Promise.resolve();
+  }
+  beforeFormatInit(): Promise<void> {
+    // before formate init, so you can do some async operations
     return Promise.resolve();
   }
   getTargetSite(): string {
@@ -146,6 +151,10 @@ export default class Item<T> {
     return "";
   }
   getTitlePrefix(): string {
+    // this will not be translated
+    return "";
+  }
+  getTitleSuffix(): string {
     // this will not be translated
     return "";
   }
@@ -247,6 +256,7 @@ export default class Item<T> {
   getVideo(): Video | undefined {
     return undefined;
   }
+
   getRawPath(): string {
     return `${getDataRawPath()}/${(this
       .getTargetSitePath())}/${this.getModifiedYear()}/${this.getModifiedMonth()}/${this.getModifiedDay()}/${this.getItemIdentifier()}.json`;
@@ -305,6 +315,9 @@ export default class Item<T> {
     }
     if (this.getTitlePrefix()) {
       item._title_prefix = this.getTitlePrefix();
+    }
+    if (this.getTitleSuffix()) {
+      item._title_suffix = this.getTitleSuffix();
     }
     const links = this.getLinks();
     if (links && Array.isArray(links) && links.length > 0) {
