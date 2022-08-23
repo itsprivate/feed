@@ -5,6 +5,7 @@ import {
   getArchivedFilePath,
   getArchiveS3Bucket,
   isDebug,
+  parsePageUrl,
   readJSONFile,
   siteIdentifierToUrl,
 } from "./util.ts";
@@ -32,7 +33,7 @@ export default async function serveSite(port = 8000) {
       return addTrailSlash(request.url)!;
     }
 
-    const routeInfo = parseUrl(request.url);
+    const routeInfo = parsePageUrl(request.url);
     log.debug(`routeInfo`, routeInfo);
     const url = routeInfo.url;
     const language = routeInfo.language;
@@ -40,7 +41,6 @@ export default async function serveSite(port = 8000) {
     const pattern = new URLPattern({
       pathname: "/:siteIdentifier/:type/*",
     });
-    // console.log("newUrl.pathname", newUrl.pathname);
     const parsedRoute = pattern.exec(url);
     log.debug("parsedRoute", parsedRoute);
     if (!parsedRoute) {
@@ -108,7 +108,6 @@ export default async function serveSite(port = 8000) {
           );
           const feedJsonResponse = await fetch(feedJsonpath);
           currentSiteFeedJson = await feedJsonResponse.json();
-          console.log("feedJsonpath", feedJsonpath);
         } catch (e) {
           log.warn("fail to get current site feed.json", e);
         }
@@ -162,51 +161,6 @@ export default async function serveSite(port = 8000) {
     `HTTP webserver running. Access it at: http://localhost:${port}/`,
   );
   serve(handler, { port });
-}
-
-function parseUrl(urlStr: string) {
-  const url = new URL(urlStr);
-  // get language code
-  const langField = url.pathname.split("/")[1];
-  // check if language code is valid
-  let language = TARGET_SITE_LANGUAEGS[0];
-  let pathname = url.pathname;
-  for (const targetLang of TARGET_SITE_LANGUAEGS) {
-    let prefix = targetLang.prefix;
-    // remove trailing slash
-    if (prefix.endsWith("/")) {
-      prefix = prefix.slice(0, -1);
-    }
-    if (prefix === langField) {
-      language = targetLang;
-      pathname = url.pathname.slice(targetLang.prefix.length);
-      break;
-    }
-  }
-
-  // support version lite
-
-  const versionField = pathname.split("/")[1];
-  let version = "current";
-  if (versionField === "lite") {
-    version = "lite";
-    console.log("pathname", pathname);
-    pathname = pathname.slice("/lite".length);
-    // add start slash
-    if (!pathname.startsWith("/")) {
-      pathname = "/" + pathname;
-    }
-  }
-
-  const newUrl = new URL(url);
-  newUrl.pathname = pathname;
-
-  return {
-    language: language,
-    pathname: pathname,
-    url: newUrl.href,
-    version: version,
-  };
 }
 
 function addTrailSlash(url: string): Response | null {

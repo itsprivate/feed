@@ -5,6 +5,7 @@ import {
   getFeedSiteIdentifiers,
   getGeneralTranslations,
   issueToUrl,
+  parsePageUrl,
   siteIdentifierToUrl,
   tagToUrl,
   urlToLanguageUrl,
@@ -24,6 +25,19 @@ export default function feedToHTML(
     throw new Error(`home_page_url not found for feedjson`);
   }
   const siteIdentifier = urlToSiteIdentifier(homepage, config);
+
+  let isArchive = false;
+
+  if (siteIdentifier === config.archive.siteIdentifier) {
+    isArchive = true;
+  }
+  let subsite = "";
+  if (isArchive) {
+    const routeInfo = parsePageUrl(homepage);
+    const splited = routeInfo.pathname.split("/");
+    subsite = splited[1];
+  }
+
   const languageCode = feedJson.language;
   if (!languageCode) {
     throw new Error(`language code not found for feedjson`);
@@ -133,7 +147,7 @@ export default function feedToHTML(
     feedJson._tag_list = feedJson._tags.map((tag, index) => {
       return {
         name: tag,
-        url: tagToUrl(tag, siteIdentifier, language, config),
+        url: tagToUrl(tag, subsite || siteIdentifier, language, config),
         is_last: index === feedJson._tags!.length - 1,
       };
     });
@@ -144,7 +158,7 @@ export default function feedToHTML(
     feedJson._archive_list = feedJson._archive.map((item, index) => {
       return {
         name: item,
-        url: archiveToUrl(item, siteIdentifier, language, config),
+        url: archiveToUrl(item, subsite || siteIdentifier, language, config),
         is_last: index === feedJson._archive!.length - 1,
       };
     });
@@ -156,7 +170,7 @@ export default function feedToHTML(
     feedJson._issue_list = feedJson._issues.map((item, index) => {
       return {
         name: item,
-        url: issueToUrl(item, siteIdentifier, language, config),
+        url: issueToUrl(item, subsite || siteIdentifier, language, config),
         is_last: index === feedJson._issues!.length - 1,
       };
     });

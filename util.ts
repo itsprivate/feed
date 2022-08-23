@@ -639,3 +639,48 @@ export function issueToUrl(
     getArchiveSitePrefix(config)
   }/${language.prefix}${siteIdentifier}/issues/${issue}/`;
 }
+
+export function parsePageUrl(urlStr: string) {
+  const url = new URL(urlStr);
+  // get language code
+  const langField = url.pathname.split("/")[1];
+  // check if language code is valid
+  let language = TARGET_SITE_LANGUAEGS[0];
+  let pathname = url.pathname;
+  for (const targetLang of TARGET_SITE_LANGUAEGS) {
+    let prefix = targetLang.prefix;
+    // remove trailing slash
+    if (prefix.endsWith("/")) {
+      prefix = prefix.slice(0, -1);
+    }
+    if (prefix === langField) {
+      language = targetLang;
+      pathname = url.pathname.slice(targetLang.prefix.length);
+      break;
+    }
+  }
+
+  // support version lite
+
+  const versionField = pathname.split("/")[1];
+  let version = "current";
+  if (versionField === "lite") {
+    version = "lite";
+    console.log("pathname", pathname);
+    pathname = pathname.slice("/lite".length);
+    // add start slash
+    if (!pathname.startsWith("/")) {
+      pathname = "/" + pathname;
+    }
+  }
+
+  const newUrl = new URL(url);
+  newUrl.pathname = pathname;
+
+  return {
+    language: language,
+    pathname: pathname,
+    url: newUrl.href,
+    version: version,
+  };
+}
