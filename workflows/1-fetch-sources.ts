@@ -19,6 +19,9 @@ export default async function fetchSources(
   for (const siteIdentifier of siteIdentifiers) {
     const siteConfig = sitesMap[siteIdentifier];
     const sources = siteConfig.sources || [];
+    if (sources.length === 0) {
+      log.info(`site ${siteIdentifier} has no sources, skip fetch sources`);
+    }
     let total = 0;
     for (const source of sources) {
       const sourceUrl = source.url;

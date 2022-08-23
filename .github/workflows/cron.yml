@@ -64,14 +64,15 @@ jobs:
           R2_SECRET_ACCESS_KEY: ${{secrets.R2_SECRET_ACCESS_KEY}}
           R2_REGION: ${{secrets.R2_REGION}}
           R2_ENDPOINT: ${{secrets.R2_ENDPOINT}}
-          ARCHIVE_ACCESS_KEY_ID: ${{secrets.ARCHIVE_ACCESS_KEY_ID}}
-          ARCHIVE_SECRET_ACCESS_KEY: ${{secrets.ARCHIVE_SECRET_ACCESS_KEY}}
-          ARCHIVE_ENDPOINT: ${{secrets.ARCHIVE_ENDPOINT}}
-          ARCHIVE_REGION: ${{secrets.ARCHIVE_REGION}}
           CLOUDFLARE_ACCOUNT_ID: ${{secrets.CLOUDFLARE_ACCOUNT_ID}}
           CLOUDFLARE_API_TOKEN: ${{secrets.CLOUDFLARE_API_TOKEN}}
       - run: make prod-source
         continue-on-error: true
+        env:
+          ARCHIVE_ACCESS_KEY_ID: ${{secrets.ARCHIVE_ACCESS_KEY_ID}}
+          ARCHIVE_SECRET_ACCESS_KEY: ${{secrets.ARCHIVE_SECRET_ACCESS_KEY}}
+          ARCHIVE_ENDPOINT: ${{secrets.ARCHIVE_ENDPOINT}}
+          ARCHIVE_REGION: ${{secrets.ARCHIVE_REGION}}
       - name: upload files
         run: make prod-upload
         env:

@@ -77,64 +77,68 @@ export default async function main() {
       return (sites as string[]).includes(siteIdentifier);
     });
   }
-  log.info("start build ", siteIdentifiers);
+  log.info("start build ", siteIdentifiers, stage);
   const runOptions: RunOptions = { siteIdentifiers: siteIdentifiers, config };
   let allPostTasks: Task[] = [];
-
-  // 1. fetch sources
-  if (stage.includes("fetch")) {
-    const { postTasks } = await fetchSources(runOptions);
-    if (postTasks && Array.isArray(postTasks) && postTasks.length > 0) {
-      allPostTasks = allPostTasks.concat(postTasks);
-    }
-  } else {
-    log.info("skip fetch stage");
-  }
-
-  // 2. format sources
-  if (stage.includes("format")) {
-    await formatItems(runOptions);
-  } else {
-    log.info("skip format stage");
-  }
-
-  // 3. translate formated items
-  if (stage.includes("translate")) {
-    await translateItems(runOptions);
-  } else {
-    log.info("skip translate stage");
-  }
-
-  // 4. build_items
-  if (stage.includes("build_current")) {
-    await buildCurrent(runOptions);
-  } else {
-    log.info("skip build_current stage");
-  }
-
-  // 5. archive items
-  if (stage.includes("archive")) {
-    log.info(`start archive items`);
-    await archive(runOptions);
-  } else {
-    log.info("skip archive stage");
-  }
-
-  // 6. build site
-  if (stage.includes("build_site")) {
-    log.info(`start build site`);
-    await buildSite(runOptions);
-  } else {
-    log.info("skip build_site stage");
-  }
-
-  if (allPostTasks.length > 0) {
-    for (const task of allPostTasks) {
-      if (task.type === "write") {
-        await writeTextFile(task.meta.path, task.meta.content);
+  try {
+    // 1. fetch sources
+    if (stage.includes("fetch")) {
+      const { postTasks } = await fetchSources(runOptions);
+      if (postTasks && Array.isArray(postTasks) && postTasks.length > 0) {
+        allPostTasks = allPostTasks.concat(postTasks);
       }
+    } else {
+      log.info("skip fetch stage");
     }
-    log.info(`run ${allPostTasks.length} post tasks success`);
+
+    // 2. format sources
+    if (stage.includes("format")) {
+      await formatItems(runOptions);
+    } else {
+      log.info("skip format stage");
+    }
+
+    // 3. translate formated items
+    if (stage.includes("translate")) {
+      await translateItems(runOptions);
+    } else {
+      log.info("skip translate stage");
+    }
+
+    // 4. build_items
+    if (stage.includes("build_current")) {
+      await buildCurrent(runOptions);
+    } else {
+      log.info("skip build_current stage");
+    }
+
+    // 5. archive items
+    if (stage.includes("archive")) {
+      log.info(`start archive items`);
+      await archive(runOptions);
+    } else {
+      log.info("skip archive stage");
+    }
+
+    // 6. build site
+    if (stage.includes("build_site")) {
+      log.info(`start build site`);
+      await buildSite(runOptions);
+    } else {
+      log.info("skip build_site stage");
+    }
+  } catch (e) {
+    throw e;
+  } finally {
+    // must run post tasks
+    if (allPostTasks.length > 0) {
+      for (const task of allPostTasks) {
+        if (task.type === "write") {
+          await writeTextFile(task.meta.path, task.meta.content);
+        }
+      }
+      log.info(`run ${allPostTasks.length} post tasks success`);
+    }
   }
 
   // 7. serve site

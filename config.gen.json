@@ -85,7 +85,18 @@
           "description": "用中文瀏覽Reddit熱門內容"
         }
       },
-      "sources": []
+      "sources": [
+        {
+          "url": "https://news.google.com/rss/topics/CAAqJggKIiBDQkFTRWdvSUwyMHZNRGx1YlY4U0FtVnVHZ0pWVXlnQVAB?hl=en-US&gl=US&ceid=US:en",
+          "type": "googlenews",
+          "rules": [
+            {
+              "type": "limit",
+              "value": 1
+            }
+          ]
+        }
+      ]
     },
     "hackernews": {
       "port": 8001,
