@@ -9,13 +9,13 @@ import {
 } from "./interface.ts";
 import {
   formatHumanTime,
-  getArchiveSitePrefix,
   getCurrentTranslations,
   getItemTranslations,
   getPageMeta,
   itemsPathToURLPath,
   siteIdentifierToUrl,
   slug,
+  tagToUrl,
 } from "./util.ts";
 import { TARGET_SITE_LANGUAEGS } from "./constant.ts";
 export default function itemsToFeed(
@@ -166,10 +166,8 @@ export default function itemsToFeed(
         const isGreaterFirst = index >= 1;
         summary += ` #${tag}`;
         content_html += `${isGreaterFirst ? "&nbsp;&nbsp;" : ""}<a href="${
-          getArchiveSitePrefix(config)
-        }/${language.prefix}${siteIdentifier}/tags/${
-          // @ts-ignore: npm module
-          slug(tag)}/">#${tag}</a>`;
+          tagToUrl(tag, siteIdentifier, language, config)
+        }">#${tag}</a>`;
         index++;
       }
     }

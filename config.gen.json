@@ -33,32 +33,44 @@
   ],
   "translations": {
     "zh-Hans": {
-      "about_label": "关于此页面",
+      "about_label": "关于此站",
       "subscription_label": "订阅地址",
       "powered_by_label": "背后的人❤️",
       "languages_label": "该页面其他语言",
-      "more_sites_label": "姊妹站点"
+      "more_sites_label": "姊妹站点",
+      "tags_label": "所有标签",
+      "archive_label": "历史归档",
+      "issues_label": "往期精选"
     },
     "en": {
       "about_label": "About this page",
       "subscription_label": "Subscription",
       "powered_by_label": "Made by ❤️",
       "languages_label": "Other languages",
-      "more_sites_label": "More feeds"
+      "more_sites_label": "More feeds",
+      "tags_label": "All tags",
+      "archive_label": "Archive",
+      "issues_label": "Past issues"
     },
     "ja": {
       "about_label": "このページについて",
       "subscription_label": "購読",
       "powered_by_label": "製作者 ❤️",
       "languages_label": "他の言語",
-      "more_sites_label": "他のフィード"
+      "more_sites_label": "他のフィード",
+      "tags_label": "すべてのタグ",
+      "archive_label": "アーカイブ",
+      "issues_label": "過去の問題"
     },
     "zh-Hant": {
-      "about_label": "關於此頁面",
+      "about_label": "關於此站",
       "subscription_label": "訂閱地址",
       "powered_by_label": "背後的人❤️",
       "languages_label": "該頁面其他語言",
-      "more_sites_label": "姊妹站點"
+      "more_sites_label": "姊妹站點",
+      "tags_label": "所有標籤",
+      "archive_label": "歷史歸檔",
+      "issues_label": "往期精選"
     }
   },
   "archive": {

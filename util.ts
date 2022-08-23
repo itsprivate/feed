@@ -277,6 +277,10 @@ export const siteIdentifierToUrl = (
     const siteConfig = config.sites[siteIdentifier];
     port = siteConfig.port || 8000;
   }
+  // pathname add start slash
+  if (!pathname.startsWith("/")) {
+    pathname = "/" + pathname;
+  }
   const isWorkersDev = Deno.env.get("WORKERS_DEV") === "1";
   if (isWorkersDev) {
     return `https://dev-${
@@ -601,4 +605,37 @@ export function callWithTimeout<T>(func: unknown, timeout: number): Promise<T> {
       (err) => reject(new Error(err)),
     ).finally(() => clearTimeout(timer));
   });
+}
+export function tagToUrl(
+  tag: string,
+  siteIdentifier: string,
+  language: Language,
+  config: Config,
+): string {
+  return `${
+    getArchiveSitePrefix(config)
+  }/${language.prefix}${siteIdentifier}/tags/${
+    // @ts-ignore: npm module
+    slug(tag)}/`;
+}
+export function archiveToUrl(
+  archiveKey: string,
+  siteIdentifier: string,
+  language: Language,
+  config: Config,
+): string {
+  return `${
+    getArchiveSitePrefix(config)
+  }/${language.prefix}${siteIdentifier}/archive/${archiveKey}/`;
+}
+
+export function issueToUrl(
+  issue: string,
+  siteIdentifier: string,
+  language: Language,
+  config: Config,
+): string {
+  return `${
+    getArchiveSitePrefix(config)
+  }/${language.prefix}${siteIdentifier}/issues/${issue}/`;
 }

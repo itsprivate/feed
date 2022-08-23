@@ -25,6 +25,10 @@ all:
 serve:
 	deno run -A --watch=main.ts,templates/,config.yml main.ts --serve --site devfeed
 
+.Phony: site
+site:
+	deno run -A --watch=main.ts,templates/,config.yml main.ts --serve --site $(name)
+
 .Phony: prod-serve
 prod-serve:
 	PROD=1 deno run -A --watch=main.ts,templates/,config.yml main.ts --serve

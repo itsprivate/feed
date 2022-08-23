@@ -6,12 +6,13 @@ import {
   getArchiveS3Bucket,
   isDebug,
   readJSONFile,
+  siteIdentifierToUrl,
 } from "./util.ts";
 import log from "./log.ts";
 import { TARGET_SITE_LANGUAEGS } from "./constant.ts";
 import feedToHTML from "./feed-to-html.ts";
 import itemsToFeed from "./items-to-feed.ts";
-import { ItemsJson } from "./interface.ts";
+import { Feedjson, ItemsJson } from "./interface.ts";
 import notfound from "./notfound.ts";
 import config from "./config.gen.json" assert { type: "json" };
 export default async function serveSite(port = 8000) {
@@ -86,7 +87,8 @@ export default async function serveSite(port = 8000) {
         }
       }
       if (itemsJson) {
-        const feedjson = itemsToFeed(
+        // merge with site items
+        let feedjson = itemsToFeed(
           relativeItemsPath,
           itemsJson,
           siteIdentifier,
@@ -96,6 +98,27 @@ export default async function serveSite(port = 8000) {
             isArchive: true,
           },
         );
+
+        let currentSiteFeedJson: Feedjson | null = null;
+        try {
+          const feedJsonpath = siteIdentifierToUrl(
+            siteIdentifier,
+            "/feed.json",
+            config,
+          );
+          const feedJsonResponse = await fetch(feedJsonpath);
+          currentSiteFeedJson = await feedJsonResponse.json();
+          console.log("feedJsonpath", feedJsonpath);
+        } catch (e) {
+          log.warn("fail to get current site feed.json", e);
+        }
+        if (currentSiteFeedJson) {
+          feedjson = {
+            ...currentSiteFeedJson,
+            ...feedjson,
+          };
+        }
+
         // let type = "feedjson";
         //  write temp json
         // await writeJSONFile("temp.json", feedjson);

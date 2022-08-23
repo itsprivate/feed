@@ -28,6 +28,7 @@ export default async function moveIssues() {
   } catch (_e) {
     // ignore
   }
+  console.log("oldAndNewMap", oldAndNewMap);
   if (!oldAndNewMap[siteIdentifier]) {
     oldAndNewMap[siteIdentifier] = {};
   }
@@ -109,6 +110,7 @@ export default async function moveIssues() {
   issues = resortArchiveKeys(issues);
   await writeJSONFile(getMigratedIssueMapPath(), oldAndNewMap);
   console.log("issues", issues);
+  console.log("issueIndexPath", issueIndexPath);
   await writeJSONFile(issueIndexPath, issues);
   log.info(
     `formated ${total} items`,

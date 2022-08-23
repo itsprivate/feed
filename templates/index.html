@@ -55,7 +55,7 @@
         max-width: 45em;
         margin: 0 auto;
         padding: 0 2%;
-        line-height: 1.5em;
+        line-height: 1.5;
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
           Helvetica, sans-serif;
       }
@@ -130,15 +130,55 @@
       {{#_other_sites.0}}
       <details class="contrast">
         <summary>{{more_sites_label}}</summary>
-        {{#_related_sites}}
-        <a href="{{{url}}}">{{name}}</a>{{^is_last}}<span> · </span>{{/is_last}}
-        {{/_related_sites}} {{#_other_sites.0}} {{#_related_sites.0}}<span>
-          · </span
-        >{{/_related_sites.0}} {{/_other_sites.0}} {{#_other_sites}}
-        <a href="{{{url}}}">{{name}}</a>{{^is_last}}<span> · </span>{{/is_last}}
-        {{/_other_sites}}
+        <p>
+          {{#_related_sites}}
+
+          <a href="{{{url}}}">{{name}}</a>{{^is_last}}<span> · </span
+          >{{/is_last}} {{/_related_sites}} {{#_other_sites.0}}
+          {{#_related_sites.0}}<span> · </span>{{/_related_sites.0}}
+          {{/_other_sites.0}} {{#_other_sites}}
+          <a href="{{{url}}}">{{name}}</a>{{^is_last}}<span> · </span
+          >{{/is_last}} {{/_other_sites}}
+        </p>
       </details>
-      {{/_other_sites.0}}
+      {{/_other_sites.0}} {{#_tag_list.0}}
+
+      <details>
+        <summary>{{tags_label}}</summary>
+        <p>
+          <cite>
+            {{#_tag_list}}
+            <a class="no-underline" href="{{{url}}}">#{{name}}</a
+            >{{^is_last}}<span>&nbsp;&nbsp;</span>{{/is_last}} {{/_tag_list}}
+          </cite>
+        </p>
+      </details>
+      {{/_tag_list.0}} {{#_archive_list.0}}
+
+      <details>
+        <summary>{{archive_label}}</summary>
+        <p>
+          <cite>
+            {{#_archive_list}}
+            <a class="no-underline" href="{{{url}}}">{{name}}</a
+            >{{^is_last}}<span>&nbsp;&nbsp;</span>{{/is_last}}
+            {{/_archive_list}}</cite
+          >
+        </p>
+      </details>
+      {{/_archive_list.0}} {{#_issue_list.0}}
+
+      <details>
+        <summary>{{issues_label}}</summary>
+        <p>
+          <cite>
+            {{#_issue_list}}
+            <a class="no-underline" href="{{{url}}}">{{name}}</a
+            >{{^is_last}}<span>&nbsp;&nbsp;</span>{{/is_last}} {{/_issue_list}}
+          </cite>
+        </p>
+      </details>
+      {{/_issue_list.0}}
     </header>
     {{#items}}
     <article class="h-entry hentry">
@@ -151,16 +191,6 @@
       <div class="p-summary entry-summary secondary">{{{content_html}}}</div>
     </article>
     {{/items}}
-    <footer>
-      {{#_tags.0}}
-
-      <details>
-        <summary>Tags</summary>
-        {{#_tags}}
-        <a href="{{{url}}}">{{name}}</a>{{^is_last}}<span> · </span>{{/is_last}}
-        {{/_tags}}
-      </details>
-      {{/_tags.0}}
-    </footer>
+    <footer></footer>
   </body>
 </html>

@@ -1,9 +1,12 @@
 import {
+  archiveToUrl,
   feedjsonUrlToRssUrl,
   getCurrentTranslations,
   getFeedSiteIdentifiers,
   getGeneralTranslations,
+  issueToUrl,
   siteIdentifierToUrl,
+  tagToUrl,
   urlToLanguageUrl,
   urlToSiteIdentifier,
 } from "./util.ts";
@@ -125,6 +128,39 @@ export default function feedToHTML(
   //   "/" + language.prefix + "atom.xml",
   //   config,
   // );
+  if (feedJson._tags) {
+    // @ts-ignore: add meta data
+    feedJson._tag_list = feedJson._tags.map((tag, index) => {
+      return {
+        name: tag,
+        url: tagToUrl(tag, siteIdentifier, language, config),
+        is_last: index === feedJson._tags!.length - 1,
+      };
+    });
+  }
+  // archive
+  if (feedJson._archive) {
+    // @ts-ignore: add meta data
+    feedJson._archive_list = feedJson._archive.map((item, index) => {
+      return {
+        name: item,
+        url: archiveToUrl(item, siteIdentifier, language, config),
+        is_last: index === feedJson._archive!.length - 1,
+      };
+    });
+  }
+
+  // issues
+  if (feedJson._issues) {
+    // @ts-ignore: add meta data
+    feedJson._issue_list = feedJson._issues.map((item, index) => {
+      return {
+        name: item,
+        url: issueToUrl(item, siteIdentifier, language, config),
+        is_last: index === feedJson._issues!.length - 1,
+      };
+    });
+  }
 
   // build index.html
   // @ts-ignore: js package does not have type for mustache
