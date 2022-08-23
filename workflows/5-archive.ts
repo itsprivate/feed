@@ -2,6 +2,7 @@ import { fs } from "../deps.ts";
 import {
   getArchivedFilePath,
   getCurrentArchiveFilePath,
+  getCurrentItemsFilePath,
   getCurrentToBeArchivedItemsFilePath,
   getDataCurrentItemsPath,
   isWeekBiggerThan,
@@ -81,15 +82,16 @@ export default async function archive(options: RunOptions) {
       );
 
       if (isWeekBiggerThan(now, oldestToBeArchivedItemDate)) {
-        let currentArchive: string[] = [];
+        let currentItems: ItemsJson = { items: {} };
         try {
-          currentArchive = await readJSONFile(
-            getCurrentArchiveFilePath(siteIdentifier),
+          currentItems = await readJSONFile(
+            getCurrentItemsFilePath(siteIdentifier),
           );
         } catch (e) {
           // ignore
           log.debug(`read json file error: ${e}`);
         }
+        let currentArchive = currentItems.archive || [];
 
         // archive items
         // from old to new
@@ -165,10 +167,11 @@ export default async function archive(options: RunOptions) {
           );
         }
         currentArchive = resortArchiveKeys(currentArchive);
-        // write to current archive file
+        currentItems.archive = currentArchive;
+        // write to current items file
         await writeJSONFile(
-          getCurrentArchiveFilePath(siteIdentifier),
-          currentArchive,
+          getCurrentItemsFilePath(siteIdentifier),
+          currentItems,
         );
         // for garbage collection
         // @ts-ignore: type is not assignable

@@ -27,11 +27,11 @@ run:
 
 .Phony: prod-buildfromformat
 prod-buildfromformat:
-	PROD=1 deno run -A main.ts --stage format,translate,build_current,archive,build_site --site news
+	PROD=1 deno run -A main.ts --stage format,translate,build_current,archive,build_site
 
 .Phony: serve
 serve:
-	deno run -A --watch=main.ts,templates/,config.yml main.ts --stage build_site,serve_site --site news
+	deno run -A --watch=main.ts,templates/,config.yml main.ts --stage build_site,serve_site
 
 .Phony: site
 site:
