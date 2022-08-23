@@ -20,7 +20,7 @@ export default async function generateRedirects(
       `https://${archiveDomain}.${rootDomain}/${language.prefix}${siteIdentifier}`;
 
     // generate tags
-    redirects += `/${language.prefix}tags/* ${targetPrefix}/tags/:splat 301\n`;
+    redirects += `/${language.prefix}tags/* ${targetPrefix}/tags/:splat 302\n`;
 
     // generate issues
 
@@ -34,7 +34,7 @@ export default async function generateRedirects(
           // @ts-ignore: json
           const newIssue = issueMaps[issueKey];
           redirects +=
-            `/${language.prefix}issues/${issueKey}/ ${targetPrefix}/issues/${newIssue}/ 301\n`;
+            `/${language.prefix}issues/${issueKey}/ ${targetPrefix}/issues/${newIssue}/ 302\n`;
         }
       }
     }
