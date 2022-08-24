@@ -19,7 +19,7 @@ jobs:
           mkdir -p archive
           echo "hello world" > archive/hello.txt
           echo "hello world" > archive/hello2.txt
-      - uses: isbang/setup-awscli@v0.1.0
+      # - uses: isbang/setup-awscli@v0.1.0
       - run: make prod-awsuploadarchive
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.ARCHIVE_ACCESS_KEY_ID }}
