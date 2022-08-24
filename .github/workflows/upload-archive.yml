@@ -19,11 +19,18 @@ jobs:
           mkdir -p archive
           echo "hello world" > archive/hello.txt
           echo "hello world" > archive/hello2.txt
-      - name: upload files
-        uses: ItsKarma/aws-cli@v1.70.0
-        with:
-          args: make prod-awsuploadarchive
+      - uses: chrislennon/action-aws-cli@v1.1
+      - run: make prod-awsuploadarchive
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.ARCHIVE_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.ARCHIVE_SECRET_ACCESS_KEY }}
           AWS_DEFAULT_REGION: ${{secrets.ARCHIVE_REGION}}
+
+      # - name: upload files
+      #   uses: ItsKarma/aws-cli@v1.70.0
+      #   with:
+      #     args: make prod-awsuploadarchive
+      #   env:
+      #     AWS_ACCESS_KEY_ID: ${{ secrets.ARCHIVE_ACCESS_KEY_ID }}
+      #     AWS_SECRET_ACCESS_KEY: ${{ secrets.ARCHIVE_SECRET_ACCESS_KEY }}
+      #     AWS_DEFAULT_REGION: ${{secrets.ARCHIVE_REGION}}
