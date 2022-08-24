@@ -14,14 +14,13 @@ jobs:
     steps:
       - name: Check out repository code
         uses: actions/checkout@v3
-
       - name: create test files
         run: |
           mkdir -p archive
           echo "hello world" > archive/hello.txt
           echo "hello world" > archive/hello2.txt
       - name: upload files
-        use: ItsKarma/aws-cli@v1.70.0
+        uses: ItsKarma/aws-cli@v1.70.0
         with:
           args: make prod-awsuploadarchive
         env:
