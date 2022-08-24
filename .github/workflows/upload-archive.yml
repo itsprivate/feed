@@ -14,17 +14,16 @@ jobs:
     steps:
       - name: Check out repository code
         uses: actions/checkout@v3
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          role-skip-session-tagging: true
-          aws-access-key-id: ${{ secrets.ARCHIVE_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.ARCHIVE_SECRET_ACCESS_KEY }}
-          aws-region: ${{secrets.ARCHIVE_REGION}}
+
       - name: create test files
         run: |
           mkdir -p archive
           echo "hello world" > archive/hello.txt
           echo "hello world" > archive/hello2.txt
       - name: upload files
+        use: ItsKarma/aws-cli@v1.70.0
         run: make prod-awsuploadarchive
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.ARCHIVE_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.ARCHIVE_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: ${{secrets.ARCHIVE_REGION}}
