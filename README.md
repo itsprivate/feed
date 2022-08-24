@@ -79,6 +79,6 @@ aws s3 sync s3://mybucket . --endpoint-url https://example.com
 - [x] fetch 的时候先 check 本地的数据
 - [ ] sitemap support
 - [ ] support search
-- [ ] archive backup
+- [x] archive backup
 - [ ] current backup
 - [ ] add links meta

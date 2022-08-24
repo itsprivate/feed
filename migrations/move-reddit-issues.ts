@@ -1,7 +1,6 @@
 import { fs } from "../deps.ts";
 import {
   getArchivePath,
-  getCurrentIssuesFilePath,
   getFullDay,
   getFullMonth,
   getFullYear,
@@ -106,12 +105,13 @@ export default async function moveIssues() {
       total++;
     }
   }
-  const issueIndexPath = getCurrentIssuesFilePath(siteIdentifier);
-  issues = resortArchiveKeys(issues);
-  await writeJSONFile(getMigratedIssueMapPath(), oldAndNewMap);
-  console.log("issues", issues);
-  console.log("issueIndexPath", issueIndexPath);
-  await writeJSONFile(issueIndexPath, issues);
+
+  // const issueIndexPath = getCurrentIssuesFilePath(siteIdentifier);
+  // issues = resortArchiveKeys(issues);
+  // await writeJSONFile(getMigratedIssueMapPath(), oldAndNewMap);
+  // console.log("issues", issues);
+  // console.log("issueIndexPath", issueIndexPath);
+  // await writeJSONFile(issueIndexPath, issues);
   log.info(
     `formated ${total} items`,
   );

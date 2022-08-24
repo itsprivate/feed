@@ -649,7 +649,6 @@ export function parsePageUrl(urlStr: string) {
   let version = "current";
   if (versionField === "lite") {
     version = "lite";
-    console.log("pathname", pathname);
     pathname = pathname.slice("/lite".length);
     // add start slash
     if (!pathname.startsWith("/")) {

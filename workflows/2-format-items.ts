@@ -70,7 +70,7 @@ export default async function formatItems(
             originalItem,
             parsedFilename.targetSiteIdentifier,
           );
-          await item.beforeFormatInit();
+          await item.init();
           const itemJson = await item.getFormatedItem();
 
           // write formated item to file

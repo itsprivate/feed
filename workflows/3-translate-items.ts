@@ -1,18 +1,20 @@
 import { fs, path } from "../deps.ts";
-import { FormatedItem, RunOptions } from "../interface.ts";
+import { FormatedItem, ItemsJson, RunOptions } from "../interface.ts";
 import Item from "../item.ts";
 import {
   callWithTimeout,
+  getCurrentItemsFilePath,
   getDataFormatedPath,
   isDev,
   pathToSiteIdentifier,
+  readJSONFile,
   siteIdentifierToPath,
   writeJSONFile,
 } from "../util.ts";
 import log from "../log.ts";
 import Translation from "../translate.ts";
 import { DEV_MODE_HANDLED_ITEMS, TARGET_SITE_LANGUAEGS } from "../constant.ts";
-
+import SourceItemAdapter from "../adapters/source.ts";
 export default async function translateItems(
   options: RunOptions,
 ) {
@@ -72,16 +74,77 @@ export default async function translateItems(
           const item = JSON.parse(
             await Deno.readTextFile(file),
           ) as FormatedItem;
+
+          const itemInstance = new SourceItemAdapter(item, siteIdentifier);
           const filename = path.basename(file);
-          const parsedFilename = Item.parseItemIdentifier(filename);
           const originalTranslations = (item._translations
             ? item
               ._translations[item._original_language]
             : {}) as Record<string, string>;
           const originalTranslationKeys = Object.keys(originalTranslations);
+          // try to find 3-translations to get cached items
+
+          // write translated item to file
+          const translatedPath = Item.getTranslatedPath(filename);
           const translations = {
             ...item._translations,
           };
+          // is exists translated file
+          let translatedItem: FormatedItem | undefined;
+
+          try {
+            translatedItem = await readJSONFile(translatedPath) as FormatedItem;
+          } catch (_e) {
+            // ignore
+          }
+
+          if (translatedItem) {
+            if (translatedItem._translations) {
+              const cachedKeys = Object.keys(translatedItem._translations);
+              for (const key of cachedKeys) {
+                if (!translations[key]) {
+                  log.debug(
+                    `use cached translation for ${key}`,
+                    translatedItem._translations[key],
+                  );
+                  translations[key] = {
+                    ...translatedItem._translations[key],
+                    ...translations[key],
+                  };
+                }
+              }
+            }
+          }
+
+          // try to find translation from already translated items
+          const currentItemsFilePath = getCurrentItemsFilePath(siteIdentifier);
+          let currentItemsJson: ItemsJson = { items: {} };
+          try {
+            currentItemsJson = await readJSONFile(currentItemsFilePath);
+          } catch (_e) {
+            // ignore
+          }
+
+          if (currentItemsJson.items[itemInstance.getItemIdentifier()]) {
+            const cachedTranslations =
+              currentItemsJson.items[itemInstance.getItemIdentifier()]
+                ._translations;
+            if (cachedTranslations) {
+              const cachedKeys = Object.keys(cachedTranslations);
+              for (const key of cachedKeys) {
+                if (!translations[key]) {
+                  log.debug(
+                    `use cached translation for ${key}`,
+                    cachedTranslations[key],
+                  );
+                  translations[key] = {
+                    ...cachedTranslations[key],
+                    ...translations[key],
+                  };
+                }
+              }
+            }
+          }
           const translatedJson = {
             ...item,
           } as Record<string, unknown>;
@@ -120,7 +183,7 @@ export default async function translateItems(
 
               const value = originalTranslations[field];
               log.debug(
-                `translating ${parsedFilename.type} ${parsedFilename.language} ${field}: ${value} for ${parsedFilename.targetSiteIdentifier}`,
+                `translating ${itemInstance.getType()} ${itemInstance.getLanguage()} ${field}: ${value} for ${siteIdentifier}`,
               );
               // set timeout, max 100s
 
@@ -147,9 +210,6 @@ export default async function translateItems(
           }
 
           translatedJson._translations = translations;
-
-          // write translated item to file
-          const translatedPath = Item.getTranslatedPath(filename);
 
           await writeJSONFile(
             translatedPath,

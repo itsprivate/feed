@@ -2,9 +2,7 @@ import {
   Config,
   FeedItem,
   FeedItemKey,
-  FeedItemValueOf,
   Feedjson,
-  FormatedItem,
   GeneralSiteConfig,
   ItemKey,
   ItemsJson,
@@ -17,7 +15,6 @@ import {
   getPageMeta,
   itemsPathToURLPath,
   siteIdentifierToUrl,
-  slug,
   tagToUrl,
 } from "./util.ts";
 import SourceItemAdapter from "./adapters/source.ts";
@@ -87,7 +84,6 @@ export default function itemsToFeed(
     const itemInstance = new SourceItemAdapter(
       item,
       parsedIdentifier.targetSiteIdentifier,
-      config.sites[parsedIdentifier.targetSiteIdentifier],
     );
     const itemUrl = itemInstance.getUrl();
     const itemUrlObj = new URL(itemUrl);

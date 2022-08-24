@@ -1,5 +1,4 @@
 import { getDataPath } from "../util.ts";
-import { RunOptions } from "../interface.ts";
 import log from "../log.ts";
 import { compress } from "../bad-deps.ts";
 import { path } from "../deps.ts";
@@ -54,7 +53,7 @@ async function removeEmptyDirectories(directory: string) {
   }
 
   if (isRealEmpty) {
-    console.log("Removing empty folder: ", directory);
+    log.info("Removing empty folder: ", directory);
     await Deno.remove(directory);
   }
 }

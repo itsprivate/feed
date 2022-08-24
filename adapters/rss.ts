@@ -47,6 +47,8 @@ export interface RSSItem {
   updated: string;
   updatedRaw: string;
   links: Link2[];
+  _id?: string;
+  _url?: string;
 }
 
 export interface Description {

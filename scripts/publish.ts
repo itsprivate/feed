@@ -1,5 +1,6 @@
 import { fs } from "../deps.ts";
 import { getDistPath, pathToSiteIdentifier } from "../util.ts";
+import log from "../log.ts";
 export default async function publishToPages() {
   // walk dist folder
   await fs.ensureDir(getDistPath());
@@ -16,7 +17,7 @@ export default async function publishToPages() {
       cmd: ["make", "publish", "name=" + siteIdentifier],
     });
     const status = await p.status();
-    console.log("publish status: ", status);
+    log.info("publish status: ", status);
   }
 }
 

@@ -92,7 +92,7 @@ upload:
 
 .Phony: prod-upload
 prod-upload:
-	make prod-uploadcurrent && make prod-awsuploadarchive
+	make prod-uploadcurrent && make prod-uploadarchive
 
 
 .Phony: loadcurrent
@@ -121,7 +121,7 @@ prod-awsuploadarchive:
 
 .Phony: dufsuploadarchive
 dufsuploadarchive:
-	curl --digest -u $(DUFS_SECRETS) -T ./dev-archive $(DUFS_URL)/dev-archive -v
+	curl --digest -u $(DUFS_SECRETS) -T ./dev-archive $(DUFS_URL)/dev-archive
 
 .Phony: prod-dufsuploadarchive
 prod-dufsuploadarchive:
@@ -129,11 +129,11 @@ prod-dufsuploadarchive:
 
 .Phony: uploadcurrent
 uploadcurrent:
-	make compresscurrent && wrangler r2 object put dev-feed/dev-current.zip -f ./dev-current.zip
+	make compresscurrent && curl --digest -u $(DUFS_SECRETS) -T ./dev-current.zip $(DUFS_URL)/dev-current.zip &&  wrangler r2 object put dev-feed/dev-current.zip -f ./dev-current.zip
 
 .Phony: prod-uploadcurrent
 prod-uploadcurrent:
-	make prod-compresscurrent && wrangler r2 object put feed/current.zip -f ./current.zip
+	make prod-compresscurrent && curl --digest -u $(DUFS_SECRETS) -T ./current.zip $(DUFS_URL)/current.zip && wrangler r2 object put feed/current.zip -f ./current.zip
 
 .Phony: uploadpublic
 uploadpublic:
@@ -248,6 +248,7 @@ temp-uploadarchive:
 createsite:
 	wrangler pages project create $(name) --production-branch main
 
+# only for dev
 .Phony: prod-zipuploadarchive
 prod-zipuploadarchive:
 	zip -r archive.zip archive && sleep 1 && scp ./archive.zip $(DUFS_SERVER):$(DUFS_PATH)/archive.zip

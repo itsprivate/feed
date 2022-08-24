@@ -5,9 +5,15 @@ export default class googlenews extends RSS {
   private id: string = super.getId();
   private url: string = super.getUrl();
   getId(): string {
+    if (this.originalItem._id) {
+      return this.originalItem._id;
+    }
     return this.id;
   }
   getUrl(): string {
+    if (this.originalItem._url) {
+      return this.originalItem._url;
+    }
     return this.url;
   }
   getTags(): string[] {
@@ -42,19 +48,27 @@ export default class googlenews extends RSS {
     return super.getTitle();
   }
 
-  async afterFetchInit(): Promise<void> {
-    await super.afterFetchInit();
+  getRawItem() {
+    const originItem = super.getRawItem();
+    originItem._id = this.getId();
+    originItem._url = this.getUrl();
+    return originItem;
+  }
+
+  async init(): Promise<void> {
+    await super.init();
+    // check if already init
+
+    if (this.originalItem._id && this.originalItem._url) {
+      return;
+    }
+
     let id = super.getId();
     const title = super.getTitle();
     if (id.length > 32) {
       id = await sha1(title);
       this.id = id;
     }
-  }
-  async beforeFormatInit(): Promise<void> {
-    // get title unique
-    await super.beforeFormatInit();
-    // init to get the real url
     const fetchResult = await fetch(super.getUrl(), {
       redirect: "manual",
     });

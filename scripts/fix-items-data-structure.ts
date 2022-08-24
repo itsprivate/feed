@@ -50,11 +50,11 @@ export default async function uploadArchive() {
                 delete item._links;
                 isChanged = true;
                 if (totalItems % 1000 === 0) {
-                  console.log(`Processed ${totalItems} items`);
+                  log.info(`Processed ${totalItems} items`);
                 }
                 totalItems++;
               } else {
-                console.log("no match", name, entry.path);
+                log.info("no match", name, entry.path);
                 throw new Error("no match");
               }
             }

@@ -1,4 +1,10 @@
-import { ItemsJson, RunOptions, Task } from "../interface.ts";
+import {
+  FormatedItem,
+  ItemsJson,
+  Rule,
+  RunOptions,
+  Task,
+} from "../interface.ts";
 import adapters from "../adapters/mod.ts";
 import {
   get,
@@ -8,7 +14,7 @@ import {
 } from "../util.ts";
 import { parseFeed } from "../deps.ts";
 import log from "../log.ts";
-
+import Item from "../item.ts";
 export default async function fetchSources(
   options: RunOptions,
 ): Promise<{ postTasks: Task[] }> {
@@ -40,7 +46,7 @@ export default async function fetchSources(
       }
 
       // get items
-      const originalItems = get(originalJson, itemsPath) as Record<
+      let originalItems = get(originalJson, itemsPath) as Record<
         string,
         unknown
       >[];
@@ -56,84 +62,91 @@ export default async function fetchSources(
       } catch (e) {
         log.debug(`read current items file failed, ${e.message}`);
       }
-      let index = 0;
+      let limitRule: Rule | undefined;
+      for (const rule of rules) {
+        if (rule.type === "limit") {
+          limitRule = rule;
+          break;
+        }
+      }
+
+      if (limitRule) {
+        originalItems = originalItems.slice(0, Number(limitRule.value));
+      }
+
       for (const originalItem of originalItems) {
         // check rules
         let isAllRulesFine = true;
         for (const rule of rules) {
           const { key: thekey, value: theValue, type } = rule;
-          if (type === "limit") {
-            if ((index + 1) > Number(theValue)) {
+          if (!thekey) {
+            continue;
+          }
+          const key = thekey!;
+          const originalValue = get(originalItem, key);
+          const value = theValue as string;
+          if (type === "greater") {
+            if (Number(originalValue) <= Number(value)) {
+              isAllRulesFine = false;
+              break;
+            }
+          } else if (type === "equal") {
+            if (originalValue !== value) {
+              isAllRulesFine = false;
+              break;
+            }
+          } else if (type === "notEqual") {
+            if (originalValue === value) {
+              isAllRulesFine = false;
+              break;
+            }
+          } else if (type === "include") {
+            if (!(originalValue as string[]).includes(value)) {
+              isAllRulesFine = false;
+              break;
+            }
+          } else if (type === "notInclude") {
+            if ((originalValue as string[]).includes(value)) {
+              isAllRulesFine = false;
+              break;
+            }
+          } else if (type === "notExist") {
+            if (originalValue) {
+              isAllRulesFine = false;
+              break;
+            }
+          } else if (type === "exist") {
+            if (!originalValue) {
+              isAllRulesFine = false;
+              break;
+            }
+          } else if (type === "notMatch") {
+            if ((originalValue as string).match(value)) {
+              isAllRulesFine = false;
+              break;
+            }
+          } else if (type === "match") {
+            if (!(originalValue as string).match(value)) {
+              isAllRulesFine = false;
+              break;
+            }
+          } else if (type === "greaterEqual") {
+            if (Number(originalValue) < Number(value)) {
+              isAllRulesFine = false;
+              break;
+            }
+          } else if (type === "less") {
+            if (Number(originalValue) >= Number(value)) {
+              isAllRulesFine = false;
+              break;
+            }
+          } else if (type === "lessEqual") {
+            if (Number(originalValue) > Number(value)) {
               isAllRulesFine = false;
               break;
             }
           } else {
-            const key = thekey!;
-            const originalValue = get(originalItem, key);
-            const value = theValue as string;
-            if (type === "greater") {
-              if (Number(originalValue) <= Number(value)) {
-                isAllRulesFine = false;
-                break;
-              }
-            } else if (type === "equal") {
-              if (originalValue !== value) {
-                isAllRulesFine = false;
-                break;
-              }
-            } else if (type === "notEqual") {
-              if (originalValue === value) {
-                isAllRulesFine = false;
-                break;
-              }
-            } else if (type === "include") {
-              if (!(originalValue as string[]).includes(value)) {
-                isAllRulesFine = false;
-                break;
-              }
-            } else if (type === "notInclude") {
-              if ((originalValue as string[]).includes(value)) {
-                isAllRulesFine = false;
-                break;
-              }
-            } else if (type === "notExist") {
-              if (originalValue) {
-                isAllRulesFine = false;
-                break;
-              }
-            } else if (type === "exist") {
-              if (!originalValue) {
-                isAllRulesFine = false;
-                break;
-              }
-            } else if (type === "notMatch") {
-              if ((originalValue as string).match(value)) {
-                isAllRulesFine = false;
-                break;
-              }
-            } else if (type === "match") {
-              if (!(originalValue as string).match(value)) {
-                isAllRulesFine = false;
-                break;
-              }
-            } else if (type === "greaterEqual") {
-              if (Number(originalValue) < Number(value)) {
-                isAllRulesFine = false;
-                break;
-              }
-            } else if (type === "less") {
-              if (Number(originalValue) >= Number(value)) {
-                isAllRulesFine = false;
-                break;
-              }
-            } else if (type === "lessEqual") {
-              if (Number(originalValue) > Number(value)) {
-                isAllRulesFine = false;
-                break;
-              }
-            } else {
-              throw new Error(`unknown rule type ${type}`);
-            }
+            throw new Error(`unknown rule type ${type}`);
           }
         }
         if (!isAllRulesFine) {
@@ -145,20 +158,37 @@ export default async function fetchSources(
           originalItem,
           siteIdentifier,
         );
-        await item.afterFetchInit();
+        await item.init();
+
+        // is exists translated file
+        let translatedItem: FormatedItem | undefined;
+        const translatedPath = Item.getTranslatedPath(
+          item.getItemIdentifier() + ".json",
+        );
+        try {
+          translatedItem = await readJSONFile(translatedPath) as FormatedItem;
+        } catch (_e) {
+          // ignore
+        }
+
+        if (translatedItem) {
+          log.debug("translated item exists, skip save source");
+          // skip if exists
+          continue;
+        }
+
         if (!currentItemsJson.items[item.getItemIdentifier()]) {
           // not exists
           // save original item to file
           await writeJSONFile(
             item.getRawPath(),
-            originalItem,
+            item.getRawItem(),
           );
           log.debug(
             `fetched raw data to ${item.getRawPath()}`,
           );
           total++;
         }
-        index++;
       }
 
       // save current keys

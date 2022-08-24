@@ -85,6 +85,8 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.ARCHIVE_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.ARCHIVE_SECRET_ACCESS_KEY }}
           AWS_DEFAULT_REGION: ${{secrets.ARCHIVE_REGION}}
+          DUFS_URL: ${{secrets.DUFS_URL}}
+          DUFS_SECRETS: ${{secrets.DUFS_SECRETS}}
       - run: make prod-build
       - run: git status
 

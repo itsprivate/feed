@@ -3,7 +3,6 @@ import {
   FormatedItem,
   Link,
   ParsedFilename,
-  SiteConfig,
   Video,
 } from "./interface.ts";
 import {
@@ -14,7 +13,6 @@ import {
   getFullMonth,
   getFullYear,
   isMock,
-  siteIdentifierToDomain,
   siteIdentifierToPath,
 } from "./util.ts";
 import { DOMParser, getMetadata } from "./deps.ts";
@@ -24,7 +22,6 @@ export default class Item<T> {
   private siteIdentifier: string;
   private now: Date = new Date();
   private image: string | null | undefined;
-  private siteConfig: SiteConfig | undefined;
   static parseItemIdentifier(
     fileBasename: string,
   ): ParsedFilename {
@@ -68,24 +65,17 @@ export default class Item<T> {
     }/${getFullMonth(now)}/${getFullDay(now)}/${filename}`;
   }
 
-  constructor(originalItem: T, siteIdentifier: string, config?: SiteConfig) {
+  constructor(originalItem: T, siteIdentifier: string) {
     this.originalItem = originalItem;
     this.siteIdentifier = siteIdentifier;
-    this.siteConfig = config;
   }
 
-  afterFetchInit(): Promise<void> {
-    // after fetch init, so you can do some async operations
+  init(): Promise<void> {
+    // after constructor,  you can do some async operations to init item
     // use by googlenews, for format id, cause google id is too long
     return Promise.resolve();
   }
-  beforeFormatInit(): Promise<void> {
-    // before formate init, so you can do some async operations
-    return Promise.resolve();
-  }
-  getTargetSite(): string {
-    return siteIdentifierToDomain(this.siteIdentifier, this.siteConfig);
-  }
+
   getSensitive(): boolean {
     return false;
   }
@@ -188,12 +178,11 @@ export default class Item<T> {
     }
     const url = this.getUrl();
     // add siteIdentifier referrer
-    const targetSite = this.getTargetSite();
     log.debug(`try to load image for ${url}`);
     let resource: { text: string; contentType: string };
     try {
       resource = await fetch(url, {
-        referrer: `https://${targetSite}`,
+        referrer: `https://www.google.com`,
       }).then(async (res) => {
         if (res.ok) {
           const contentType = res.headers.get("content-type");
@@ -261,6 +250,9 @@ export default class Item<T> {
   getRawPath(): string {
     return `${getDataRawPath()}/${(this
       .getTargetSitePath())}/${this.getModifiedYear()}/${this.getModifiedMonth()}/${this.getModifiedDay()}/${this.getItemIdentifier()}.json`;
+  }
+  getRawItem(): T {
+    return this.originalItem;
   }
   getScore(): number {
     return 0;
