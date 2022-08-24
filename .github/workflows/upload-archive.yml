@@ -22,7 +22,8 @@ jobs:
           echo "hello world" > archive/hello2.txt
       - name: upload files
         use: ItsKarma/aws-cli@v1.70.0
-        run: make prod-awsuploadarchive
+        with:
+          args: make prod-awsuploadarchive
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.ARCHIVE_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.ARCHIVE_SECRET_ACCESS_KEY }}
