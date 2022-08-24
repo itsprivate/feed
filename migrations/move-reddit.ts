@@ -1,5 +1,7 @@
 import { fs } from "../deps.ts";
+// import Adapter, { HnItem } from "./hn-adapter.ts";
 import Adapter, { RedditItem } from "./reddit-adapter.ts";
+
 import { isDev, readJSONFile, writeJSONFile } from "../util.ts";
 import log from "../log.ts";
 import { DEV_MODE_HANDLED_ITEMS } from "../constant.ts";
@@ -12,7 +14,7 @@ export default async function moveReddit() {
     let totalFiles = 0;
     for await (
       const entry of fs.walk(
-        "../inbox/ts-new/data/reddit-top",
+        "../inbox/ts-new/data/reddit-ask",
       )
     ) {
       if (isDev()) {
@@ -40,7 +42,7 @@ export default async function moveReddit() {
       const originalItem = await readJSONFile(file) as RedditItem;
       const item = new Adapter(
         originalItem,
-        "reddit",
+        "ask",
       );
       try {
         const itemJson = await item.getFormatedItem();

@@ -87,8 +87,6 @@ jobs:
           AWS_DEFAULT_REGION: ${{secrets.ARCHIVE_REGION}}
           DUFS_URL: ${{secrets.DUFS_URL}}
           DUFS_SECRETS: ${{secrets.DUFS_SECRETS}}
-      - run: make prod-build
-      - run: git status
 
       - name: Publish pages
         run: make prod-publish

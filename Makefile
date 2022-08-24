@@ -180,7 +180,7 @@ publish:
 
 .Phony: prod-publish
 prod-publish:
-	PROD=1 deno run -A ./scripts/publish.ts
+	make prod-build && PROD=1 deno run -A ./scripts/publish.ts
 
 .Phony: test
 test:

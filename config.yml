@@ -149,6 +149,41 @@ sites:
           - type: greaterEqual
             key: data.score
             value: "75000"
+  ask:
+    port: 8007
+    redirect: true
+    tags:
+      - reddit
+    translations:
+      "zh-Hans":
+        title: "Reddit 热门提问"
+        short_title: "Reddit提问"
+        description: "用中文浏览 Reddit 上的热门提问"
+
+    sources:
+      - url: https://www.reddit.com/r/AskReddit/top/.json?raw_json=1
+        itemsPath: data.children
+        type: reddit
+        rules:
+          - type: greaterEqual
+            key: data.score
+            value: "1000"
+      - url:
+          - https://www.reddit.com/r/AskReddit/top/.json?raw_json=1
+          - https://www.reddit.com/r/Ask_Politics/top/.json?raw_json=1
+          - https://www.reddit.com/r/AskHistorians/top/.json?raw_json=1
+          - https://www.reddit.com/r/AskWomen/top/.json?raw_json=1
+          - https://www.reddit.com/r/TooAfraidToAsk/top/.json?raw_json=1
+          - https://www.reddit.com/r/NoStupidQuestions/top/.json?raw_json=1
+          - https://www.reddit.com/r/TrueAskReddit/top/.json?raw_json=1
+          - https://www.reddit.com/r/askscience/top/.json?raw_json=1
+          - https://www.reddit.com/r/askphilosophy/top/.json?raw_json=1
+        itemsPath: data.children
+        type: reddit
+        rules:
+          - type: greaterEqual
+            key: data.score
+            value: "100"
   news:
     port: 8006
     archive: true

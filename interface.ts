@@ -4,7 +4,7 @@ export interface Rule {
   value: string | number | boolean;
 }
 export interface Source {
-  url: string;
+  url: string | string[];
   type: string;
   itemsPath?: string;
   rules?: Rule[];

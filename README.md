@@ -62,6 +62,21 @@ aws s3 cp s3://mybucket/items/test localtest --endpoint-url https://example.com 
 aws s3 sync s3://mybucket . --endpoint-url https://example.com
 ```
 
+## Migration
+
+```bash
+PROD=1 deno run -A ./migrations/move-reddit.ts
+NO_TRANSLATE=1 make prod-buildfromformat
+# upload archive
+make prod-awsuploadarchive
+# upload current
+make prod-uploadcurrent
+# create site
+make createsite name=ask
+```
+
+```
+
 ## TODO
 
 - [ ] add more feeds
@@ -82,3 +97,4 @@ aws s3 sync s3://mybucket . --endpoint-url https://example.com
 - [x] archive backup
 - [ ] current backup
 - [ ] add links meta
+```
