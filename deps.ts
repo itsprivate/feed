@@ -33,6 +33,7 @@ export * as posixPath from "https://deno.land/std@0.152.0/path/posix.ts";
 export { config as dotenvConfig } from "https://deno.land/std@0.152.0/dotenv/mod.ts";
 // third party modules
 
+export { DigestClient } from "https://deno.land/x/digest_fetch@v1.2.1/mod.ts";
 export {
   DOMParser,
   Element,

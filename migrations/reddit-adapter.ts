@@ -1,4 +1,4 @@
-import { Author, Link, Video, VideoSource } from "../interface.ts";
+import { Author, Video, VideoSource } from "../interface.ts";
 import Item from "../item.ts";
 import { contentType } from "../deps.ts";
 const prefixies: string[] = [];
@@ -168,10 +168,10 @@ export default class reddit extends Item<RedditItem> {
       url: `https://old.reddit.com/user/${this.originalItem.author}`,
     }];
   }
-  getPoints(): number {
+  getScore(): number {
     return this.originalItem.score as number;
   }
-  getCommentCount(): number {
+  getNumComments(): number {
     return 0;
   }
   getPublishedDate(): Date {
@@ -179,23 +179,6 @@ export default class reddit extends Item<RedditItem> {
   }
   getModifiedDate(): Date {
     return new Date(this.originalItem.created_utc * 1000);
-  }
-  getLinks(): Link[] {
-    if (this.getPoints() > 0) {
-      return [
-        {
-          url: this.getUrl(),
-          name: `&uarr;${this.getPoints()} votes`,
-        },
-      ];
-    } else {
-      return [
-        {
-          url: this.getUrl(),
-          name: `&rarr; Reddit Link`,
-        },
-      ];
-    }
   }
   getTags(): string[] {
     // check if specific tags are present in the item

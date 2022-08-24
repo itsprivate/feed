@@ -1,5 +1,7 @@
 import {
   DateTimeFormatter,
+  DigestClient,
+  dotenvConfig,
   fs,
   kebabCase,
   path,
@@ -115,27 +117,7 @@ export const getCurrentItemsFilePath = (siteIdentifier: string) => {
     siteIdentifierToPath(siteIdentifier)
   }/items.json`;
 };
-export const getCurrentTagsFilePath = (siteIdentifier: string) => {
-  return `${getDataCurrentItemsPath()}/${
-    siteIdentifierToPath(siteIdentifier)
-  }/tags.json`;
-};
 
-export const getCurrentIssuesFilePath = (siteIdentifier: string) => {
-  return `${getDataCurrentItemsPath()}/${
-    siteIdentifierToPath(siteIdentifier)
-  }/issues.json`;
-};
-export const getCurrentKeysFilePath = (siteIdentifier: string) => {
-  return `${getDataCurrentItemsPath()}/${
-    siteIdentifierToPath(siteIdentifier)
-  }/keys.json`;
-};
-export const getCurrentArchiveFilePath = (siteIdentifier: string) => {
-  return `${getDataCurrentItemsPath()}/${
-    siteIdentifierToPath(siteIdentifier)
-  }/archive.json`;
-};
 export const getCurrentToBeArchivedItemsFilePath = (siteIdentifier: string) => {
   return `${getDataCurrentItemsPath()}/${
     siteIdentifierToPath(siteIdentifier)
@@ -331,12 +313,12 @@ export const pathToSiteIdentifier = (path: string) => {
   return path;
 };
 export const arrayToObj = <T>(
-  arr: Record<string, T>[],
+  arr: T[],
   key = "id",
-): Record<string, Record<string, T>> => {
-  const obj: Record<string, Record<string, T>> = {};
+): Record<string, T> => {
+  const obj: Record<string, T> = {};
   for (const item of arr) {
-    obj[item[key] as unknown as string] = item;
+    obj[(item as unknown as Record<string, string>)[key]] = item;
   }
   return obj;
 };
@@ -420,14 +402,15 @@ export const urlToFilePath = (url: string): string => {
   return filepath;
 };
 export const getArchiveS3Bucket = (bucket: string): S3Bucket => {
+  const params = {
+    accessKeyID: Deno.env.get("ARCHIVE_ACCESS_KEY_ID")!,
+    secretKey: Deno.env.get("ARCHIVE_SECRET_ACCESS_KEY")!,
+    bucket: bucket,
+    region: Deno.env.get("ARCHIVE_REGION")!,
+    endpointURL: Deno.env.get("ARCHIVE_ENDPOINT")!,
+  };
   const s3Bucket = new S3Bucket(
-    {
-      accessKeyID: Deno.env.get("ARCHIVE_ACCESS_KEY_ID")!,
-      secretKey: Deno.env.get("ARCHIVE_SECRET_ACCESS_KEY")!,
-      bucket: bucket,
-      region: Deno.env.get("ARCHIVE_REGION")!,
-      endpointURL: Deno.env.get("ARCHIVE_ENDPOINT")!,
-    },
+    params,
   );
   return s3Bucket;
 };
@@ -687,4 +670,42 @@ export function parsePageUrl(urlStr: string) {
 export const formatNumber = (num: number): string => {
   const formatter = Intl.NumberFormat("en", { notation: "compact" });
   return formatter.format(num);
+};
+
+export const uploadFileToDufs = async (
+  client: DigestClient,
+  filepath: string,
+) => {
+  // use fetch to put file
+  // const formData = new FormData();
+  // formData.append("file", new Blob([]));
+  const url = Deno.env.get("DUFS_URL")!;
+  if (!url) {
+    throw new Error("DUFS_URL is not set");
+  }
+
+  const response = await client.fetch(
+    url + "/" + filepath,
+    {
+      method: "PUT",
+      body: await Deno.readTextFile(filepath),
+    },
+  );
+  if (response.status === 201) {
+    return response;
+  } else {
+    throw new Error("upload failed " + filepath + " " + response.status);
+  }
+};
+
+export const getDufsClient = (): DigestClient => {
+  const secrets = Deno.env.get("DUFS_SECRETS");
+  const secretsArr = secrets?.split(":");
+  const username = secretsArr?.[0];
+  const password = secretsArr?.[1];
+  if (!username || !password) {
+    throw new Error("DUFS_SECRETS is not set");
+  }
+  const client = new DigestClient(username!, password!);
+  return client;
 };

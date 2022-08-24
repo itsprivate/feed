@@ -1,7 +1,6 @@
-import { Author, Link, Video, VideoSource } from "../interface.ts";
+import { Author, Video, VideoSource } from "../interface.ts";
 import Item from "../item.ts";
 import { contentType } from "../deps.ts";
-import { formatNumber } from "../util.ts";
 const prefixies: string[] = [];
 export default class reddit extends Item<RedditItem> {
   getOriginalPublishedDate(): Date {
@@ -146,29 +145,13 @@ export default class reddit extends Item<RedditItem> {
       url: `https://old.reddit.com/user/${this.originalItem.data.author}`,
     }];
   }
-  getPoints(): number {
+  getScore(): number {
     return this.originalItem.data.score as number;
   }
-  getCommentCount(): number {
+  getNumComments(): number {
     return this.originalItem.data.num_comments as number;
   }
-  getLinks(): Link[] {
-    if (this.getPoints() > 0) {
-      return [
-        {
-          url: this.getExternalUrl(),
-          name: `&uarr; ${formatNumber(this.getPoints())} Reddit Upvotes`,
-        },
-      ];
-    } else {
-      return [
-        {
-          url: this.getExternalUrl(),
-          name: `&rarr; Reddit Link`,
-        },
-      ];
-    }
-  }
+
   getTags(): string[] {
     // check if specific tags are present in the item
     // like Show HN, Ask HN, etc.

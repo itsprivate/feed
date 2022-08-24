@@ -223,3 +223,29 @@ Deno.test("format Number #19", () => {
   const result = formatNumber(4222);
   assertEquals(result, "4.2K");
 });
+
+Deno.test("typescript ? #21", () => {
+  const a: {
+    b: {
+      c: number;
+      e?: number;
+    };
+  } = {
+    "b": {
+      "c": 1,
+    },
+  };
+  const d = a.b?.c;
+  assertEquals(d, 1);
+  const e = a.b?.e;
+  assertEquals(e, undefined);
+});
+Deno.test("regex #22", () => {
+  const a = "&uarr;18 points";
+
+  const regex = /[^0-9]*(\d+?)[^0-9]+/;
+
+  const result = a.match(regex);
+
+  assertEquals(result![1], "18");
+});

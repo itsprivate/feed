@@ -81,7 +81,7 @@ export interface ParsedFilename {
   day: string;
   language: string;
   type: string;
-  targetSite: string;
+  // targetSite: string;
   targetSiteIdentifier: string;
 }
 
@@ -106,17 +106,22 @@ export interface FormatedItem {
   date_published: string;
   date_modified: string;
   tags?: string[];
+  external_url?: string;
   authors?: Author[];
-  _score?: number;
   _video?: Video;
+  _score?: number;
+  _num_comments?: number;
   _sensitive?: boolean;
   _original_published: string;
   _original_language: string;
   _title_prefix?: string;
-  _links?: Link[];
+  _title_suffix?: string;
   _translations?: Record<string, Record<string, string>>;
-  [key: string]: unknown;
 }
+type ValueOf<T> = T[keyof T];
+export type ItemKey = keyof FormatedItem;
+export type FeedItemKey = keyof FeedItem;
+export type FeedItemValueOf = ValueOf<FeedItem>;
 export type LevelName = "debug" | "info" | "warn" | "error" | "fatal";
 
 export enum Level {
@@ -156,6 +161,7 @@ export interface ItemsJson {
 
 export interface FeedItem extends FormatedItem {
   title: string;
+  author?: Author;
   summary: string;
   content_text: string;
   content_html: string;

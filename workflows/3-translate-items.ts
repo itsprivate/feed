@@ -73,7 +73,7 @@ export default async function translateItems(
             await Deno.readTextFile(file),
           ) as FormatedItem;
           const filename = path.basename(file);
-          const parsedFilename = Item.parseItemIdentifier(filename, config);
+          const parsedFilename = Item.parseItemIdentifier(filename);
           const originalTranslations = (item._translations
             ? item
               ._translations[item._original_language]
@@ -120,7 +120,7 @@ export default async function translateItems(
 
               const value = originalTranslations[field];
               log.debug(
-                `translating ${parsedFilename.type} ${parsedFilename.language} ${field}: ${value} for ${parsedFilename.targetSite}`,
+                `translating ${parsedFilename.type} ${parsedFilename.language} ${field}: ${value} for ${parsedFilename.targetSiteIdentifier}`,
               );
               // set timeout, max 100s
 
@@ -149,7 +149,7 @@ export default async function translateItems(
           translatedJson._translations = translations;
 
           // write translated item to file
-          const translatedPath = Item.getTranslatedPath(filename, config);
+          const translatedPath = Item.getTranslatedPath(filename);
 
           await writeJSONFile(
             translatedPath,

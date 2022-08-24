@@ -1,4 +1,3 @@
-import { Author, Link, Video, VideoSource } from "../interface.ts";
 import Item from "../item.ts";
 
 import log from "../log.ts";
@@ -105,9 +104,6 @@ export default class reddit extends Item<NewsItem> {
   }
   getModifiedDate(): Date {
     return new Date(this.originalItem.created_at);
-  }
-  getLinks(): Link[] {
-    return [];
   }
 }
 export interface NewsItem {

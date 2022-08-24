@@ -53,11 +53,9 @@ Deno.test("parseItemIdentifier #10", async () => {
   const config = await getConfig();
   const parsed = Item.parseItemIdentifier(
     "2022_08_10_en_hn_example-com__32407873",
-    config,
   );
   assertEquals(parsed, {
     type: "hn",
-    targetSite: "example-com.buzzing.cc",
     targetSiteIdentifier: "example-com",
     id: "32407873",
     year: "2022",
@@ -66,16 +64,12 @@ Deno.test("parseItemIdentifier #10", async () => {
     language: "en",
   });
 });
-Deno.test("parseItemIdentifier #11", async () => {
-  const config = await getConfig();
-
+Deno.test("parseItemIdentifier #11", () => {
   const parsed = Item.parseItemIdentifier(
     "2022_08_10_en_hn_example-com___32407873_-1223",
-    config,
   );
   assertEquals(parsed, {
     type: "hn",
-    targetSite: "example-com.buzzing.cc",
     targetSiteIdentifier: "example-com",
     id: "_32407873_-1223",
     year: "2022",

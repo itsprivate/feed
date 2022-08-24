@@ -1,9 +1,12 @@
 import {
   Config,
   FeedItem,
+  FeedItemKey,
+  FeedItemValueOf,
   Feedjson,
   FormatedItem,
   GeneralSiteConfig,
+  ItemKey,
   ItemsJson,
   ItemsToFeedOptions,
 } from "./interface.ts";
@@ -17,6 +20,8 @@ import {
   slug,
   tagToUrl,
 } from "./util.ts";
+import SourceItemAdapter from "./adapters/source.ts";
+import Item from "./item.ts";
 import { TARGET_SITE_LANGUAEGS } from "./constant.ts";
 export default function itemsToFeed(
   relativePath: string,
@@ -69,8 +74,22 @@ export default function itemsToFeed(
 
   const items: FeedItem[] = [];
   currentItemsJsonKeysSorted.forEach((key) => {
-    const item = currentItemsJson.items[key] as FormatedItem;
-    const itemUrl = item["url"];
+    const originalItem = currentItemsJson.items[key];
+    const item: FeedItem = {
+      title: "",
+      summary: "",
+      content_text: "",
+      content_html: "",
+      ...originalItem,
+    };
+    // parse key to get id, type
+    const parsedIdentifier = Item.parseItemIdentifier(key);
+    const itemInstance = new SourceItemAdapter(
+      item,
+      parsedIdentifier.targetSiteIdentifier,
+      config.sites[parsedIdentifier.targetSiteIdentifier],
+    );
+    const itemUrl = itemInstance.getUrl();
     const itemUrlObj = new URL(itemUrl);
     const translationObj = getItemTranslations(
       item._translations || {},
@@ -88,19 +107,19 @@ export default function itemsToFeed(
     for (const translationField of translationFields) {
       let translationValue = translationObj[translationField];
       // is has prefix
-      if (item[`_${translationField}_prefix`]) {
+      if (item[`_${translationField}_prefix` as ItemKey]) {
         translationValue = `${
-          item[`_${translationField}_prefix`]
+          item[`_${translationField}_prefix` as ItemKey]
         }${translationValue}`;
       }
       // is has suffix
-      if (item[`_${translationField}_suffix`]) {
+      if (item[`_${translationField}_suffix` as ItemKey]) {
         translationValue = `${translationValue}${
-          item[`_${translationField}_suffix`]
+          item[`_${translationField}_suffix` as ItemKey]
         }`;
       }
-
-      item[translationField] = translationValue;
+      item.title = "1";
+      item[translationField as FeedItemKey] = translationValue as never;
     }
 
     let summary = "";
@@ -111,7 +130,7 @@ export default function itemsToFeed(
       const height = item._video.height;
       const width = item._video.width;
       const poster = item._video.poster;
-      content_html = `<video controls preload="none"`;
+      content_html = `<video playsinline controls preload="none"`;
       if (width) {
         content_html += ` width="${width}"`;
       }
@@ -154,8 +173,8 @@ export default function itemsToFeed(
     let index = 0;
 
     // add links
-    if (item._links) {
-      for (const link of item._links) {
+    if (itemInstance.getLinks().length > 0) {
+      for (const link of itemInstance.getLinks()) {
         const isGreaterFirst = index >= 1;
         const linkName = currentTranslations[link.name] ??
           link.name;
@@ -190,7 +209,7 @@ export default function itemsToFeed(
     ) {
       item.author = item.authors[0];
     }
-    items.push(item as FeedItem);
+    items.push(item);
   });
   const homepageIdentifier = options?.isArchive
     ? config.archive.siteIdentifier

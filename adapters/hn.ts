@@ -1,7 +1,6 @@
-import { Author, Link } from "../interface.ts";
+import { Author } from "../interface.ts";
 import Item from "../item.ts";
 const prefixies = ["Show HN: ", "Ask HN: ", "Tell HN: ", "Poll: "];
-import { formatNumber } from "../util.ts";
 export default class hn extends Item<HnItem> {
   getOriginalPublishedDate(): Date {
     return new Date(this.originalItem.created_at as string);
@@ -40,28 +39,11 @@ export default class hn extends Item<HnItem> {
       url: `https://news.ycombinator.com/user?id=${this.originalItem.author}`,
     }];
   }
-  getPoints(): number {
+  getScore(): number {
     return this.originalItem.points as number;
   }
-  getCommentCount(): number {
+  getNumComments(): number {
     return this.originalItem.num_comments as number;
-  }
-  getLinks(): Link[] {
-    if (this.getPoints() > 0) {
-      return [
-        {
-          url: this.getExternalUrl(),
-          name: `&uarr; ${formatNumber(this.getPoints())} HN Points`,
-        },
-      ];
-    } else {
-      return [
-        {
-          url: this.getExternalUrl(),
-          name: `&rarr; HN Link`,
-        },
-      ];
-    }
   }
   getTags(): string[] {
     // check if specific tags are present in the item

@@ -37,6 +37,7 @@ wrangler r2 bucket create feed
 ## Tools
 
 - [QuickType](https://app.quicktype.io/) - JSON to TypeScript
+- [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
 
 ## Init
 
@@ -75,8 +76,9 @@ aws s3 sync s3://mybucket . --endpoint-url https://example.com
 - [x] show issues
 - [x] show tags
 - [x] show archives
-- [ ] fetch 的时候先 check 本地的数据
+- [x] fetch 的时候先 check 本地的数据
 - [ ] sitemap support
 - [ ] support search
 - [ ] archive backup
 - [ ] current backup
+- [ ] add links meta

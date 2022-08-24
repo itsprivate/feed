@@ -1,4 +1,7 @@
-
+ifneq (,$(wildcard ./.env))
+    include .env
+    export
+endif
 .Phony: source
 source:
 	deno run -A main.ts --source --site devfeed
@@ -17,13 +20,9 @@ build:
 prod-build:
 	 PROD=1 deno run -A main.ts --build
 
-.Phony: all
-all:
-	FILES=50 deno run -A main.ts --site devfeed 
-
-.Phony: run
-run:
-	deno run -A --watch=main.ts,templates/,config.yml main.ts --stage format,translate,build_current,archive,build_site,serve_site --site news
+.Phony: start
+start:
+	deno run -A --watch=main.ts,templates/,config.yml main.ts --stage format,translate,build_current,archive,build_site,serve_site
 
 .Phony: prod-buildfromformat
 prod-buildfromformat:
@@ -37,9 +36,9 @@ serve:
 site:
 	deno run -A --watch=main.ts,templates/,config.yml main.ts --stage format,translate,build_current,archive,build_site,serve_site --site $(name)
 
-.Phony: start
-start:
-	deno run -A main.ts --site $(name)
+.Phony: all
+all:
+	FILES=50 deno run -A main.ts --site $(name)
 
 .Phony: prod-serve
 prod-serve:
@@ -104,14 +103,29 @@ loadcurrent:
 prod-loadcurrent:
 	wrangler r2 object get feed/current.zip
 
-.Phony: loadarchive
-loadarchive:
+.Phony: loadarchivehttp
+loadarchivehttp:
 	deno run -A scripts/load-archive.ts
 	
-.Phony: prod-loadarchive
-prod-loadarchive:
+.Phony: prod-loadarchivehttp
+prod-loadarchivehttp:
 	PROD=1 deno run -A scripts/load-archive.ts
 
+.Phony: prod-loadarchive
+prod-loadarchive:
+	aws s3 cp s3://feedarchive/archive ./archive --endpoint-url https://s3.nl-ams.scw.cloud --recursive
+
+.Phony: prod-awsuploadarchive
+prod-awsuploadarchive:
+	aws s3 cp ./archive s3://feedarchive/archive --endpoint-url https://s3.nl-ams.scw.cloud --recursive
+
+.Phony: dufsuploadarchive
+dufsuploadarchive:
+	curl --digest -u $(DUFS_SECRETS) -T ./dev-archive $(DUFS_URL)/dev-archive -v
+
+.Phony: prod-dufsuploadarchive
+prod-dufsuploadarchive:
+	curl -T ./archive $(DUFS_URL)/archive
 
 .Phony: uploadcurrent
 uploadcurrent:
@@ -233,3 +247,7 @@ temp-uploadarchive:
 .Phony: createsite
 createsite:
 	wrangler pages project create $(name) --production-branch main
+
+.Phony: prod-zipuploadarchive
+prod-zipuploadarchive:
+	zip -r archive.zip archive && sleep 1 && scp ./archive.zip $(DUFS_SERVER):$(DUFS_PATH)/archive.zip

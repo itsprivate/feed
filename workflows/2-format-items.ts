@@ -61,7 +61,7 @@ export default async function formatItems(
       if (files.length > 0) {
         for (const file of files) {
           const filenmae = path.basename(file);
-          const parsedFilename = Item.parseItemIdentifier(filenmae, config);
+          const parsedFilename = Item.parseItemIdentifier(filenmae);
           const originalItem = await readJSONFile(file) as Record<
             string,
             unknown

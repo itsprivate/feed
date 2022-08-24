@@ -1,6 +1,5 @@
 import {
   Author,
-  Config,
   FormatedItem,
   Link,
   ParsedFilename,
@@ -28,7 +27,6 @@ export default class Item<T> {
   private siteConfig: SiteConfig | undefined;
   static parseItemIdentifier(
     fileBasename: string,
-    config: Config,
   ): ParsedFilename {
     // remove extension
     let filename = fileBasename;
@@ -45,10 +43,10 @@ export default class Item<T> {
     const language = symParts[3];
     const type = symParts[4];
     const targetSiteIdentifier = symParts[5];
-    const targetSite = siteIdentifierToDomain(
-      targetSiteIdentifier,
-      config.sites[targetSiteIdentifier],
-    );
+    // const targetSite = siteIdentifierToDomain(
+    //   targetSiteIdentifier,
+    //   config.sites[targetSiteIdentifier],
+    // );
     const idParts = parts.slice(1);
     const id = idParts.join("__");
     return {
@@ -58,13 +56,12 @@ export default class Item<T> {
       day,
       language,
       type,
-      targetSite,
       targetSiteIdentifier,
     };
   }
 
-  static getTranslatedPath(filename: string, config: Config): string {
-    const parsed = Item.parseItemIdentifier(filename, config);
+  static getTranslatedPath(filename: string): string {
+    const parsed = Item.parseItemIdentifier(filename);
     const now = new Date();
     return `${getDataTranslatedPath()}/${parsed.targetSiteIdentifier}/${
       getFullYear(now)
@@ -76,6 +73,7 @@ export default class Item<T> {
     this.siteIdentifier = siteIdentifier;
     this.siteConfig = config;
   }
+
   afterFetchInit(): Promise<void> {
     // after fetch init, so you can do some async operations
     // use by googlenews, for format id, cause google id is too long
@@ -240,10 +238,13 @@ export default class Item<T> {
       return null;
     }
   }
-  getLinks(): Link[] {
-    return [];
+  getMeta(): Record<string, string> | undefined {
+    return undefined;
   }
   getAuthors(): Author[] {
+    return [];
+  }
+  getLinks(): Link[] {
     return [];
   }
 
@@ -262,6 +263,9 @@ export default class Item<T> {
       .getTargetSitePath())}/${this.getModifiedYear()}/${this.getModifiedMonth()}/${this.getModifiedDay()}/${this.getItemIdentifier()}.json`;
   }
   getScore(): number {
+    return 0;
+  }
+  getNumComments(): number {
     return 0;
   }
   getFormatedPath(): string {
@@ -313,16 +317,16 @@ export default class Item<T> {
     if (this.getScore()) {
       item._score = this.getScore();
     }
+    if (this.getNumComments()) {
+      item._num_comments = this.getNumComments();
+    }
     if (this.getTitlePrefix()) {
       item._title_prefix = this.getTitlePrefix();
     }
     if (this.getTitleSuffix()) {
       item._title_suffix = this.getTitleSuffix();
     }
-    const links = this.getLinks();
-    if (links && Array.isArray(links) && links.length > 0) {
-      item._links = links;
-    }
+
     if (this.getSensitive()) {
       item._sensitive = true;
     }

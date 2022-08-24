@@ -2,7 +2,6 @@ import { dotenvConfig, fs } from "../deps.ts";
 import {
   arrayToObj,
   getArchivedFilePath,
-  getCurrentTagsFilePath,
   getCurrentToBeArchivedItemsFilePath,
   getDistPath,
   loadS3ArchiveFile,
@@ -30,9 +29,9 @@ export default async function fixTags() {
     let currentTags: string[] = [];
 
     try {
-      currentTags = await readJSONFile(
-        getCurrentTagsFilePath(siteIdentifier),
-      );
+      // currentTags = await readJSONFile(
+      //   getCurrentTagsFilePath(siteIdentifier),
+      // );
     } catch (e) {
       // ignore
       log.debug(`read json file error: ${e}`);
@@ -114,17 +113,19 @@ export default async function fixTags() {
         tagFilePath,
         {
           meta: tagFiles[tagFilePath].meta,
-          items: arrayToObj(getLatestItems(tagFiles[tagFilePath].items)),
+          items: arrayToObj(
+            getLatestItems(tagFiles[tagFilePath].items),
+          ),
         },
       );
     }
     // write tag index
     if (isTagsChanged) {
-      log.info(`write tags file: ${getCurrentTagsFilePath(siteIdentifier)}`);
-      await writeJSONFile(
-        getCurrentTagsFilePath(siteIdentifier),
-        currentTags,
-      );
+      // log.info(`write tags file: ${getCurrentTagsFilePath(siteIdentifier)}`);
+      // await writeJSONFile(
+      //   getCurrentTagsFilePath(siteIdentifier),
+      //   currentTags,
+      // );
     }
   }
 }

@@ -1,8 +1,8 @@
-import { RunOptions, Task } from "../interface.ts";
+import { ItemsJson, RunOptions, Task } from "../interface.ts";
 import adapters from "../adapters/mod.ts";
 import {
   get,
-  getCurrentKeysFilePath,
+  getCurrentItemsFilePath,
   readJSONFile,
   writeJSONFile,
 } from "../util.ts";
@@ -47,12 +47,14 @@ export default async function fetchSources(
       log.info(
         `fetched ${originalItems.length} items from ${sourceUrl} for ${siteIdentifier}`,
       );
-      const currentKeysPath = getCurrentKeysFilePath(siteIdentifier);
-      let currentKeysJson: string[] = [];
+      const currentItemsPath = getCurrentItemsFilePath(siteIdentifier);
+      let currentItemsJson: ItemsJson = {
+        items: {},
+      };
       try {
-        currentKeysJson = await readJSONFile(currentKeysPath);
+        currentItemsJson = await readJSONFile(currentItemsPath);
       } catch (e) {
-        log.debug(`read current keys file failed, ${e.message}`);
+        log.debug(`read current items file failed, ${e.message}`);
       }
       let index = 0;
       for (const originalItem of originalItems) {
@@ -144,14 +146,13 @@ export default async function fetchSources(
           siteIdentifier,
         );
         await item.afterFetchInit();
-        if (!currentKeysJson.includes(item.getItemIdentifier())) {
+        if (!currentItemsJson.items[item.getItemIdentifier()]) {
           // not exists
           // save original item to file
           await writeJSONFile(
             item.getRawPath(),
             originalItem,
           );
-          currentKeysJson.unshift(item.getItemIdentifier());
           log.debug(
             `fetched raw data to ${item.getRawPath()}`,
           );
@@ -159,10 +160,7 @@ export default async function fetchSources(
         }
         index++;
       }
-      // if keys length > 1000
-      if (currentKeysJson.length > 1000) {
-        currentKeysJson = currentKeysJson.slice(0, 1000);
-      }
+
       // save current keys
       // postTasks.push({
       //   type: "write",
@@ -171,7 +169,6 @@ export default async function fetchSources(
       //     content: JSON.stringify(currentKeysJson, null, 2),
       //   },
       // });
-      await writeJSONFile(currentKeysPath, currentKeysJson);
       log.info(
         `saved ${total} items from ${sourceUrl} for ${siteIdentifier}`,
       );
