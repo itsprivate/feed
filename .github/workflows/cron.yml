@@ -82,6 +82,9 @@ jobs:
           ARCHIVE_REGION: ${{secrets.ARCHIVE_REGION}}
           CLOUDFLARE_ACCOUNT_ID: ${{secrets.CLOUDFLARE_ACCOUNT_ID}}
           CLOUDFLARE_API_TOKEN: ${{secrets.CLOUDFLARE_API_TOKEN}}
+          AWS_ACCESS_KEY_ID: ${{ secrets.ARCHIVE_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.ARCHIVE_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: ${{secrets.ARCHIVE_REGION}}
       - run: make prod-build
       - run: git status
 

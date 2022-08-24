@@ -92,7 +92,7 @@ upload:
 
 .Phony: prod-upload
 prod-upload:
-	make prod-uploadcurrent && make prod-uploadarchive
+	make prod-uploadcurrent && make prod-awsuploadarchive
 
 
 .Phony: loadcurrent
