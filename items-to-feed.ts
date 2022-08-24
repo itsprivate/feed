@@ -83,7 +83,7 @@ export default function itemsToFeed(
     const parsedIdentifier = Item.parseItemIdentifier(key);
     const itemInstance = new SourceItemAdapter(
       item,
-      parsedIdentifier.targetSiteIdentifier,
+      siteIdentifier,
     );
     const itemUrl = itemInstance.getUrl();
     const itemUrlObj = new URL(itemUrl);

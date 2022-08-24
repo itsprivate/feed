@@ -34,11 +34,15 @@ serve:
 
 .Phony: site
 site:
-	deno run -A --watch=main.ts,templates/,config.yml main.ts --stage format,translate,build_current,archive,build_site,serve_site --site $(name)
+	deno run -A --watch=main.ts,templates/,config.yml main.ts --stage format,translate,build_current,archive,build_site,serve_site --site $(site)
 
 .Phony: all
 all:
-	FILES=50 deno run -A main.ts --site $(name)
+	FILES=50 deno run -A main.ts --site $(site)
+
+.Phony: realall
+realall:
+	FILES=50 deno run -A main.ts
 
 .Phony: prod-serve
 prod-serve:
@@ -48,9 +52,17 @@ prod-serve:
 fetch:
 	deno run -A main.ts --stage fetch --site devfeed
 
+.Phony: stage
+stage:
+	deno run -A main.ts --stage $(stage) --site $(site)
+
+
 .Phony: format
 format:
 	deno run -A main.ts --stage format --site devfeed
+.Phony: formatall
+formatall:
+	deno run -A main.ts --stage format
 
 .Phony: archive
 archive:
@@ -176,7 +188,7 @@ prod-decompresscurrent:
 
 .Phony: publish
 publish:
-	wrangler pages publish public/$(name) --project-name $(name)
+	wrangler pages publish public/$(site) --project-name $(site)
 
 .Phony: prod-publish
 prod-publish:
@@ -246,7 +258,7 @@ temp-uploadarchive:
 
 .Phony: createsite
 createsite:
-	wrangler pages project create $(name) --production-branch main
+	wrangler pages project create $(site) --production-branch main
 
 # only for dev
 .Phony: prod-zipuploadarchive

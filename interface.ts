@@ -8,6 +8,7 @@ export interface Source {
   type: string;
   itemsPath?: string;
   rules?: Rule[];
+  id: string;
 }
 export interface Language {
   code: string;
@@ -34,7 +35,6 @@ export interface SiteConfig extends GeneralSiteConfig {
   port?: number;
   redirect?: boolean;
   domain?: string;
-  sources?: Source[];
   archive?: boolean;
   translations?: Record<string, Record<string, string>>;
 }
@@ -51,13 +51,18 @@ export interface DevOverwrite {
   translated_items_per_page: number;
   max_files_per_site: number;
 }
-
+export interface FilteredFile {
+  files: string[];
+  targetSiteIdentifiers: string[];
+  groups: Record<string, string[]>;
+}
 export interface Config {
   icon: string;
   favicon: string;
   root_domain: string;
   translated_items_per_page: number;
   max_files_per_site: number;
+  sources: Source[];
   sites: Record<string, SiteConfig>;
   translations: Record<string, Record<string, string>>;
   archive: ArchiveSiteConfig;
@@ -76,13 +81,8 @@ export interface Author {
 }
 export interface ParsedFilename {
   id: string;
-  year: string;
-  month: string;
-  day: string;
   language: string;
   type: string;
-  // targetSite: string;
-  targetSiteIdentifier: string;
 }
 
 export interface Task {

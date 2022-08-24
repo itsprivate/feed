@@ -78,6 +78,99 @@
     "siteIdentifier": "i",
     "tags": []
   },
+  "sources": [
+    {
+      "url": "https://news.google.com/rss/topics/CAAqJggKIiBDQkFTRWdvSUwyMHZNRGx1YlY4U0FtVnVHZ0pWVXlnQVAB?hl=en-US&gl=US&ceid=US:en",
+      "type": "googlenews",
+      "id": "source-google-news",
+      "rules": [
+        {
+          "type": "limit",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "url": "https://hn.algolia.com/api/v1/search_by_date?tags=front_page&hitsPerPage=50",
+      "itemsPath": "hits",
+      "type": "hn",
+      "id": "source-hackernews-index"
+    },
+    {
+      "url": "http://hn.algolia.com/api/v1/search_by_date?tags=(story,poll,show_hn,ask_hn)&numericFilters=points>=200&hitsPerPage=50",
+      "itemsPath": "hits",
+      "type": "hn",
+      "tags": [
+        "source-hackernews-best"
+      ]
+    },
+    {
+      "url": "https://hn.algolia.com/api/v1/search_by_date?tags=(ask_hn)&hitsPerPage=50",
+      "itemsPath": "hits",
+      "type": "hn",
+      "id": "source-hackernews-ask"
+    },
+    {
+      "url": "https://hn.algolia.com/api/v1/search_by_date?tags=(show_hn)&hitsPerPage=50",
+      "itemsPath": "hits",
+      "type": "hn",
+      "id": "source-hackernews-show"
+    },
+    {
+      "url": "https://www.reddit.com/r/all/top/.json?raw_json=1",
+      "itemsPath": "data.children",
+      "type": "reddit",
+      "id": "source-reddit-top",
+      "rules": [
+        {
+          "type": "greaterEqual",
+          "key": "data.score",
+          "value": "75000"
+        }
+      ]
+    },
+    {
+      "url": "https://www.reddit.com/r/AskReddit/top/.json?raw_json=1",
+      "itemsPath": "data.children",
+      "type": "reddit",
+      "id": "source-reddit-ask",
+      "rules": [
+        {
+          "type": "greaterEqual",
+          "key": "data.score",
+          "value": "1000"
+        }
+      ]
+    },
+    {
+      "url": [
+        "https://www.reddit.com/r/AskReddit/top/.json?raw_json=1",
+        "https://www.reddit.com/r/Ask_Politics/top/.json?raw_json=1",
+        "https://www.reddit.com/r/AskHistorians/top/.json?raw_json=1",
+        "https://www.reddit.com/r/AskWomen/top/.json?raw_json=1",
+        "https://www.reddit.com/r/TooAfraidToAsk/top/.json?raw_json=1",
+        "https://www.reddit.com/r/NoStupidQuestions/top/.json?raw_json=1",
+        "https://www.reddit.com/r/TrueAskReddit/top/.json?raw_json=1",
+        "https://www.reddit.com/r/askscience/top/.json?raw_json=1",
+        "https://www.reddit.com/r/askphilosophy/top/.json?raw_json=1"
+      ],
+      "itemsPath": "data.children",
+      "id": "source-reddit-ask",
+      "type": "reddit",
+      "rules": [
+        {
+          "type": "greaterEqual",
+          "key": "data.score",
+          "value": "100"
+        }
+      ]
+    },
+    {
+      "url": "nikitonsky",
+      "type": "twitter",
+      "id": "source-reddit-stocks"
+    }
+  ],
   "sites": {
     "devfeed": {
       "redirect": true,
@@ -96,24 +189,13 @@
           "short_title": "Reddit 熱門",
           "description": "用中文瀏覽Reddit熱門內容"
         }
-      },
-      "sources": [
-        {
-          "url": "https://news.google.com/rss/topics/CAAqJggKIiBDQkFTRWdvSUwyMHZNRGx1YlY4U0FtVnVHZ0pWVXlnQVAB?hl=en-US&gl=US&ceid=US:en",
-          "type": "googlenews",
-          "rules": [
-            {
-              "type": "limit",
-              "value": 2
-            }
-          ]
-        }
-      ]
+      }
     },
     "hackernews": {
       "port": 8001,
       "tags": [
-        "hn"
+        "hn",
+        "source-hackernews-index"
       ],
       "translations": {
         "zh-Hans": {
@@ -134,21 +216,15 @@
           "description": "用中文瀏覽Hacker News 首頁最新文章",
           "keywords": "HackerNews 頭條, Hacker News 中文, Hacker News Story"
         }
-      },
-      "sources": [
-        {
-          "url": "https://hn.algolia.com/api/v1/search_by_date?tags=front_page&hitsPerPage=50",
-          "itemsPath": "hits",
-          "type": "hn"
-        }
-      ]
+      }
     },
     "hn": {
       "port": 8002,
       "domain": "prodhn.buzzing.cc",
       "redirect": true,
       "tags": [
-        "hn"
+        "hn",
+        "source-hackernews-best"
       ],
       "translations": {
         "zh-Hans": {
@@ -161,20 +237,14 @@
           "short_title": "HN熱門",
           "description": "追蹤Hacker News上超過 200 points的帖子"
         }
-      },
-      "sources": [
-        {
-          "url": "http://hn.algolia.com/api/v1/search_by_date?tags=(story,poll,show_hn,ask_hn)&numericFilters=points>=200&hitsPerPage=50",
-          "itemsPath": "hits",
-          "type": "hn"
-        }
-      ]
+      }
     },
     "askhn": {
       "port": 8003,
       "domain": "prodaskhn.buzzing.cc",
       "tags": [
-        "hn"
+        "hn",
+        "source-hackernews-ask"
       ],
       "translations": {
         "zh-Hans": {
@@ -187,19 +257,13 @@
           "short_title": "HN問答",
           "description": "追蹤 Hacker News 上的問答"
         }
-      },
-      "sources": [
-        {
-          "url": "https://hn.algolia.com/api/v1/search_by_date?tags=(ask_hn)&hitsPerPage=50",
-          "itemsPath": "hits",
-          "type": "hn"
-        }
-      ]
+      }
     },
     "showhn": {
       "port": 8004,
       "tags": [
-        "hn"
+        "hn",
+        "source-hackernews-show"
       ],
       "translations": {
         "zh-Hans": {
@@ -212,20 +276,14 @@
           "short_title": "Show HN",
           "description": "追蹤 Hacker News 上的項目展示"
         }
-      },
-      "sources": [
-        {
-          "url": "https://hn.algolia.com/api/v1/search_by_date?tags=(show_hn)&hitsPerPage=50",
-          "itemsPath": "hits",
-          "type": "hn"
-        }
-      ]
+      }
     },
     "reddit": {
       "port": 8005,
       "redirect": true,
       "tags": [
-        "reddit"
+        "reddit",
+        "source-reddit-top"
       ],
       "translations": {
         "zh-Hans": {
@@ -243,27 +301,14 @@
           "short_title": "Reddit 熱門",
           "description": "用中文瀏覽Reddit熱門內容"
         }
-      },
-      "sources": [
-        {
-          "url": "https://www.reddit.com/r/all/top/.json?raw_json=1",
-          "itemsPath": "data.children",
-          "type": "reddit",
-          "rules": [
-            {
-              "type": "greaterEqual",
-              "key": "data.score",
-              "value": "75000"
-            }
-          ]
-        }
-      ]
+      }
     },
     "ask": {
       "port": 8007,
       "redirect": true,
       "tags": [
-        "reddit"
+        "reddit",
+        "source-reddit-ask"
       ],
       "translations": {
         "zh-Hans": {
@@ -276,50 +321,34 @@
           "short_title": "Reddit提問",
           "description": "用中文瀏覽 Reddit 上的熱門提問"
         }
-      },
-      "sources": [
-        {
-          "url": "https://www.reddit.com/r/AskReddit/top/.json?raw_json=1",
-          "itemsPath": "data.children",
-          "type": "reddit",
-          "rules": [
-            {
-              "type": "greaterEqual",
-              "key": "data.score",
-              "value": "1000"
-            }
-          ]
+      }
+    },
+    "stocks": {
+      "port": 8008,
+      "redirect": true,
+      "tags": [
+        "reddit",
+        "finance",
+        "source-reddit-stocks"
+      ],
+      "translations": {
+        "zh-Hans": {
+          "title": "国外股市热门",
+          "description": "用中文浏览国外股票社区里的热门讨论"
         },
-        {
-          "url": [
-            "https://www.reddit.com/r/AskReddit/top/.json?raw_json=1",
-            "https://www.reddit.com/r/Ask_Politics/top/.json?raw_json=1",
-            "https://www.reddit.com/r/AskHistorians/top/.json?raw_json=1",
-            "https://www.reddit.com/r/AskWomen/top/.json?raw_json=1",
-            "https://www.reddit.com/r/TooAfraidToAsk/top/.json?raw_json=1",
-            "https://www.reddit.com/r/NoStupidQuestions/top/.json?raw_json=1",
-            "https://www.reddit.com/r/TrueAskReddit/top/.json?raw_json=1",
-            "https://www.reddit.com/r/askscience/top/.json?raw_json=1",
-            "https://www.reddit.com/r/askphilosophy/top/.json?raw_json=1"
-          ],
-          "itemsPath": "data.children",
-          "type": "reddit",
-          "rules": [
-            {
-              "type": "greaterEqual",
-              "key": "data.score",
-              "value": "100"
-            }
-          ]
+        "zh-Hant": {
+          "title": "國外股市熱門",
+          "description": "用中文瀏覽國外股票社區裡的熱門討論"
         }
-      ]
+      }
     },
     "news": {
       "port": 8006,
       "archive": true,
       "redirect": true,
       "tags": [
-        "news"
+        "news",
+        "source-google-news"
       ],
       "translations": {
         "zh-Hans": {
@@ -337,19 +366,7 @@
           "short_title": "國外新聞",
           "description": "用中文瀏覽國外新聞頭條，美國新聞頭條，全球新聞(西方媒體)頭條"
         }
-      },
-      "sources": [
-        {
-          "url": "https://news.google.com/rss/topics/CAAqJggKIiBDQkFTRWdvSUwyMHZNRGx1YlY4U0FtVnVHZ0pWVXlnQVAB?hl=en-US&gl=US&ceid=US:en",
-          "type": "googlenews",
-          "rules": [
-            {
-              "type": "limit",
-              "value": 2
-            }
-          ]
-        }
-      ]
+      }
     }
   }
 }

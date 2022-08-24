@@ -19,7 +19,6 @@ import { DOMParser, getMetadata } from "./deps.ts";
 import log from "./log.ts";
 export default class Item<T> {
   originalItem: T;
-  private siteIdentifier: string;
   private now: Date = new Date();
   private image: string | null | undefined;
   static parseItemIdentifier(
@@ -34,40 +33,20 @@ export default class Item<T> {
     // first will be safe part, other will be the id parts
     const safePart = parts[0];
     const symParts = safePart.split("_");
-    const year = symParts[0];
-    const month = symParts[1];
-    const day = symParts[2];
-    const language = symParts[3];
-    const type = symParts[4];
-    const targetSiteIdentifier = symParts[5];
-    // const targetSite = siteIdentifierToDomain(
-    //   targetSiteIdentifier,
-    //   config.sites[targetSiteIdentifier],
-    // );
+    const language = symParts[0];
+    const type = symParts[1];
+
     const idParts = parts.slice(1);
     const id = idParts.join("__");
     return {
       id,
-      year,
-      month,
-      day,
       language,
       type,
-      targetSiteIdentifier,
     };
   }
 
-  static getTranslatedPath(filename: string): string {
-    const parsed = Item.parseItemIdentifier(filename);
-    const now = new Date();
-    return `${getDataTranslatedPath()}/${parsed.targetSiteIdentifier}/${
-      getFullYear(now)
-    }/${getFullMonth(now)}/${getFullDay(now)}/${filename}`;
-  }
-
-  constructor(originalItem: T, siteIdentifier: string) {
+  constructor(originalItem: T) {
     this.originalItem = originalItem;
-    this.siteIdentifier = siteIdentifier;
   }
 
   init(): Promise<void> {
@@ -79,9 +58,7 @@ export default class Item<T> {
   getSensitive(): boolean {
     return false;
   }
-  getTargetSitePath(): string {
-    return siteIdentifierToPath(this.siteIdentifier);
-  }
+
   getType(): string {
     return this.constructor.name;
   }
@@ -227,9 +204,7 @@ export default class Item<T> {
       return null;
     }
   }
-  getMeta(): Record<string, string> | undefined {
-    return undefined;
-  }
+
   getAuthors(): Author[] {
     return [];
   }
@@ -238,7 +213,7 @@ export default class Item<T> {
   }
 
   getItemIdentifier(): string {
-    return `${this.getOriginalPublishedYear()}_${this.getOriginalPublishedMonth()}_${this.getOriginalPublishedDay()}_${this.getLanguage()}_${this.getType()}_${this.getTargetSitePath()}__${this.getId()}`;
+    return `${this.getLanguage()}_${this.getType()}__${this.getId()}`;
   }
   getLanguage(): string {
     return "en";
@@ -247,9 +222,13 @@ export default class Item<T> {
     return undefined;
   }
 
-  getRawPath(): string {
-    return `${getDataRawPath()}/${(this
-      .getTargetSitePath())}/${this.getModifiedYear()}/${this.getModifiedMonth()}/${this.getModifiedDay()}/${this.getItemIdentifier()}.json`;
+  getRawPath(targetSiteIdentifiers: string[]): string {
+    if (targetSiteIdentifiers.length === 0) {
+      throw new Error("targetSiteIdentifiers can not be empty");
+    }
+    return `${getDataRawPath()}/${this.getModifiedYear()}/${this.getModifiedMonth()}/${this.getModifiedDay()}/${
+      targetSiteIdentifiers.join("_")
+    }/${this.getItemIdentifier()}.json`;
   }
   getRawItem(): T {
     return this.originalItem;
@@ -260,9 +239,15 @@ export default class Item<T> {
   getNumComments(): number {
     return 0;
   }
-  getFormatedPath(): string {
-    return `${getDataFormatedPath()}/${(this
-      .getTargetSitePath())}/${this.getModifiedYear()}/${this.getModifiedMonth()}/${this.getModifiedDay()}/${this.getItemIdentifier()}.json`;
+  getFormatedPath(targetSiteIdentifiers: string[]): string {
+    return `${getDataFormatedPath()}/${this.getModifiedYear()}/${this.getModifiedMonth()}/${this.getModifiedDay()}/${
+      targetSiteIdentifiers.join("_")
+    }/${this.getItemIdentifier()}.json`;
+  }
+  getTranslatedPath(targetSiteIdentifiers: string[]): string {
+    return `${getDataTranslatedPath()}/${this.getModifiedYear()}/${this.getModifiedMonth()}/${this.getModifiedDay()}/${
+      targetSiteIdentifiers.join("_")
+    }/${this.getItemIdentifier()}.json`;
   }
   getExternalUrl(): string | undefined {
     return undefined;

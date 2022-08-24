@@ -9,9 +9,15 @@ import {
   slug as slugFn,
   YAML,
 } from "./deps.ts";
-import { ROOT_DOMAIN, TARGET_SITE_LANGUAEGS } from "./constant.ts";
+import {
+  DEV_MODE_HANDLED_ITEMS,
+  ROOT_DOMAIN,
+  TARGET_SITE_LANGUAEGS,
+} from "./constant.ts";
+import log from "./log.ts";
 import {
   Config,
+  FilteredFile,
   Language,
   PageMeta,
   SiteConfig,
@@ -79,7 +85,8 @@ export const getArchivePath = () => {
   return dataPath;
 };
 export const getDistPath = () => {
-  return "public";
+  const dataPath = isDev() ? "dev-public" : "public";
+  return dataPath;
 };
 export const getSiteIdentifierDistPath = (siteIdentifier: string) => {
   return `${getDistPath()}/${siteIdentifierToPath(siteIdentifier)}`;
@@ -708,3 +715,56 @@ export const getDufsClient = (): DigestClient => {
   const client = new DigestClient(username!, password!);
   return client;
 };
+
+export function getTargetSiteIdentifiersByFilePath(filePath: string): string[] {
+  const targetSiteIdentifiers = path.basename(path.dirname(filePath)).split(
+    "_",
+  );
+  return targetSiteIdentifiers;
+}
+
+export async function getFilesByTargetSiteIdentifiers(
+  dirPath: string,
+  targetSiteIdentifiers: string[],
+): Promise<FilteredFile> {
+  const sites = targetSiteIdentifiers || [];
+  const groups: Record<string, string[]> = {};
+  const files: string[] = [];
+  const siteTotalFiles: Record<string, number> = {};
+  const filteredSites: string[] = [];
+  for await (const entry of fs.walk(dirPath)) {
+    if (entry.isFile && entry.name.endsWith(".json")) {
+      // get siteIdentifiers
+      const dirname = path.dirname(entry.path);
+      const siteIdentifiers = path.basename(dirname).split("_");
+      for (const siteIdentifier of siteIdentifiers) {
+        if (sites.includes(siteIdentifier)) {
+          if (siteTotalFiles[siteIdentifier] === undefined) {
+            siteTotalFiles[siteIdentifier] = 0;
+          }
+
+          if (isDev()) {
+            if (siteTotalFiles[siteIdentifier] >= DEV_MODE_HANDLED_ITEMS) {
+              log.info(`dev mode, only take ${DEV_MODE_HANDLED_ITEMS} files`);
+              break;
+            }
+          }
+          siteTotalFiles[siteIdentifier]++;
+          if (!filteredSites.includes(siteIdentifier)) {
+            filteredSites.push(siteIdentifier);
+          }
+          if (!groups[siteIdentifier]) {
+            groups[siteIdentifier] = [];
+          }
+          groups[siteIdentifier].push(entry.path);
+          files.push(entry.path);
+        }
+      }
+    }
+  }
+  return {
+    files: files,
+    targetSiteIdentifiers: filteredSites,
+    groups,
+  };
+}

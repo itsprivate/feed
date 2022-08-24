@@ -14,7 +14,7 @@ export default async function publishToPages() {
 
   for (const siteIdentifier of siteIdentifiers) {
     const p = Deno.run({
-      cmd: ["make", "publish", "name=" + siteIdentifier],
+      cmd: ["make", "publish", "site=" + siteIdentifier],
     });
     const status = await p.status();
     log.info("publish status: ", status);

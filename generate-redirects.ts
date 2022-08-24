@@ -43,6 +43,6 @@ export default async function generateRedirects(
   if (redirects.endsWith(`\n`)) {
     redirects = redirects.slice(0, -1);
   }
-  // console.log("redirects", redirects);
+  // log.debug("redirects", redirects);
   await writeTextFile(getDistFilePath(siteIdentifier, "_redirects"), redirects);
 }

@@ -23,7 +23,7 @@ make tr
 ## New Site
 
 ```bash
-make createsite name=site_name
+make createsite site=site_name
 ```
 
 ## Deploy to workers
@@ -72,9 +72,7 @@ make prod-awsuploadarchive
 # upload current
 make prod-uploadcurrent
 # create site
-make createsite name=ask
-```
-
+make createsite site=ask
 ```
 
 ## TODO
@@ -97,4 +95,3 @@ make createsite name=ask
 - [x] archive backup
 - [ ] current backup
 - [ ] add links meta
-```

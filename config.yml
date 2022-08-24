@@ -47,6 +47,66 @@ archive:
   siteIdentifier: i
   tags: []
 
+sources:
+  - url: https://news.google.com/rss/topics/CAAqJggKIiBDQkFTRWdvSUwyMHZNRGx1YlY4U0FtVnVHZ0pWVXlnQVAB?hl=en-US&gl=US&ceid=US:en
+    type: googlenews
+    id: source-google-news
+    rules:
+      - type: limit
+        value: 2
+  - url: https://hn.algolia.com/api/v1/search_by_date?tags=front_page&hitsPerPage=50
+    itemsPath: hits
+    type: hn
+    id: source-hackernews-index
+  - url: http://hn.algolia.com/api/v1/search_by_date?tags=(story,poll,show_hn,ask_hn)&numericFilters=points>=200&hitsPerPage=50
+    itemsPath: hits
+    type: hn
+    tags:
+      - source-hackernews-best
+  - url: https://hn.algolia.com/api/v1/search_by_date?tags=(ask_hn)&hitsPerPage=50
+    itemsPath: hits
+    type: hn
+    id: source-hackernews-ask
+  - url: https://hn.algolia.com/api/v1/search_by_date?tags=(show_hn)&hitsPerPage=50
+    itemsPath: hits
+    type: hn
+    id: source-hackernews-show
+  - url: https://www.reddit.com/r/all/top/.json?raw_json=1
+    itemsPath: data.children
+    type: reddit
+    id: source-reddit-top
+    rules:
+      - type: greaterEqual
+        key: data.score
+        value: "75000"
+  - url: https://www.reddit.com/r/AskReddit/top/.json?raw_json=1
+    itemsPath: data.children
+    type: reddit
+    id: source-reddit-ask
+    rules:
+      - type: greaterEqual
+        key: data.score
+        value: "1000"
+  - url:
+      - https://www.reddit.com/r/AskReddit/top/.json?raw_json=1
+      - https://www.reddit.com/r/Ask_Politics/top/.json?raw_json=1
+      - https://www.reddit.com/r/AskHistorians/top/.json?raw_json=1
+      - https://www.reddit.com/r/AskWomen/top/.json?raw_json=1
+      - https://www.reddit.com/r/TooAfraidToAsk/top/.json?raw_json=1
+      - https://www.reddit.com/r/NoStupidQuestions/top/.json?raw_json=1
+      - https://www.reddit.com/r/TrueAskReddit/top/.json?raw_json=1
+      - https://www.reddit.com/r/askscience/top/.json?raw_json=1
+      - https://www.reddit.com/r/askphilosophy/top/.json?raw_json=1
+    itemsPath: data.children
+    id: source-reddit-ask
+    type: reddit
+    rules:
+      - type: greaterEqual
+        key: data.score
+        value: "100"
+  - url: nikitonsky
+    type: twitter
+    id: source-reddit-stocks
 sites:
   devfeed:
     redirect: true
@@ -59,16 +119,12 @@ sites:
         title: "Reddit 热门"
         short_title: "Reddit 热门"
         description: "用中文浏览Reddit热门内容"
-    sources:
-      - url: https://news.google.com/rss/topics/CAAqJggKIiBDQkFTRWdvSUwyMHZNRGx1YlY4U0FtVnVHZ0pWVXlnQVAB?hl=en-US&gl=US&ceid=US:en
-        type: googlenews
-        rules:
-          - type: limit
-            value: 2
+
   hackernews:
     port: 8001
     tags:
       - hn
+      - source-hackernews-index
     translations:
       "zh-Hans":
         title: "Hacker News 首页"
@@ -80,58 +136,49 @@ sites:
         short_title: "HN Front Page"
         description: "Hacker News Front Page Feed"
         keywords: "HackerNews 头条, Hacker News 中文, Hacker News Story"
-    sources:
-      - url: https://hn.algolia.com/api/v1/search_by_date?tags=front_page&hitsPerPage=50
-        itemsPath: hits
-        type: hn
+
   hn:
     port: 8002
     domain: prodhn.buzzing.cc
     redirect: true
     tags:
       - hn
+      - source-hackernews-best
     translations:
       "zh-Hans":
         title: "Hacker News 热门"
         short_title: "HN热门"
         description: "追踪Hacker News上超过 200 points的帖子"
-    sources:
-      - url: http://hn.algolia.com/api/v1/search_by_date?tags=(story,poll,show_hn,ask_hn)&numericFilters=points>=200&hitsPerPage=50
-        itemsPath: hits
-        type: hn
+
   askhn:
     port: 8003
     domain: prodaskhn.buzzing.cc
     tags:
       - hn
+      - source-hackernews-ask
     translations:
       "zh-Hans":
         title: "Hacker News 问答"
         short_title: "HN问答"
         description: "追踪 Hacker News 上的问答"
-    sources:
-      - url: https://hn.algolia.com/api/v1/search_by_date?tags=(ask_hn)&hitsPerPage=50
-        itemsPath: hits
-        type: hn
+
   showhn:
     port: 8004
     tags:
       - hn
+      - source-hackernews-show
     translations:
       "zh-Hans":
         title: "Show HN"
         short_title: "Show HN"
         description: "追踪 Hacker News 上的项目展示"
-    sources:
-      - url: https://hn.algolia.com/api/v1/search_by_date?tags=(show_hn)&hitsPerPage=50
-        itemsPath: hits
-        type: hn
 
   reddit:
     port: 8005
     redirect: true
     tags:
       - reddit
+      - source-reddit-top
     translations:
       "zh-Hans":
         title: "Reddit 热门"
@@ -141,55 +188,38 @@ sites:
         title: "Buzzing on Reddit"
         description: "See what's buzzing on Reddit in your native language"
         keywords: "Reddit Hot, Reddit Hot Feed"
-    sources:
-      - url: https://www.reddit.com/r/all/top/.json?raw_json=1
-        itemsPath: data.children
-        type: reddit
-        rules:
-          - type: greaterEqual
-            key: data.score
-            value: "75000"
+
   ask:
     port: 8007
     redirect: true
     tags:
       - reddit
+      - source-reddit-ask
     translations:
       "zh-Hans":
         title: "Reddit 热门提问"
         short_title: "Reddit提问"
         description: "用中文浏览 Reddit 上的热门提问"
 
-    sources:
-      - url: https://www.reddit.com/r/AskReddit/top/.json?raw_json=1
-        itemsPath: data.children
-        type: reddit
-        rules:
-          - type: greaterEqual
-            key: data.score
-            value: "1000"
-      - url:
-          - https://www.reddit.com/r/AskReddit/top/.json?raw_json=1
-          - https://www.reddit.com/r/Ask_Politics/top/.json?raw_json=1
-          - https://www.reddit.com/r/AskHistorians/top/.json?raw_json=1
-          - https://www.reddit.com/r/AskWomen/top/.json?raw_json=1
-          - https://www.reddit.com/r/TooAfraidToAsk/top/.json?raw_json=1
-          - https://www.reddit.com/r/NoStupidQuestions/top/.json?raw_json=1
-          - https://www.reddit.com/r/TrueAskReddit/top/.json?raw_json=1
-          - https://www.reddit.com/r/askscience/top/.json?raw_json=1
-          - https://www.reddit.com/r/askphilosophy/top/.json?raw_json=1
-        itemsPath: data.children
-        type: reddit
-        rules:
-          - type: greaterEqual
-            key: data.score
-            value: "100"
+  stocks:
+    port: 8008
+    redirect: true
+    tags:
+      - reddit
+      - finance
+      - source-reddit-stocks
+    translations:
+      "zh-Hans":
+        title: "国外股市热门"
+        description: "用中文浏览国外股票社区里的热门讨论"
+
   news:
     port: 8006
     archive: true
     redirect: true
     tags:
       - news
+      - source-google-news
     translations:
       "zh-Hans":
         title: "国外新闻头条 - 全球新闻头条 - 美国新闻头条"
@@ -199,9 +229,3 @@ sites:
         title: "Buzzing on World News"
         description: "See what's buzzing on the news in your native language"
         keywords: "Buzzing News, Buzzing News Feed"
-    sources:
-      - url: https://news.google.com/rss/topics/CAAqJggKIiBDQkFTRWdvSUwyMHZNRGx1YlY4U0FtVnVHZ0pWVXlnQVAB?hl=en-US&gl=US&ceid=US:en
-        type: googlenews
-        rules:
-          - type: limit
-            value: 2

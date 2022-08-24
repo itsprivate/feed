@@ -157,7 +157,7 @@ Deno.test({
         contentType: "text/plain",
         metadataDirective: "REPLACE",
       })
-      .catch((e) => console.log(e.response));
+      .catch((e) => console.error(e.response));
     const res = await bucket.getObject("test4");
     assert(res);
     await res.body.cancel();

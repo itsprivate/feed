@@ -7,9 +7,9 @@ import {
   getCurrentItemsFilePath,
   getCurrentToBeArchivedItemsFilePath,
   getDataTranslatedPath,
+  getFilesByTargetSiteIdentifiers,
   isDev,
   loadS3ArchiveFile,
-  pathToSiteIdentifier,
   readJSONFile,
   resortArchiveKeys,
   siteIdentifierToPath,
@@ -25,37 +25,18 @@ export default async function buildCurrent(
 ) {
   // get all 3-translated files
   // is exists translated files folder
-  let siteIdentifiers: string[] = [];
+  const config = options.config;
   // ensure folder exists
   await fs.ensureDir(getDataTranslatedPath());
-  for await (const dirEntry of Deno.readDir(getDataTranslatedPath())) {
-    if (dirEntry.isDirectory && !dirEntry.name.startsWith(".")) {
-      siteIdentifiers.push(pathToSiteIdentifier(dirEntry.name));
-    }
-  }
-  const sites = options.siteIdentifiers;
-  if (sites && Array.isArray(sites)) {
-    siteIdentifiers = siteIdentifiers.filter((siteIdentifier) => {
-      return (sites as string[]).includes(siteIdentifier);
-    });
-  }
-
-  for (const siteIdentifier of siteIdentifiers) {
+  const sites = options.siteIdentifiers || [];
+  const { groups, targetSiteIdentifiers } =
+    await getFilesByTargetSiteIdentifiers(
+      getDataTranslatedPath(),
+      sites,
+    );
+  for (const siteIdentifier of targetSiteIdentifiers) {
+    const files = groups[siteIdentifier] || [];
     const siteConfig = options.config.sites[siteIdentifier];
-    const files: string[] = [];
-    try {
-      for await (
-        const entry of fs.walk(
-          getDataTranslatedPath() + "/" + siteIdentifierToPath(siteIdentifier),
-        )
-      ) {
-        if (entry.isFile && entry.path.endsWith(".json")) {
-          files.push(entry.path);
-        }
-      }
-    } catch (e) {
-      throw e;
-    }
     if (files.length > 0) {
       log.info(
         `start build items, got ${files.length} translated items for ${siteIdentifier}`,
@@ -89,7 +70,7 @@ export default async function buildCurrent(
       }
 
       let currentArchive: string[] = currentItemsJson.archive || [];
-      let currentTags: string[] = currentItemsJson.tags || [];
+      const currentTags: string[] = currentItemsJson.tags || [];
 
       let total = 0;
       // merge items to current itemsJson

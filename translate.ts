@@ -232,7 +232,6 @@ export default class Translation {
       if (this.currentSourceLanguage !== sourceLanguage) {
         // click  black
         // await page.screenshot({ path: "data/1.png" });
-        // console.log("click");
         await page.waitForSelector(sourceLangSelect, { visible: true });
 
         await page.click(sourceLangSelect);
@@ -254,10 +253,8 @@ export default class Translation {
       await this.changeTargetLanguage(
         Translation.toDeeplLanguage(targetLanguage),
       );
-      // console.log("wait original");
 
       await page.waitForSelector(originalSentenceField);
-      // console.log("start type", sentence);
       await page.$eval(
         originalSentenceField,
         (el, sentence) => (el.value = sentence),

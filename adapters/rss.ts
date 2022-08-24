@@ -1,6 +1,5 @@
 import { Author } from "../interface.ts";
 import Item from "../item.ts";
-const prefixies = ["Show HN: ", "Ask HN: ", "Tell HN: ", "Poll: "];
 export default class rss extends Item<RSSItem> {
   getOriginalPublishedDate(): Date {
     return new Date(this.originalItem.published as string);
@@ -10,11 +9,7 @@ export default class rss extends Item<RSSItem> {
   }
   getTitle(): string {
     const title = this.originalItem.title.value as string;
-    for (const prefix of prefixies) {
-      if (title.startsWith(prefix)) {
-        return title.slice(prefix.length);
-      }
-    }
+
     return title;
   }
   getTitlePrefix(): string {
@@ -22,7 +17,11 @@ export default class rss extends Item<RSSItem> {
   }
 
   getUrl(): string {
-    return this.originalItem.links[0].href;
+    if (this.originalItem.links) {
+      return this.originalItem.links[0].href;
+    } else {
+      return "";
+    }
   }
 
   getAuthors(): Author[] {

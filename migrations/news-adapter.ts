@@ -15,9 +15,9 @@ export default class reddit extends Item<NewsItem> {
   getOriginalPublishedDate(): Date {
     return new Date(this.originalItem.original_created_at);
   }
-  async beforeFormatInit(): Promise<void> {
+  async init(): Promise<void> {
     // get title unique
-    await super.beforeFormatInit();
+    await super.init();
     // default id
     const title = this.originalItem.title;
     let id = this.originalItem.id;

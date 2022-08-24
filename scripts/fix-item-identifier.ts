@@ -30,44 +30,32 @@ export default async function uploadArchive() {
       const itemsJson = await readJSONFile(entry.path);
       let isChanged = false;
       if (itemsJson.items && itemsJson.items) {
-        // if (total > 1555) {
-        //   break;
-        // }
         const keys = Object.keys(itemsJson.items);
 
         if (keys.length > 0) {
           for (const key of keys) {
             const item = itemsJson.items[key];
-            if (item._links && item._links.length > 0) {
-              // try to get score, and save them
-              const name = item._links[0].name;
-              const match = name.match(regex);
-              if (match && match.length > 1) {
-                const score = match[1];
-                itemsJson.items[key]._score = Number(score);
-                // remove links
-                delete item._links;
-                isChanged = true;
-                if (totalItems % 1000 === 0) {
-                  log.info(`Processed ${totalItems} items`);
-                }
-                totalItems++;
-              } else {
-                log.info("no match", name, entry.path);
-                throw new Error("no match");
-              }
+            // remove target site
+            const id = item.id;
+            const parsed = parseItemIdentifier(id);
+            let newId = id;
+            if (parsed.targetSiteIdentifier) {
+              newId = stringifyItemIdentifier(parsed);
+              const newItem = { ...item, id: newId };
+              itemsJson.items[newId] = newItem;
+              isChanged = true;
+              delete itemsJson.items[key];
             }
           }
 
           if (isChanged) {
             await writeJSONFile(entry.path, itemsJson);
+            total++;
           }
 
           if (total % 100 === 0) {
             log.info(`Processing ${total} files`);
           }
-
-          total++;
         }
       }
     }
@@ -82,4 +70,48 @@ if (import.meta.main) {
   // init dotenv
   await dotenvConfig({ export: true });
   await uploadArchive();
+}
+interface ParsedFilename {
+  id: string;
+  year: string;
+  month: string;
+  day: string;
+  language: string;
+  type: string;
+  targetSiteIdentifier: string;
+}
+function stringifyItemIdentifier(parsed: ParsedFilename): string {
+  return `${parsed.year}_${parsed.month}_${parsed.day}_${parsed.language}_${parsed.type}__${parsed.id}`;
+}
+
+function parseItemIdentifier(
+  fileBasename: string,
+) {
+  // remove extension
+  let filename = fileBasename;
+  if (filename.endsWith(".json")) {
+    filename = filename.slice(0, -5);
+  }
+  const parts = filename.split("__");
+  // first will be safe part, other will be the id parts
+  const safePart = parts[0];
+  const symParts = safePart.split("_");
+  const year = symParts[0];
+  const month = symParts[1];
+  const day = symParts[2];
+  const language = symParts[3];
+  const type = symParts[4];
+  const targetSiteIdentifier = symParts[5];
+
+  const idParts = parts.slice(1);
+  const id = idParts.join("__");
+  return {
+    id,
+    year,
+    month,
+    day,
+    language,
+    type,
+    targetSiteIdentifier,
+  };
 }

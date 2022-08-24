@@ -10,6 +10,7 @@ private.txt
 /archive/
 temp.json
 /public/
+/dev-public/
 # Logs
 logs
 *.log

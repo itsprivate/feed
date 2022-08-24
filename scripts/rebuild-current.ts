@@ -90,9 +90,6 @@ export async function rebuildCurrent() {
 
     currentIssues = resortArchiveKeys(currentIssues);
 
-    // console.log("tags", currentTags);
-    // console.log("issues", currentIssues);
-    // console.log("archive", currentArchive);
     let items = {};
     if (currentArchive.length > 0) {
       const latestArchiveFilePath = getArchivedFilePath(

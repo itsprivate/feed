@@ -5,6 +5,7 @@ import hnExampleJson from "./example/current/1-raw/hackernews/2022/08/10/2022_08
 };
 import Item from "./item.ts";
 import { getConfig } from "./util.ts";
+import ItemAdapter from "./adapters/mod.ts";
 const list = [
   {
     class: HnItem,
@@ -13,7 +14,7 @@ const list = [
 ];
 for (const testItem of list) {
   Deno.test("parse item valid #1", async (t) => {
-    const item = new testItem.class(testItem.originalItem, "example.com");
+    const item = new testItem.class(testItem.originalItem);
     await t.step(`${item.getType()} id must not empty`, () => {
       assertNotEquals(item.getId(), "");
     });
@@ -52,29 +53,34 @@ for (const testItem of list) {
 Deno.test("parseItemIdentifier #10", async () => {
   const config = await getConfig();
   const parsed = Item.parseItemIdentifier(
-    "2022_08_10_en_hn_example-com__32407873",
+    "en_hn_example-com__32407873",
   );
   assertEquals(parsed, {
     type: "hn",
-    targetSiteIdentifier: "example-com",
     id: "32407873",
-    year: "2022",
-    month: "08",
-    day: "10",
+
     language: "en",
   });
 });
 Deno.test("parseItemIdentifier #11", () => {
   const parsed = Item.parseItemIdentifier(
-    "2022_08_10_en_hn_example-com___32407873_-1223",
+    "en_hn_example-com___32407873_-1223",
   );
   assertEquals(parsed, {
     type: "hn",
-    targetSiteIdentifier: "example-com",
     id: "_32407873_-1223",
-    year: "2022",
-    month: "08",
-    day: "10",
+
     language: "en",
   });
+});
+
+Deno.test("item adapter class name equal with filename #12", () => {
+  const adapters = Object.keys(ItemAdapter);
+  for (const adapter of adapters) {
+    const adapterInstance = new ItemAdapter[adapter](
+      {} as unknown,
+      "example.com",
+    );
+    assertEquals(adapter, adapterInstance.getType());
+  }
 });
