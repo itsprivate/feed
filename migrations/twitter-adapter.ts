@@ -13,6 +13,8 @@ export default class twitter extends Item<TwitterItem> {
     if (item.retweeted_status) {
       // @ts-ignore: Unreachable code error
       tweet = item.retweeted_status;
+      tweet.localize = item.localize;
+      tweet.original_created_at = item.original_created_at;
     }
     super(tweet);
     if (item.retweeted_status) {

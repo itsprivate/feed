@@ -16,7 +16,7 @@ export default async function move() {
       )
     ) {
       if (isDev()) {
-        if (totalFiles >= DEV_MODE_HANDLED_ITEMS) {
+        if (totalFiles >= 1500) {
           log.info(`dev mode, only take ${DEV_MODE_HANDLED_ITEMS} files`);
           break;
         }
@@ -63,7 +63,7 @@ export default async function move() {
           `formated item to ${item.getFormatedPath(["stocks"])}`,
         );
       } catch (e) {
-        log.warn("ignore error when format item", e);
+        log.warn(file + " ignore error when format item", e);
       }
     }
   }

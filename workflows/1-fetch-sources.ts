@@ -134,7 +134,10 @@ export default async function fetchSources(
             reject(error);
           });
         });
-        originalJson = result;
+        // @ts-ignore: ignore quoted type
+        originalJson = result.filter((item) => {
+          return item.is_quote_status === false;
+        });
       } else {
         const originItemResult = await fetch(sourceUrl);
         originalJson = await originItemResult.json();
