@@ -40,7 +40,7 @@ for (const testItem of list) {
 
     // languatge must not empty
     await t.step(`${item.getType()} languatge must not empty`, () => {
-      assertNotEquals(item.getLanguage(), "");
+      assertNotEquals(item.getOriginalLanguage(), "");
     });
 
     // source type must not empty

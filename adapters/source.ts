@@ -60,7 +60,13 @@ export default class source extends Item<FormatedItem> {
     }
     return false;
   }
-
+  getFullTranslations(): Record<string, Record<string, string>> | undefined {
+    if (this.originalItem._translations) {
+      return this.originalItem._translations;
+    } else {
+      return undefined;
+    }
+  }
   getLinks(): Link[] {
     const type = this.getType();
     const links: Link[] = [];

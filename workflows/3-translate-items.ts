@@ -56,7 +56,6 @@ export default async function translateItems(
       if (total % 100 === 0) {
         log.info(`translated ${total} items `);
       }
-      console.log("file", file);
       const item = await readJSONFile(file) as FormatedItem;
 
       const itemInstance = new SourceItemAdapter(item);
@@ -160,7 +159,7 @@ export default async function translateItems(
 
           const value = originalTranslations[field];
           log.debug(
-            `translating ${itemInstance.getType()} ${itemInstance.getLanguage()} ${field}: ${value} `,
+            `translating ${itemInstance.getType()} ${itemInstance.getOriginalLanguage()} ${field}: ${value} `,
           );
           // set timeout, max 100s
 

@@ -78,7 +78,6 @@ export default async function buildCurrent(
       let isTagsChanged = false;
 
       for (const file of files) {
-        console.log("file", file);
         const item = await readJSONFile(file) as FormatedItem;
         const id = item["id"];
         // handle tags

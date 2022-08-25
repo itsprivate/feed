@@ -226,9 +226,9 @@ export default class Item<T> {
   }
 
   getItemIdentifier(): string {
-    return `${this.getLanguage()}_${this.getType()}__${this.getId()}`;
+    return `${this.getOriginalLanguage()}_${this.getType()}__${this.getId()}`;
   }
-  getLanguage(): string {
+  getOriginalLanguage(): string {
     return "en";
   }
   getVideo(): Video | undefined {
@@ -268,7 +268,7 @@ export default class Item<T> {
   getExternalUrl(): string | undefined {
     return undefined;
   }
-  getTranslations(): Record<string, string> {
+  getTranslation(): Record<string, string> {
     return {
       "title": this.getTitle(),
     };
@@ -277,13 +277,15 @@ export default class Item<T> {
     return undefined;
   }
   getFormatedItemSync(): FormatedItem {
+    // this function will only format the original item
+    // if you need the final formated item, please use getFeedItem()
     const externalUrl = this.getExternalUrl();
     let translations: Record<string, Record<string, string>> = {};
 
     if (this.getFullTranslations()) {
       translations = this.getFullTranslations()!;
     } else {
-      translations[this.getLanguage()] = this.getTranslations();
+      translations[this.getOriginalLanguage()] = this.getTranslation();
     }
     const image = this.getImage();
 
@@ -293,7 +295,7 @@ export default class Item<T> {
       date_published: this.getModified(),
       date_modified: this.getModified(),
       _original_published: this.getOriginalPublished(),
-      _original_language: this.getLanguage(),
+      _original_language: this.getOriginalLanguage(),
       _translations: translations,
     };
 
@@ -380,7 +382,6 @@ export default class Item<T> {
       item._original_language,
       item._original_language,
     );
-
     const translationFields = Object.keys(translationObj);
     for (const translationField of translationFields) {
       let translationValue = translationObj[translationField];
