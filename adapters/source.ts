@@ -1,4 +1,4 @@
-import { FeedItem, FormatedItem, Link } from "../interface.ts";
+import { FormatedItem, Link } from "../interface.ts";
 import Item from "../item.ts";
 export default class source extends Item<FormatedItem> {
   getOriginalPublishedDate(): Date {
@@ -8,7 +8,8 @@ export default class source extends Item<FormatedItem> {
     return this.originalItem.id as string;
   }
   getId(): string {
-    return this.originalItem.id as string;
+    const parsedId = Item.parseItemIdentifier(this.originalItem.id);
+    return parsedId.id;
   }
   getTitle(): string {
     const language = this.originalItem._original_language;
@@ -47,11 +48,21 @@ export default class source extends Item<FormatedItem> {
   getTags() {
     return this.originalItem.tags || [];
   }
+  getType(): string {
+    const id = this.getItemIdentifier();
+    const parsedId = Item.parseItemIdentifier(id);
+    return parsedId.type;
+  }
+  isText(): boolean {
+    const type = this.getType();
+    if (type === "twitter") {
+      return true;
+    }
+    return false;
+  }
 
   getLinks(): Link[] {
-    const id = this.getId();
-    const parsedId = Item.parseItemIdentifier(id);
-    const type = parsedId.type;
+    const type = this.getType();
     const links: Link[] = [];
     const externalLink = this.getExternalUrl();
     let externalLinkName = "";

@@ -43,19 +43,19 @@ export default async function moveReddit() {
         originalItem,
         "news",
       );
-      await item.beforeFormatInit();
+      await item.init();
       try {
         const itemJson = await item.getFormatedItem();
 
         // write formated item to file
         await writeJSONFile(
-          item.getFormatedPath(),
+          item.getFormatedPath(["news"]),
           itemJson,
         );
 
         total += 1;
         log.debug(
-          `formated item to ${item.getFormatedPath()}`,
+          `formated item to ${item.getFormatedPath(["news"])}`,
         );
       } catch (e) {
         log.warn("ignore error when format item", e);

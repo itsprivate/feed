@@ -52,9 +52,14 @@ export { S3, S3Bucket } from "./s3/mod.ts";
 
 // npm modules
 export { getMetadata } from "https://jspm.dev/page-metadata-parser@1.1.4";
-export { default as slug } from "https://jspm.dev/slug@6.0.0";
+// export { default as slug } from "https://jspm.dev/slug@6.0.0";
+import transliteration from "https://jspm.dev/transliteration@2.3.5";
+// @ts-ignore: npm module
+const slug = transliteration.slugify;
+export { slug };
 export { default as kebabCase } from "https://jspm.dev/lodash@4.17.21/kebabCase";
 
 export { default as mustache } from "https://jspm.dev/mustache@4.2.0";
 export { default as jsonfeedToAtom } from "https://jspm.dev/jsonfeed-to-atom@1.2.2";
 export { default as jsonfeedToRSS } from "https://jspm.dev/jsonfeed-to-rss@3.0.6";
+export { default as tweetPatch } from "https://jspm.dev/tweet-patch@2.0.5";

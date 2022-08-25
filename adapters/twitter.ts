@@ -2,6 +2,9 @@ import { Author, Video } from "../interface.ts";
 import Item from "../item.ts";
 export default class twitter extends Item<TwitterItem> {
   constructor(item: TwitterItem) {
+    if (item.quoted_status) {
+      throw new Error("Quoted tweets are not supported");
+    }
     let tweet = item;
     if (item.retweeted_status) {
       // @ts-ignore: Unreachable code error
@@ -25,18 +28,13 @@ export default class twitter extends Item<TwitterItem> {
       }
     }
 
-    // and remove other links
+    // and replace the real links
     if (tweet.entities.urls.length > 0) {
       // not for latest url
       for (let i = 0; i < tweet.entities.urls.length; i++) {
         const urlEntity = tweet.entities.urls[i];
-        if (i < tweet.entities.urls.length - 1) {
-          // replace other url with expanded url
-          title = title.replace(urlEntity.url, urlEntity.expanded_url);
-        } else {
-          // remove latest url
-          title = title.replace(urlEntity.url, "");
-        }
+        // replace other url with expanded url
+        title = title.replace(urlEntity.url, urlEntity.expanded_url);
       }
     }
 
@@ -58,10 +56,16 @@ export default class twitter extends Item<TwitterItem> {
       return tweet.entities.urls[tweet.entities.urls.length - 1].expanded_url;
     }
 
-    return this.getExternalUrl();
-  }
-  getExternalUrl(): string {
     return `https://twitter.com/${this.originalItem.user.screen_name}/status/${this.originalItem.id_str}`;
+  }
+  getExternalUrl(): string | undefined {
+    const twitterUrl =
+      `https://twitter.com/${this.originalItem.user.screen_name}/status/${this.originalItem.id_str}`;
+    if (twitterUrl === this.getUrl()) {
+      return;
+    } else {
+      return twitterUrl;
+    }
   }
   getAuthors(): Author[] {
     return [
@@ -77,7 +81,7 @@ export default class twitter extends Item<TwitterItem> {
   }
 
   getTags(): string[] {
-    return this.originalItem.entities.hashtags.map((tag) => tag.text) || [];
+    return this.getAuthors().map((author) => author.name);
   }
   getImage(): string | null {
     return this.originalItem.entities.media?.[0]?.media_url_https || null;
@@ -166,7 +170,7 @@ export interface TwitterItem {
   coordinates: null;
   place: null;
   contributors: null;
-  retweeted_status: RetweetedStatus;
+  retweeted_status?: RetweetedStatus;
   is_quote_status: boolean;
   retweet_count: number;
   favorite_count: number;
@@ -174,6 +178,7 @@ export interface TwitterItem {
   retweeted: boolean;
   lang: string;
   extended_entities: ExtendedEntities;
+  quoted_status?: RetweetedStatus;
 }
 
 export interface TwitterItemEntities {

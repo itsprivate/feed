@@ -1,11 +1,9 @@
 import { fs } from "../deps.ts";
-// import Adapter, { HnItem } from "./hn-adapter.ts";
-import Adapter, { RedditItem } from "./reddit-adapter.ts";
-
+import Adapter, { TwitterItem } from "./twitter-adapter.ts";
 import { isDev, readJSONFile, writeJSONFile } from "../util.ts";
 import log from "../log.ts";
 import { DEV_MODE_HANDLED_ITEMS } from "../constant.ts";
-export default async function moveReddit() {
+export default async function move() {
   // get all 1-raw files
   // is exists raw files folder
 
@@ -14,7 +12,7 @@ export default async function moveReddit() {
     let totalFiles = 0;
     for await (
       const entry of fs.walk(
-        "../inbox/ts-new/data/reddit-ask",
+        "../inbox/ts-new/data/tweet-stocks",
       )
     ) {
       if (isDev()) {
@@ -34,27 +32,35 @@ export default async function moveReddit() {
   let total = 0;
 
   if (files.length > 0) {
+    log.info(`total files: ${files.length}`);
     for (const file of files) {
       // if total can divide by 100
       if (total % 100 === 0) {
         log.info(`handled: ${total}`);
       }
-      const originalItem = await readJSONFile(file) as RedditItem;
+      const originalItem = await readJSONFile(file) as TwitterItem;
+      // is quoted status
+      // then contineu
+      if (originalItem.quoted_status) {
+        // quoted_status
+        continue;
+      }
       const item = new Adapter(
         originalItem,
       );
+      // await item.init();
       try {
         const itemJson = await item.getFormatedItem();
 
         // write formated item to file
         await writeJSONFile(
-          item.getFormatedPath(["ask"]),
+          item.getFormatedPath(["stocks"]),
           itemJson,
         );
 
         total += 1;
         log.debug(
-          `formated item to ${item.getFormatedPath(["ask"])}`,
+          `formated item to ${item.getFormatedPath(["stocks"])}`,
         );
       } catch (e) {
         log.warn("ignore error when format item", e);
@@ -67,5 +73,5 @@ export default async function moveReddit() {
 }
 
 if (import.meta.main) {
-  await moveReddit();
+  await move();
 }

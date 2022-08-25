@@ -54,8 +54,9 @@
       body {
         max-width: 45em;
         margin: 0 auto;
-        padding: 0 2%;
+        padding: 0;
         line-height: 1.5;
+        background-color: #fffff8;
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
           Helvetica, sans-serif;
       }
@@ -63,7 +64,7 @@
       img {
         max-width: 95%;
         max-height: 24em;
-        border-radius: 0.3em;
+        border-radius: 0.5em;
         height: auto;
       }
       video {
@@ -80,14 +81,19 @@
       }
       header{
         padding-top: 0.5em;
-        margin-bottom: 0.5em;
+        padding-left: 1em;
+        padding-right: 1em;
       }
       footer{
-        padding-bottom: 2em;
+        margin-bottom: 2em;
+        padding-left: 1em;
+        padding-right: 1em;
       }
       article {
-        margin-bottom: 1em;
+        padding: 0.5em 1em;
+        border-radius: 0.5em;
       }
+   
       .pre-line {
         white-space: pre-line;
       }
@@ -97,7 +103,6 @@
       .muted {
         color: #828282;
       }
-
       a.muted:link,a.muted:visited {
         color: #828282;
         text-decoration: none;
@@ -107,14 +112,14 @@
         text-decoration: underline;
         color: rgb(0, 102, 204);
       }
-      .secondary{
-        font-style: italic;
-      }
       .secondary a:link,.secondary a:visited {
         color: #828282;
       }
       .secondary a:hover{
         color: rgb(0, 102, 204);
+      }
+      .italic{
+        font-style: italic;
       }
       .contrast a:link,
       .contrast a:visited {
@@ -160,15 +165,17 @@
       .about:target ~ .less-about {
         display: inline;
       }
-      .entry-title{
-        font-weight: bold;
+      .bold{
+        font-weight: 500;
       }
+  
       a.entry-title:hover{
         text-decoration: none;
       }
       .mb{
         margin-bottom: 0.5em;
       }
+  
     </style>
   </head>
   <body>
@@ -227,24 +234,23 @@
         </p>
       </div>
     </header>
+    
     {{#items}}
     <article class="h-entry hentry">
       <div class="mb">
-        <a
-        class="no-underline pre-line u-url p-name entry-title"
-        href="{{{url}}}"
-        ><span>{{order}}. </span>{{{title}}}</a
-      >
+        {{#_is_text}}
+        <span class="p-name entry-title bold pre-line secondary">{{order}}. {{{_title_html}}}</span>
+        {{/_is_text}}
+        {{^_is_text}}
+        <a class="p-name entry-title bold no-underline u-url" href="{{{url}}}"><span>{{order}}. </span>{{{title}}}</a>
+        {{/_is_text}}
       </div>
-        
-
-      <div class="p-summary entry-summary secondary pre-line small">{{{content_html}}}</div>
+      <div class="p-summary entry-summary secondary pre-line small italic">{{{content_html}}}</div>
     </article>
     {{/items}}
     <footer>
       <p class="muted small">{{more_post_label}}</p>
       {{#_issue_list.0}}
-
       <details>
         <summary>{{issues_label}}</summary>
           <cite>
@@ -256,7 +262,6 @@
       {{/_issue_list.0}} 
 
       {{#_tag_list.0}}
-
       <details>
         <summary>{{tags_label}}</summary>
           <cite>
@@ -265,8 +270,9 @@
             >{{^is_last}}<span>&nbsp;&nbsp;</span>{{/is_last}} {{/_tag_list}}
           </cite>
       </details>
-      {{/_tag_list.0}} {{#_archive_list.0}}
-
+      {{/_tag_list.0}} 
+      
+      {{#_archive_list.0}}
       <details>
         <summary>{{archive_label}}</summary>
           <cite>

@@ -247,3 +247,9 @@ Deno.test("regex #22", () => {
 
   assertEquals(result![1], "18");
 });
+Deno.test("slug #23", () => {
+  assertEquals(slug("中文标签"), "zhong-wen-biao-qian");
+  assertEquals(slug("中 English 结合标签"), "zhong-english-jie-he-biao-qian");
+
+  assertEquals(slug("KidsAreFuckingStupid"), "kids-are-fucking-stupid");
+});

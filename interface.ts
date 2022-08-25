@@ -165,7 +165,8 @@ export interface FeedItem extends FormatedItem {
   summary: string;
   content_text: string;
   content_html: string;
-  _title_type?: string;
+  _is_text?: boolean;
+  _title_html: string;
 }
 export interface Type<T> extends Function {
   new (...args: unknown[]): T;

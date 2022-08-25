@@ -22,7 +22,7 @@ import {
   isMock,
   tagToUrl,
 } from "./util.ts";
-import { DOMParser, getMetadata } from "./deps.ts";
+import { DOMParser, getMetadata, tweetPatch } from "./deps.ts";
 import log from "./log.ts";
 export default class Item<T> {
   originalItem: T;
@@ -296,6 +296,7 @@ export default class Item<T> {
       _original_language: this.getLanguage(),
       _translations: translations,
     };
+
     const tags = this.getTags();
     if (tags && Array.isArray(tags) && tags.length > 0) {
       item.tags = tags;
@@ -343,6 +344,10 @@ export default class Item<T> {
     }
     return formatedItem;
   }
+  isText(): boolean {
+    // title is text
+    return false;
+  }
 
   getFeedItemSync(
     siteIdentifier: string,
@@ -352,11 +357,16 @@ export default class Item<T> {
     const formatedItem = this.getFormatedItemSync();
     const item: FeedItem = {
       title: "",
+      _title_html: "",
       summary: "",
       content_text: "",
       content_html: "",
       ...formatedItem,
     };
+    if (this.isText()) {
+      item._is_text = this.isText();
+    }
+
     const itemUrl = this.getUrl();
     const itemUrlObj = new URL(itemUrl);
     const translationObj = getItemTranslations(
@@ -387,6 +397,13 @@ export default class Item<T> {
         }`;
       }
       item[translationField as FeedItemKey] = translationValue as never;
+    }
+
+    if (this.getType() === "twitter") {
+      // @ts-ignore: npm module
+      item._title_html = tweetPatch(item.title);
+    } else {
+      item._title_html = item.title;
     }
 
     let summary = "";
@@ -423,8 +440,15 @@ export default class Item<T> {
     }
     content_html += ``;
     if (item._original_language !== language.code) {
+      let finalTitle = originalTranslationObj.title;
+      if (this.getType() === "twitter") {
+        // @ts-ignore: npm modules
+        finalTitle = tweetPatch(
+          originalTranslationObj.title,
+        );
+      }
       content_html +=
-        `<div>${originalTranslationObj.title} (<a href="${itemUrl}">${itemUrlObj.hostname}</a>)</div>`;
+        `<div>${finalTitle} (<a href="${itemUrl}">${itemUrlObj.hostname}</a>)<br>`;
       summary += `${
         formatHumanTime(
           new Date(item._original_published as string),
@@ -432,7 +456,7 @@ export default class Item<T> {
       } - ${originalTranslationObj.title}`;
     }
     content_html +=
-      `<div><a href="${itemUrl}"><time class="dt-published published" datetime="${item._original_published}">${
+      `<a href="${itemUrl}"><time class="dt-published published" datetime="${item._original_published}">${
         formatHumanTime(
           new Date(item._original_published as string),
         )

@@ -34,7 +34,7 @@ serve:
 
 .Phony: servesite
 servesite:
-	deno run -A --watch=main.ts,templates/,config.yml main.ts --stage build_site,serve_site --site devfeed
+	deno run -A --watch=main.ts,templates/,config.yml main.ts --stage build_site,serve_site --site stocks
 
 
 .Phony: site
