@@ -16,7 +16,7 @@ languages:
   ]
 translations:
   zh-Hans:
-    about_label: 关于此站
+    about_label: 关于
     subscription_label: 订阅地址
     powered_by_label: 背后的人❤️
     languages_label: 该页面其他语言
@@ -24,8 +24,11 @@ translations:
     tags_label: 所有标签
     archive_label: 历史归档
     issues_label: 往期精选
+    more_label: 更多
+    less_label: 收起
+    more_post_label: 好吧, 如果你还没看够... 以下👇
   en:
-    about_label: About this page
+    about_label: About
     subscription_label: Subscription
     powered_by_label: Made by ❤️
     languages_label: Other languages
@@ -33,6 +36,8 @@ translations:
     tags_label: All tags
     archive_label: Archive
     issues_label: Past issues
+    more_label: More
+    less_label: Less
   ja:
     about_label: このページについて
     subscription_label: 購読
@@ -42,77 +47,20 @@ translations:
     tags_label: すべてのタグ
     archive_label: アーカイブ
     issues_label: 過去の問題
+    more_label: もっと
+    less_label: 閉じる
 archive:
   port: 9000
   siteIdentifier: i
   tags: []
 
-sources:
-  - url: https://news.google.com/rss/topics/CAAqJggKIiBDQkFTRWdvSUwyMHZNRGx1YlY4U0FtVnVHZ0pWVXlnQVAB?hl=en-US&gl=US&ceid=US:en
-    type: googlenews
-    id: source-google-news
-    rules:
-      - type: limit
-        value: 2
-  - url: https://hn.algolia.com/api/v1/search_by_date?tags=front_page&hitsPerPage=50
-    itemsPath: hits
-    type: hn
-    id: source-hackernews-index
-  - url: http://hn.algolia.com/api/v1/search_by_date?tags=(story,poll,show_hn,ask_hn)&numericFilters=points>=200&hitsPerPage=50
-    itemsPath: hits
-    type: hn
-    tags:
-      - source-hackernews-best
-  - url: https://hn.algolia.com/api/v1/search_by_date?tags=(ask_hn)&hitsPerPage=50
-    itemsPath: hits
-    type: hn
-    id: source-hackernews-ask
-  - url: https://hn.algolia.com/api/v1/search_by_date?tags=(show_hn)&hitsPerPage=50
-    itemsPath: hits
-    type: hn
-    id: source-hackernews-show
-  - url: https://www.reddit.com/r/all/top/.json?raw_json=1
-    itemsPath: data.children
-    type: reddit
-    id: source-reddit-top
-    rules:
-      - type: greaterEqual
-        key: data.score
-        value: "75000"
-  - url: https://www.reddit.com/r/AskReddit/top/.json?raw_json=1
-    itemsPath: data.children
-    type: reddit
-    id: source-reddit-ask
-    rules:
-      - type: greaterEqual
-        key: data.score
-        value: "1000"
-  - url:
-      - https://www.reddit.com/r/AskReddit/top/.json?raw_json=1
-      - https://www.reddit.com/r/Ask_Politics/top/.json?raw_json=1
-      - https://www.reddit.com/r/AskHistorians/top/.json?raw_json=1
-      - https://www.reddit.com/r/AskWomen/top/.json?raw_json=1
-      - https://www.reddit.com/r/TooAfraidToAsk/top/.json?raw_json=1
-      - https://www.reddit.com/r/NoStupidQuestions/top/.json?raw_json=1
-      - https://www.reddit.com/r/TrueAskReddit/top/.json?raw_json=1
-      - https://www.reddit.com/r/askscience/top/.json?raw_json=1
-      - https://www.reddit.com/r/askphilosophy/top/.json?raw_json=1
-    itemsPath: data.children
-    id: source-reddit-ask
-    type: reddit
-    rules:
-      - type: greaterEqual
-        key: data.score
-        value: "100"
-  - url: nikitonsky
-    type: twitter
-    id: source-reddit-stocks
 sites:
   devfeed:
     redirect: true
     port: 8000
-    test: true
-    tags: []
+    dev: true
+    tags:
+      - source-hackernews-index
     archive: false
     translations:
       "zh-Hans":
@@ -208,6 +156,9 @@ sites:
       - reddit
       - finance
       - source-reddit-stocks
+      - source-twitter-stocks
+      # - source-reddit-wallstreetbets
+      # - source-reddit-bogleheads
     translations:
       "zh-Hans":
         title: "国外股市热门"
@@ -229,3 +180,96 @@ sites:
         title: "Buzzing on World News"
         description: "See what's buzzing on the news in your native language"
         keywords: "Buzzing News, Buzzing News Feed"
+
+sources:
+  - url: https://news.google.com/rss/topics/CAAqJggKIiBDQkFTRWdvSUwyMHZNRGx1YlY4U0FtVnVHZ0pWVXlnQVAB?hl=en-US&gl=US&ceid=US:en
+    type: googlenews
+    id: source-google-news
+    rules:
+      - type: limit
+        value: "2"
+  - url: https://hn.algolia.com/api/v1/search_by_date?tags=front_page&hitsPerPage=50
+    type: hn
+    id: source-hackernews-index
+  - url: http://hn.algolia.com/api/v1/search_by_date?tags=(story,poll,show_hn,ask_hn)&numericFilters=points>=200&hitsPerPage=50
+    type: hn
+    id: source-hackernews-best
+  - url: https://hn.algolia.com/api/v1/search_by_date?tags=(ask_hn)&hitsPerPage=50
+    type: hn
+    id: source-hackernews-ask
+  - url: https://hn.algolia.com/api/v1/search_by_date?tags=(show_hn)&hitsPerPage=50
+    type: hn
+    id: source-hackernews-show
+  - url: https://www.reddit.com/r/all/top/.json?raw_json=1
+    type: reddit
+    id: source-reddit-top
+    rules:
+      - type: greaterEqual
+        key: getWeightedScore
+        value: "85000"
+  - url: https://www.reddit.com/r/AskReddit/top/.json?raw_json=1
+    type: reddit
+    id: source-reddit-ask
+    rules:
+      - type: greaterEqual
+        key: getWeightedScore
+        value: "70000"
+  - url:
+      - https://www.reddit.com/r/TooAfraidToAsk/top/.json?raw_json=1
+      - https://www.reddit.com/r/NoStupidQuestions/top/.json?raw_json=1
+    type: reddit
+    id: source-reddit-ask
+    rules:
+      - type: greaterEqual
+        key: getWeightedScore
+        value: "45000"
+  - url:
+      - https://www.reddit.com/r/Ask_Politics/top/.json?raw_json=1
+      - https://www.reddit.com/r/AskHistorians/top/.json?raw_json=1
+      - https://www.reddit.com/r/AskWomen/top/.json?raw_json=1
+      - https://www.reddit.com/r/TrueAskReddit/top/.json?raw_json=1
+      - https://www.reddit.com/r/askscience/top/.json?raw_json=1
+      - https://www.reddit.com/r/askphilosophy/top/.json?raw_json=1
+    id: source-reddit-ask
+    type: reddit
+    rules:
+      - type: greaterEqual
+        key: getWeightedScore
+        value: "300"
+  - url:
+      - charliebilello
+      - Stocktwits
+      - MarketWatch
+      - The_Real_Fly
+      - awealthofcs
+      - michaelbatnick
+      - InvestmentTalkk
+    type: twitter
+    id: source-twitter-stocks
+    rules:
+      - type: greaterEqual
+        key: getWeightedScore
+        value: "400"
+  - url: https://www.reddit.com/r/wallstreetbets/top/.json?raw_json=1
+    type: reddit
+    id: source-reddit-wallstreetbets
+    rules:
+      - type: greaterEqual
+        key: getWeightedScore
+        value: "4000"
+  - url: https://www.reddit.com/r/Bogleheads/top/.json?raw_json=1
+    type: reddit
+    id: source-reddit-bogleheads
+    rules:
+      - type: greaterEqual
+        key: getWeightedScore
+        value: "15"
+  - url:
+      - https://www.reddit.com/r/stocks/top/.json?raw_json=1
+      - https://www.reddit.com/r/investing/top/.json?raw_json=1
+    type: reddit
+    id: source-reddit-stocks
+    rules:
+      - type: greaterEqual
+        key: getWeightedScore
+        value: "40"

@@ -1,4 +1,4 @@
-import { ItemsJson, Rule, RunOptions, Source, Task } from "../interface.ts";
+import { ItemsJson, RunOptions, Source, Task } from "../interface.ts";
 import adapters from "../adapters/mod.ts";
 import {
   get,
@@ -7,6 +7,7 @@ import {
   readJSONFile,
   writeJSONFile,
 } from "../util.ts";
+import filterByRules from "../filter-by-rules.ts";
 import { fs, parseFeed, SimpleTwitter } from "../deps.ts";
 import log from "../log.ts";
 export default async function fetchSources(
@@ -120,7 +121,7 @@ export default async function fetchSources(
           include_rts: true,
           tweet_mode: "extended",
           // since_id,
-          count: 200,
+          count: 100,
         };
         const result = await new Promise((resolve, reject) => {
           simpleTwitter.get("statuses/user_timeline", params, function (
@@ -138,115 +139,56 @@ export default async function fetchSources(
         const originItemResult = await fetch(sourceUrl);
         originalJson = await originItemResult.json();
       }
-
       // get items
       let originalItems = originalJson;
-      if (itemsPath) {
-        originalItems = get(originalJson, itemsPath) as Record<
+      let theItemsPath = itemsPath;
+      if (!itemsPath) {
+        // auto itemsPath
+        if (sourceType === "reddit") {
+          theItemsPath = "data.children";
+        } else if (sourceType === "hn") {
+          theItemsPath = "hits";
+        }
+      }
+
+      if (theItemsPath) {
+        originalItems = get(originalJson, theItemsPath) as Record<
           string,
           unknown
         >[];
       }
 
       log.info(
-        `fetched ${originalItems.length} items from ${sourceId} `,
+        `fetched ${originalItems.length} raw items from ${sourceId} `,
+      );
+      originalItems = filterByRules(
+        // @ts-ignore: hard to type
+        originalItems.map((originalItem) =>
+          new (adapters[sourceType])(
+            originalItem,
+          )
+        ),
+        rules,
+      );
+      log.info(
+        `filterd ${originalItems.length} items by rules`,
       );
 
-      let limitRule: Rule | undefined;
-      for (const rule of rules) {
-        if (rule.type === "limit") {
-          limitRule = rule;
-          break;
+      // resort items from old to new , cause we need to keep the order of items
+      // @ts-ignore: hard to type
+      originalItems = (originalItems).sort((a, b) => {
+        const aDate = a.getOriginalPublishedDate();
+        const bDate = b.getOriginalPublishedDate();
+        if (aDate > bDate) {
+          return -1;
         }
-      }
-
-      if (limitRule) {
-        originalItems = originalItems.slice(0, Number(limitRule.value));
-      }
-
-      for (const originalItem of originalItems) {
-        // check rules
-        let isAllRulesFine = true;
-        for (const rule of rules) {
-          const { key: thekey, value: theValue, type } = rule;
-          if (!thekey) {
-            continue;
-          }
-          const key = thekey!;
-          const originalValue = get(originalItem, key);
-          const value = theValue as string;
-          if (type === "greater") {
-            if (Number(originalValue) <= Number(value)) {
-              isAllRulesFine = false;
-              break;
-            }
-          } else if (type === "equal") {
-            if (originalValue !== value) {
-              isAllRulesFine = false;
-              break;
-            }
-          } else if (type === "notEqual") {
-            if (originalValue === value) {
-              isAllRulesFine = false;
-              break;
-            }
-          } else if (type === "include") {
-            if (!(originalValue as string[]).includes(value)) {
-              isAllRulesFine = false;
-              break;
-            }
-          } else if (type === "notInclude") {
-            if ((originalValue as string[]).includes(value)) {
-              isAllRulesFine = false;
-              break;
-            }
-          } else if (type === "notExist") {
-            if (originalValue) {
-              isAllRulesFine = false;
-              break;
-            }
-          } else if (type === "exist") {
-            if (!originalValue) {
-              isAllRulesFine = false;
-              break;
-            }
-          } else if (type === "notMatch") {
-            if ((originalValue as string).match(value)) {
-              isAllRulesFine = false;
-              break;
-            }
-          } else if (type === "match") {
-            if (!(originalValue as string).match(value)) {
-              isAllRulesFine = false;
-              break;
-            }
-          } else if (type === "greaterEqual") {
-            if (Number(originalValue) < Number(value)) {
-              isAllRulesFine = false;
-              break;
-            }
-          } else if (type === "less") {
-            if (Number(originalValue) >= Number(value)) {
-              isAllRulesFine = false;
-              break;
-            }
-          } else if (type === "lessEqual") {
-            if (Number(originalValue) > Number(value)) {
-              isAllRulesFine = false;
-              break;
-            }
-          } else {
-            throw new Error(`unknown rule type ${type}`);
-          }
+        if (aDate < bDate) {
+          return 1;
         }
-        if (!isAllRulesFine) {
-          continue;
-        }
+        return 0;
+      });
 
-        // parse item to formated item
-        const item = new (adapters[sourceType])(
-          originalItem,
-        );
+      for (const item of originalItems) {
         await item.init();
 
         if (!currentKeysMap.get(item.getItemIdentifier())) {

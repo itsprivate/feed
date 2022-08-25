@@ -72,140 +72,18 @@ export default function itemsToFeed(
   const items: FeedItem[] = [];
   currentItemsJsonKeysSorted.forEach((key) => {
     const originalItem = currentItemsJson.items[key];
-    const item: FeedItem = {
-      title: "",
-      summary: "",
-      content_text: "",
-      content_html: "",
-      ...originalItem,
-    };
+
     // parse key to get id, type
-    const parsedIdentifier = Item.parseItemIdentifier(key);
     const itemInstance = new SourceItemAdapter(
-      item,
+      originalItem,
+    );
+    const feedItem = itemInstance.getFeedItemSync(
       siteIdentifier,
-    );
-    const itemUrl = itemInstance.getUrl();
-    const itemUrlObj = new URL(itemUrl);
-    const translationObj = getItemTranslations(
-      item._translations || {},
-      language.code,
-      item._original_language,
+      language,
+      config,
     );
 
-    const originalTranslationObj = getItemTranslations(
-      item._translations || {},
-      item._original_language,
-      item._original_language,
-    );
-
-    const translationFields = Object.keys(translationObj);
-    for (const translationField of translationFields) {
-      let translationValue = translationObj[translationField];
-      // is has prefix
-      if (item[`_${translationField}_prefix` as ItemKey]) {
-        translationValue = `${
-          item[`_${translationField}_prefix` as ItemKey]
-        }${translationValue}`;
-      }
-      // is has suffix
-      if (item[`_${translationField}_suffix` as ItemKey]) {
-        translationValue = `${translationValue}${
-          item[`_${translationField}_suffix` as ItemKey]
-        }`;
-      }
-      item.title = "1";
-      item[translationField as FeedItemKey] = translationValue as never;
-    }
-
-    let summary = "";
-
-    let content_html = "";
-    if (item._video) {
-      const sources = item._video.sources;
-      const height = item._video.height;
-      const width = item._video.width;
-      const poster = item._video.poster;
-      content_html = `<video playsinline controls preload="none"`;
-      if (width) {
-        content_html += ` width="${width}"`;
-      }
-      if (height) {
-        content_html += ` height="${height}"`;
-      }
-      if (poster) {
-        content_html += ` poster="${poster}"`;
-      }
-
-      content_html += `>`;
-      for (const source of sources) {
-        content_html += `<source src="${source.url}"`;
-        if (source.type) {
-          content_html += ` type="${source.type}"`;
-        }
-        content_html += `>`;
-      }
-      content_html += "your browser does not support the video tag.</video>";
-    } else if (item.image) {
-      content_html += `<img class="u-photo" src="${item.image}" alt="image">`;
-    }
-    content_html += `<div>`;
-    if (item._original_language !== language.code) {
-      content_html +=
-        ` ${originalTranslationObj.title} (<a href="${itemUrlObj.protocol}//${itemUrlObj.hostname}">${itemUrlObj.hostname}</a>)`;
-      summary += `${
-        formatHumanTime(
-          new Date(item._original_published as string),
-        )
-      } - ${originalTranslationObj.title}`;
-    }
-    content_html +=
-      `<p><cite><a href="${itemUrl}"><time class="dt-published published" datetime="${item._original_published}">${
-        formatHumanTime(
-          new Date(item._original_published as string),
-        )
-      }</time></a>&nbsp;&nbsp;`;
-
-    let index = 0;
-
-    // add links
-    if (itemInstance.getLinks().length > 0) {
-      for (const link of itemInstance.getLinks()) {
-        const isGreaterFirst = index >= 1;
-        const linkName = currentTranslations[link.name] ??
-          link.name;
-        summary += `${linkName}: ${link.url}\n`;
-        content_html += `${
-          isGreaterFirst ? "&nbsp;&nbsp;" : ""
-        }<a href="${link.url}">${linkName}</a>`;
-        index++;
-      }
-    }
-
-    // add tags
-    if (item.tags && Array.isArray(item.tags)) {
-      for (const tag of item.tags) {
-        const isGreaterFirst = index >= 1;
-        summary += ` #${tag}`;
-        content_html += `${isGreaterFirst ? "&nbsp;&nbsp;" : ""}<a href="${
-          tagToUrl(tag, siteIdentifier, language, config)
-        }">#${tag}</a>`;
-        index++;
-      }
-    }
-    content_html += "</cite></p></div>";
-
-    item.summary = summary;
-    item.content_text = summary;
-    item.content_html = content_html;
-    // add feed 1.0 adapter author
-    if (
-      item.authors && Array.isArray(item.authors) &&
-      item.authors.length > 0
-    ) {
-      item.author = item.authors[0];
-    }
-    items.push(item);
+    items.push(feedItem);
   });
   const homepageIdentifier = options?.isArchive
     ? config.archive.siteIdentifier

@@ -95,3 +95,4 @@ make createsite site=ask
 - [x] archive backup
 - [ ] current backup
 - [ ] add links meta
+- [ ] relative links for most links

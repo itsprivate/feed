@@ -19,6 +19,10 @@ export default async function generateRedirects(
     const targetPrefix =
       `https://${archiveDomain}.${rootDomain}/${language.prefix}${siteIdentifier}`;
 
+    // generate rss.xml to feed.xml
+
+    redirects += `*/rss.xml */feed.xml 302\n`;
+
     // generate tags
     redirects += `/${language.prefix}tags/* ${targetPrefix}/tags/:splat 302\n`;
 

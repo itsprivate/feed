@@ -1,4 +1,4 @@
-import { jsonfeedToRSS, path } from "../deps.ts";
+import { jsonfeedToAtom, jsonfeedToRSS, path } from "../deps.ts";
 import { ItemsJson, RunOptions } from "../interface.ts";
 import itemsToFeed from "../items-to-feed.ts";
 import {
@@ -85,22 +85,23 @@ export default async function buildSite(options: RunOptions) {
         // no need
         // @ts-ignore: npm module
         // const atomOutput = jsonfeedToAtom(feedJson);
-        // // write to dist file
+        // write to dist file
         // const atomPath = getDistFilePath(
         //   siteIdentifier,
         //   `${language.prefix}atom.xml`,
         // );
         // await writeTextFile(atomPath, atomOutput);
 
-        // build rss.xml
+        // build feed.xml
         // @ts-ignore: npm module
         const rssOutput = jsonfeedToRSS(feedJson, {
           language: feedJson.language,
         });
+        // const rssOutput = "";
         // write to dist file
         const rssPath = getDistFilePath(
           siteIdentifier,
-          `${language.prefix}rss.xml`,
+          `${language.prefix}feed.xml`,
         );
         await writeTextFile(rssPath, rssOutput);
 

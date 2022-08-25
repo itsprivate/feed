@@ -76,7 +76,7 @@ export const getFeedSiteIdentifiers = (config: Config) => {
   const keys = Object.keys(sitesMap);
   const siteIdentifiers = keys.filter((key) => {
     const site = sitesMap[key];
-    return !(site.test);
+    return !(site.dev);
   });
   return siteIdentifiers;
 };
@@ -284,7 +284,7 @@ export const siteIdentifierToUrl = (
   }
 };
 export const feedjsonUrlToRssUrl = (url: string) => {
-  return url.replace("/feed.json", "/rss.xml");
+  return url.replace("/feed.json", "/feed.xml");
 };
 export const urlToLanguageUrl = (url: string, languagePrefix: string) => {
   const urlInfo = getUrlLanguage(url);
@@ -729,7 +729,7 @@ export async function getFilesByTargetSiteIdentifiers(
 ): Promise<FilteredFile> {
   const sites = targetSiteIdentifiers || [];
   const groups: Record<string, string[]> = {};
-  const files: string[] = [];
+  let files: string[] = [];
   const siteTotalFiles: Record<string, number> = {};
   const filteredSites: string[] = [];
   for await (const entry of fs.walk(dirPath)) {
@@ -745,7 +745,7 @@ export async function getFilesByTargetSiteIdentifiers(
 
           if (isDev()) {
             if (siteTotalFiles[siteIdentifier] >= DEV_MODE_HANDLED_ITEMS) {
-              log.info(`dev mode, only take ${DEV_MODE_HANDLED_ITEMS} files`);
+              // log.info(`dev mode, only take ${DEV_MODE_HANDLED_ITEMS} files`);
               break;
             }
           }
@@ -762,6 +762,8 @@ export async function getFilesByTargetSiteIdentifiers(
       }
     }
   }
+  // files need to unique
+  files = Array.from(new Set(files));
   return {
     files: files,
     targetSiteIdentifiers: filteredSites,

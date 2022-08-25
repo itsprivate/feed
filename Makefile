@@ -32,6 +32,11 @@ prod-buildfromformat:
 serve:
 	deno run -A --watch=main.ts,templates/,config.yml main.ts --stage build_site,serve_site
 
+.Phony: servesite
+servesite:
+	deno run -A --watch=main.ts,templates/,config.yml main.ts --stage build_site,serve_site --site devfeed
+
+
 .Phony: site
 site:
 	deno run -A --watch=main.ts,templates/,config.yml main.ts --stage format,translate,build_current,archive,build_site,serve_site --site $(site)
@@ -64,8 +69,8 @@ format:
 formatall:
 	deno run -A main.ts --stage format
 
-.Phony: archive
-archive:
+.Phony: archivesite
+archivesite:
 	deno run -A main.ts --stage archive --site devfeed
 
 .Phony: tr
@@ -83,7 +88,7 @@ buildcurrent:
 
 .Phony: dev
 dev:
-	wrangler pages dev public/reddit
+	wrangler pages dev dev-public/${site}
 
 .Phony: install
 install:

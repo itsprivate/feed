@@ -129,7 +129,7 @@ export default async function serveSite(port = 8000) {
               },
             }),
           );
-        } else if (pageType === "rss.xml") {
+        } else if (pageType === "feed.xml") {
           // @ts-ignore: npm module
           const rssOutput = jsonfeedToRSS(feedjson, {
             language: feedjson.language,

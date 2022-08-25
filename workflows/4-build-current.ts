@@ -8,11 +8,9 @@ import {
   getCurrentToBeArchivedItemsFilePath,
   getDataTranslatedPath,
   getFilesByTargetSiteIdentifiers,
-  isDev,
   loadS3ArchiveFile,
   readJSONFile,
   resortArchiveKeys,
-  siteIdentifierToPath,
   slug,
   weekOfYear,
   writeJSONFile,
@@ -25,7 +23,6 @@ export default async function buildCurrent(
 ) {
   // get all 3-translated files
   // is exists translated files folder
-  const config = options.config;
   // ensure folder exists
   await fs.ensureDir(getDataTranslatedPath());
   const sites = options.siteIdentifiers || [];
@@ -34,6 +31,7 @@ export default async function buildCurrent(
       getDataTranslatedPath(),
       sites,
     );
+  const filesNeedToBeDeleted = new Set<string>();
   for (const siteIdentifier of targetSiteIdentifiers) {
     const files = groups[siteIdentifier] || [];
     const siteConfig = options.config.sites[siteIdentifier];
@@ -80,6 +78,7 @@ export default async function buildCurrent(
       let isTagsChanged = false;
 
       for (const file of files) {
+        console.log("file", file);
         const item = await readJSONFile(file) as FormatedItem;
         const id = item["id"];
         // handle tags
@@ -194,9 +193,9 @@ export default async function buildCurrent(
           }
         }
         // delete old file
-        if (!isDev()) {
-          await Deno.remove(file);
-        }
+        // note: old file may use by other site, so we can not delete it now
+        // just put it to set of files to be deleted
+        filesNeedToBeDeleted.add(file);
       }
       if (isTagsChanged) {
         currentItemsJson.tags = currentTags;
@@ -245,6 +244,10 @@ export default async function buildCurrent(
         currentToBeArchivedItemsJson = null;
       }
     }
+  }
+  // delete old files
+  for (const file of filesNeedToBeDeleted) {
+    await Deno.remove(file);
   }
 }
 const exists = async (filename: string): Promise<boolean> => {

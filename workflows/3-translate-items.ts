@@ -56,9 +56,8 @@ export default async function translateItems(
       if (total % 100 === 0) {
         log.info(`translated ${total} items `);
       }
-      const item = JSON.parse(
-        await Deno.readTextFile(file),
-      ) as FormatedItem;
+      console.log("file", file);
+      const item = await readJSONFile(file) as FormatedItem;
 
       const itemInstance = new SourceItemAdapter(item);
       const originalTranslations = (item._translations
@@ -194,9 +193,8 @@ export default async function translateItems(
         translatedJson,
       );
       // remove formated file
-      if (!isDev()) {
-        await Deno.remove(file);
-      }
+      await Deno.remove(file);
+
       total += 1;
     }
 

@@ -1,0 +1,176 @@
+{
+  "created_at": "Tue Aug 23 15:37:02 +0000 2022",
+  "id": 1562101617742282800,
+  "id_str": "1562101617742282752",
+  "full_text": "Americans spent more time watching streaming services than Cable or Broadcast TV in July, the first time that's ever happened.\n\nhttps://t.co/pCAhAqBOuT https://t.co/sahIB02iuq",
+  "truncated": false,
+  "display_text_range": [0, 151],
+  "entities": {
+    "hashtags": [],
+    "symbols": [],
+    "user_mentions": [],
+    "urls": [
+      {
+        "url": "https://t.co/pCAhAqBOuT",
+        "expanded_url": "https://www.wsj.com/articles/americans-spent-more-time-streaming-than-watching-cable-tv-in-julya-first-11660827184",
+        "display_url": "wsj.com/articles/ameri…",
+        "indices": [128, 151]
+      }
+    ],
+    "media": [
+      {
+        "id": 1562100844509761500,
+        "id_str": "1562100844509761537",
+        "indices": [152, 175],
+        "media_url": "http://pbs.twimg.com/media/Fa2ycRRXkAEuhtN.png",
+        "media_url_https": "https://pbs.twimg.com/media/Fa2ycRRXkAEuhtN.png",
+        "url": "https://t.co/sahIB02iuq",
+        "display_url": "pic.twitter.com/sahIB02iuq",
+        "expanded_url": "https://twitter.com/charliebilello/status/1562101617742282752/photo/1",
+        "type": "photo",
+        "sizes": {
+          "small": {
+            "w": 349,
+            "h": 467,
+            "resize": "fit"
+          },
+          "medium": {
+            "w": 349,
+            "h": 467,
+            "resize": "fit"
+          },
+          "large": {
+            "w": 349,
+            "h": 467,
+            "resize": "fit"
+          },
+          "thumb": {
+            "w": 150,
+            "h": 150,
+            "resize": "crop"
+          }
+        }
+      }
+    ]
+  },
+  "extended_entities": {
+    "media": [
+      {
+        "id": 1562100844509761500,
+        "id_str": "1562100844509761537",
+        "indices": [152, 175],
+        "media_url": "http://pbs.twimg.com/media/Fa2ycRRXkAEuhtN.png",
+        "media_url_https": "https://pbs.twimg.com/media/Fa2ycRRXkAEuhtN.png",
+        "url": "https://t.co/sahIB02iuq",
+        "display_url": "pic.twitter.com/sahIB02iuq",
+        "expanded_url": "https://twitter.com/charliebilello/status/1562101617742282752/photo/1",
+        "type": "photo",
+        "sizes": {
+          "small": {
+            "w": 349,
+            "h": 467,
+            "resize": "fit"
+          },
+          "medium": {
+            "w": 349,
+            "h": 467,
+            "resize": "fit"
+          },
+          "large": {
+            "w": 349,
+            "h": 467,
+            "resize": "fit"
+          },
+          "thumb": {
+            "w": 150,
+            "h": 150,
+            "resize": "crop"
+          }
+        }
+      }
+    ]
+  },
+  "source": "<a href=\"https://mobile.twitter.com\" rel=\"nofollow\">Twitter Web App</a>",
+  "in_reply_to_status_id": null,
+  "in_reply_to_status_id_str": null,
+  "in_reply_to_user_id": null,
+  "in_reply_to_user_id_str": null,
+  "in_reply_to_screen_name": null,
+  "user": {
+    "id": 1413027896,
+    "id_str": "1413027896",
+    "name": "Charlie Bilello",
+    "screen_name": "charliebilello",
+    "location": "Join free newsletter here...",
+    "description": "Founder and CEO of Compound Capital Advisors. Investor | Writer | Reader | Thinker | Sharing ideas that compound. https://t.co/jPwaIAthJO",
+    "url": "https://t.co/KCPKL3DLxv",
+    "entities": {
+      "url": {
+        "urls": [
+          {
+            "url": "https://t.co/KCPKL3DLxv",
+            "expanded_url": "https://compoundadvisors.com/newsletter",
+            "display_url": "compoundadvisors.com/newsletter",
+            "indices": [0, 23]
+          }
+        ]
+      },
+      "description": {
+        "urls": [
+          {
+            "url": "https://t.co/jPwaIAthJO",
+            "expanded_url": "http://Compound.blog",
+            "display_url": "Compound.blog",
+            "indices": [114, 137]
+          }
+        ]
+      }
+    },
+    "protected": false,
+    "followers_count": 458163,
+    "friends_count": 121,
+    "listed_count": 8092,
+    "created_at": "Wed May 08 14:41:31 +0000 2013",
+    "favourites_count": 2510,
+    "utc_offset": null,
+    "time_zone": null,
+    "geo_enabled": false,
+    "verified": true,
+    "statuses_count": 25421,
+    "lang": null,
+    "contributors_enabled": false,
+    "is_translator": false,
+    "is_translation_enabled": false,
+    "profile_background_color": "050505",
+    "profile_background_image_url": "http://abs.twimg.com/images/themes/theme1/bg.png",
+    "profile_background_image_url_https": "https://abs.twimg.com/images/themes/theme1/bg.png",
+    "profile_background_tile": false,
+    "profile_image_url": "http://pbs.twimg.com/profile_images/1207655488168574976/N0sQdj76_normal.png",
+    "profile_image_url_https": "https://pbs.twimg.com/profile_images/1207655488168574976/N0sQdj76_normal.png",
+    "profile_banner_url": "https://pbs.twimg.com/profile_banners/1413027896/1631892313",
+    "profile_link_color": "061014",
+    "profile_sidebar_border_color": "FFFFFF",
+    "profile_sidebar_fill_color": "DDEEF6",
+    "profile_text_color": "333333",
+    "profile_use_background_image": true,
+    "has_extended_profile": false,
+    "default_profile": false,
+    "default_profile_image": false,
+    "following": null,
+    "follow_request_sent": null,
+    "notifications": null,
+    "translator_type": "none",
+    "withheld_in_countries": []
+  },
+  "geo": null,
+  "coordinates": null,
+  "place": null,
+  "contributors": null,
+  "is_quote_status": false,
+  "retweet_count": 61,
+  "favorite_count": 235,
+  "favorited": false,
+  "retweeted": false,
+  "possibly_sensitive": false,
+  "lang": "en"
+}

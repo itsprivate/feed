@@ -1,19 +1,26 @@
 import {
   Author,
+  Config,
+  FeedItem,
+  FeedItemKey,
   FormatedItem,
+  Language,
   Link,
   ParsedFilename,
   Video,
 } from "./interface.ts";
 import {
+  formatHumanTime,
+  getCurrentTranslations,
   getDataFormatedPath,
   getDataRawPath,
   getDataTranslatedPath,
   getFullDay,
   getFullMonth,
   getFullYear,
+  getItemTranslations,
   isMock,
-  siteIdentifierToPath,
+  tagToUrl,
 } from "./util.ts";
 import { DOMParser, getMetadata } from "./deps.ts";
 import log from "./log.ts";
@@ -121,6 +128,12 @@ export default class Item<T> {
   }
   getTitleSuffix(): string {
     // this will not be translated
+    return "";
+  }
+  getTitleAddition(): string {
+    // this will not be translated
+    // and will not be displayed in title
+    // only in description
     return "";
   }
   getUrl(): string {
@@ -236,6 +249,9 @@ export default class Item<T> {
   getScore(): number {
     return 0;
   }
+  getWeightedScore(): number {
+    return this.getNumComments() * 2 + this.getScore();
+  }
   getNumComments(): number {
     return 0;
   }
@@ -260,7 +276,7 @@ export default class Item<T> {
   getFullTranslations(): Record<string, Record<string, string>> | undefined {
     return undefined;
   }
-  async getFormatedItem(): Promise<FormatedItem> {
+  getFormatedItemSync(): FormatedItem {
     const externalUrl = this.getExternalUrl();
     let translations: Record<string, Record<string, string>> = {};
 
@@ -269,11 +285,8 @@ export default class Item<T> {
     } else {
       translations[this.getLanguage()] = this.getTranslations();
     }
-    let image = this.getImage();
-    if (image === undefined) {
-      await this.tryToLoadImage();
-      image = this.image;
-    }
+    const image = this.getImage();
+
     const item: FormatedItem = {
       id: this.getItemIdentifier(),
       url: this.getUrl(),
@@ -318,6 +331,157 @@ export default class Item<T> {
     if (externalUrl) {
       item.external_url = externalUrl;
     }
+    return item;
+  }
+  async getFormatedItem(): Promise<FormatedItem> {
+    const formatedItem = this.getFormatedItemSync();
+    if (formatedItem.image === undefined) {
+      await this.tryToLoadImage();
+      if (this.image) {
+        formatedItem.image = this.image;
+      }
+    }
+    return formatedItem;
+  }
+
+  getFeedItemSync(
+    siteIdentifier: string,
+    language: Language,
+    config: Config,
+  ): FeedItem {
+    const formatedItem = this.getFormatedItemSync();
+    const item: FeedItem = {
+      title: "",
+      summary: "",
+      content_text: "",
+      content_html: "",
+      ...formatedItem,
+    };
+    const itemUrl = this.getUrl();
+    const itemUrlObj = new URL(itemUrl);
+    const translationObj = getItemTranslations(
+      item._translations || {},
+      language.code,
+      item._original_language,
+    );
+
+    const originalTranslationObj = getItemTranslations(
+      item._translations || {},
+      item._original_language,
+      item._original_language,
+    );
+
+    const translationFields = Object.keys(translationObj);
+    for (const translationField of translationFields) {
+      let translationValue = translationObj[translationField];
+      // is has prefix
+      if (item[`_${translationField}_prefix` as FeedItemKey]) {
+        translationValue = `${
+          item[`_${translationField}_prefix` as FeedItemKey]
+        }${translationValue}`;
+      }
+      // is has suffix
+      if (item[`_${translationField}_suffix` as FeedItemKey]) {
+        translationValue = `${translationValue}${
+          item[`_${translationField}_suffix` as FeedItemKey]
+        }`;
+      }
+      item[translationField as FeedItemKey] = translationValue as never;
+    }
+
+    let summary = "";
+
+    let content_html = "";
+    if (item._video) {
+      const sources = item._video.sources;
+      const height = item._video.height;
+      const width = item._video.width;
+      const poster = item._video.poster;
+      content_html = `<video playsinline controls preload="none"`;
+      if (width) {
+        content_html += ` width="${width}"`;
+      }
+      if (height) {
+        content_html += ` height="${height}"`;
+      }
+      if (poster) {
+        content_html += ` poster="${poster}"`;
+      }
+
+      content_html += `>`;
+      for (const source of sources) {
+        content_html += `<source src="${source.url}"`;
+        if (source.type) {
+          content_html += ` type="${source.type}"`;
+        }
+        content_html += `>`;
+      }
+      content_html += "your browser does not support the video tag.</video>";
+    } else if (item.image) {
+      content_html +=
+        `<div><img class="u-photo" src="${item.image}" alt="image"></div>`;
+    }
+    content_html += ``;
+    if (item._original_language !== language.code) {
+      content_html +=
+        `<div>${originalTranslationObj.title} (<a href="${itemUrl}">${itemUrlObj.hostname}</a>)</div>`;
+      summary += `${
+        formatHumanTime(
+          new Date(item._original_published as string),
+        )
+      } - ${originalTranslationObj.title}`;
+    }
+    content_html +=
+      `<div><a href="${itemUrl}"><time class="dt-published published" datetime="${item._original_published}">${
+        formatHumanTime(
+          new Date(item._original_published as string),
+        )
+      }</time></a>&nbsp;&nbsp;`;
+
+    let index = 0;
+    const currentTranslations = getCurrentTranslations(
+      siteIdentifier,
+      language.code,
+      config,
+    );
+    // add links
+    if (this.getLinks().length > 0) {
+      for (const link of this.getLinks()) {
+        const isGreaterFirst = index >= 1;
+        const linkName = currentTranslations[link.name] ??
+          link.name;
+        summary += `${linkName}: ${link.url}\n`;
+        content_html += `${
+          isGreaterFirst ? "&nbsp;&nbsp;" : ""
+        }<a href="${link.url}">${linkName}</a>`;
+        index++;
+      }
+    }
+
+    // add tags
+    if (item.tags && Array.isArray(item.tags)) {
+      for (const tag of item.tags) {
+        const isGreaterFirst = index >= 1;
+        summary += ` #${tag}`;
+        content_html += `${isGreaterFirst ? "&nbsp;&nbsp;" : ""}<a href="${
+          tagToUrl(tag, siteIdentifier, language, config)
+        }">#${tag}</a>`;
+        index++;
+      }
+    }
+    content_html += "</div>";
+
+    item.summary = summary;
+    item.content_text = summary;
+    item.content_html = content_html;
+    // add feed 1.0 adapter author
+    if (
+      item.authors && Array.isArray(item.authors) &&
+      item.authors.length > 0
+    ) {
+      item.author = item.authors[0];
+    }
+
     return item;
   }
   getTags(): string[] {

@@ -1,8 +1,11 @@
-import { FormatedItem, Link } from "../interface.ts";
+import { FeedItem, FormatedItem, Link } from "../interface.ts";
 import Item from "../item.ts";
 export default class source extends Item<FormatedItem> {
   getOriginalPublishedDate(): Date {
     return new Date(this.originalItem._original_published as string);
+  }
+  getItemIdentifier(): string {
+    return this.originalItem.id as string;
   }
   getId(): string {
     return this.originalItem.id as string;
@@ -38,9 +41,13 @@ export default class source extends Item<FormatedItem> {
   getNumComments() {
     return this.originalItem._num_comments || 0;
   }
+  getImage(): string | null {
+    return this.originalItem.image || null;
+  }
   getTags() {
     return this.originalItem.tags || [];
   }
+
   getLinks(): Link[] {
     const id = this.getId();
     const parsedId = Item.parseItemIdentifier(id);
@@ -59,6 +66,14 @@ export default class source extends Item<FormatedItem> {
         externalLinkName = `&uarr; ${this.getScore()} Reddit Upvotes`;
       } else {
         externalLinkName = `Reddit Link`;
+      }
+    } else if (type === "twitter") {
+      if (
+        this.getScore() && this.getExternalUrl()
+      ) {
+        externalLinkName = `&uarr; ${this.getScore()} Twitter Like`;
+      } else {
+        externalLinkName = `Twitter Link`;
       }
     }
 

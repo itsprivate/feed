@@ -31,7 +31,7 @@ export interface GeneralSiteConfig {
   tags?: string[];
 }
 export interface SiteConfig extends GeneralSiteConfig {
-  test?: boolean;
+  dev?: boolean;
   port?: number;
   redirect?: boolean;
   domain?: string;
@@ -165,6 +165,7 @@ export interface FeedItem extends FormatedItem {
   summary: string;
   content_text: string;
   content_html: string;
+  _title_type?: string;
 }
 export interface Type<T> extends Function {
   new (...args: unknown[]): T;

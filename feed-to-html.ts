@@ -59,6 +59,7 @@ export default function feedToHTML(
   feedJson.items = feedJson.items.map((item, index) => {
     const newItem = { ...item };
     const order = index + 1;
+    // @ts-ignore: new meta
     newItem.order = order;
     return newItem;
   });
@@ -76,8 +77,8 @@ export default function feedToHTML(
   const otherSites: string[] = [];
   const relatedSites = getFeedSiteIdentifiers(config).filter((site) => {
     const siteTags = sitesMap[site].tags;
-    const currentSiteTags = feedJson._tags;
-    if (sitesMap[site].test === true) {
+    const currentSiteTags = feedJson._site_tags;
+    if (sitesMap[site].dev === true) {
       return false;
     }
     // ignore self
@@ -97,6 +98,17 @@ export default function feedToHTML(
       return false;
     }
   });
+  // resort ,self is no.1
+  // relatedSites.sort((a, b) => {
+  //   if (a === siteIdentifier) {
+  //     return -1;
+  //   }
+  //   if (b === siteIdentifier) {
+  //     return 1;
+  //   }
+  //   return 0;
+  // });
+
   //@ts-ignore: add meta data
   feedJson._related_sites = relatedSites.map(
     (item, index) => {
@@ -112,6 +124,7 @@ export default function feedToHTML(
         name: siteShortName || siteName,
         url: siteIdentifierToUrl(item, "/" + language.prefix, config),
         is_last: index === relatedSites.length - 1,
+        active: item === siteIdentifier,
       };
     },
   );

@@ -1,31 +1,77 @@
 import { Author, Video } from "../interface.ts";
 import Item from "../item.ts";
 export default class twitter extends Item<TwitterItem> {
+  constructor(item: TwitterItem) {
+    let tweet = item;
+    if (item.retweeted_status) {
+      // @ts-ignore: Unreachable code error
+      tweet = item.retweeted_status;
+    }
+    super(tweet);
+  }
   getOriginalPublishedDate(): Date {
-    return new Date(Date.parse(this.originalItem.created_at));
+    return new Date(this.originalItem.created_at);
   }
   getId(): string {
     return this.originalItem.id_str as string;
   }
   getTitle(): string {
-    const title = this.originalItem.full_text as string;
+    const tweet = this.originalItem;
+    let title = this.originalItem.full_text as string;
+
+    if (tweet.entities.media && Array.isArray(tweet.entities.media)) {
+      for (let i = 0; i < tweet.entities.media.length; i++) {
+        title = title.replace(tweet.entities.media[i].url, "");
+      }
+    }
+
+    // and remove other links
+    if (tweet.entities.urls.length > 0) {
+      // not for latest url
+      for (let i = 0; i < tweet.entities.urls.length; i++) {
+        const urlEntity = tweet.entities.urls[i];
+        if (i < tweet.entities.urls.length - 1) {
+          // replace other url with expanded url
+          title = title.replace(urlEntity.url, urlEntity.expanded_url);
+        } else {
+          // remove latest url
+          title = title.replace(urlEntity.url, "");
+        }
+      }
+    }
 
     return title;
   }
-  getTitlePrefix(): string {
-    return "";
+
+  getScore(): number {
+    return this.originalItem.favorite_count;
+  }
+
+  getNumComments(): number {
+    return this.originalItem.retweet_count;
   }
 
   getUrl(): string {
+    // check entities for urls
+    const tweet = this.originalItem;
+    if (tweet.entities.urls.length > 0) {
+      return tweet.entities.urls[tweet.entities.urls.length - 1].expanded_url;
+    }
+
+    return this.getExternalUrl();
+  }
+  getExternalUrl(): string {
     return `https://twitter.com/${this.originalItem.user.screen_name}/status/${this.originalItem.id_str}`;
   }
-
   getAuthors(): Author[] {
     return [
       {
         name: this.originalItem.user.name,
         url: `https://twitter.com/${this.originalItem.user.screen_name}`,
-        avatar: this.originalItem.user.profile_image_url_https,
+        avatar: this.originalItem.user.profile_image_url_https.replace(
+          `_normal.`,
+          `.`,
+        ),
       },
     ];
   }
@@ -43,9 +89,11 @@ export default class twitter extends Item<TwitterItem> {
     const tweet = this.originalItem;
     let bitrate: number | undefined = 0;
     let hq_video_url = "";
-    let aspect_ratio: number[] | undefined = [];
     let content_type = "";
+    let poster = "";
+    let large: Large | undefined = undefined;
     if (tweet?.extended_entities?.media[0]?.video_info?.variants) {
+      poster = tweet.extended_entities.media[0].media_url_https;
       const videoInfo = tweet?.extended_entities?.media[0]?.video_info;
       for (
         let j = 0;
@@ -60,10 +108,22 @@ export default class twitter extends Item<TwitterItem> {
           ) {
             bitrate = videoInfo.variants[j].bitrate;
             hq_video_url = videoInfo.variants[j].url;
-            aspect_ratio = videoInfo.aspect_ratio;
             content_type = videoInfo.variants[j].content_type;
           }
         }
+      }
+
+      // get large size
+      const sizes = tweet?.extended_entities?.media[0]?.sizes;
+      large = sizes?.large;
+      if (!large) {
+        large = sizes?.medium;
+      }
+      if (!large) {
+        large = sizes?.small;
+      }
+      if (!large) {
+        large = sizes?.thumb;
       }
     }
 
@@ -75,13 +135,116 @@ export default class twitter extends Item<TwitterItem> {
             type: content_type,
           },
         ],
-        width: aspect_ratio[0],
-        height: aspect_ratio[1],
+        poster,
+        width: large?.w,
+        height: large?.h,
       };
     }
   }
 }
+
+// function parseTweetFulltext(tweet: TwitterItem): {
+
+// }
 export interface TwitterItem {
+  created_at: string;
+  id: number;
+  id_str: string;
+  full_text: string;
+  truncated: boolean;
+  display_text_range: number[];
+  entities: TwitterItemEntities;
+  possibly_sensitive?: boolean;
+  source: string;
+  in_reply_to_status_id: null;
+  in_reply_to_status_id_str: null;
+  in_reply_to_user_id: null;
+  in_reply_to_user_id_str: null;
+  in_reply_to_screen_name: null;
+  user: User;
+  geo: null;
+  coordinates: null;
+  place: null;
+  contributors: null;
+  retweeted_status: RetweetedStatus;
+  is_quote_status: boolean;
+  retweet_count: number;
+  favorite_count: number;
+  favorited: boolean;
+  retweeted: boolean;
+  lang: string;
+  extended_entities: ExtendedEntities;
+}
+
+export interface TwitterItemEntities {
+  hashtags: Hashtag[];
+  symbols: any[];
+  user_mentions: UserMention[];
+  urls: any[];
+  media?: Media[];
+}
+
+export interface Hashtag {
+  text: string;
+  indices: number[];
+}
+
+export interface Media {
+  id: number;
+  id_str: string;
+  indices: number[];
+  media_url: string;
+  media_url_https: string;
+  url: string;
+  display_url: string;
+  expanded_url: string;
+  type: string;
+  sizes: Sizes;
+  video_info?: VideoInfo;
+  additional_media_info?: AdditionalMediaInfo;
+}
+
+export interface AdditionalMediaInfo {
+  title: string;
+  description: string;
+  embeddable: boolean;
+  monetizable: boolean;
+}
+
+export interface Sizes {
+  thumb: Large;
+  small: Large;
+  large: Large;
+  medium: Large;
+}
+
+export interface Large {
+  w: number;
+  h: number;
+  resize: string;
+}
+
+export interface VideoInfo {
+  aspect_ratio: number[];
+  duration_millis: number;
+  variants: Variant[];
+}
+
+export interface Variant {
+  bitrate?: number;
+  content_type: string;
+  url: string;
+}
+
+export interface UserMention {
+  screen_name: string;
+  name: string;
+  id: number;
+  id_str: string;
+  indices: number[];
+}
+
+export interface RetweetedStatus {
   created_at: string;
   id: number;
   id_str: string;
@@ -108,58 +271,6 @@ export interface TwitterItem {
   retweeted: boolean;
   possibly_sensitive: boolean;
   lang: string;
-}
-
-export interface TwitterItemEntities {
-  hashtags: any[];
-  symbols: any[];
-  user_mentions: any[];
-  urls: any[];
-  media: Media[];
-}
-
-export interface Media {
-  id: number;
-  id_str: string;
-  indices: number[];
-  media_url: string;
-  media_url_https: string;
-  url: string;
-  display_url: string;
-  expanded_url: string;
-  type: string;
-  sizes: Sizes;
-  video_info?: VideoInfo;
-  additional_media_info?: AdditionalMediaInfo;
-}
-
-export interface AdditionalMediaInfo {
-  monetizable: boolean;
-}
-
-export interface Sizes {
-  thumb: Large;
-  small: Large;
-  medium: Large;
-  large: Large;
-}
-
-export interface Large {
-  w: number;
-  h: number;
-  resize: string;
-}
-
-export interface VideoInfo {
-  aspect_ratio: number[];
-  duration_millis: number;
-  variants: Variant[];
-}
-
-export interface Variant {
-  content_type: string;
-  url: string;
-  bitrate?: number;
 }
 
 export interface ExtendedEntities {
@@ -226,4 +337,8 @@ export interface URL {
   expanded_url: string;
   display_url: string;
   indices: number[];
+}
+
+export interface ExtendedEntities {
+  media: Media[];
 }
