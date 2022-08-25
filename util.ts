@@ -606,7 +606,7 @@ export function tagToUrl(
     getArchiveSitePrefix(config)
   }/${language.prefix}${siteIdentifier}/tags/${
     // @ts-ignore: npm module
-    slug("中文测试")}/`;
+    slug(tag)}/`;
 }
 export function archiveToUrl(
   archiveKey: string,
