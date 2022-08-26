@@ -437,6 +437,18 @@
           "value": "40"
         }
       ]
+    },
+    {
+      "id": "source-producthunt-top",
+      "url": "https://api.producthunt.com/v2/api/graphql",
+      "type": "ph",
+      "rules": [
+        {
+          "type": "greaterEqual",
+          "key": "getWeightedScore",
+          "value": "80"
+        }
+      ]
     }
   ]
 }

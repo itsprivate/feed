@@ -83,6 +83,9 @@ export interface ParsedFilename {
   id: string;
   language: string;
   type: string;
+  year: string;
+  month: string;
+  day: string;
 }
 
 export interface Task {

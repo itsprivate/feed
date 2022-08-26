@@ -66,11 +66,17 @@ aws s3 sync s3://mybucket . --endpoint-url https://example.com
 
 ```bash
 PROD=1 deno run -A ./migrations/move-reddit.ts
+
+# if need, also move issues
+PROD=1 deno run -A ./migrations/move-reddit-issues.ts
+
 NO_TRANSLATE=1 make prod-buildfromformat
 # upload archive
 make prod-awsuploadarchive
 # aws configure set s3.max_concurrent_requests 50
 # 50 is fine, seems 100 is too much
+
+
 # upload current
 make prod-uploadcurrent
 # create site

@@ -20,6 +20,7 @@ import {
   FilteredFile,
   Language,
   PageMeta,
+  ParsedFilename,
   SiteConfig,
   WeekOfYear,
 } from "./interface.ts";
@@ -773,4 +774,60 @@ export async function getFilesByTargetSiteIdentifiers(
     targetSiteIdentifiers: filteredSites,
     groups,
   };
+}
+
+export function getDuplicatedFiles(
+  newFiles: string[],
+  oldFiles: string[],
+): string[] {
+  if (oldFiles.length === 0) {
+    return [];
+  }
+  const rawFilesMap = new Map<string, string>();
+  for (const file of newFiles) {
+    const identifier = path.basename(file, ".json");
+    const cachedKey = identifierToCachedKey(identifier);
+    rawFilesMap.set(cachedKey, file);
+  }
+
+  const needToremovedFormatedFiles = oldFiles.filter((file) => {
+    const identifier = path.basename(file, ".json");
+    const cachedKey = identifierToCachedKey(identifier);
+    return rawFilesMap.has(cachedKey);
+  });
+  return needToremovedFormatedFiles;
+}
+
+export function parseItemIdentifier(
+  fileBasename: string,
+): ParsedFilename {
+  // remove extension
+  let filename = fileBasename;
+  if (filename.endsWith(".json")) {
+    filename = filename.slice(0, -5);
+  }
+  const parts = filename.split("__");
+  // first will be safe part, other will be the id parts
+  const safePart = parts[0];
+  const symParts = safePart.split("_");
+  const language = symParts[0];
+  const type = symParts[1];
+  const year = symParts[2];
+  const month = symParts[3];
+  const day = symParts[4];
+  const idParts = parts.slice(1);
+  const id = idParts.join("__");
+  return {
+    id,
+    language,
+    type,
+    year,
+    month,
+    day,
+  };
+}
+export function identifierToCachedKey(identifier: string): string {
+  // to unique key, remove published date.
+  const parsed = parseItemIdentifier(identifier);
+  return `${parsed.language}_${parsed.type}__${parsed.id}`;
 }

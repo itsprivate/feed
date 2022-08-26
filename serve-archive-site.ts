@@ -4,7 +4,9 @@ import {
   getArchivedBucketName,
   getArchivedFilePath,
   getArchiveS3Bucket,
+  getCurrentItemsFilePath,
   isDebug,
+  isDev,
   parsePageUrl,
   readJSONFile,
   siteIdentifierToUrl,
@@ -101,13 +103,26 @@ export default async function serveSite(port = 8000) {
 
         let currentSiteFeedJson: Feedjson | null = null;
         try {
-          const feedJsonpath = siteIdentifierToUrl(
-            siteIdentifier,
-            "/feed.json",
-            config,
-          );
-          const feedJsonResponse = await fetch(feedJsonpath);
-          currentSiteFeedJson = await feedJsonResponse.json();
+          if (isLocal) {
+            const currentSiteItemsJson = await readJSONFile(
+              getCurrentItemsFilePath(siteIdentifier),
+            );
+            currentSiteFeedJson = itemsToFeed(
+              "items.json",
+              currentSiteItemsJson,
+              siteIdentifier,
+              language.code,
+              config,
+            );
+          } else {
+            const feedJsonpath = siteIdentifierToUrl(
+              siteIdentifier,
+              "/feed.json",
+              config,
+            );
+            const feedJsonResponse = await fetch(feedJsonpath);
+            currentSiteFeedJson = await feedJsonResponse.json();
+          }
         } catch (e) {
           log.warn("fail to get current site feed.json", e);
         }

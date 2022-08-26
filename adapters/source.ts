@@ -1,5 +1,6 @@
 import { FormatedItem, Link, Video } from "../interface.ts";
 import Item from "../item.ts";
+import { parseItemIdentifier } from "../util.ts";
 export default class source extends Item<FormatedItem> {
   getSensitive(): boolean {
     return this.originalItem._sensitive || false;
@@ -14,7 +15,7 @@ export default class source extends Item<FormatedItem> {
     return this.originalItem._original_language || "en";
   }
   getId(): string {
-    const parsedId = Item.parseItemIdentifier(this.originalItem.id);
+    const parsedId = parseItemIdentifier(this.originalItem.id);
     return parsedId.id;
   }
   getTitle(): string {
@@ -59,7 +60,7 @@ export default class source extends Item<FormatedItem> {
   }
   getType(): string {
     const id = this.getItemIdentifier();
-    const parsedId = Item.parseItemIdentifier(id);
+    const parsedId = parseItemIdentifier(id);
     return parsedId.type;
   }
   isText(): boolean {

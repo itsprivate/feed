@@ -1,9 +1,13 @@
 import { fs } from "../deps.ts";
 import {
+  getArchivedFilePath,
   getArchivePath,
   getCurrentItemsFilePath,
+  getFullMonth,
+  getFullYear,
   getMigratedIssueMapPath,
   isDev,
+  parseItemIdentifier,
   readJSONFile,
   resortArchiveKeys,
   weekOfYear,
@@ -15,8 +19,7 @@ import { FormatedItem, ItemsJson } from "../interface.ts";
 export default async function moveIssues() {
   // get all 1-raw files
   // is exists raw files folder
-  const siteIdentifier = "reddit";
-  const type = "reddit";
+  const siteIdentifier = "hn";
   const files: string[] = [];
   let issues: string[] = [];
   let oldAndNewMap: Record<string, Record<string, string>> = {};
@@ -32,14 +35,14 @@ export default async function moveIssues() {
     let totalFiles = 0;
     for await (
       const entry of fs.walk(
-        "../inbox/ts-new/data/reddit-top-issues",
+        "../inbox/ts-new/data/hn-top-issues",
       )
     ) {
       if (isDev()) {
-        // if (totalFiles >= 1) {
-        //   log.info(`dev mode, only take ${DEV_MODE_HANDLED_ITEMS} files`);
-        //   break;
-        // }
+        if (totalFiles >= 1) {
+          log.info(`dev mode, only take ${DEV_MODE_HANDLED_ITEMS} files`);
+          break;
+        }
       }
       if (entry.isFile && entry.path.endsWith(".json")) {
         files.push(entry.path);
@@ -50,8 +53,30 @@ export default async function moveIssues() {
     throw e;
   }
   let total = 0;
-
+  let totalItems = 0;
   if (files.length > 0) {
+    // build all items map
+    const itemsMap: Record<string, string> = {};
+    let archiveTotal = 0;
+    for await (
+      const entry of fs.walk(getArchivedFilePath(siteIdentifier, "archive"))
+    ) {
+      if (entry.isFile && entry.path.endsWith(".json")) {
+        // if (isDev()) {
+        //   if (archiveTotal >= 3) {
+        //     log.info(`dev mode, only take ${DEV_MODE_HANDLED_ITEMS} files`);
+        //     break;
+        //   }
+        // }
+        const json = await readJSONFile(entry.path);
+        const keys = Object.keys(json.items);
+        for (const key of keys) {
+          itemsMap[newIdToSlug(key)] = entry.path;
+        }
+        archiveTotal++;
+      }
+    }
+    // console.log("itemsMap", itemsMap);
     for (const file of files) {
       // if total can divide by 100
       if (total % 100 === 0) {
@@ -61,35 +86,36 @@ export default async function moveIssues() {
       const newItems: ItemsJson = { items: {} };
       const items = originalItem.items;
       for (const item of items) {
+        // console.log("item", item);
         const id = item.slug;
-        // try to find new id
-        const oldFile = `../inbox/ts-new/data/reddit-top${
-          id.slice(item.type.length + 1, -1)
-        }.json`;
-        const json = await readJSONFile(oldFile) as Record<
-          string,
-          string | number
-        >;
-        const originalCreated = new Date(
-          Number(json.created_utc) * 1000,
-        );
-        const weekInfo = weekOfYear(originalCreated);
-        const newIdentifier = `en_${type}__${getId(json.permalink as string)}`;
-        const newPath =
-          `archive/${siteIdentifier}/archive/${weekInfo.path}/items.json`;
-        // console.log("newPath", newPath);
-        try {
-          const newJson = await readJSONFile(newPath) as ItemsJson;
-          if (newJson.items[newIdentifier]) {
-            // find items
-            newItems.items[newIdentifier] = newJson.items[newIdentifier];
-          } else {
-            // not find items
-            log.warn("can not found " + newIdentifier, "from ", newPath);
-            throw new Error("not found");
+        // try to find new file path
+        const newPath = itemsMap[id];
+        if (newPath) {
+          // console.log("yes, found", newPath);
+          try {
+            const newJson = await readJSONFile(newPath) as ItemsJson;
+
+            const newJsonItems = newJson.items;
+            const newKeys = Object.keys(newJsonItems);
+            const oldItemsMap: Record<string, FormatedItem> = {};
+            for (const key of newKeys) {
+              const oldSlug = newIdToSlug(key);
+              oldItemsMap[oldSlug] = newJsonItems[key];
+            }
+            if (oldItemsMap[id]) {
+              const newItem = oldItemsMap[id];
+              totalItems++;
+              newItems.items[newItem.id] = newItem;
+            } else {
+              log.info(`${id} not match `);
+              throw new Error(`${id} not match `);
+            }
+          } catch (e) {
+            log.warn("error when format item", e);
+            throw e;
           }
-        } catch (e) {
-          log.warn("ignore error when format item", e);
+        } else {
+          log.warn(`can not find new path for ${id}`);
         }
       }
       const weekInfo = weekOfYear(new Date(originalItem.startedAt));
@@ -122,9 +148,26 @@ export default async function moveIssues() {
 
   await writeJSONFile(currentItemsPath, currentItems);
   log.info(
-    `formated ${total} items`,
+    `formated ${total} issues, ${totalItems} items`,
   );
 }
+
+function slugToId() {
+}
+
+function newIdToSlug(newId: string) {
+  const parsed = parseItemIdentifier(newId);
+  let type = parsed.type;
+  if (parsed.type === "twitter") {
+    type = "tweet";
+  }
+  let id = parsed.id;
+  if (parsed.type === "reddit") {
+    id = id.replace(/--/g, "/");
+  }
+  return `/${type}/${id}/`;
+}
+
 function getId(permalink: string): string {
   const id = permalink;
   // replace / to -- to avoid conflict with path
@@ -151,7 +194,7 @@ export interface Item {
 }
 
 export enum Type {
-  Reddit = "reddit",
+  Reddit = "stocks",
 }
 if (import.meta.main) {
   await moveIssues();

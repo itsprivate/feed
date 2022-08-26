@@ -28,38 +28,24 @@ export default class Item<T> {
   originalItem: T;
   private now: Date = new Date();
   private image: string | null | undefined;
-  static parseItemIdentifier(
-    fileBasename: string,
-  ): ParsedFilename {
-    // remove extension
-    let filename = fileBasename;
-    if (filename.endsWith(".json")) {
-      filename = filename.slice(0, -5);
-    }
-    const parts = filename.split("__");
-    // first will be safe part, other will be the id parts
-    const safePart = parts[0];
-    const symParts = safePart.split("_");
-    const language = symParts[0];
-    const type = symParts[1];
-
-    const idParts = parts.slice(1);
-    const id = idParts.join("__");
-    return {
-      id,
-      language,
-      type,
-    };
-  }
 
   constructor(originalItem: T) {
     this.originalItem = originalItem;
   }
-
   init(): Promise<void> {
     // after constructor,  you can do some async operations to init item
     // use by googlenews, for format id, cause google id is too long
     return Promise.resolve();
+  }
+
+  getItemIdentifier(): string {
+    return `${this.getOriginalLanguage()}_${this.getType()}_${this.getPublishedYear()}_${this.getPublishedMonth()}_${this.getPublishedDay()}__${this.getId()}`;
+  }
+  getCachedKey(): string {
+    return `${this.getOriginalLanguage()}_${this.getType()}__${this.getId()}`;
+  }
+  getOriginalLanguage(): string {
+    return "en";
   }
 
   getSensitive(): boolean {
@@ -220,12 +206,6 @@ export default class Item<T> {
     return [];
   }
 
-  getItemIdentifier(): string {
-    return `${this.getOriginalLanguage()}_${this.getType()}__${this.getId()}`;
-  }
-  getOriginalLanguage(): string {
-    return "en";
-  }
   getVideo(): Video | undefined {
     return undefined;
   }

@@ -4,12 +4,14 @@ import {
   get,
   getCurrentItemsFilePath,
   getDataTranslatedPath,
+  identifierToCachedKey,
   readJSONFile,
   writeJSONFile,
 } from "../util.ts";
 import filterByRules from "../filter-by-rules.ts";
 import { fs, parseFeed, SimpleTwitter } from "../deps.ts";
 import log from "../log.ts";
+import Item from "../item.ts";
 export default async function fetchSources(
   options: RunOptions,
 ): Promise<{ postTasks: Task[] }> {
@@ -58,7 +60,7 @@ export default async function fetchSources(
         log.debug(`read current items file failed, ${e.message}`);
       }
       for (const key of Object.keys(currentItemsJson.items)) {
-        currentKeysMap.set(key, true);
+        currentKeysMap.set(identifierToCachedKey(key), true);
       }
     }
   }
@@ -88,7 +90,7 @@ export default async function fetchSources(
     ) {
       if (entry.isFile) {
         const key = entry.name.replace(/\.json$/, "");
-        currentKeysMap.set(key, true);
+        currentKeysMap.set(identifierToCachedKey(key), true);
       }
     }
     log.info(`current keys length: ${currentKeysMap.size}`);
@@ -194,7 +196,7 @@ export default async function fetchSources(
       for (const item of originalItems) {
         await item.init();
 
-        if (!currentKeysMap.get(item.getItemIdentifier())) {
+        if (!currentKeysMap.get(item.getCachedKey())) {
           // not exists
           // save original item to file
           await writeJSONFile(
@@ -207,6 +209,8 @@ export default async function fetchSources(
             }`,
           );
           total++;
+        } else {
+          log.debug(`${item.getCachedKey()} exists, skip`);
         }
       }
       log.info(

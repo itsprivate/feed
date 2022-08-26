@@ -221,11 +221,11 @@ deletearchive:
 
 .Phony: prod-servearchive
 prod-servearchive:
-	PROD=1 deno run -A ./dev-archive-site.ts
+	PROD=1 deno run -A --watch=main.ts,templates/ ./dev-archive-site.ts
 
 .Phony: servearchive
 servearchive:
-	LOCAL=0 PROD=1 deno run -A --watch=main.ts,templates/ ./dev-archive-site.ts
+	LOCAL=1 deno run -A --watch=main.ts,templates/ ./dev-archive-site.ts
 
 .Phony: checkfmt
 checkfmt:

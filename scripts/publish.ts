@@ -11,13 +11,20 @@ export default async function publishToPages() {
       siteIdentifiers.push(pathToSiteIdentifier(dirEntry.name));
     }
   }
-
+  let index = 1;
   for (const siteIdentifier of siteIdentifiers) {
+    log.info(
+      `${index}/${siteIdentifiers.length}`,
+      "publishing",
+      "site",
+      siteIdentifier,
+    );
     const p = Deno.run({
       cmd: ["make", "publish", "site=" + siteIdentifier],
     });
     const status = await p.status();
     log.info("publish status: ", status);
+    index++;
   }
 }
 

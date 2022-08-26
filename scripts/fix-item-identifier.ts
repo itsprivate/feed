@@ -4,6 +4,9 @@ import {
   getArchivePath,
   getArchiveS3Bucket,
   getDataPath,
+  getFullDay,
+  getFullMonth,
+  getFullYear,
   readJSONFile,
   writeJSONFile,
 } from "../util.ts";
@@ -40,7 +43,10 @@ export default async function uploadArchive() {
             const parsed = parseItemIdentifier(id);
             let newId = id;
             if (parsed.year && parsed.month && parsed.day) {
-              newId = stringifyItemIdentifier(parsed);
+              // no need
+              log.warn("no need to fix???", id);
+            } else {
+              newId = stringifyItemIdentifier(parsed, item.date_published);
               const newItem = { ...item, id: newId };
               itemsJson.items[newId] = newItem;
               isChanged = true;
@@ -79,8 +85,15 @@ interface ParsedFilename {
   language: string;
   type: string;
 }
-function stringifyItemIdentifier(parsed: ParsedFilename): string {
-  return `${parsed.language}_${parsed.type}__${parsed.id}`;
+function stringifyItemIdentifier(
+  parsed: ParsedFilename,
+  published: string,
+): string {
+  const date = new Date(published);
+  const year = getFullYear(date);
+  const month = getFullMonth(date);
+  const day = getFullDay(date);
+  return `${parsed.language}_${parsed.type}_${year}_${month}_${day}__${parsed.id}`;
 }
 
 function parseItemIdentifier(
@@ -95,20 +108,37 @@ function parseItemIdentifier(
   // first will be safe part, other will be the id parts
   const safePart = parts[0];
   const symParts = safePart.split("_");
-  const year = symParts[0];
-  const month = symParts[1];
-  const day = symParts[2];
-  const language = symParts[3];
-  const type = symParts[4];
 
-  const idParts = parts.slice(1);
-  const id = idParts.join("__");
-  return {
-    id,
-    year,
-    month,
-    day,
-    language,
-    type,
-  };
+  if (symParts.length === 2) {
+    // olde
+    const language = symParts[0];
+    const type = symParts[1];
+
+    const idParts = parts.slice(1);
+    const id = idParts.join("__");
+    return {
+      id,
+      year: "",
+      month: "",
+      day: "",
+      language,
+      type,
+    };
+  } else {
+    const language = symParts[0];
+    const type = symParts[1];
+    const year = symParts[2];
+    const month = symParts[3];
+    const day = symParts[4];
+    const idParts = parts.slice(1);
+    const id = idParts.join("__");
+    return {
+      id,
+      year,
+      month,
+      day,
+      language,
+      type,
+    };
+  }
 }

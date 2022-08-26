@@ -1,6 +1,10 @@
-import { assertEquals } from "https://deno.land/std@0.151.0/testing/asserts.ts";
+import { assert } from "https://deno.land/std@0.151.0/_util/assert.ts";
+import { assertEquals } from "./deps.ts";
 import {
   formatNumber,
+  getDuplicatedFiles,
+  getFullDay,
+  getFullMonth,
   isDev,
   isMock,
   isWeekBiggerThan,
@@ -252,4 +256,32 @@ Deno.test("slug #23", () => {
   assertEquals(slug("中 English 结合标签"), "zhong-english-jie-he-biao-qian");
 
   assertEquals(slug("KidsAreFuckingStupid"), "kids-are-fucking-stupid");
+});
+
+Deno.test("get full date #24", () => {
+  const str = "2021-01-15T15:58:50.000Z";
+  const date = new Date(str);
+  const fullMonth = getFullMonth(date);
+  const fullDay = getFullDay(date);
+  assertEquals(fullMonth, "01");
+  assertEquals(fullDay, "15");
+});
+
+Deno.test("getDuplicatedFiles #25", () => {
+  const removedFiles = getDuplicatedFiles(
+    [
+      "en_reddit_2022_08_26__test1.json",
+      "en_reddit_2022_08_24__test1.json",
+      "en_reddit_2022_08_26__test2.json",
+    ],
+    [
+      "en_reddit_2022_08_22__test2.json",
+      "en_reddit_2022_08_23__test1.json",
+      "en_reddit_2022_08_22__test3.json",
+    ],
+  );
+  assertEquals(removedFiles, [
+    "en_reddit_2022_08_22__test2.json",
+    "en_reddit_2022_08_23__test1.json",
+  ]);
 });
