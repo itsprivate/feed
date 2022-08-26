@@ -66,13 +66,13 @@ jobs:
           DUFS_URL: ${{secrets.DUFS_URL}}
           DUFS_SECRETS: ${{secrets.DUFS_SECRETS}}
 
-      - name: Publish pages
-        run: make prod-publish
-        env:
-          CLOUDFLARE_ACCOUNT_ID: ${{secrets.CLOUDFLARE_ACCOUNT_ID}}
-          CLOUDFLARE_API_TOKEN: ${{secrets.CLOUDFLARE_API_TOKEN}}
       - name: throw if source failed
         if: steps.source.outcome == 'failure'
         run: |
           echo "::error::Source build failed"
           exit 1
+      - name: Publish pages
+        run: make prod-publish
+        env:
+          CLOUDFLARE_ACCOUNT_ID: ${{secrets.CLOUDFLARE_ACCOUNT_ID}}
+          CLOUDFLARE_API_TOKEN: ${{secrets.CLOUDFLARE_API_TOKEN}}

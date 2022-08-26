@@ -92,7 +92,7 @@ export default async function fetchSources(
         currentKeysMap.set(identifierToCachedKey(key), true);
       }
     }
-    log.info(`current keys length: ${currentKeysMap.size}`);
+    log.info(sourceId + ` current keys length: ${currentKeysMap.size}`);
     // fetch source, and parse it to item;
     for (const sourceUrl of sourceUrls) {
       let total = 0;
