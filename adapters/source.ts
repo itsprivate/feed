@@ -1,11 +1,17 @@
-import { FormatedItem, Link } from "../interface.ts";
+import { FormatedItem, Link, Video } from "../interface.ts";
 import Item from "../item.ts";
 export default class source extends Item<FormatedItem> {
+  getSensitive(): boolean {
+    return this.originalItem._sensitive || false;
+  }
   getOriginalPublishedDate(): Date {
     return new Date(this.originalItem._original_published as string);
   }
   getItemIdentifier(): string {
     return this.originalItem.id as string;
+  }
+  getOriginalLanguage(): string {
+    return this.originalItem._original_language || "en";
   }
   getId(): string {
     const parsedId = Item.parseItemIdentifier(this.originalItem.id);
@@ -44,6 +50,9 @@ export default class source extends Item<FormatedItem> {
   }
   getImage(): string | null {
     return this.originalItem.image || null;
+  }
+  getVideo(): Video | undefined {
+    return this.originalItem._video;
   }
   getTags() {
     return this.originalItem.tags || [];

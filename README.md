@@ -76,6 +76,7 @@ make prod-uploadcurrent
 # create site
 make createsite site=ask
 # build site, and publish
+make prod-publish
 ```
 
 ## TODO
