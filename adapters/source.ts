@@ -1,4 +1,4 @@
-import { FormatedItem, Link, Video } from "../interface.ts";
+import { Embed, FormatedItem, Link, Video } from "../interface.ts";
 import Item from "../item.ts";
 import { parseItemIdentifier } from "../util.ts";
 export default class source extends Item<FormatedItem> {
@@ -54,6 +54,9 @@ export default class source extends Item<FormatedItem> {
   }
   getVideo(): Video | undefined {
     return this.originalItem._video;
+  }
+  getEmbed(): Embed | undefined {
+    return this.originalItem._embed;
   }
   getTags() {
     return this.originalItem.tags || [];

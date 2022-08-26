@@ -1,0 +1,80 @@
+{
+  "id": "356689",
+  "commentsCount": 258,
+  "createdAt": "2022-08-25T07:04:00Z",
+  "description": "Upword helps you capture, summarize, and organize your most important knowledge - all in one, powerful app. Improve your content workflow with Upword: 1. Capture key ideas in moments 2. Interact, edit and personalize 3. Read, listen and share your work",
+  "featuredAt": "2022-08-25T07:04:00Z",
+  "media": [
+    {
+      "type": "video",
+      "url": "https://ph-files.imgix.net/7d479e08-2951-4586-8603-4595316ccb67.jpeg?auto=format",
+      "videoUrl": "https://www.youtube.com/watch?v=EdPDeuowNLo"
+    },
+    {
+      "type": "image",
+      "url": "https://ph-files.imgix.net/d2255aaf-4835-452d-99b7-5869e28781dd.png?auto=format",
+      "videoUrl": null
+    },
+    {
+      "type": "image",
+      "url": "https://ph-files.imgix.net/664c494a-580f-4ec2-846c-6653b17c243c.png?auto=format",
+      "videoUrl": null
+    },
+    {
+      "type": "image",
+      "url": "https://ph-files.imgix.net/65c76e6a-521f-4a43-8a32-e959618a1e8c.png?auto=format",
+      "videoUrl": null
+    },
+    {
+      "type": "image",
+      "url": "https://ph-files.imgix.net/9c17b0d5-0748-41dc-b53d-01544f84a76b.png?auto=format",
+      "videoUrl": null
+    },
+    {
+      "type": "video",
+      "url": "https://ph-files.imgix.net/a5e51985-720d-4eb8-a959-0c9f95431138.jpeg?auto=format",
+      "videoUrl": "https://youtu.be/NG3fOyqcYBo"
+    }
+  ],
+  "name": "Upword",
+  "productLinks": [
+    {
+      "type": "Chrome",
+      "url": "https://www.producthunt.com/r/28c42d0544383f?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+Buzzing+%28ID%3A+41381%29"
+    },
+    {
+      "type": "Website",
+      "url": "https://www.producthunt.com/r/eb5421009199f8?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+Buzzing+%28ID%3A+41381%29"
+    }
+  ],
+  "user": {
+    "name": "Ben Lang",
+    "url": "https://www.producthunt.com/@benln?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+Buzzing+%28ID%3A+41381%29"
+  },
+  "reviewsCount": 0,
+  "reviewsRating": 0,
+  "slug": "upword",
+  "tagline": "Transform any content into your knowledge",
+  "url": "https://www.producthunt.com/posts/upword?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+Buzzing+%28ID%3A+41381%29",
+  "votesCount": 1207,
+  "website": "https://www.producthunt.com/r/eb5421009199f8?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+Buzzing+%28ID%3A+41381%29",
+  "topics": {
+    "edges": [
+      {
+        "node": {
+          "name": "Chrome Extensions"
+        }
+      },
+      {
+        "node": {
+          "name": "Productivity"
+        }
+      },
+      {
+        "node": {
+          "name": "Artificial Intelligence"
+        }
+      }
+    ]
+  }
+}

@@ -14,7 +14,9 @@ Deno.test("filterByRules #1", async (t) => {
   const redditItem = await readJSONFile(
     "example/current/1-raw/2022/08/22/en_reddit_test.json",
   );
-
+  const quoraTweetItem = await readJSONFile(
+    "example/current/1-raw/2022/08/22/en_twitter_test.json",
+  );
   await t.step("not filter #1", () => {
     const items = filterByRules([new TwitterItem(tweetItem)], [
       {
@@ -54,6 +56,16 @@ Deno.test("filterByRules #1", async (t) => {
         type: "greaterEqual",
         key: "getWeightedScore",
         value: "53",
+      },
+    ]);
+    assertEquals(items.length, 1);
+  });
+  await t.step("filtered #5", () => {
+    const items = filterByRules([new TwitterItem(quoraTweetItem)], [
+      {
+        type: "include",
+        key: "getTitle",
+        value: "?",
       },
     ]);
     assertEquals(items.length, 1);

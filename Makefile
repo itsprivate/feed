@@ -14,11 +14,17 @@ prod-source:
 .Phony: build
 build:
 	NO_SERVE=1 deno run -A main.ts --build
-
+# only build dev site
+.Phony: builddev
+builddev:
+	NO_SERVE=1 deno run -A main.ts --build --site devfeed
 # only build site
 .Phony: prod-build
 prod-build:
 	 PROD=1 deno run -A main.ts --build
+.Phony: prod-buildsite
+prod-buildsite:
+	 PROD=1 deno run -A main.ts --build --site wsj
 
 .Phony: start
 start:
@@ -30,11 +36,18 @@ prod-buildfromformat:
 
 .Phony: serve
 serve:
+	deno run -A --watch=main.ts,templates/,config.yml main.ts --site devfeed --stage build_site,serve_site
+.Phony: serveall
+serveall:
 	deno run -A --watch=main.ts,templates/,config.yml main.ts --stage build_site,serve_site
 
 .Phony: servesite
 servesite:
 	deno run -A --watch=main.ts,templates/,config.yml main.ts --stage build_site,serve_site --site stocks
+
+.Phony: buildandserver
+buildandserver:
+	deno run -A --watch=main.ts,templates/,config.yml main.ts --stage translate,build_current,archive,build_site,serve_site --site devfeed
 
 
 .Phony: site

@@ -2,8 +2,9 @@ import hn, { HnItem } from "./hn.ts";
 import Item from "../item.ts";
 import reddit, { RedditItem } from "./reddit.ts";
 import twitter from "./twitter.ts";
-
+import ph from "./ph.ts";
 import rss from "./rss.ts";
+import devto from "./devto.ts";
 import { Type } from "../interface.ts";
 import googlenews from "./googlenews.ts";
 export type ItemType = Item<RedditItem | HnItem>;
@@ -18,5 +19,9 @@ const adapters: Record<string, Type<Item<RedditItem>>> = {
   googlenews,
   // @ts-ignore: hard to type
   twitter,
+  // @ts-ignore: hard to type
+  ph,
+  // @ts-ignore: hard to type
+  devto,
 };
 export default adapters;

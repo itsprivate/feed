@@ -831,3 +831,33 @@ export function identifierToCachedKey(identifier: string): string {
   const parsed = parseItemIdentifier(identifier);
   return `${parsed.language}_${parsed.type}__${parsed.id}`;
 }
+export async function getRedirectedUrl(url: string): Promise<string> {
+  const fetchResult = await fetch(url, {
+    redirect: "manual",
+  });
+  log.debug(`redirected url fetch result: `, url, fetchResult.status);
+  if (
+    (fetchResult.status === 301 || fetchResult.status === 302) &&
+    fetchResult.headers.get("location")
+  ) {
+    return fetchResult.headers.get("location")!;
+  } else {
+    return url;
+  }
+}
+
+export function tryToRemoveUnnecessaryParams(
+  url: string,
+): string {
+  const urlObj = new URL(url);
+  urlObj.searchParams.delete("ref");
+  // utm_source
+  urlObj.searchParams.delete("utm_source");
+  // utm_medium
+  urlObj.searchParams.delete("utm_medium");
+  // utm_campaign
+  urlObj.searchParams.delete("utm_campaign");
+  // utm_term
+  urlObj.searchParams.delete("utm_term");
+  return urlObj.href;
+}

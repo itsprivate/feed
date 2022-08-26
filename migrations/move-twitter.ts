@@ -6,13 +6,13 @@ import { DEV_MODE_HANDLED_ITEMS } from "../constant.ts";
 export default async function move() {
   // get all 1-raw files
   // is exists raw files folder
-
+  const siteIdentifier = "economist";
   let files: string[] = [];
   try {
     let totalFiles = 0;
     for await (
       const entry of fs.walk(
-        "../inbox/ts-new/data/tweet-stocks",
+        "../inbox/ts-new/data/tweet-economist",
       )
     ) {
       if (isDev()) {
@@ -55,13 +55,13 @@ export default async function move() {
 
         // write formated item to file
         await writeJSONFile(
-          item.getFormatedPath(["stocks"]),
+          item.getFormatedPath([siteIdentifier]),
           itemJson,
         );
 
         total += 1;
         log.debug(
-          `formated item to ${item.getFormatedPath(["stocks"])}`,
+          `formated item to ${item.getFormatedPath([siteIdentifier])}`,
         );
       } catch (e) {
         log.warn(file + " ignore error when format item", e);

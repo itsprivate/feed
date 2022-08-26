@@ -60,7 +60,7 @@ sites:
     port: 8000
     dev: true
     tags:
-      - source-hackernews-index
+      - source-twitter-wsj
     archive: false
     translations:
       "zh-Hans":
@@ -163,7 +163,6 @@ sites:
       "zh-Hans":
         title: "国外股市热门"
         description: "用中文浏览国外股票社区里的热门讨论"
-
   news:
     port: 8006
     archive: true
@@ -180,22 +179,122 @@ sites:
         title: "Buzzing on World News"
         description: "See what's buzzing on the news in your native language"
         keywords: "Buzzing News, Buzzing News Feed"
-  # ph:
-  #   port: 8009
-  #   archive: true
-  #   redirect: true
-  #   tags:
-  #     - tech
-  #     - source-producthunt-top
-  #   translations:
-  #     "zh-Hans":
-  #       title: "Product Hunt"
-  #       short_title: "国外新闻"
-  #       description: "用中文浏览国外新闻头条，美国新闻头条，全球新闻(西方媒体)头条"
-  #     "en":
-  #       title: "Buzzing on World News"
-  #       description: "See what's buzzing on the news in your native language"
-  #       keywords: "Buzzing News, Buzzing News Feed"
+  ph:
+    port: 8009
+    archive: true
+    redirect: true
+    tags:
+      - tech
+      - source-producthunt-top
+    translations:
+      "zh-Hans":
+        title: "Product Hunt"
+        short_title: "国外新闻"
+        description: "用中文浏览国外新闻头条，美国新闻头条，全球新闻(西方媒体)头条"
+      "en":
+        title: "Buzzing on World News"
+        description: "See what's buzzing on the news in your native language"
+        keywords: "Buzzing News, Buzzing News Feed"
+  crypto:
+    port: 8010
+    archive: true
+    redirect: true
+    tags:
+      - tech
+      - source-crypto-reddit
+      - source-crypto-twitter
+    translations:
+      "zh-Hans":
+        title: "加密货币热门讨论"
+        short_title: "加密货币"
+        description: "加密货币热门讨论"
+  dev:
+    port: 8011
+    archive: true
+    redirect: true
+    tags:
+      - tech
+      - source-devto
+    translations:
+      "zh-Hans":
+        title: "开发者热门讨论"
+        short_title: "开发者"
+        description: "开发者热门讨论"
+  quora:
+    port: 8012
+    archive: true
+    redirect: true
+    tags:
+      - ask
+      - source-quora
+    translations:
+      "zh-Hans":
+        title: "Quora 热门问答"
+        short_title: "Quora热门"
+        description: "Quora 热门问答"
+  depth:
+    port: 8013
+    archive: true
+    redirect: true
+    tags:
+      - depth
+      - source-reddit-depth
+    translations:
+      "zh-Hans":
+        title: "深度文章分享"
+        short_title: "深度思考"
+        description: "Reddit 精神食粮小组"
+  nytimes:
+    port: 8014
+    archive: true
+    redirect: true
+    tags:
+      - depth
+      - news
+      - source-twitter-nytimes
+    translations:
+      "zh-Hans":
+        title: "纽约时报热门文章"
+        short_title: "纽约时报"
+        description: "纽约时报热门文章"
+  wsj:
+    port: 8015
+    archive: true
+    redirect: true
+    tags:
+      - depth
+      - news
+      - source-twitter-wsj
+    translations:
+      "zh-Hans":
+        title: "华尔街日报热门文章"
+        short_title: "华尔街日报"
+        description: "华尔街日报热门文章"
+  economist:
+    port: 8016
+    archive: true
+    redirect: true
+    tags:
+      - depth
+      - news
+      - source-twitter-economist
+    translations:
+      "zh-Hans":
+        title: "经济学人热门文章"
+        short_title: "经济学人"
+        description: "经济学人热门文章"
+  sideproject:
+    port: 8017
+    archive: true
+    redirect: true
+    tags:
+      - sideproject
+      - source-reddit-sideproject
+    translations:
+      "zh-Hans":
+        title: "业余项目分享交流"
+        short_title: "业余项目"
+        description: "Reddit 业余项目小组"
 sources:
   - url: https://news.google.com/rss/topics/CAAqJggKIiBDQkFTRWdvSUwyMHZNRGx1YlY4U0FtVnVHZ0pWVXlnQVAB?hl=en-US&gl=US&ceid=US:en
     type: googlenews
@@ -294,4 +393,88 @@ sources:
     rules:
       - type: greaterEqual
         key: getWeightedScore
-        value: "80"
+        value: "60"
+  - id: source-crypto-reddit
+    url:
+      - https://www.reddit.com/r/CryptoCurrency/top/.json?raw_json=1
+      - https://www.reddit.com/r/Bitcoin/top/.json?raw_json=1
+    type: reddit
+    rules:
+      - type: greaterEqual
+        key: getWeightedScore
+        value: "400"
+  - url:
+      - s2fmultiple
+    type: twitter
+    id: source-crypto-twitter
+    rules:
+      - type: greaterEqual
+        key: getWeightedScore
+        value: "200"
+  - url:
+      - 100trillionUSD
+    type: twitter
+    id: source-crypto-twitter
+    rules:
+      - type: greaterEqual
+        key: getWeightedScore
+        value: "3000"
+  - url: https://dev.to/api/articles?top=3
+    id: source-devto
+    type: devto
+    rules:
+      - type: greaterEqual
+        key: getWeightedScore
+        value: "40"
+  - url: Quora
+    params:
+      include_rts: false
+    id: source-quora
+    type: twitter
+    rules:
+      - type: include
+        key: getTitle
+        value: "?"
+  - url: https://www.reddit.com/r/SideProject/top/.json?raw_json=1
+    id: source-reddit-sideproject
+    type: reddit
+    rules:
+      - type: greaterEqual
+        key: getWeightedScore
+        value: "4"
+  - url:
+      - https://www.reddit.com/r/TrueReddit/top/.json?raw_json=1
+      - https://www.reddit.com/r/Foodforthought/top/.json?raw_json=1
+    id: source-reddit-depth
+    type: reddit
+    rules:
+      - type: greaterEqual
+        key: getWeightedScore
+        value: "50"
+  - url: nytimes
+    params:
+      include_rts: false
+    id: source-twitter-nytimes
+    type: twitter
+    rules:
+      - type: greaterEqual
+        key: getWeightedScore
+        value: "1000"
+  - url: wsj
+    params:
+      include_rts: false
+    id: source-twitter-wsj
+    type: twitter
+    rules:
+      - type: greaterEqual
+        key: getWeightedScore
+        value: "150"
+  - url: TheEconomist
+    params:
+      include_rts: false
+    id: source-twitter-economist
+    type: twitter
+    rules:
+      - type: greaterEqual
+        key: getWeightedScore
+        value: "150"

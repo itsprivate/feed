@@ -285,3 +285,52 @@ Deno.test("getDuplicatedFiles #25", () => {
     "en_reddit_2022_08_23__test1.json",
   ]);
 });
+
+Deno.test("url format #26", () => {
+  const a = "https://thecoliving.guide?ref=producthunt";
+  const b = new URL(a);
+  b.searchParams.delete("ref");
+  const c = b.href;
+  assertEquals(c, "https://thecoliving.guide/");
+});
+
+Deno.test("url format #27", () => {
+  const a = "https://thecoliving.guide";
+  const b = new URL(a);
+  b.searchParams.delete("ref");
+  const c = b.href;
+  assertEquals(c, "https://thecoliving.guide/");
+});
+
+Deno.test("url pattern #28", () => {
+  const url = "https://youtu.be/mWx2mSlHWAM";
+  const urlPattern = new URLPattern("https://youtu.be/:id");
+  const result = urlPattern.exec(url);
+  assertEquals(result?.pathname.groups.id, "mWx2mSlHWAM");
+});
+
+Deno.test("url pattern #29", () => {
+  const url = "https://www.youtube.com/embed/x6sSa5NpqUI?autohide=1&showinfo=0";
+  const urlPattern = new URLPattern({
+    pathname: "/embed/:id",
+  });
+  const result = urlPattern.exec(url);
+  assertEquals(result?.pathname.groups.id, "x6sSa5NpqUI");
+});
+Deno.test("url pattern #30", () => {
+  const url = "https://youtu.be/LU46FWhLJAs?t=10";
+  const urlPattern = new URLPattern({
+    pathname: "/:id",
+  });
+  const result = urlPattern.exec(url);
+  assertEquals(result?.pathname.groups.id, "LU46FWhLJAs");
+});
+
+Deno.test("url pattern #31", () => {
+  const url = "https://youtu.be/DmyqLp6rgss?t=45";
+  const urlPattern = new URLPattern({
+    pathname: "/:id",
+  });
+  const result = urlPattern.exec(url);
+  assertEquals(result?.pathname.groups.id, "DmyqLp6rgss");
+});

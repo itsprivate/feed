@@ -11,7 +11,7 @@ import {
 import filterByRules from "../filter-by-rules.ts";
 import { fs, parseFeed, SimpleTwitter } from "../deps.ts";
 import log from "../log.ts";
-import Item from "../item.ts";
+import fetchPHData from "../sources/fetch-ph.ts";
 export default async function fetchSources(
   options: RunOptions,
 ): Promise<{ postTasks: Task[] }> {
@@ -71,7 +71,6 @@ export default async function fetchSources(
 
   for (const source of filteredSources) {
     const sourceId = source.id;
-    let total = 0;
     let sourceUrls = source.url as string[];
     if (typeof sourceUrls === "string") {
       sourceUrls = [sourceUrls];
@@ -96,6 +95,7 @@ export default async function fetchSources(
     log.info(`current keys length: ${currentKeysMap.size}`);
     // fetch source, and parse it to item;
     for (const sourceUrl of sourceUrls) {
+      let total = 0;
       let originalJson;
       if (sourceType === "rss" || sourceType === "googlenews") {
         const originItemResult = await fetch(sourceUrl);
@@ -124,6 +124,7 @@ export default async function fetchSources(
           tweet_mode: "extended",
           // since_id,
           count: 100,
+          ...source.params,
         };
         const result = await new Promise((resolve, reject) => {
           simpleTwitter.get("statuses/user_timeline", params, function (
@@ -140,6 +141,9 @@ export default async function fetchSources(
         originalJson = result.filter((item) => {
           return item.is_quote_status === false;
         });
+      } else if (sourceType === "ph") {
+        // producthunt graphql api
+        originalJson = await fetchPHData();
       } else {
         const originItemResult = await fetch(sourceUrl);
         originalJson = await originItemResult.json();
@@ -153,6 +157,8 @@ export default async function fetchSources(
           theItemsPath = "data.children";
         } else if (sourceType === "hn") {
           theItemsPath = "hits";
+        } else if (sourceType === "ph") {
+          theItemsPath = "data.posts.edges";
         }
       }
 

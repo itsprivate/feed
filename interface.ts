@@ -9,6 +9,7 @@ export interface Source {
   itemsPath?: string;
   rules?: Rule[];
   id: string;
+  params?: Record<string, string | boolean | number>;
 }
 export interface Language {
   code: string;
@@ -102,6 +103,15 @@ export interface Video {
   width?: number;
   height?: number;
 }
+export interface Embed {
+  html?: string;
+  width?: number;
+  height?: number;
+  url: string;
+  poster?: string;
+  type: string;
+  provider: string;
+}
 export interface FormatedItem {
   id: string;
   image?: string;
@@ -112,6 +122,7 @@ export interface FormatedItem {
   external_url?: string;
   authors?: Author[];
   _video?: Video;
+  _embed?: Embed;
   _score?: number;
   _num_comments?: number;
   _sensitive?: boolean;

@@ -53,9 +53,11 @@ export default class Translation {
     this.currentTargetLanguage = "";
     // init puppeteer
     const isHeadless = !(Deno.env.get("HEADLESS") === "0");
+    const iPhone = puppeteer.devices["iPhone 13"];
     if (!this.browser) {
       this.browser = await puppeteer.launch({
         devtools: true,
+        ignoreHTTPSErrors: true,
         // defaultViewport: null,
         headless: isHeadless, // !isDev,
         defaultViewport: {
@@ -75,9 +77,10 @@ export default class Translation {
       } else {
         this.page = await this.browser.newPage();
       }
+      // await this.page.emulate(iPhone);
 
       await this.page.setUserAgent(
-        "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36",
+        "Mozilla/5.0 (iPhone; CPU iPhone OS 15_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/19G71 [FBAN/FBIOS;FBDV/iPhone14,5;FBMD/iPhone;FBSN/iOS;FBSV/15.6;FBSS/3;FBID/phone;FBLC/en_US;FBOP/5]",
       );
 
       this.page.setExtraHTTPHeaders({ referer: "https://www.google.com/" });

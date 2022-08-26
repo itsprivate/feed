@@ -1,12 +1,12 @@
 import {
   Author,
   Config,
+  Embed,
   FeedItem,
   FeedItemKey,
   FormatedItem,
   Language,
   Link,
-  ParsedFilename,
   Video,
 } from "./interface.ts";
 import {
@@ -19,8 +19,10 @@ import {
   getFullMonth,
   getFullYear,
   getItemTranslations,
+  getRedirectedUrl,
   isMock,
   tagToUrl,
+  tryToRemoveUnnecessaryParams,
 } from "./util.ts";
 import { DOMParser, getMetadata, tweetPatch } from "./deps.ts";
 import log from "./log.ts";
@@ -28,7 +30,7 @@ export default class Item<T> {
   originalItem: T;
   private now: Date = new Date();
   private image: string | null | undefined;
-
+  private realUrl: string | null | undefined;
   constructor(originalItem: T) {
     this.originalItem = originalItem;
   }
@@ -118,6 +120,9 @@ export default class Item<T> {
   }
 
   getUrl(): string {
+    if (this.realUrl) {
+      return this.realUrl;
+    }
     return "";
   }
   getSiteIdentifier(): string {
@@ -209,6 +214,9 @@ export default class Item<T> {
   getVideo(): Video | undefined {
     return undefined;
   }
+  getEmbed(): Embed | undefined {
+    return undefined;
+  }
 
   getRawPath(targetSiteIdentifiers: string[]): string {
     if (targetSiteIdentifiers.length === 0) {
@@ -229,6 +237,9 @@ export default class Item<T> {
   }
   getNumComments(): number {
     return 0;
+  }
+  isNeedToGetRedirectedUrl(): boolean {
+    return false;
   }
   getFormatedPath(targetSiteIdentifiers: string[]): string {
     return `${getDataFormatedPath()}/${this.getModifiedYear()}/${this.getModifiedMonth()}/${this.getModifiedDay()}/${
@@ -266,7 +277,7 @@ export default class Item<T> {
 
     const item: FormatedItem = {
       id: this.getItemIdentifier(),
-      url: this.getUrl(),
+      url: this.realUrl || this.getUrl(),
       date_published: this.getModified(),
       date_modified: this.getModified(),
       _original_published: this.getOriginalPublished(),
@@ -306,6 +317,10 @@ export default class Item<T> {
     if (video) {
       item._video = video;
     }
+    const embed = this.getEmbed();
+    if (embed) {
+      item._embed = embed;
+    }
     if (externalUrl) {
       item.external_url = externalUrl;
     }
@@ -319,6 +334,17 @@ export default class Item<T> {
         formatedItem.image = this.image;
       }
     }
+
+    if (this.isNeedToGetRedirectedUrl()) {
+      if (this.realUrl === undefined) {
+        // try to get redirected url
+        const originalUrl = this.getUrl();
+        const redirectedUrl = await getRedirectedUrl(originalUrl);
+        this.realUrl = tryToRemoveUnnecessaryParams(redirectedUrl);
+        formatedItem.url = this.realUrl;
+      }
+    }
+
     return formatedItem;
   }
   isText(): boolean {
@@ -410,9 +436,40 @@ export default class Item<T> {
         content_html += `>`;
       }
       content_html += "your browser does not support the video tag.</video>";
+    } else if (item._embed) {
+      // add embed code
+      const embedType = item._embed.type;
+      const embedProvider = item._embed.provider;
+      const embedUrl = item._embed.url;
+
+      if (embedType === "video" && embedProvider === "youtube" && embedUrl) {
+        const embedUrlObj = new URL(embedUrl);
+        const embedUrlParams = embedUrlObj.searchParams;
+        const embedUrlVideoId = embedUrlParams.get("v");
+        if (embedUrlVideoId) {
+          content_html += `<iframe
+          class="embed-video"
+          loading="lazy"
+          src="https://www.youtube.com/embed/${embedUrlVideoId}&autoplay=1"
+          srcdoc="<style>*{padding:0;margin:0;overflow:hidden}html,body{height:100%}img,span{position:absolute;width:100%;top:0;bottom:0;margin:auto}span{height:1.5em;text-align:center;font:48px/1.5 sans-serif;color:white;text-shadow:0 0 0.5em black}</style><a href=https://www.youtube.com/embed/${embedUrlVideoId}?autoplay=1><img src=https://img.youtube.com/vi/${embedUrlVideoId}/hqdefault.jpg loading='lazy' alt='Youtube Preview Image'><span>▶</span></a>"
+          frameborder="0"
+          allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen
+        ></iframe>`;
+        } else {
+          throw new Error("youtube video id not found: " + embedUrl);
+        }
+      } else {
+        throw new Error(
+          "not supported embed type: " + embedProvider + embedType + " , " +
+            embedUrl,
+        );
+      }
     } else if (item.image) {
+      const imageUrl = new URL(item.image);
+
       content_html +=
-        `<div><img class="u-photo" src="${item.image}" alt="image"></div>`;
+        `<div><img loading="lazy" class="u-photo" src="${item.image}" alt="${imageUrl.hostname} image"></div>`;
     }
     content_html += ``;
     if (item._original_language !== language.code) {

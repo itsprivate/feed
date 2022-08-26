@@ -19,6 +19,7 @@ import {
 } from "./util.ts";
 import SourceItemAdapter from "./adapters/source.ts";
 import Item from "./item.ts";
+import log from "./log.ts";
 import { TARGET_SITE_LANGUAEGS } from "./constant.ts";
 export default function itemsToFeed(
   relativePath: string,
@@ -77,13 +78,18 @@ export default function itemsToFeed(
     const itemInstance = new SourceItemAdapter(
       originalItem,
     );
-    const feedItem = itemInstance.getFeedItemSync(
-      siteIdentifier,
-      language,
-      config,
-    );
+    try {
+      const feedItem = itemInstance.getFeedItemSync(
+        siteIdentifier,
+        language,
+        config,
+      );
 
-    items.push(feedItem);
+      items.push(feedItem);
+    } catch (_e) {
+      // ignore
+      log.debug(`ignore item ${key}`);
+    }
   });
   const homepageIdentifier = options?.isArchive
     ? config.archive.siteIdentifier

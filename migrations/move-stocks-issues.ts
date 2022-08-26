@@ -18,8 +18,7 @@ import { FormatedItem, ItemsJson } from "../interface.ts";
 export default async function moveIssues() {
   // get all 1-raw files
   // is exists raw files folder
-  const siteIdentifier = "stocks";
-  const type = "twitter";
+  const siteIdentifier = "ph";
   const files: string[] = [];
   let issues: string[] = [];
   let oldAndNewMap: Record<string, Record<string, string>> = {};
@@ -35,14 +34,14 @@ export default async function moveIssues() {
     let totalFiles = 0;
     for await (
       const entry of fs.walk(
-        "../inbox/ts-new/data/stocks-issues",
+        "../inbox/ts-new/data/ph-top-issues",
       )
     ) {
       if (isDev()) {
-        // if (totalFiles >= 1) {
-        //   log.info(`dev mode, only take ${DEV_MODE_HANDLED_ITEMS} files`);
-        //   break;
-        // }
+        if (totalFiles >= 1) {
+          log.info(`dev mode, only take ${DEV_MODE_HANDLED_ITEMS} files`);
+          break;
+        }
       }
       if (entry.isFile && entry.path.endsWith(".json")) {
         files.push(entry.path);

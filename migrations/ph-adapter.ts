@@ -1,25 +1,60 @@
-import { Author, Embed } from "../interface.ts";
+import { Author, Embed, VideoSource } from "../interface.ts";
 import Item from "../item.ts";
+import { contentType } from "../deps.ts";
+const prefixies: string[] = [];
+import log from "../log.ts";
 export default class ph extends Item<PHItem> {
-  getOriginalPublishedDate(): Date {
-    return new Date(this.originalItem.node.createdAt);
-  }
-  getId(): string {
-    return this.originalItem.node.slug as string;
-  }
-  getTitle(): string {
-    return this.originalItem.node.tagline;
-  }
-  getTitlePrefix(): string {
-    return `${this.originalItem.node.name} - `;
+  getFullTranslations(): Record<string, Record<string, string>> {
+    const translations: Record<string, Record<string, string>> = {
+      "en": {
+        title: this.getTitle(),
+      },
+    };
+    if (this.originalItem.localize) {
+      for (const locale of this.originalItem.localize) {
+        let languageCode = locale.locale;
+        if (languageCode === "zh") {
+          languageCode = "zh-Hans";
+        }
+        const title = locale.tagline;
+        translations[languageCode] = {
+          "title": title,
+        };
+      }
+    } else {
+      log.info("no locale", this.getId());
+    }
+
+    return translations;
   }
 
+  getPublishedDate(): Date {
+    return new Date(this.originalItem.createdAt);
+  }
+  getModifiedDate(): Date {
+    return new Date(this.originalItem.createdAt);
+  }
+  getOriginalPublishedDate(): Date {
+    return new Date(this.originalItem.original_createdAt);
+  }
+  getId(): string {
+    return this.originalItem.slug;
+  }
+  getTitle(): string {
+    const tweet = this.originalItem;
+
+    return tweet.tagline;
+  }
+
+  getTitlePrefix(): string {
+    return `${this.originalItem.name} - `;
+  }
   getScore(): number {
-    return this.originalItem.node.votesCount;
+    return this.originalItem.votesCount;
   }
 
   getNumComments(): number {
-    return this.originalItem.node.commentsCount;
+    return this.originalItem.commentsCount;
   }
   isNeedToGetRedirectedUrl() {
     return true;
@@ -27,17 +62,17 @@ export default class ph extends Item<PHItem> {
 
   getUrl(): string {
     // check entities for urls
-    return this.originalItem.node.website || this.originalItem.node.url;
+    return this.originalItem.website || this.originalItem.url;
   }
   getExternalUrl(): string | undefined {
-    const url = this.originalItem.node.url;
+    const url = this.originalItem.url;
     const urlObj = new URL(url);
     // remove all params
     urlObj.search = ``;
     return urlObj.href;
   }
   getAuthors(): Author[] {
-    const node = this.originalItem.node;
+    const node = this.originalItem;
     const author = node.user.name;
     const authorUrl = node.user.url;
     if (author && authorUrl) {
@@ -50,7 +85,7 @@ export default class ph extends Item<PHItem> {
   }
 
   getTags(): string[] {
-    const node = this.originalItem.node;
+    const node = this.originalItem;
     const tags: string[] = [];
     if (node.topics && node.topics.edges && node.topics.edges.length > 0) {
       node.topics.edges.forEach((edge) => {
@@ -60,7 +95,7 @@ export default class ph extends Item<PHItem> {
     return tags;
   }
   getImage(): string | null {
-    const node = this.originalItem.node;
+    const node = this.originalItem;
     let url = "";
     if (node.media && node.media.length > 0) {
       const imageItem = node.media.find((item) =>
@@ -81,7 +116,7 @@ export default class ph extends Item<PHItem> {
     return false;
   }
   getEmbed(): Embed | undefined {
-    const node = this.originalItem.node;
+    const node = this.originalItem;
     let url = "";
     if (node.media && node.media.length > 0) {
       if (node.media[0].type === `video` && node.media[0].videoUrl) {
@@ -133,14 +168,9 @@ export default class ph extends Item<PHItem> {
       // https://img.youtube.com/vi/nQCMDPWON5A/hqdefault.jpg
       // youtube preview img
     }
-    return undefined;
   }
 }
-
 export interface PHItem {
-  node: PHNodeItem;
-}
-export interface PHNodeItem {
   id: string;
   commentsCount: number;
   createdAt: string;
@@ -158,6 +188,15 @@ export interface PHNodeItem {
   votesCount: number;
   website: string;
   topics: Topics;
+  original_createdAt: string;
+  localize: Localize[];
+  source_updated_at: number;
+}
+
+export interface Localize {
+  locale: string;
+  description: string;
+  tagline: string;
 }
 
 export interface Media {

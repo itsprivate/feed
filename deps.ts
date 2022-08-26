@@ -8,6 +8,7 @@ export * as datetime from "https://deno.land/std@0.151.0/datetime/mod.ts";
 export * as async from "https://deno.land/std@0.151.0/async/mod.ts";
 export * as flags from "https://deno.land/std@0.151.0/flags/mod.ts";
 export * as colors from "https://deno.land/std@0.151.0/fmt/colors.ts";
+export { delay } from "https://deno.land/std@0.151.0/async/delay.ts";
 export { DateTimeFormatter } from "https://deno.land/std@0.151.0/datetime/formatter.ts";
 export {
   assert,
