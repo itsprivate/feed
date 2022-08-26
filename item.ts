@@ -130,12 +130,7 @@ export default class Item<T> {
     // this will not be translated
     return "";
   }
-  getTitleAddition(): string {
-    // this will not be translated
-    // and will not be displayed in title
-    // only in description
-    return "";
-  }
+
   getUrl(): string {
     return "";
   }
@@ -338,7 +333,7 @@ export default class Item<T> {
   }
   async getFormatedItem(): Promise<FormatedItem> {
     const formatedItem = this.getFormatedItemSync();
-    if (formatedItem.image === undefined) {
+    if (this.getImage() === undefined) {
       await this.tryToLoadImage();
       if (this.image) {
         formatedItem.image = this.image;
@@ -449,7 +444,7 @@ export default class Item<T> {
         );
       }
       content_html +=
-        `<div>${finalTitle} (<a href="${itemUrl}">${itemUrlObj.hostname}</a>)<br>`;
+        `<div>${finalTitle} (<a href="${itemUrl}">${itemUrlObj.hostname}</a>)</div>`;
       summary += `${
         formatHumanTime(
           new Date(item._original_published as string),
@@ -457,7 +452,7 @@ export default class Item<T> {
       } - ${originalTranslationObj.title}`;
     }
     content_html +=
-      `<a href="${itemUrl}"><time class="dt-published published" datetime="${item._original_published}">${
+      `<footer><a href="${itemUrl}"><time class="dt-published published" datetime="${item._original_published}">${
         formatHumanTime(
           new Date(item._original_published as string),
         )
@@ -494,7 +489,7 @@ export default class Item<T> {
         index++;
       }
     }
-    content_html += "</div>";
+    content_html += "</footer>";
 
     item.summary = summary;
     item.content_text = summary;

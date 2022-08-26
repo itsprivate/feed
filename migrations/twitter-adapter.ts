@@ -14,6 +14,7 @@ export default class twitter extends Item<TwitterItem> {
       // @ts-ignore: Unreachable code error
       tweet = item.retweeted_status;
       tweet.localize = item.localize;
+      tweet.created_at = item.created_at;
       tweet.original_created_at = item.original_created_at;
     }
     super(tweet);
@@ -27,28 +28,46 @@ export default class twitter extends Item<TwitterItem> {
         title: this.getTitle(),
       },
     };
+    const tweet = this.originalItem;
     if (this.originalItem.localize) {
       for (const locale of this.originalItem.localize) {
         let languageCode = locale.locale;
         if (languageCode === "zh") {
           languageCode = "zh-Hans";
         }
-
+        let title = "";
         if (!this.isRetweet) {
           if (!locale.full_text) {
             throw new Error("no full_text " + this.getId());
           }
-          translations[languageCode] = {
-            "title": locale.full_text,
-          };
+          title = locale.full_text;
         } else {
           if (!locale.retweeted_status_full_text) {
             throw new Error("no full_text " + this.getId());
           }
-          translations[languageCode] = {
-            "title": locale.retweeted_status_full_text,
-          };
+          title = locale.retweeted_status_full_text;
         }
+
+        // handle url
+
+        if (tweet.entities.media && Array.isArray(tweet.entities.media)) {
+          for (let i = 0; i < tweet.entities.media.length; i++) {
+            title = title.replace(tweet.entities.media[i].url, "");
+          }
+        }
+
+        // and replace the real links
+        if (tweet.entities.urls.length > 0) {
+          // not for latest url
+          for (let i = 0; i < tweet.entities.urls.length; i++) {
+            const urlEntity = tweet.entities.urls[i];
+            // replace other url with expanded url
+            title = title.replace(urlEntity.url, urlEntity.expanded_url);
+          }
+        }
+        translations[languageCode] = {
+          "title": title,
+        };
       }
     } else {
       log.info("no locale", this.getId());

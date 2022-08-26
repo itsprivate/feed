@@ -7,7 +7,7 @@ export default async function move() {
   // get all 1-raw files
   // is exists raw files folder
 
-  const files: string[] = [];
+  let files: string[] = [];
   try {
     let totalFiles = 0;
     for await (
@@ -16,7 +16,7 @@ export default async function move() {
       )
     ) {
       if (isDev()) {
-        if (totalFiles >= 1500) {
+        if (totalFiles >= 100) {
           log.info(`dev mode, only take ${DEV_MODE_HANDLED_ITEMS} files`);
           break;
         }
@@ -29,6 +29,7 @@ export default async function move() {
   } catch (e) {
     throw e;
   }
+  // files = ["./migrations/twitter2.json"];
   let total = 0;
 
   if (files.length > 0) {

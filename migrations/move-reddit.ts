@@ -14,14 +14,14 @@ export default async function moveReddit() {
     let totalFiles = 0;
     for await (
       const entry of fs.walk(
-        "../inbox/ts-new/data/reddit-ask",
+        "../inbox/ts-new/data/reddit-stocks",
       )
     ) {
       if (isDev()) {
-        if (totalFiles >= DEV_MODE_HANDLED_ITEMS) {
-          log.info(`dev mode, only take ${DEV_MODE_HANDLED_ITEMS} files`);
-          break;
-        }
+        // if (totalFiles >= DEV_MODE_HANDLED_ITEMS) {
+        //   log.info(`dev mode, only take ${DEV_MODE_HANDLED_ITEMS} files`);
+        //   break;
+        // }
       }
       if (entry.isFile && entry.path.endsWith(".json")) {
         files.push(entry.path);
@@ -48,13 +48,13 @@ export default async function moveReddit() {
 
         // write formated item to file
         await writeJSONFile(
-          item.getFormatedPath(["ask"]),
+          item.getFormatedPath(["stocks"]),
           itemJson,
         );
 
         total += 1;
         log.debug(
-          `formated item to ${item.getFormatedPath(["ask"])}`,
+          `formated item to ${item.getFormatedPath(["stocks"])}`,
         );
       } catch (e) {
         log.warn("ignore error when format item", e);

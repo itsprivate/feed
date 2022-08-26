@@ -1,0 +1,65 @@
+{
+  "created_at": "Sun May 09 14:42:21 +0000 2021",
+  "id_str": "1391387466624536590",
+  "full_text": "RT @finkd: A good day.",
+  "display_text_range": [0, 22],
+  "entities": {
+    "hashtags": [],
+    "symbols": [],
+    "user_mentions": [
+      {
+        "screen_name": "finkd",
+        "name": "Mark Zuckerberg",
+        "id": 20749410,
+        "id_str": "20749410",
+        "indices": [3, 9]
+      }
+    ],
+    "urls": []
+  },
+  "user": {
+    "name": "Conor",
+    "screen_name": "InvestmentTalkk",
+    "profile_image_url_https": "https://pbs.twimg.com/profile_images/1357676311897071616/t3ILOzBV_normal.jpg"
+  },
+  "retweet_count": 525,
+  "favorite_count": 0,
+  "original_created_at": "Sun May 09 13:39:57 +0000 2021",
+  "localize": [
+    {
+      "locale": "ja",
+      "full_text": "RT @finkd: 良い一日だった。",
+      "retweeted_status_full_text": "いい日だ。"
+    },
+    {
+      "locale": "zh",
+      "full_text": "RT @finkd: 一个好日子。",
+      "retweeted_status_full_text": "一个好日子。"
+    },
+    {
+      "locale": "zh-Hant",
+      "full_text": "RT @finkd: 一個好日子。",
+      "retweeted_status_full_text": "一個好日子。"
+    }
+  ],
+  "source_updated_at": 1620986000389,
+  "retweeted_status": {
+    "created_at": "Thu Mar 05 05:38:35 +0000 2009",
+    "id_str": "1282177499",
+    "full_text": "A good day.",
+    "display_text_range": [0, 11],
+    "entities": {
+      "hashtags": [],
+      "symbols": [],
+      "user_mentions": [],
+      "urls": []
+    },
+    "user": {
+      "name": "Mark Zuckerberg",
+      "screen_name": "finkd",
+      "profile_image_url_https": "https://pbs.twimg.com/profile_images/77846223/profile_normal.jpg"
+    },
+    "retweet_count": 526,
+    "favorite_count": 1409
+  }
+}

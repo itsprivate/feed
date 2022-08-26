@@ -11,10 +11,10 @@ export default async function generateRedirects(
   const rootDomain = config.root_domain;
   const archiveDomain = config.archive.siteIdentifier;
   let redirects = ``;
-  if (siteConfig.redirect !== true) {
-    log.info(`skip generate redirects for ${siteIdentifier}`);
-    return;
-  }
+  // if (siteConfig.redirect !== true) {
+  //   log.info(`skip generate redirects for ${siteIdentifier}`);
+  //   return;
+  // }
   for (const language of TARGET_SITE_LANGUAEGS) {
     const targetPrefix =
       `https://${archiveDomain}.${rootDomain}/${language.prefix}${siteIdentifier}`;

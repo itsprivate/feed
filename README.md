@@ -69,10 +69,13 @@ PROD=1 deno run -A ./migrations/move-reddit.ts
 NO_TRANSLATE=1 make prod-buildfromformat
 # upload archive
 make prod-awsuploadarchive
+# aws configure set s3.max_concurrent_requests 50
+# 50 is fine, seems 100 is too much
 # upload current
 make prod-uploadcurrent
 # create site
 make createsite site=ask
+# build site, and publish
 ```
 
 ## TODO

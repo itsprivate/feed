@@ -78,19 +78,22 @@
         text-decoration: underline;
         color: rgb(0, 102, 204);
       }
-      header{
+      .header{
         padding-top: 0.5em;
         padding-left: 1em;
         padding-right: 1em;
       }
-      footer{
+      .footer{
         margin-bottom: 2em;
         padding-left: 1em;
         padding-right: 1em;
       }
-      article {
-        padding: 4px 1em;
+      .article {
+        padding: 0.5em 1em;
         border-radius: 0.5em;
+      }
+      .article footer{
+        margin-top: 0.5em;
       }
    
       .pre-line {
@@ -164,29 +167,29 @@
       .about:target ~ .less-about {
         display: inline;
       }
-      .bold{
+      .bold {
         font-weight: 500;
       }
-      .mb{
+      .mb {
         margin-bottom: 2px;
       }
-      .px{
+      .px {
         padding-left: 1em;
         padding-right: 1em;
       }
-      .border-bottom{
+      .border-bottom {
         height: 1px;
         border-bottom: 1px dashed #d4d4d4;
         
       }
-       .w-50{
+      .w-50 {
         width: 50%;
-       }
-  
+      }
+    
     </style>
   </head>
   <body>
-    <header class="small">
+    <header class="header small">
         <a class="contrast no-underline small" href="{{{home_page_url}}}">{{title}}</a>
         <span> · </span>
         <a
@@ -243,7 +246,7 @@
     </header>
     
     {{#items}}
-    <article class="h-entry hentry">
+    <article class="article h-entry hentry">
       <div class="mb">
         {{#_is_text}}
         <span class="p-name entry-title bold pre-line secondary">{{order}}. {{{_title_html}}}</span>
@@ -256,7 +259,7 @@
     </article>
     <div class="px"><div class="border-bottom w-50"></div></div>
     {{/items}}
-    <footer>
+    <footer class="footer">
       <p class="muted small">{{more_post_label}}</p>
       {{#_issue_list.0}}
       <details>
