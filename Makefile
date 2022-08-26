@@ -8,8 +8,8 @@ source:
 
 .Phony: prod-source
 prod-source:
-	PROD=1 deno run -A main.ts --source
-
+# PROD=1 deno run -A main.ts --source --site hn,hackernews
+	PROD=1 deno run -A main.ts --stage translate
 # only build site
 .Phony: build
 build:
@@ -94,6 +94,9 @@ tr:
 realtr:
 	HEADLESS=1 MOCK=0 FILES=4 deno run -A main.ts --stage translate --site devfeed
 
+.Phony: realtrall
+realtrall:
+	DEBUG=1 HEADLESS=1 MOCK=0 FILES=4 deno run -A main.ts --stage translate
 
 .Phony: buildcurrent
 buildcurrent:

@@ -94,7 +94,7 @@ export default async function formatItems(
       }
       total += 1;
       if (total % 10 === 0) {
-        log.info(`${total}/${files} items formated`);
+        log.info(`${total}/${files.length} items formated`);
       }
       log.debug(
         `formated item to ${item.getFormatedPath(targetSiteIdentifiers)}`,

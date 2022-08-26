@@ -52,7 +52,30 @@ export default async function translateItems(
     let total = 0;
 
     log.info(`start translate ${files.length} items`);
+    const TRANSLATE_COUNT_ENV = Deno.env.get("TRANSLATE_COUNT");
+    let translateCountLimit = -1;
+    if (TRANSLATE_COUNT_ENV) {
+      translateCountLimit = parseInt(TRANSLATE_COUNT_ENV);
+    }
+    let translateTimeout = -1;
+    const TRANSLATE_TIMEOUT_ENV = Deno.env.get("TRANSLATE_TIMEOUT");
+    if (TRANSLATE_TIMEOUT_ENV) {
+      translateTimeout = parseInt(TRANSLATE_TIMEOUT_ENV); // in minutes
+    }
+    const startTime = Date.now();
+
     for (const file of files) {
+      // check is timeout
+      if (translateTimeout > 0) {
+        const elapsedTime = (Date.now() - startTime) / 1000 / 60;
+        if (elapsedTime > translateTimeout) {
+          log.info(
+            `translate timeout, elapsed time: ${elapsedTime} minutes, expect time: ${translateTimeout} minutes`,
+          );
+          break;
+        }
+      }
+
       const item = await readJSONFile(file) as FormatedItem;
 
       const itemInstance = new SourceItemAdapter(item);
@@ -142,7 +165,7 @@ export default async function translateItems(
               translations[language.code][field] !== undefined
             ) {
               // yes already translated
-              log.debug(`field ${field} already translated, skip`);
+              // log.debug(`field ${field} already translated, skip`);
               continue;
             }
 
@@ -150,13 +173,15 @@ export default async function translateItems(
           }
           // if todoLanguages is empty, skip
           if (todoLanguages.length === 0) {
-            log.debug(`field ${field} already translated, skip`);
+            log.debug(
+              ` field ${field} use cached translation, skip`,
+            );
             continue;
           }
 
           const value = originalTranslations[field];
-          log.debug(
-            `translating ${itemInstance.getType()} ${itemInstance.getOriginalLanguage()} ${field}: ${value} `,
+          log.info(
+            `translating ${itemInstance.getItemIdentifier()} ${field}: ${value} `,
           );
           // set timeout, max 100s
 
@@ -179,6 +204,12 @@ export default async function translateItems(
             }
             translations[languageCode][field] = translated[languageCode];
           }
+          // real total
+          total += 1;
+
+          if (total % 10 === 0) {
+            log.info(`translated ${total} items `);
+          }
         }
       }
 
@@ -191,9 +222,11 @@ export default async function translateItems(
       // remove formated file
       await Deno.remove(file);
 
-      total += 1;
-      if (total % 10 === 0) {
-        log.info(`translated ${total} items `);
+      if (translateCountLimit > 0 && total >= translateCountLimit) {
+        log.info(
+          `translated ${total} items, limit ${translateCountLimit}, break`,
+        );
+        break;
       }
     }
 

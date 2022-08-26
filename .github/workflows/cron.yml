@@ -2,6 +2,15 @@ name: cron tasks
 on:
   repository_dispatch:
   workflow_dispatch:
+    inputs:
+      translate_count:
+        description: "translate count"
+        required: false
+        default: "-1"
+      translate_timeout:
+        description: "translate timeout in minutes"
+        required: false
+        default: "120"
   push:
     branches:
       - main
@@ -47,6 +56,8 @@ jobs:
           TWITTER_ACCESS_TOKEN_SECRET: ${{secrets.TWITTER_ACCESS_TOKEN_SECRET}}
           TWITTER_CONSUMER_SECRET: ${{secrets.TWITTER_CONSUMER_SECRET}}
           PRODUCTHUNT_TOKEN: ${{secrets.PRODUCTHUNT_TOKEN}}
+          TRANSLATE_COUNT: ${{ github.event.inputs.translate_count }}
+          TRANSLATE_TIMEOUT: ${{ github.event.inputs.translate_timeout }}
       - name: upload files
         run: make prod-upload
         env:
@@ -77,6 +88,7 @@ jobs:
           echo "::error::Source build failed"
           exit 1
       - name: Publish pages
+        if: false
         run: make prod-publish
         env:
           CLOUDFLARE_ACCOUNT_ID: ${{secrets.CLOUDFLARE_ACCOUNT_ID}}

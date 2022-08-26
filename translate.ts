@@ -195,6 +195,7 @@ export default class Translation {
     // check zh-Hant
     if (targetLanguage === "zh-Hant") {
       if (!finalTranslatedResult["zh-Hans"]) {
+        log.warn("finalTranslatedResult", finalTranslatedResult);
         throw new Error("zh-Hans must be translated before zh-Hant");
       }
       finalTranslatedResult[targetLanguage] = toZhHant(
@@ -234,7 +235,8 @@ export default class Translation {
       isNeedInit = false;
       if (this.currentSourceLanguage !== sourceLanguage) {
         // click  black
-        await page.screenshot({ path: "temp/1.png" });
+        // await page.screenshot({ path: "temp/1.png" });
+        await page.waitForTimeout(100);
         await page.waitForSelector(sourceLangSelect, { visible: true });
 
         await page.click(sourceLangSelect);

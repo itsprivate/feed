@@ -350,20 +350,7 @@ sources:
       - type: greaterEqual
         key: getWeightedScore
         value: "300"
-  - url:
-      - charliebilello
-      - Stocktwits
-      - MarketWatch
-      - The_Real_Fly
-      - awealthofcs
-      - michaelbatnick
-      - InvestmentTalkk
-    type: twitter
-    id: source-twitter-stocks
-    rules:
-      - type: greaterEqual
-        key: getWeightedScore
-        value: "400"
+
   - url: https://www.reddit.com/r/wallstreetbets/top/.json?raw_json=1
     type: reddit
     id: source-reddit-wallstreetbets
@@ -403,22 +390,7 @@ sources:
       - type: greaterEqual
         key: getWeightedScore
         value: "400"
-  - url:
-      - s2fmultiple
-    type: twitter
-    id: source-crypto-twitter
-    rules:
-      - type: greaterEqual
-        key: getWeightedScore
-        value: "200"
-  - url:
-      - 100trillionUSD
-    type: twitter
-    id: source-crypto-twitter
-    rules:
-      - type: greaterEqual
-        key: getWeightedScore
-        value: "3000"
+
   - url: https://dev.to/api/articles?top=3
     id: source-devto
     type: devto
@@ -426,15 +398,7 @@ sources:
       - type: greaterEqual
         key: getWeightedScore
         value: "40"
-  - url: Quora
-    params:
-      include_rts: false
-    id: source-quora
-    type: twitter
-    rules:
-      - type: include
-        key: getTitle
-        value: "?"
+
   - url: https://www.reddit.com/r/SideProject/top/.json?raw_json=1
     id: source-reddit-sideproject
     type: reddit
@@ -478,3 +442,42 @@ sources:
       - type: greaterEqual
         key: getWeightedScore
         value: "150"
+  - url:
+      - charliebilello
+      - Stocktwits
+      - MarketWatch
+      - The_Real_Fly
+      - awealthofcs
+      - michaelbatnick
+      - InvestmentTalkk
+    type: twitter
+    id: source-twitter-stocks
+    rules:
+      - type: greaterEqual
+        key: getWeightedScore
+        value: "400"
+  - url:
+      - s2fmultiple
+    type: twitter
+    id: source-crypto-twitter
+    rules:
+      - type: greaterEqual
+        key: getWeightedScore
+        value: "200"
+  - url:
+      - 100trillionUSD
+    type: twitter
+    id: source-crypto-twitter
+    rules:
+      - type: greaterEqual
+        key: getWeightedScore
+        value: "3000"
+  - url: Quora
+    params:
+      include_rts: false
+    id: source-quora
+    type: twitter
+    rules:
+      - type: include
+        key: getTitle
+        value: "?"
