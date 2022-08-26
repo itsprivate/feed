@@ -57,10 +57,16 @@ export default async function formatItems(
         `remove ${needToremovedFormatedFiles.length} duplicated formated files`,
       );
     }
+    const imageCachedMap: Record<string, string> = {};
     // remove duplicated formated files
     for (const file of needToremovedFormatedFiles) {
+      const formatedJson = await readJSONFile(file);
+      if (formatedJson.image && formatedJson.url) {
+        imageCachedMap[formatedJson.url] = formatedJson.image;
+      }
       await Deno.remove(file);
     }
+    log.info(`start formating, ${files.length} files`);
     for (const file of files) {
       const filenmae = path.basename(file);
       const targetSiteIdentifiers = getTargetSiteIdentifiersByFilePath(file);
@@ -69,6 +75,7 @@ export default async function formatItems(
         string,
         unknown
       >;
+
       const item = new (adapters[parsedFilename.type])(
         originalItem,
       );
@@ -86,6 +93,9 @@ export default async function formatItems(
         await Deno.remove(file);
       }
       total += 1;
+      if (total % 10 === 0) {
+        log.info(`${total}/${files} items formated`);
+      }
       log.debug(
         `formated item to ${item.getFormatedPath(targetSiteIdentifiers)}`,
       );

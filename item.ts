@@ -5,6 +5,7 @@ import {
   FeedItem,
   FeedItemKey,
   FormatedItem,
+  GetFormatedItemOptions,
   Language,
   Link,
   Video,
@@ -147,12 +148,21 @@ export default class Item<T> {
     }
     return undefined;
   }
-  async tryToLoadImage(): Promise<string | null> {
+  async tryToLoadImage(
+    imageCachedMap?: Record<string, string>,
+  ): Promise<string | null> {
     if (isMock()) {
       this.image = null;
       return null;
     }
     const url = this.getUrl();
+
+    if (imageCachedMap && imageCachedMap[url]) {
+      this.image = imageCachedMap[url];
+      log.info(`load image from cache: ${url}`);
+      return this.image;
+    }
+
     // add siteIdentifier referrer
     log.debug(`try to load image for ${url}`);
     let resource: { text: string; contentType: string };
@@ -190,7 +200,7 @@ export default class Item<T> {
       const metadata = getMetadata(doc, url);
       if (metadata.image) {
         this.image = metadata.image;
-        log.info(`found image ${this.image} for ${url}`);
+        log.debug(`found image ${this.image} for ${url}`);
         return metadata.image;
       } else {
         this.image = null;
@@ -326,10 +336,16 @@ export default class Item<T> {
     }
     return item;
   }
-  async getFormatedItem(): Promise<FormatedItem> {
+  async getFormatedItem(
+    options?: GetFormatedItemOptions,
+  ): Promise<FormatedItem> {
     const formatedItem = this.getFormatedItemSync();
     if (this.getImage() === undefined) {
-      await this.tryToLoadImage();
+      let imageCachedMap: Record<string, string> = {};
+      if (options && options.imageCachedMap) {
+        imageCachedMap = options.imageCachedMap;
+      }
+      await this.tryToLoadImage(imageCachedMap);
       if (this.image) {
         formatedItem.image = this.image;
       }

@@ -65,7 +65,12 @@ jobs:
           AWS_DEFAULT_REGION: ${{secrets.ARCHIVE_REGION}}
           DUFS_URL: ${{secrets.DUFS_URL}}
           DUFS_SECRETS: ${{secrets.DUFS_SECRETS}}
-
+      - name: upload temp folder to github action for debug
+        uses: actions/upload-artifact@v3
+        with:
+          name: tempt
+          path: temp
+          if-no-files-found: ignore
       - name: throw if source failed
         if: steps.source.outcome == 'failure'
         run: |

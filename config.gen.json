@@ -94,7 +94,7 @@
       "port": 8000,
       "dev": true,
       "tags": [
-        "source-twitter-wsj"
+        "source-hackernews-index"
       ],
       "archive": false,
       "translations": {

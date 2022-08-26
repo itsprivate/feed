@@ -11,6 +11,9 @@ export interface Source {
   id: string;
   params?: Record<string, string | boolean | number>;
 }
+export interface GetFormatedItemOptions {
+  imageCachedMap?: Record<string, string>;
+}
 export interface Language {
   code: string;
   name: string;

@@ -1,7 +1,7 @@
 import { Browser, Page, puppeteer } from "./bad-deps.ts";
 import { isMock } from "./util.ts";
 import log from "./log.ts";
-import { YAML } from "./deps.ts";
+import { fs, YAML } from "./deps.ts";
 import { TranslationOptions } from "./interface.ts";
 import { TRANSLATED_ITEMS_PER_PAGE } from "./constant.ts";
 import { toZhHant } from "./to-zh-hant.ts";
@@ -36,7 +36,7 @@ export default class Translation {
       return;
     }
     // try to load i18n local translation files
-
+    fs.ensureDir("temp");
     for await (const dirEntry of Deno.readDir("./i18n")) {
       if (dirEntry.isFile) {
         const filename = dirEntry.name;
@@ -61,8 +61,8 @@ export default class Translation {
         // defaultViewport: null,
         headless: isHeadless, // !isDev,
         defaultViewport: {
-          width: 393,
-          height: 851,
+          width: 390,
+          height: 844,
           // deviceScaleFactor: 2,
           isMobile: true,
         },
@@ -234,7 +234,7 @@ export default class Translation {
       isNeedInit = false;
       if (this.currentSourceLanguage !== sourceLanguage) {
         // click  black
-        // await page.screenshot({ path: "data/1.png" });
+        await page.screenshot({ path: "temp/1.png" });
         await page.waitForSelector(sourceLangSelect, { visible: true });
 
         await page.click(sourceLangSelect);

@@ -92,7 +92,7 @@ tr:
 
 .Phony: realtr
 realtr:
-	HEADLESS=0 MOCK=0 FILES=4 deno run -A main.ts --stage translate --site devfeed
+	HEADLESS=1 MOCK=0 FILES=4 deno run -A main.ts --stage translate --site devfeed
 
 
 .Phony: buildcurrent
