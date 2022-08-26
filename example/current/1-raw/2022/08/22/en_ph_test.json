@@ -1,0 +1,79 @@
+{
+  "node": {
+    "id": "357026",
+    "commentsCount": 123,
+    "createdAt": "2022-08-25T07:01:00Z",
+    "description": "Compare and test the best marketing automation software on the market, including HubSpot, Active Campaign, and Constant Contact. No more demos. No more sales calls. Make a confident buying choice every time—on your terms. Free for testers, always.",
+    "featuredAt": "2022-08-25T07:01:00Z",
+    "media": [
+      {
+        "type": "video",
+        "url": "https://ph-files.imgix.net/c588759a-94e0-43bc-83c3-a9804906101a.jpeg?auto=format",
+        "videoUrl": "https://www.youtube.com/watch?v=UG0stxcfW4s"
+      },
+      {
+        "type": "image",
+        "url": "https://ph-files.imgix.net/facb62c1-4e78-418f-b0bd-a0f61727f653.png?auto=format",
+        "videoUrl": null
+      },
+      {
+        "type": "image",
+        "url": "https://ph-files.imgix.net/34dcd161-a646-4f12-be0b-23017fcab369.png?auto=format",
+        "videoUrl": null
+      },
+      {
+        "type": "image",
+        "url": "https://ph-files.imgix.net/bd7116ab-ebc6-417f-affc-5902016a6d1e.png?auto=format",
+        "videoUrl": null
+      },
+      {
+        "type": "image",
+        "url": "https://ph-files.imgix.net/54e16368-f529-428c-8480-ada69ca04772.png?auto=format",
+        "videoUrl": null
+      },
+      {
+        "type": "image",
+        "url": "https://ph-files.imgix.net/4e48cf77-39a6-4c33-91ae-dcff31ba6fe3.png?auto=format",
+        "videoUrl": null
+      }
+    ],
+    "name": "TestBox for Marketers",
+    "productLinks": [
+      {
+        "type": "Website",
+        "url": "https://www.producthunt.com/r/d0e65052f7b702?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+Buzzing+%28ID%3A+41381%29"
+      }
+    ],
+    "reviewsCount": 0,
+    "reviewsRating": 0.0,
+    "slug": "testbox-for-marketers",
+    "tagline": "Compare & test marketing automation platforms on your terms",
+    "url": "https://www.producthunt.com/posts/testbox-for-marketers?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+Buzzing+%28ID%3A+41381%29",
+    "thumbnail": {
+      "type": "image",
+      "url": "https://ph-files.imgix.net/ca2e8760-4594-413a-91b2-6bb70143fc8a.png?auto=format",
+      "videoUrl": null
+    },
+    "votesCount": 728,
+    "website": "https://www.producthunt.com/r/d0e65052f7b702?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+Buzzing+%28ID%3A+41381%29",
+    "topics": {
+      "edges": [
+        {
+          "node": {
+            "name": "Productivity"
+          }
+        },
+        {
+          "node": {
+            "name": "Marketing"
+          }
+        },
+        {
+          "node": {
+            "name": "Tech"
+          }
+        }
+      ]
+    }
+  }
+}

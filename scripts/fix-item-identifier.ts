@@ -17,7 +17,7 @@ export default async function uploadArchive() {
   let total = 0;
   let totalItems = 0;
   let totalFiles = 0;
-  for await (const entry of fs.walk(getArchivePath())) {
+  for await (const entry of fs.walk(getDataPath())) {
     totalFiles++;
     if (
       entry.isFile &&
@@ -39,7 +39,7 @@ export default async function uploadArchive() {
             const id = item.id;
             const parsed = parseItemIdentifier(id);
             let newId = id;
-            if (parsed.targetSiteIdentifier) {
+            if (parsed.year && parsed.month && parsed.day) {
               newId = stringifyItemIdentifier(parsed);
               const newItem = { ...item, id: newId };
               itemsJson.items[newId] = newItem;
@@ -78,10 +78,9 @@ interface ParsedFilename {
   day: string;
   language: string;
   type: string;
-  targetSiteIdentifier: string;
 }
 function stringifyItemIdentifier(parsed: ParsedFilename): string {
-  return `${parsed.year}_${parsed.month}_${parsed.day}_${parsed.language}_${parsed.type}__${parsed.id}`;
+  return `${parsed.language}_${parsed.type}__${parsed.id}`;
 }
 
 function parseItemIdentifier(
@@ -101,7 +100,6 @@ function parseItemIdentifier(
   const day = symParts[2];
   const language = symParts[3];
   const type = symParts[4];
-  const targetSiteIdentifier = symParts[5];
 
   const idParts = parts.slice(1);
   const id = idParts.join("__");
@@ -112,6 +110,5 @@ function parseItemIdentifier(
     day,
     language,
     type,
-    targetSiteIdentifier,
   };
 }

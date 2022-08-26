@@ -1,6 +1,7 @@
 import { fs } from "../deps.ts";
 import {
   getArchivePath,
+  getCurrentItemsFilePath,
   getFullDay,
   getFullMonth,
   getFullYear,
@@ -38,10 +39,10 @@ export default async function moveIssues() {
       )
     ) {
       if (isDev()) {
-        if (totalFiles >= 1) {
-          log.info(`dev mode, only take ${DEV_MODE_HANDLED_ITEMS} files`);
-          break;
-        }
+        // if (totalFiles >= 1) {
+        //   log.info(`dev mode, only take ${DEV_MODE_HANDLED_ITEMS} files`);
+        //   break;
+        // }
       }
       if (entry.isFile && entry.path.endsWith(".json")) {
         files.push(entry.path);
@@ -73,20 +74,23 @@ export default async function moveIssues() {
           string | number
         >;
         const originalCreated = new Date(
-          Number(json.original_created_utc) * 1000,
+          Number(json.created_utc) * 1000,
         );
         const weekInfo = weekOfYear(originalCreated);
-        const newIdentifier = `${getFullYear(originalCreated)}_${
-          getFullMonth(originalCreated)
-        }_${getFullDay(originalCreated)}_en_${type}_${siteIdentifier}__${
-          getId(json.permalink as string)
-        }`;
+        const newIdentifier = `en_${type}__${getId(json.permalink as string)}`;
         const newPath =
           `archive/${siteIdentifier}/archive/${weekInfo.path}/items.json`;
+        // console.log("newPath", newPath);
         try {
           const newJson = await readJSONFile(newPath) as ItemsJson;
-          // find items
-          newItems.items[newIdentifier] = newJson.items[newIdentifier];
+          if (newJson.items[newIdentifier]) {
+            // find items
+            newItems.items[newIdentifier] = newJson.items[newIdentifier];
+          } else {
+            // not find items
+            log.warn("can not found " + newIdentifier, "from ", newPath);
+            throw new Error("not found");
+          }
         } catch (e) {
           log.warn("ignore error when format item", e);
         }
@@ -105,11 +109,21 @@ export default async function moveIssues() {
     }
   }
 
-  // const issueIndexPath = getCurrentIssuesFilePath(siteIdentifier);
-  // issues = resortArchiveKeys(issues);
-  // await writeJSONFile(getMigratedIssueMapPath(), oldAndNewMap);
+  const currentItemsPath = getCurrentItemsFilePath(siteIdentifier);
+  issues = resortArchiveKeys(issues);
+  await writeJSONFile(getMigratedIssueMapPath(), oldAndNewMap);
 
-  // await writeJSONFile(issueIndexPath, issues);
+  // try read current items
+  let currentItems: ItemsJson = { items: {} };
+  try {
+    currentItems = await readJSONFile(currentItemsPath) as ItemsJson;
+  } catch (e) {
+    // ignore
+  }
+  // merge current items and new items
+  currentItems.issues = issues;
+
+  await writeJSONFile(currentItemsPath, currentItems);
   log.info(
     `formated ${total} items`,
   );

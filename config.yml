@@ -180,7 +180,22 @@ sites:
         title: "Buzzing on World News"
         description: "See what's buzzing on the news in your native language"
         keywords: "Buzzing News, Buzzing News Feed"
-
+  # ph:
+  #   port: 8009
+  #   archive: true
+  #   redirect: true
+  #   tags:
+  #     - tech
+  #     - source-producthunt-top
+  #   translations:
+  #     "zh-Hans":
+  #       title: "Product Hunt"
+  #       short_title: "国外新闻"
+  #       description: "用中文浏览国外新闻头条，美国新闻头条，全球新闻(西方媒体)头条"
+  #     "en":
+  #       title: "Buzzing on World News"
+  #       description: "See what's buzzing on the news in your native language"
+  #       keywords: "Buzzing News, Buzzing News Feed"
 sources:
   - url: https://news.google.com/rss/topics/CAAqJggKIiBDQkFTRWdvSUwyMHZNRGx1YlY4U0FtVnVHZ0pWVXlnQVAB?hl=en-US&gl=US&ceid=US:en
     type: googlenews
@@ -273,3 +288,10 @@ sources:
       - type: greaterEqual
         key: getWeightedScore
         value: "40"
+  - id: source-producthunt-top
+    url: https://api.producthunt.com/v2/api/graphql
+    type: ph
+    rules:
+      - type: greaterEqual
+        key: getWeightedScore
+        value: "80"
