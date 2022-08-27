@@ -109,3 +109,6 @@ make prod-publish
 - [ ] current backup
 - [x] add links meta
 - [ ] relative links for most links
+- [ ] issue generate support
+- [ ] twitter message support
+- [ ] config import

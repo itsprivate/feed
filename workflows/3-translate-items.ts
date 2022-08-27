@@ -81,7 +81,7 @@ export default async function translateItems(
     const translation = new Translation();
     await translation.init();
 
-    let total = 1;
+    let total = 0;
     let translateWithAPITotal = 0;
     let failedTotal = 0;
     let translateWithCacheTotal = 0;
@@ -99,6 +99,7 @@ export default async function translateItems(
     const startTime = Date.now();
 
     for (const file of files) {
+      total += 1;
       // check is timeout
       if (translateTimeout > 0) {
         const elapsedTime = (Date.now() - startTime) / 1000 / 60;
@@ -252,7 +253,6 @@ export default async function translateItems(
           break;
         }
       }
-      total += 1;
     }
 
     // close instance
