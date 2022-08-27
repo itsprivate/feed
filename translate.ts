@@ -51,6 +51,7 @@ export default class Translation {
   private currentTargetLanguage = "";
   private localTranslations: Record<string, Record<string, string>> = {};
   private scheme = "a";
+  private alreadyTriedTargetMenu = false;
   constructor(options: TranslationOptions = {}) {
     if (options.isMock !== undefined) {
       this.isMock = options.isMock;
@@ -296,6 +297,10 @@ export default class Translation {
         try {
           await page.click(sourceLangButton);
         } catch (_) {
+          // upload png
+          await page.screenshot({
+            path: "temp/UNSUPPORTED_SOURCE_LANGUAGE.png",
+          });
           throw new Error("UNSUPPORTED_SOURCE_LANGUAGE");
         }
         // await page.screenshot({ path: "screens/3.png" });
@@ -371,7 +376,7 @@ export default class Translation {
     if (this.currentTargetLanguage !== targetLanguage) {
       const page = this.page!;
       await page.click(deepScheme[this.scheme].targetLangSelect);
-      // await page.waitForTimeout(100);
+      await page.waitForTimeout(100);
 
       await page.waitForSelector(deepScheme[this.scheme].targetLangMenu, {
         visible: true,
@@ -381,7 +386,29 @@ export default class Translation {
       try {
         await page.click(Translation.getTargetButtonSelector(targetLanguage));
       } catch (_) {
-        throw new Error("UNSUPPORTED_TARGET_LANGUAGE");
+        if (!this.alreadyTriedTargetMenu) {
+          // retry
+          await page.waitForTimeout(1000);
+          try {
+            await page.click(
+              Translation.getTargetButtonSelector(targetLanguage),
+            );
+            this.alreadyTriedTargetMenu = true;
+          } catch (e) {
+            // upload png
+            await page.screenshot({
+              path: "temp/UNSUPPORTED_TARGET_LANGUAGE_already.png",
+            });
+            this.alreadyTriedTargetMenu = true;
+            throw e;
+          }
+        } else {
+          // upload png
+          await page.screenshot({
+            path: "temp/UNSUPPORTED_TARGET_LANGUAGE.png",
+          });
+          throw new Error("UNSUPPORTED_TARGET_LANGUAGE");
+        }
       }
       this.currentTargetLanguage = targetLanguage;
     }
