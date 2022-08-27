@@ -5,6 +5,7 @@ import {
   FeedItem,
   FeedItemKey,
   FormatedItem,
+  GetFeedItemSyncOptions,
   GetFormatedItemOptions,
   Language,
   Link,
@@ -364,28 +365,31 @@ export default class Item<T> {
 
     return formatedItem;
   }
-  isText(): boolean {
-    // title is text
-    return false;
-  }
 
   getFeedItemSync(
     siteIdentifier: string,
     language: Language,
     config: Config,
+    options?: GetFeedItemSyncOptions,
   ): FeedItem {
+    let versionCode = "default";
+    if (options && options.versionCode) {
+      if (options.versionCode === "lite") {
+        versionCode = "lite";
+      } else {
+        log.warn(`unsupported version ${options.versionCode}, use default`);
+      }
+    }
+    const isLite = versionCode === "lite";
+
     const formatedItem = this.getFormatedItemSync();
     const item: FeedItem = {
       title: "",
-      _title_html: "",
       summary: "",
       content_text: "",
       content_html: "",
       ...formatedItem,
     };
-    if (this.isText()) {
-      item._is_text = this.isText();
-    }
 
     const itemUrl = this.getUrl();
     const itemUrlObj = new URL(itemUrl);
@@ -418,17 +422,10 @@ export default class Item<T> {
       item[translationField as FeedItemKey] = translationValue as never;
     }
 
-    if (this.getType() === "twitter") {
-      // @ts-ignore: npm module
-      item._title_html = tweetPatch(item.title);
-    } else {
-      item._title_html = item.title;
-    }
-
     let summary = "";
 
     let content_html = "";
-    if (item._video) {
+    if (!isLite && item._video) {
       const sources = item._video.sources;
       const height = item._video.height;
       const width = item._video.width;
@@ -453,7 +450,7 @@ export default class Item<T> {
         content_html += `>`;
       }
       content_html += "your browser does not support the video tag.</video>";
-    } else if (item._embed) {
+    } else if (!isLite && item._embed) {
       // add embed code
       const embedType = item._embed.type;
       const embedProvider = item._embed.provider;
@@ -482,7 +479,7 @@ export default class Item<T> {
             embedUrl,
         );
       }
-    } else if (item.image) {
+    } else if (!isLite && item.image) {
       const imageUrl = new URL(item.image);
 
       content_html +=

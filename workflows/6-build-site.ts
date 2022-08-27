@@ -88,62 +88,68 @@ export default async function buildSite(options: RunOptions) {
     if (currentItemsJsonKeys.length > 0) {
       // multiple languages support
       const languages = TARGET_SITE_LANGUAEGS;
+      const versions = config.versions;
       for (const language of languages) {
-        const feedJson = itemsToFeed(
-          itemsRelativePath,
-          currentItemsJson,
-          siteIdentifier,
-          language.code,
-          config,
-        );
-        // write to dist file
-        const feedPath = getDistFilePath(
-          siteIdentifier,
-          `${language.prefix}feed.json`,
-        );
-        await writeJSONFile(feedPath, feedJson);
+        for (const version of versions) {
+          const feedJson = itemsToFeed(
+            itemsRelativePath,
+            currentItemsJson,
+            siteIdentifier,
+            language.code,
+            config,
+            {
+              versionCode: version.code,
+            },
+          );
+          // write to dist file
+          const feedPath = getDistFilePath(
+            siteIdentifier,
+            `${language.prefix}${version.prefix}feed.json`,
+          );
+          await writeJSONFile(feedPath, feedJson);
 
-        // build atom.xml
-        // no need
-        // @ts-ignore: npm module
-        // const atomOutput = jsonfeedToAtom(feedJson);
-        // write to dist file
-        // const atomPath = getDistFilePath(
-        //   siteIdentifier,
-        //   `${language.prefix}atom.xml`,
-        // );
-        // await writeTextFile(atomPath, atomOutput);
+          // build atom.xml
+          // no need
+          // @ts-ignore: npm module
+          // const atomOutput = jsonfeedToAtom(feedJson);
+          // write to dist file
+          // const atomPath = getDistFilePath(
+          //   siteIdentifier,
+          //   `${language.prefix}atom.xml`,
+          // );
+          // await writeTextFile(atomPath, atomOutput);
 
-        // build feed.xml
-        // @ts-ignore: npm module
-        const rssOutput = jsonfeedToRSS(feedJson, {
-          language: feedJson.language,
-        });
-        // const rssOutput = "";
-        // write to dist file
-        const rssPath = getDistFilePath(
-          siteIdentifier,
-          `${language.prefix}feed.xml`,
-        );
-        await writeTextFile(rssPath, rssOutput);
+          // build feed.xml
+          // @ts-ignore: npm module
+          const rssOutput = jsonfeedToRSS(feedJson, {
+            language: feedJson.language,
+          });
+          // const rssOutput = "";
+          // write to dist file
+          const rssPath = getDistFilePath(
+            siteIdentifier,
+            `${language.prefix}${version.prefix}feed.xml`,
+          );
+          await writeTextFile(rssPath, rssOutput);
 
-        const indexPath = getDistFilePath(
-          siteIdentifier,
-          `${language.prefix}index.html`,
-        );
-        const indexHTML = await feedToHTML(
-          feedJson,
-          config,
-          indexTemplateString,
-        );
-        await writeTextFile(indexPath, indexHTML);
+          const indexPath = getDistFilePath(
+            siteIdentifier,
+            `${language.prefix}${version.prefix}index.html`,
+          );
+          const indexHTML = await feedToHTML(
+            feedJson,
+            config,
+            indexTemplateString,
+          );
+          await writeTextFile(indexPath, indexHTML);
 
-        // copy static files
-        try {
-          await generateIcons(siteIdentifier);
-        } catch (e) {
-          log.error("can not generate icons for ", siteIdentifier);
-          throw e;
+          // copy static files
+          try {
+            await generateIcons(siteIdentifier);
+          } catch (e) {
+            log.error("can not generate icons for ", siteIdentifier);
+            throw e;
+          }
         }
       }
       log.info(

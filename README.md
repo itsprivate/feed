@@ -111,5 +111,5 @@ make prod-publish
 - [ ] relative links for most links
 - [ ] issue generate support
 - [ ] twitter message support
-- [ ] config import
-- [ ] build index for all sites
+- [x] config import
+- [ ] build www.buzzing.cc index for all sites

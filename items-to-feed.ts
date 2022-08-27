@@ -4,6 +4,7 @@ import {
   FeedItemKey,
   Feedjson,
   GeneralSiteConfig,
+  GetFeedItemSyncOptions,
   ItemKey,
   ItemsJson,
   ItemsToFeedOptions,
@@ -79,10 +80,15 @@ export default function itemsToFeed(
       originalItem,
     );
     try {
+      const getFeedItemSyncOptions: GetFeedItemSyncOptions = {};
+      if (options && options.versionCode) {
+        getFeedItemSyncOptions.versionCode = options.versionCode;
+      }
       const feedItem = itemInstance.getFeedItemSync(
         siteIdentifier,
         language,
         config,
+        getFeedItemSyncOptions,
       );
 
       items.push(feedItem);

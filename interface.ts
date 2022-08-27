@@ -29,6 +29,7 @@ export interface RunOptions {
 }
 export interface ItemsToFeedOptions {
   isArchive?: boolean;
+  versionCode?: string;
 }
 export interface GeneralSiteConfig {
   port?: number;
@@ -61,12 +62,18 @@ export interface FilteredFile {
   targetSiteIdentifiers: string[];
   groups: Record<string, string[]>;
 }
+export interface Version {
+  prefix: string;
+  code: string;
+  name: string;
+}
 export interface Config {
   icon: string;
   favicon: string;
   root_domain: string;
   translated_items_per_page: number;
   max_files_per_site: number;
+  versions: Version[];
   sources: Source[];
   sites: Record<string, SiteConfig>;
   translations: Record<string, Record<string, string>>;
@@ -183,9 +190,11 @@ export interface FeedItem extends FormatedItem {
   summary: string;
   content_text: string;
   content_html: string;
-  _is_text?: boolean;
-  _title_html: string;
 }
 export interface Type<T> extends Function {
   new (...args: unknown[]): T;
+}
+
+export interface GetFeedItemSyncOptions {
+  versionCode?: string;
 }

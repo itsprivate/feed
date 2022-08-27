@@ -4,6 +4,13 @@ root_domain: buzzing.cc
 page_size: 200
 translated_items_per_page: 100
 max_files_per_site: -1
+versions:
+  - prefix: ""
+    code: "default"
+    name: "Default"
+  - prefix: "lite/"
+    code: "lite"
+    name: "Lite"
 dev:
   max_files_per_site: 4
   translated_items_per_page: 2
