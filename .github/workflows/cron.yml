@@ -11,9 +11,9 @@ on:
         description: "translate timeout in minutes"
         required: false
         default: "120"
-  push:
-    branches:
-      - main
+  # push:
+  #   branches:
+  #     - main
   # schedule:
   #   - cron: "*/30 * * * *"
 jobs:

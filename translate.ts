@@ -236,7 +236,7 @@ export default class Translation {
       isNeedInit = false;
       if (this.currentSourceLanguage !== sourceLanguage) {
         // click  black
-        // await page.screenshot({ path: "temp/1.png" });
+        await page.screenshot({ path: "temp/1.png" });
         await page.waitForTimeout(100);
         await page.waitForSelector(sourceLangSelect, { visible: true });
 
