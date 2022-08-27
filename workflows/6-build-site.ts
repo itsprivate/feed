@@ -41,7 +41,9 @@ export default async function buildSite(options: RunOptions) {
   } catch (_e) {
     // ignore
   }
+  let siteOrder = 0;
   for (const siteIdentifier of siteIdentifiers) {
+    siteOrder++;
     const currentItemsFilePath = getCurrentItemsFilePath(
       siteIdentifier,
     );
@@ -124,7 +126,9 @@ export default async function buildSite(options: RunOptions) {
           throw e;
         }
       }
-      log.info(`${siteIdentifier} build success`);
+      log.info(
+        `${siteOrder}/${siteIdentifiers.length} ${siteIdentifier} build success`,
+      );
     } else {
       log.info(
         `skip build ${siteIdentifier}, cause no items to be build`,

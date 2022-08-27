@@ -81,7 +81,7 @@ export default async function translateItems(
     const translation = new Translation();
     await translation.init();
 
-    let total = 0;
+    let total = 1;
     let translateWithAPITotal = 0;
     let failedTotal = 0;
     let translateWithCacheTotal = 0;
@@ -194,7 +194,7 @@ export default async function translateItems(
 
           const value = originalTranslations[field];
           log.info(
-            `translating ${itemInstance.getItemIdentifier()} ${field}: ${value} `,
+            `translating ${file} ${field}: ${value} `,
           );
           // set timeout, max 100s
           try {
@@ -219,7 +219,7 @@ export default async function translateItems(
             isTranslateSuccess = true;
 
             log.info(
-              `${total}/${files.length} translated ${value} to`,
+              `${total}/${files.length} translated result:`,
               translated,
             );
             if (translateWithAPITotal % 10 === 0) {
@@ -257,7 +257,7 @@ export default async function translateItems(
 
     // close instance
     log.info(
-      `translated ${total} items, failed ${failedTotal} items, use api: ${translateWithAPITotal}, use cache: `,
+      `translated ${total} items, failed ${failedTotal} items, use api: ${translateWithAPITotal}, use cache: ${translateWithCacheTotal}`,
     );
 
     await translation.close();

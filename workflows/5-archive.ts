@@ -37,7 +37,7 @@ export default async function archive(options: RunOptions) {
     const siteConfig = options.config.sites[siteIdentifier];
     if (siteConfig.archive === false) {
       log.info(
-        `Skipping archive ${siteIdentifier} as it is configured not archived`,
+        `${siteIdentifier}: skip archive as it is configured not archived`,
       );
       continue;
     }
@@ -178,7 +178,7 @@ export default async function archive(options: RunOptions) {
       } else {
         // no archive items
         log.info(
-          `no need to archive items for ${siteIdentifier}`,
+          `${siteIdentifier}: no need to archive items`,
         );
       }
     } else {

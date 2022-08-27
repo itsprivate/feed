@@ -37,7 +37,7 @@ export default async function buildCurrent(
     const siteConfig = options.config.sites[siteIdentifier];
     if (files.length > 0) {
       log.info(
-        `start build items, got ${files.length} translated items for ${siteIdentifier}`,
+        `start build ${siteIdentifier} items, got ${files.length} translated items`,
       );
 
       // move items to current items folder

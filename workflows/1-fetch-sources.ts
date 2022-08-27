@@ -68,8 +68,9 @@ export default async function fetchSources(
   // unique filteredSources
   filteredSources = Array.from(new Set(filteredSources.map((item) => item.id)))
     .map((id) => sourcesMap.get(id)!);
-
+  let sourceOrder = 0;
   for (const source of filteredSources) {
+    sourceOrder++;
     const sourceId = source.id;
     let sourceUrls = source.url as string[];
     if (typeof sourceUrls === "string") {
@@ -92,7 +93,7 @@ export default async function fetchSources(
         currentKeysMap.set(identifierToCachedKey(key), true);
       }
     }
-    log.info(sourceId + ` current keys length: ${currentKeysMap.size}`);
+    log.debug(sourceId + ` current keys length: ${currentKeysMap.size}`);
     // fetch source, and parse it to item;
     for (const sourceUrl of sourceUrls) {
       let total = 0;
@@ -170,7 +171,7 @@ export default async function fetchSources(
       }
 
       log.info(
-        `fetched ${originalItems.length} raw items from ${sourceId} `,
+        `${sourceOrder}/${filteredSources.length} ${sourceId} fetched ${originalItems.length} raw items from ${sourceUrl} `,
       );
       originalItems = filterByRules(
         // @ts-ignore: hard to type
@@ -182,7 +183,7 @@ export default async function fetchSources(
         rules,
       );
       log.info(
-        `filterd ${originalItems.length} items by rules`,
+        `got ${originalItems.length} valid items by rules`,
       );
 
       // resort items from old to new , cause we need to keep the order of items
@@ -220,7 +221,7 @@ export default async function fetchSources(
         }
       }
       log.info(
-        `saved ${total} items from ${sourceUrl} for ${sourceId}`,
+        `saved ${total} items by unique keys`,
       );
     }
   }

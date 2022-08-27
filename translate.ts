@@ -278,9 +278,9 @@ export default class Translation {
             timeout: 3000,
           });
           this.scheme = "b";
-          log.info(`deepl scheme is b`);
+          log.info(`use B scheme`);
         } catch (_e) {
-          log.info(`use a scheme`);
+          log.info(`use A scheme`);
           await page.waitForSelector(deepScheme.a.sourceLangSelect, {
             visible: true,
           });
