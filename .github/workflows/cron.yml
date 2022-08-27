@@ -3,6 +3,10 @@ on:
   repository_dispatch:
   workflow_dispatch:
     inputs:
+      force_all:
+        default: "0"
+        description: "Force all sites to build"
+        type: string
       translate_count:
         description: "translate count"
         required: false
@@ -58,6 +62,7 @@ jobs:
           PRODUCTHUNT_TOKEN: ${{secrets.PRODUCTHUNT_TOKEN}}
           TRANSLATE_COUNT: ${{ github.event.inputs.translate_count }}
           TRANSLATE_TIMEOUT: ${{ github.event.inputs.translate_timeout }}
+          ALL: ${{ github.event.inputs.force_all }}
       - name: upload files
         run: make prod-upload
         env:
