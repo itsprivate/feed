@@ -26,7 +26,7 @@ export default function feedToHTML(
     throw new Error(`home_page_url not found for feedjson`);
   }
   const siteIdentifier = urlToSiteIdentifier(homepage, config);
-  const siteConfig = sitesMap[siteIdentifier];
+  let siteConfig = sitesMap[siteIdentifier] || {};
   let isArchive = false;
 
   if (siteIdentifier === config.archive.siteIdentifier) {
@@ -37,6 +37,7 @@ export default function feedToHTML(
     const routeInfo = parsePageUrl(homepage);
     const splited = routeInfo.pathname.split("/");
     subsite = splited[1];
+    siteConfig = sitesMap[subsite] || {};
   }
 
   const languageCode = feedJson.language;
