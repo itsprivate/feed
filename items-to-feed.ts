@@ -109,7 +109,10 @@ export default function itemsToFeed(
     ? config.archive.siteIdentifier
     : siteIdentifier;
 
-  let siteTitle = `${currentTranslations.title} ${version.name}`;
+  let siteTitle = `${currentTranslations.title}`;
+  if (version.code !== "default") {
+    siteTitle = `${currentTranslations.title} - ${version.name}`;
+  }
   if (options?.isArchive) {
     const pageMeta = getPageMeta(relativePath);
     if (pageMeta.type === "tag") {

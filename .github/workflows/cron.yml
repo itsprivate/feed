@@ -62,7 +62,7 @@ jobs:
           PRODUCTHUNT_TOKEN: ${{secrets.PRODUCTHUNT_TOKEN}}
           TRANSLATE_COUNT: ${{ github.event.inputs.translate_count }}
           TRANSLATE_TIMEOUT: ${{ github.event.inputs.translate_timeout }}
-          ALL: ${{ github.event.inputs.force_all }}
+          ALL: ${{ github.event.push && "1" ||  github.event.inputs.force_all }}
       - name: upload files
         run: make prod-upload
         env:
