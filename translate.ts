@@ -112,7 +112,8 @@ export default class Translation {
     }
 
     // if current translated count if greater than 10, close page and init again
-    if (this.currentTranslated >= this.countPerPage) {
+    if (this.countPerPage > 0 && this.currentTranslated >= this.countPerPage) {
+      log.info(`translated ${this.currentTranslated} items, refreshing page`);
       await this.page.close();
       this.page = null;
       await this.init();

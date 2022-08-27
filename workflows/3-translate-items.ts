@@ -4,9 +4,9 @@ import {
   callWithTimeout,
   getCurrentItemsFilePath,
   getDataFormatedPath,
+  getDataTranslatedPath,
   getFilesByTargetSiteIdentifiers,
   getTargetSiteIdentifiersByFilePath,
-  isDev,
   readJSONFile,
   writeJSONFile,
 } from "../util.ts";
@@ -27,7 +27,28 @@ export default async function translateItems(
       sites,
     );
   if (files.length > 0) {
-    const currentKeysMap = new Map<string, FormatedItem>();
+    const currentTranslationsMap = new Map<
+      string,
+      Record<string, Record<string, string>>
+    >();
+
+    // get current translated files
+
+    // for await (const entry of fs.walk(getDataTranslatedPath())) {
+    //   if (entry.isFile && entry.name.endsWith(".json")) {
+    //     const translationJson = await readJSONFile(entry.path) as FormatedItem;
+
+    //     if (translationJson._translations && translationJson.id) {
+    //       currentTranslationsMap.set(
+    //         translationJson.id,
+    //         translationJson._translations,
+    //       );
+    //     }
+    //   }
+    // }
+    // const translationFolderCachedSize = currentTranslationsMap.size;
+    // log.info(`found ${translationFolderCachedSize} cached translation files`);
+
     // get current Itemsjson
     for (const siteIdentifier of targetSiteIdentifiers) {
       const currentItemsPath = getCurrentItemsFilePath(siteIdentifier);
@@ -40,9 +61,18 @@ export default async function translateItems(
         log.debug(`read current items file failed, ${e.message}`);
       }
       for (const key of Object.keys(currentItemsJson.items)) {
-        currentKeysMap.set(key, currentItemsJson.items[key]);
+        if (currentItemsJson.items[key]._translations) {
+          currentTranslationsMap.set(
+            key,
+            currentItemsJson.items[key]._translations!,
+          );
+        }
       }
     }
+
+    log.info(
+      `found ${currentTranslationsMap.size} current  items translated Cache`,
+    );
 
     // yes
     // start instance
@@ -50,7 +80,7 @@ export default async function translateItems(
     await translation.init();
 
     let total = 0;
-
+    let translatingTotal = 0;
     log.info(`start translate ${files.length} items`);
     const TRANSLATE_COUNT_ENV = Deno.env.get("TRANSLATE_COUNT");
     let translateCountLimit = -1;
@@ -121,9 +151,10 @@ export default async function translateItems(
         }
       }
 
-      if (currentKeysMap.has(itemInstance.getItemIdentifier())) {
-        const cachedTranslations =
-          currentKeysMap.get(itemInstance.getItemIdentifier())!._translations;
+      if (currentTranslationsMap.has(itemInstance.getItemIdentifier())) {
+        const cachedTranslations = currentTranslationsMap.get(
+          itemInstance.getItemIdentifier(),
+        );
 
         if (cachedTranslations) {
           const cachedKeys = Object.keys(cachedTranslations);
@@ -173,8 +204,8 @@ export default async function translateItems(
           }
           // if todoLanguages is empty, skip
           if (todoLanguages.length === 0) {
-            log.debug(
-              ` field ${field} use cached translation, skip`,
+            log.info(
+              `${total}/${files.length} ${file} use cached translation, skip`,
             );
             continue;
           }
@@ -194,10 +225,7 @@ export default async function translateItems(
             ),
             100000,
           );
-          log.info(
-            `${total + 1}/${files.length} translated ${value} to`,
-            translated,
-          );
+
           for (const languageCode of Object.keys(translated)) {
             if (!translations[languageCode]) {
               translations[languageCode] = {};
@@ -205,10 +233,13 @@ export default async function translateItems(
             translations[languageCode][field] = translated[languageCode];
           }
           // real total
-          total += 1;
-
-          if (total % 10 === 0) {
-            log.info(`translated ${total} items `);
+          translatingTotal += 1;
+          log.info(
+            `${translatingTotal}/${files.length} translated ${value} to`,
+            translated,
+          );
+          if (translatingTotal % 10 === 0) {
+            log.info(`translated ${translatingTotal} items `);
           }
         }
       }
@@ -221,7 +252,7 @@ export default async function translateItems(
       );
       // remove formated file
       await Deno.remove(file);
-
+      total += 1;
       if (translateCountLimit > 0 && total >= translateCountLimit) {
         log.info(
           `translated ${total} items, limit ${translateCountLimit}, break`,

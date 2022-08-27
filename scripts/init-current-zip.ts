@@ -1,4 +1,4 @@
-import compressCurrent from "../workflows/8-compress-current.ts";
+import compressCurrent from "./compress-current.ts";
 import { fs } from "../deps.ts";
 import { getDataPath } from "../util.ts";
 export async function initCurrentZip() {
