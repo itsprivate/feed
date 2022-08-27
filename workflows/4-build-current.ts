@@ -1,11 +1,13 @@
-import { fs } from "../deps.ts";
+import { fs, path } from "../deps.ts";
 import { FormatedItem, ItemsJson, RunOptions } from "../interface.ts";
 import getLatestItems from "../latest-items.ts";
 import {
   arrayToObj,
   getArchivedFilePath,
+  getChangedSitePaths,
   getCurrentItemsFilePath,
   getCurrentToBeArchivedItemsFilePath,
+  getDataCurrentItemsPath,
   getDataTranslatedPath,
   getFilesByTargetSiteIdentifiers,
   loadS3ArchiveFile,
@@ -21,6 +23,13 @@ import { MAX_ITEMS_PER_PAGE } from "../constant.ts";
 export default async function buildCurrent(
   options: RunOptions,
 ) {
+  // clean changed sites json
+  try {
+    await Deno.remove(getChangedSitePaths());
+    log.debug(`clean changed sites json file ` + getChangedSitePaths());
+  } catch (_e) {
+    // ignore
+  }
   // get all 3-translated files
   // is exists translated files folder
   // ensure folder exists
@@ -32,6 +41,7 @@ export default async function buildCurrent(
       sites,
     );
   const filesNeedToBeDeleted = new Set<string>();
+  const changedSites: string[] = [];
   for (const siteIdentifier of targetSiteIdentifiers) {
     const files = groups[siteIdentifier] || [];
     const siteConfig = options.config.sites[siteIdentifier];
@@ -242,6 +252,20 @@ export default async function buildCurrent(
         // @ts-ignore: type is not assignable
         currentToBeArchivedItemsJson = null;
       }
+    }
+    changedSites.push(siteIdentifier);
+
+    // copy current items to current-changed
+  }
+  if (changedSites.length > 0) {
+    const allEnvValue = Deno.env.get("ALL");
+    if (allEnvValue === "1") {
+      // ignore write changed sites
+    } else {
+      await writeJSONFile(
+        getChangedSitePaths(),
+        changedSites,
+      );
     }
   }
   // delete old files

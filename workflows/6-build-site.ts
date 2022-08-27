@@ -1,7 +1,8 @@
-import { jsonfeedToAtom, jsonfeedToRSS, path } from "../deps.ts";
+import { jsonfeedToRSS, path } from "../deps.ts";
 import { ItemsJson, RunOptions } from "../interface.ts";
 import itemsToFeed from "../items-to-feed.ts";
 import {
+  getChangedSitePaths,
   getCurrentItemsFilePath,
   getDataCurrentItemsPath,
   getDistFilePath,
@@ -24,11 +25,28 @@ export default async function buildSite(options: RunOptions) {
   const indexTemplateString = await Deno.readTextFile(
     "./templates/index.html",
   );
-  for await (const dirEntry of Deno.readDir(currentDataPath)) {
-    if (dirEntry.isDirectory && !dirEntry.name.startsWith(".")) {
-      siteIdentifiers.push(pathToSiteIdentifier(dirEntry.name));
+  let changedSites: string[] | undefined;
+  try {
+    const changedSitesPath = getChangedSitePaths();
+    changedSites = await readJSONFile(changedSitesPath);
+  } catch (e) {
+    log.debug(`read changedSitesPath json file error:`, e);
+  }
+  if (changedSites) {
+    log.info(`got changed sites: ${changedSites}`);
+    siteIdentifiers = changedSites;
+  } else {
+    log.info(`no changed sites file, scan all sites`);
+
+    for await (const dirEntry of Deno.readDir(currentDataPath)) {
+      if (dirEntry.isDirectory && !dirEntry.name.startsWith(".")) {
+        // only build changed folder
+
+        siteIdentifiers.push(pathToSiteIdentifier(dirEntry.name));
+      }
     }
   }
+
   const sites = options.siteIdentifiers;
   if (sites && Array.isArray(sites)) {
     siteIdentifiers = siteIdentifiers.filter((siteIdentifier) => {

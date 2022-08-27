@@ -145,7 +145,6 @@
     },
     "hn": {
       "port": 8002,
-      "domain": "prodhn.buzzing.cc",
       "redirect": true,
       "tags": [
         "hn",
@@ -181,7 +180,6 @@
     },
     "askhn": {
       "port": 8003,
-      "domain": "prodaskhn.buzzing.cc",
       "tags": [
         "hn",
         "source-hackernews-ask"

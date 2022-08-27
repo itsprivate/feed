@@ -12,6 +12,7 @@ temp.json
 /public/
 /dev-public/
 /temp/
+/dev-temp/
 # Logs
 logs
 *.log

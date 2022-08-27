@@ -1,6 +1,7 @@
-import { fs } from "../deps.ts";
+import { fs, path } from "../deps.ts";
 import {
   getArchivedFilePath,
+  getChangedSitePaths,
   getCurrentItemsFilePath,
   getCurrentToBeArchivedItemsFilePath,
   getDataCurrentItemsPath,
@@ -21,12 +22,25 @@ export default async function archive(options: RunOptions) {
   let siteIdentifiers: string[] = [];
   // ensure folder exists
   await fs.ensureDir(getDataCurrentItemsPath());
-
-  for await (const dirEntry of Deno.readDir(getDataCurrentItemsPath())) {
-    if (dirEntry.isDirectory && !dirEntry.name.startsWith(".")) {
-      siteIdentifiers.push(pathToSiteIdentifier(dirEntry.name));
-    }
+  let changedSites: string[] | undefined;
+  try {
+    const changedSitesPath = getChangedSitePaths();
+    changedSites = await readJSONFile(changedSitesPath);
+  } catch (e) {
+    log.debug(`read changedSitesPath json file error:`, e);
   }
+  if (!changedSites) {
+    log.info(`no changed sites file, scan all sites`);
+    for await (const dirEntry of Deno.readDir(getDataCurrentItemsPath())) {
+      if (dirEntry.isDirectory && !dirEntry.name.startsWith(".")) {
+        siteIdentifiers.push(pathToSiteIdentifier(dirEntry.name));
+      }
+    }
+  } else {
+    log.info(`got changed sites: ${changedSites}`);
+    siteIdentifiers = changedSites;
+  }
+
   const sites = options.siteIdentifiers;
   if (sites && Array.isArray(sites)) {
     siteIdentifiers = siteIdentifiers.filter((siteIdentifier) => {

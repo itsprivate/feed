@@ -89,6 +89,13 @@ export const getDistPath = () => {
   const dataPath = isDev() ? "dev-public" : "public";
   return dataPath;
 };
+export const getTempPath = () => {
+  const dataPath = isDev() ? "dev-temp" : "temp";
+  return dataPath;
+};
+export const getChangedSitePaths = () => {
+  return path.join(getTempPath(), "changed-sites.json");
+};
 export const getSiteIdentifierDistPath = (siteIdentifier: string) => {
   return `${getDistPath()}/${siteIdentifierToPath(siteIdentifier)}`;
 };
@@ -116,6 +123,10 @@ export const getDataTranslatedPath = () => {
 
 export const getDataCurrentItemsPath = () => {
   return `${getDataPath()}/4-data`;
+};
+
+export const getDataCurrentChangedItemsPath = () => {
+  return `${getDataPath()}/5-changed-data`;
 };
 export const getMigratedIssueMapPath = () => {
   if (isDev()) {

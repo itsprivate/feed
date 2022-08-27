@@ -1,7 +1,13 @@
 import { dotenvConfig, flags } from "./deps.ts";
 
 import log from "./log.ts";
-import { getGenConfig, isDebug, isDev, writeTextFile } from "./util.ts";
+import {
+  getChangedSitePaths,
+  getGenConfig,
+  isDebug,
+  isDev,
+  writeTextFile,
+} from "./util.ts";
 import fetchSources from "./workflows/1-fetch-sources.ts";
 import formatItems from "./workflows/2-format-items.ts";
 import translateItems from "./workflows/3-translate-items.ts";
@@ -78,6 +84,7 @@ export default async function main() {
     });
   }
   log.info("start build ", siteIdentifiers, "with stage:", stage);
+
   const runOptions: RunOptions = { siteIdentifiers: siteIdentifiers, config };
   let allPostTasks: Task[] = [];
   try {
