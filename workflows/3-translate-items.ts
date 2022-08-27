@@ -4,8 +4,10 @@ import {
   callWithTimeout,
   getCurrentItemsFilePath,
   getDataFormatedPath,
+  getDataTranslatedPath,
   getFilesByTargetSiteIdentifiers,
   getTargetSiteIdentifiersByFilePath,
+  identifierToCachedKey,
   readJSONFile,
   writeJSONFile,
 } from "../util.ts";
@@ -34,20 +36,20 @@ export default async function translateItems(
 
     // get current translated files
 
-    // for await (const entry of fs.walk(getDataTranslatedPath())) {
-    //   if (entry.isFile && entry.name.endsWith(".json")) {
-    //     const translationJson = await readJSONFile(entry.path) as FormatedItem;
+    for await (const entry of fs.walk(getDataTranslatedPath())) {
+      if (entry.isFile && entry.name.endsWith(".json")) {
+        const translationJson = await readJSONFile(entry.path) as FormatedItem;
 
-    //     if (translationJson._translations && translationJson.id) {
-    //       currentTranslationsMap.set(
-    //         translationJson.id,
-    //         translationJson._translations,
-    //       );
-    //     }
-    //   }
-    // }
-    // const translationFolderCachedSize = currentTranslationsMap.size;
-    // log.info(`found ${translationFolderCachedSize} cached translation files`);
+        if (translationJson._translations && translationJson.id) {
+          currentTranslationsMap.set(
+            identifierToCachedKey(translationJson.id),
+            translationJson._translations,
+          );
+        }
+      }
+    }
+    const translationFolderCachedSize = currentTranslationsMap.size;
+    log.info(`found ${translationFolderCachedSize} cached translation files`);
 
     // get current Itemsjson
     for (const siteIdentifier of targetSiteIdentifiers) {
@@ -63,7 +65,7 @@ export default async function translateItems(
       for (const key of Object.keys(currentItemsJson.items)) {
         if (currentItemsJson.items[key]._translations) {
           currentTranslationsMap.set(
-            key,
+            identifierToCachedKey(key),
             currentItemsJson.items[key]._translations!,
           );
         }
@@ -87,7 +89,7 @@ export default async function translateItems(
     if (TRANSLATE_COUNT_ENV) {
       translateCountLimit = parseInt(TRANSLATE_COUNT_ENV);
     }
-    let translateTimeout = -1;
+    let translateTimeout = 120; // default 120 minutes
     const TRANSLATE_TIMEOUT_ENV = Deno.env.get("TRANSLATE_TIMEOUT");
     if (TRANSLATE_TIMEOUT_ENV) {
       translateTimeout = parseInt(TRANSLATE_TIMEOUT_ENV); // in minutes
@@ -124,36 +126,10 @@ export default async function translateItems(
       const translations = {
         ...item._translations,
       };
-      // is exists translated file
-      let translatedItem: FormatedItem | undefined;
 
-      try {
-        translatedItem = await readJSONFile(translatedPath) as FormatedItem;
-      } catch (_e) {
-        // ignore
-      }
-
-      if (translatedItem) {
-        if (translatedItem._translations) {
-          const cachedKeys = Object.keys(translatedItem._translations);
-          for (const key of cachedKeys) {
-            if (!translations[key]) {
-              log.debug(
-                `use cached translation for ${key}`,
-                translatedItem._translations[key],
-              );
-              translations[key] = {
-                ...translatedItem._translations[key],
-                ...translations[key],
-              };
-            }
-          }
-        }
-      }
-
-      if (currentTranslationsMap.has(itemInstance.getItemIdentifier())) {
+      if (currentTranslationsMap.has(itemInstance.getCachedKey())) {
         const cachedTranslations = currentTranslationsMap.get(
-          itemInstance.getItemIdentifier(),
+          itemInstance.getCachedKey(),
         );
 
         if (cachedTranslations) {
@@ -235,7 +211,7 @@ export default async function translateItems(
           // real total
           translatingTotal += 1;
           log.info(
-            `${translatingTotal}/${files.length} translated ${value} to`,
+            `${total}/${files.length} translated ${value} to`,
             translated,
           );
           if (translatingTotal % 10 === 0) {

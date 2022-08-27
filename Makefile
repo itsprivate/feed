@@ -88,7 +88,7 @@ archivesite:
 
 .Phony: tr
 tr:
-	deno run -A main.ts --stage translate --site devfeed
+	deno run -A main.ts --stage translate --site wsj
 
 .Phony: realtr
 realtr:
