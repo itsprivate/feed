@@ -566,6 +566,7 @@ sites:
   hnnew:
     port: 8018
     redirect: true
+    archive: true
     tags:
       - hn
       - source-hackernews-new
@@ -611,6 +612,9 @@ sources:
       - type: notInclude
         key: getTags
         value: "Job"
+      - type: notInclude
+        key: getTags
+        value: "Show HN"
   - url: http://hn.algolia.com/api/v1/search_by_date?tags=(story,poll,show_hn,ask_hn)&numericFilters=points>=200&hitsPerPage=50
     type: hn
     id: source-hackernews-best
