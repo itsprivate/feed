@@ -82,7 +82,9 @@ export default async function translateItems(
     await translation.init();
 
     let total = 0;
-    let translatingTotal = 0;
+    let translateWithAPITotal = 0;
+    let failedTotal = 0;
+    let translateWithCacheTotal = 0;
     log.info(`start translate ${files.length} items`);
     const TRANSLATE_COUNT_ENV = Deno.env.get("TRANSLATE_COUNT");
     let translateCountLimit = -1;
@@ -156,8 +158,10 @@ export default async function translateItems(
       if (Deno.env.get("NO_TRANSLATE") === "1") {
         isTranslated = false;
       }
+      let isTranslateSuccess = false;
       if (!isTranslated) {
         // do nothing
+        isTranslateSuccess = true;
       } else {
         for (const field of originalTranslationKeys) {
           // first check if this field is translated
@@ -183,6 +187,8 @@ export default async function translateItems(
             log.info(
               `${total}/${files.length} ${file} use cached translation, skip`,
             );
+            translateWithCacheTotal++;
+            isTranslateSuccess = true;
             continue;
           }
 
@@ -191,54 +197,68 @@ export default async function translateItems(
             `translating ${itemInstance.getItemIdentifier()} ${field}: ${value} `,
           );
           // set timeout, max 100s
+          try {
+            const translated = await callWithTimeout<Record<string, string>>(
+              translation.translate.bind(
+                translation,
+                value,
+                item._original_language,
+                todoLanguages.map((item) => item.code),
+              ),
+              100000,
+            );
 
-          const translated = await callWithTimeout<Record<string, string>>(
-            translation.translate.bind(
-              translation,
-              value,
-              item._original_language,
-              todoLanguages.map((item) => item.code),
-            ),
-            100000,
-          );
-
-          for (const languageCode of Object.keys(translated)) {
-            if (!translations[languageCode]) {
-              translations[languageCode] = {};
+            for (const languageCode of Object.keys(translated)) {
+              if (!translations[languageCode]) {
+                translations[languageCode] = {};
+              }
+              translations[languageCode][field] = translated[languageCode];
             }
-            translations[languageCode][field] = translated[languageCode];
-          }
-          // real total
-          translatingTotal += 1;
-          log.info(
-            `${total}/${files.length} translated ${value} to`,
-            translated,
-          );
-          if (translatingTotal % 10 === 0) {
-            log.info(`translated ${translatingTotal} items `);
+            // real total
+            translateWithAPITotal += 1;
+            isTranslateSuccess = true;
+
+            log.info(
+              `${total}/${files.length} translated ${value} to`,
+              translated,
+            );
+            if (translateWithAPITotal % 10 === 0) {
+              log.info(`translated ${translateWithAPITotal} items `);
+            }
+          } catch (e) {
+            isTranslateSuccess = false;
+            failedTotal++;
+            log.warn(
+              `translate ${file} ${value} failed, ignore, try it next time`,
+            );
+            log.warn(e);
           }
         }
       }
 
-      translatedJson._translations = translations;
+      if (isTranslateSuccess) {
+        translatedJson._translations = translations;
 
-      await writeJSONFile(
-        translatedPath,
-        translatedJson,
-      );
-      // remove formated file
-      await Deno.remove(file);
-      total += 1;
-      if (translateCountLimit > 0 && total >= translateCountLimit) {
-        log.info(
-          `translated ${total} items, limit ${translateCountLimit}, break`,
+        await writeJSONFile(
+          translatedPath,
+          translatedJson,
         );
-        break;
+        // remove formated file
+        await Deno.remove(file);
+        if (translateCountLimit > 0 && total >= translateCountLimit) {
+          log.info(
+            `translated ${total} items, limit ${translateCountLimit}, break`,
+          );
+          break;
+        }
       }
+      total += 1;
     }
 
     // close instance
-    log.info(`translated ${total} items`);
+    log.info(
+      `translated ${total} items, failed ${failedTotal} items, use api: ${translateWithAPITotal}, use cache: `,
+    );
 
     await translation.close();
   }

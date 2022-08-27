@@ -340,6 +340,8 @@ export default class Translation {
       "button[aria-label='Copy to clipboard']",
       { visible: true },
     );
+    // wait for result
+    await page.waitForTimeout(200);
 
     let result: string = await page.$eval(
       deepScheme[this.scheme].targetSentenceField,

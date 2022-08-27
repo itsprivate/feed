@@ -8,8 +8,8 @@ source:
 
 .Phony: prod-source
 prod-source:
-# PROD=1 deno run -A main.ts --source --site hn,hackernews
-	PROD=1 deno run -A main.ts --stage translate
+	PROD=1 deno run -A main.ts --source
+#	PROD=1 deno run -A main.ts --stage translate
 # only build site
 .Phony: build
 build:
