@@ -53,7 +53,6 @@ archive:
   port: 9000
   siteIdentifier: i
   tags: []
-
 sites:
   devfeed:
     redirect: true
@@ -84,6 +83,16 @@ sites:
         short_title: "HN Front Page"
         description: "Hacker News Front Page Feed"
         keywords: "HackerNews 头条, Hacker News 中文, Hacker News Story"
+      "ja":
+        title: "Hacker News トップ"
+        short_title: "HN トップ"
+        description: "Hacker News トップのニュース"
+        keywords: "HackerNews 头条, Hacker News 中文, Hacker News Story"
+      "zh-Hant":
+        title: "Hacker News 首頁"
+        short_title: "HN 首頁"
+        description: "用中文浏览Hacker News 首頁最新文章"
+        keywords: "HackerNews 头条, Hacker News 中文, Hacker News Story"
 
   hn:
     port: 8002
@@ -93,10 +102,26 @@ sites:
       - hn
       - source-hackernews-best
     translations:
-      "zh-Hans":
-        title: "Hacker News 热门"
-        short_title: "HN热门"
-        description: "追踪Hacker News上超过 200 points的帖子"
+      zh-Hans:
+        title: Hacker News 热门
+        description: 用中文浏览 Hacker News 热门内容
+        keyworkds: "Hacker News,HN,Hacker News 热门,互联网热门,科技"
+        short_title: HN热门
+      en:
+        title: Buzzing on Hacker News
+        short_title: HN热门
+        description: See what's buzzing on Hacker News in your native language
+        keywords: "Hacker News,HN,buzzing"
+      zh-Hant:
+        title: Hacker News 熱門
+        short_title: HN热门
+        description: 用中文瀏覽 Hacker News 熱門內容
+        keywords: "Hacker News,HN,Hacker News 熱門,互聯網熱門,科技"
+      ja:
+        title: Hacker News  人気の記事
+        short_title: HN热门
+        description: 人気のHacker News記事を日本語で閲覧
+        keywords: "buzzing,Hacker News "
 
   askhn:
     port: 8003
@@ -109,6 +134,22 @@ sites:
         title: "Hacker News 问答"
         short_title: "HN问答"
         description: "追踪 Hacker News 上的问答"
+        keywords: "Hacker News,HN,Hacker News 问答,互联网问答,科技"
+      "en":
+        title: "Hacker News Ask"
+        short_title: "HN Ask"
+        description: "Hacker News Ask Feed"
+        keywords: "Hacker News,HN,Hacker News Ask,互联网问答,科技"
+      "ja":
+        title: "Hacker News Ask"
+        short_title: "HN Ask"
+        description: "Hacker News Ask Feed"
+        keywords: "Hacker News,HN,Hacker News Ask,互聯網问答,科技"
+      "zh-Hant":
+        title: "Hacker News 問答"
+        short_title: "HN 問答"
+        description: "追踪 Hacker News 上的問答"
+        keywords: "Hacker News,HN,Hacker News 問答,互聯網問答,科技"
 
   showhn:
     port: 8004
@@ -120,6 +161,22 @@ sites:
         title: "Show HN"
         short_title: "Show HN"
         description: "追踪 Hacker News 上的项目展示"
+        keywords: "Hacker News,HN,Hacker News 项目展示,互联网项目展示,科技"
+      "en":
+        title: "Show HN"
+        short_title: "Show HN"
+        description: "Hacker News Show Feed"
+        keywords: "Hacker News,HN,Hacker News Show,互联网项目展示,科技"
+      "ja":
+        title: "Show HN"
+        short_title: "Show HN"
+        description: "Hacker News Show Feed"
+        keywords: "Hacker News,HN,Hacker News Show,互聯網项目展示,科技"
+      "zh-Hant":
+        title: "Show HN"
+        short_title: "Show HN"
+        description: "追踪 Hacker News 上的項目展示"
+        keywords: "Hacker News,HN,Hacker News 項目展示,互聯網項目展示,科技"
 
   reddit:
     port: 8005
@@ -128,14 +185,26 @@ sites:
       - reddit
       - source-reddit-top
     translations:
-      "zh-Hans":
-        title: "Reddit 热门"
-        short_title: "Reddit 热门"
-        description: "用中文浏览Reddit热门内容"
-      "en":
-        title: "Buzzing on Reddit"
-        description: "See what's buzzing on Reddit in your native language"
-        keywords: "Reddit Hot, Reddit Hot Feed"
+      zh-Hans:
+        title: Reddit 热门
+        description: 用中文浏览Reddit热门内容
+        keyworkds: "buzzing,reddit,reddit中文,reddit热门"
+        short_title: Reddit热门
+      en:
+        title: Buzzing on Reddit
+        short_title: Reddit热门
+        description: See what's buzzing on Reddit in your native language
+        keywords: "buzzing,reddit,reddit top"
+      zh-Hant:
+        title: Reddit 熱門
+        short_title: Reddit热门
+        description: 用中文瀏覽Reddit熱門內容
+        keywords: "buzzing,reddit,reddit中文,reddit熱門"
+      ja:
+        title: Reddit 人気の記事
+        short_title: Reddit热门
+        description: 人気のReddit記事を日本語で閲覧
+        keywords: "buzzing,Reddit"
 
   ask:
     port: 8007
@@ -144,10 +213,26 @@ sites:
       - reddit
       - source-reddit-ask
     translations:
-      "zh-Hans":
-        title: "Reddit 热门提问"
-        short_title: "Reddit提问"
-        description: "用中文浏览 Reddit 上的热门提问"
+      zh-Hans:
+        title: Reddit 热门提问
+        description: 用中文浏览 Reddit 上的热门提问
+        keyworkds: "buzzing,问题,提问,回答,答案"
+        short_title: Reddit提问
+      en:
+        title: Buzzing on Ask
+        short_title: Reddit提问
+        description: See what's buzzing on Ask Headline in your native language
+        keywords: "buzzing,ask"
+      zh-Hant:
+        title: Reddit 熱門提問
+        short_title: Reddit提问
+        description: 用中文瀏覽 Reddit 上的熱門提問
+        keywords: "buzzing,問題,提問,回答,答案"
+      ja:
+        title: Redditよくある質問
+        short_title: Reddit提问
+        description: 人気のRedditよくある質問を日本語で閲覧
+        keywords: "buzzing,よくある質問"
 
   stocks:
     port: 8008
@@ -157,12 +242,31 @@ sites:
       - finance
       - source-reddit-stocks
       - source-twitter-stocks
-      # - source-reddit-wallstreetbets
-      # - source-reddit-bogleheads
+      - source-reddit-wallstreetbets
+      - source-reddit-bogleheads
     translations:
-      "zh-Hans":
-        title: "国外股市热门"
-        description: "用中文浏览国外股票社区里的热门讨论"
+      zh-Hans:
+        title: 国外股市热门
+        description: 用中文浏览国外股票社区里的热门讨论
+        keyworkds: "buzzing,美股,股票,股市"
+        short_title: 股市热门
+      en:
+        title: Buzzing on Stocks
+        short_title: 股市热门
+        description: >-
+          See popular discussions in foreign stock communities in your native
+          language
+        keywords: "buzzing,stocks,U.S. stocks"
+      zh-Hant:
+        title: 國外股市熱門
+        short_title: 股市热门
+        description: 用中文瀏覽國外股票社區裡的熱門討論
+        keywords: "buzzing,美股,股票,股市"
+      ja:
+        title: 米国株式市場人気の話し合います
+        short_title: 股市热门
+        description: 人気の米国株式市場の話し合いまを日本語で閲覧
+        keywords: "buzzing,米国株式市場"
   news:
     port: 8006
     archive: true
@@ -171,14 +275,28 @@ sites:
       - news
       - source-google-news
     translations:
-      "zh-Hans":
-        title: "国外新闻头条 - 全球新闻头条 - 美国新闻头条"
-        short_title: "国外新闻"
-        description: "用中文浏览国外新闻头条，美国新闻头条，全球新闻(西方媒体)头条"
-      "en":
-        title: "Buzzing on World News"
-        description: "See what's buzzing on the news in your native language"
-        keywords: "Buzzing News, Buzzing News Feed"
+      zh-Hans:
+        title: 谷歌全球新闻头条
+        description: 用中文浏览谷歌全球新闻(西方媒体)头条
+        keyworkds: "buzzing,西方媒体,国外新闻,世界新闻,突发新闻"
+        short_title: 全球头条
+      en:
+        title: Buzzing on World News
+        short_title: 全球头条
+        description: >-
+          See what's buzzing on Google World News Headline in your native
+          language
+        keywords: "buzzing,Breaking News"
+      zh-Hant:
+        title: 谷歌全球新聞頭條
+        short_title: 全球头条
+        description: 用中文瀏覽谷歌全球新聞(西方媒體)頭條
+        keywords: "buzzing,西方媒體,國外新聞,世界新聞,突發新聞"
+      ja:
+        title: Googleグローバルニュースのヘッドライン
+        short_title: 全球头条
+        description: 人気のGoogleグローバルニュースのヘッドライン記事を日本語で閲覧
+        keywords: "buzzing,ホットニュース"
   ph:
     port: 8009
     archive: true
@@ -187,14 +305,26 @@ sites:
       - tech
       - source-producthunt-top
     translations:
-      "zh-Hans":
-        title: "Product Hunt"
-        short_title: "国外新闻"
-        description: "用中文浏览国外新闻头条，美国新闻头条，全球新闻(西方媒体)头条"
-      "en":
-        title: "Buzzing on World News"
-        description: "See what's buzzing on the news in your native language"
-        keywords: "Buzzing News, Buzzing News Feed"
+      zh-Hans:
+        title: Product Hunt 热门
+        description: 用中文浏览 Product Hunt 热门App，网站和产品
+        keyworkds: "buzzing,Product Hunt,热门APP,发现APP"
+        short_title: PH热门
+      en:
+        title: Buzzing on Product Hunt
+        short_title: PH热门
+        description: See what's buzzing on Product Hunt in your native language
+        keywords: "Product Hunt,buzzing,explore APP"
+      zh-Hant:
+        title: Product Hunt 熱門
+        short_title: PH热门
+        description: 用中文瀏覽 Product Hunt 熱門App，網站和產品
+        keywords: "buzzing,Product Hunt,熱門APP,發現APP"
+      ja:
+        title: Product Hunt 人気の作品
+        short_title: PH热门
+        description: 人気のProduct Hunt作品を日本語で閲覧
+        keywords: "buzzing,Product Hunt"
   crypto:
     port: 8010
     archive: true
@@ -204,10 +334,26 @@ sites:
       - source-crypto-reddit
       - source-crypto-twitter
     translations:
-      "zh-Hans":
-        title: "加密货币热门讨论"
-        short_title: "加密货币"
-        description: "加密货币热门讨论"
+      zh-Hans:
+        title: 加密货币国外热门讨论
+        description: 用中文浏览关于加密货币的国外热门讨论
+        keyworkds: "buzzing,加密货币,比特币,数字货币,区块链"
+        short_title: 加密货币
+      en:
+        title: Buzzing on Crypto
+        short_title: 加密货币
+        description: See what's buzzing on Crypto in your native language
+        keywords: "buzzing,crypto,bitcoin,blockchain"
+      zh-Hant:
+        title: 加密貨幣國外熱門討論
+        short_title: 加密货币
+        description: 用中文瀏覽關於加密貨幣的國外熱門討論
+        keywords: "buzzing,加密貨幣,比特幣,數字貨幣,區塊鏈"
+      ja:
+        title: 暗号通貨人気の応答
+        short_title: 加密货币
+        description: 人気の暗号通貨記事を日本語で閲覧
+        keywords: "buzzing,暗号通貨"
   dev:
     port: 8011
     archive: true
@@ -216,10 +362,26 @@ sites:
       - tech
       - source-devto
     translations:
-      "zh-Hans":
-        title: "开发者热门讨论"
-        short_title: "开发者"
-        description: "开发者热门讨论"
+      zh-Hans:
+        title: Dev.to 热门
+        description: 用中文浏览Dev.to热门技术文章
+        keyworkds: "buzzing,dev.to,程序员,技术,技术社区"
+        short_title: Dev热门
+      en:
+        title: Buzzing on Dev.to
+        short_title: Dev热门
+        description: See what's buzzing on Dev.to in your native language
+        keywords: "buzzing,dev,dev.to"
+      zh-Hant:
+        title: Dev.to 熱門
+        short_title: Dev热门
+        description: 用中文瀏覽Dev.to熱門技術文章
+        keywords: "buzzing,dev.to,程序員,技術,技術社區"
+      ja:
+        title: Dev.to 人気の記事
+        short_title: Dev热门
+        description: 人気のDev.to技術記事を日本語で閲覧
+        keywords: "buzzing,dev.to,プログラマー,技術,技術コミュニティ"
   quora:
     port: 8012
     archive: true
@@ -228,10 +390,26 @@ sites:
       - ask
       - source-quora
     translations:
-      "zh-Hans":
-        title: "Quora 热门问答"
-        short_title: "Quora热门"
-        description: "Quora 热门问答"
+      zh-Hans:
+        title: Quora 热门回答
+        description: 用中文浏览Quora上的热门回答
+        keyworkds: "buzzing,Quora,提问,回答"
+        short_title: Quora热门
+      en:
+        title: Buzzing on Quora
+        short_title: Quora热门
+        description: See what's buzzing on Quora in your native language
+        keywords: "buzzing,Quora"
+      zh-Hant:
+        title: Quora 熱門回答
+        short_title: Quora热门
+        description: 用中文瀏覽Quora上的熱門回答
+        keywords: "buzzing,Quora,提問,回答"
+      ja:
+        title: Quora 人気の応答
+        short_title: Quora热门
+        description: 人気のQuora応答を日本語で閲覧
+        keywords: "buzzing,Quora"
   depth:
     port: 8013
     archive: true
@@ -240,10 +418,26 @@ sites:
       - depth
       - source-reddit-depth
     translations:
-      "zh-Hans":
-        title: "深度文章分享"
-        short_title: "深度思考"
-        description: "Reddit 精神食粮小组"
+      zh-Hans:
+        title: 深度思考
+        description: 用中文浏览国外深度报道，思考和讨论
+        keyworkds: "buzzing,深度报道,深度思考,国外深度报道,深度好文,有深度的文章"
+        short_title: 深度思考
+      en:
+        title: Buzzing on In-depth thinking
+        short_title: 深度思考
+        description: See what's buzzing on In-depth thinking in your native language
+        keywords: "buzzing,In-depth thinking"
+      zh-Hant:
+        title: 深度思考
+        short_title: 深度思考
+        description: 用中文瀏覽國外深度報導，思考和討論
+        keywords: "buzzing,深度報導,深度思考,國外深度報導,深度好文,有深度的文章"
+      ja:
+        title: 深い思考人気の話し合います
+        short_title: 深度思考
+        description: 人気の深い思考記事を日本語で閲覧
+        keywords: "buzzing,深い思考"
   nytimes:
     port: 8014
     archive: true
@@ -253,10 +447,26 @@ sites:
       - news
       - source-twitter-nytimes
     translations:
-      "zh-Hans":
-        title: "纽约时报热门文章"
-        short_title: "纽约时报"
-        description: "纽约时报热门文章"
+      zh-Hans:
+        title: 纽约时报热门
+        description: 用中文浏览纽约时报热门报道
+        keyworkds: "buzzing,纽约时报"
+        short_title: 纽约时报
+      en:
+        title: The New York Times Trends
+        short_title: 纽约时报
+        description: See what's buzzing on The New York Times in your native language
+        keywords: "buzzing,The New York Times"
+      zh-Hant:
+        title: 紐約時報熱門
+        short_title: 纽约时报
+        description: 用中文瀏覽紐約時報熱門報導
+        keywords: "buzzing,紐約時報"
+      ja:
+        title: ニューヨーク・タイムズ
+        short_title: 纽约时报
+        description: 人気のニューヨーク・タイムズを日本語で閲覧
+        keywords: "buzzing,ニューヨーク・タイムズ"
   wsj:
     port: 8015
     archive: true
@@ -266,10 +476,26 @@ sites:
       - news
       - source-twitter-wsj
     translations:
-      "zh-Hans":
-        title: "华尔街日报热门文章"
-        short_title: "华尔街日报"
-        description: "华尔街日报热门文章"
+      zh-Hans:
+        title: 华尔街日报热门
+        description: 用中文浏览华尔街日报热门报道
+        keyworkds: "buzzing,华尔街日报,wsj,华尔街日报中文网"
+        short_title: 华尔街日报
+      en:
+        title: Buzzing on The Wall Street Journal
+        short_title: 华尔街日报
+        description: See what's buzzing on The Wall Street Journal in your native language
+        keywords: "buzzing,The Wall Street Journal"
+      zh-Hant:
+        title: 華爾街日報熱門
+        short_title: 华尔街日报
+        description: 用中文瀏覽華爾街日報熱門報導
+        keywords: "buzzing,華爾街日報,wsj,華爾街日報中文網"
+      ja:
+        title: ウォール・ストリート・ジャーナル
+        short_title: 华尔街日报
+        description: 人気のウォール・ストリート・ジャーナルを日本語で閲覧
+        keywords: "buzzing,ウォール・ストリート・ジャーナル"
   economist:
     port: 8016
     archive: true
@@ -279,10 +505,26 @@ sites:
       - news
       - source-twitter-economist
     translations:
-      "zh-Hans":
-        title: "经济学人热门文章"
-        short_title: "经济学人"
-        description: "经济学人热门文章"
+      zh-Hans:
+        title: 经济学人
+        description: 用中文浏览经济学人
+        keyworkds: "buzzing,经济学人"
+        short_title: 经济学人
+      en:
+        title: Buzzing on The Economist
+        short_title: 经济学人
+        description: See what's buzzing on The Economist in your native language
+        keywords: "buzzing,The Economist"
+      zh-Hant:
+        title: 經濟學人
+        short_title: 经济学人
+        description: 用中文瀏覽經濟學人
+        keywords: "buzzing,經濟學人"
+      ja:
+        title: エコノミスト人気の記事
+        short_title: 经济学人
+        description: 人気のエコノミスト記事を日本語で閲覧
+        keywords: "buzzing,エコノミスト"
   sideproject:
     port: 8017
     archive: true
@@ -291,10 +533,26 @@ sites:
       - sideproject
       - source-reddit-sideproject
     translations:
-      "zh-Hans":
-        title: "业余项目分享交流"
-        short_title: "业余项目"
-        description: "Reddit 业余项目小组"
+      zh-Hans:
+        title: 业余项目分享交流
+        description: 用中文浏览reddit业余项目讨论
+        keyworkds: "buzzing,业余项目,程序员"
+        short_title: 业余项目
+      en:
+        title: Buzzing on Side Project
+        short_title: 业余项目
+        description: See what's buzzing on Side Project in your native language
+        keywords: "buzzing,Side Project"
+      zh-Hant:
+        title: 業餘項目分享交流
+        short_title: 业余项目
+        description: 用中文瀏覽reddit業餘項目討論
+        keywords: "buzzing,業餘項目,程序員"
+      ja:
+        title: サイドプロジェクト
+        short_title: 业余项目
+        description: 人気のサイドプロジェクトを日本語で閲覧
+        keywords: "buzzing,サイドプロジェクト"
 sources:
   - url: https://news.google.com/rss/topics/CAAqJggKIiBDQkFTRWdvSUwyMHZNRGx1YlY4U0FtVnVHZ0pWVXlnQVAB?hl=en-US&gl=US&ceid=US:en
     type: googlenews

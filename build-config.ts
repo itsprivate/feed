@@ -10,6 +10,7 @@ export default async function buildConfig() {
   const siteIdentifiers = Object.keys(sites);
   for (const siteIdentifier of siteIdentifiers) {
     const siteConfig = sites[siteIdentifier];
+    console.log("siteIden", siteIdentifier);
     siteConfig.translations = getNewTranslations(siteConfig.translations || {});
   }
   // translate site translations
