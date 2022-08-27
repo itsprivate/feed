@@ -73,6 +73,9 @@ realall:
 .Phony: prod-serve
 prod-serve:
 	PROD=1 deno run -A --watch=main.ts,templates/,config.yml main.ts --serve
+.Phony: prod-servesite
+prod-servesite:
+	PROD=1 deno run -A --watch=main.ts,templates/,config.yml main.ts --serve --site ${site}
 
 .Phony: fetch
 fetch:

@@ -26,7 +26,8 @@ translations:
     about_label: 关于
     subscription_label: 订阅地址
     powered_by_label: 背后的人❤️
-    languages_label: 该页面其他语言
+    languages_label: 该页面支持的语言
+    version_label: 该页面支持的版本
     more_sites_label: 姊妹站点
     tags_label: 所有标签
     archive_label: 历史归档
@@ -38,7 +39,8 @@ translations:
     about_label: About
     subscription_label: Subscription
     powered_by_label: Made by ❤️
-    languages_label: Other languages
+    languages_label: Languages supported
+    version_label: Versions supported
     more_sites_label: More feeds
     tags_label: All tags
     archive_label: Archive
@@ -50,6 +52,7 @@ translations:
     subscription_label: 購読
     powered_by_label: 製作者 ❤️
     languages_label: 他の言語
+    version_label: バージョン
     more_sites_label: 他のフィード
     tags_label: すべてのタグ
     archive_label: アーカイブ

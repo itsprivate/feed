@@ -376,6 +376,8 @@ export default class Item<T> {
     if (options && options.versionCode) {
       if (options.versionCode === "lite") {
         versionCode = "lite";
+      } else if (options.versionCode === "default") {
+        versionCode = "default";
       } else {
         log.warn(`unsupported version ${options.versionCode}, use default`);
       }

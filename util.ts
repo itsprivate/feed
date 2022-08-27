@@ -22,6 +22,8 @@ import {
   PageMeta,
   ParsedFilename,
   SiteConfig,
+  UrlInfo,
+  Version,
   WeekOfYear,
 } from "./interface.ts";
 export const SECOND = 1e3;
@@ -302,23 +304,45 @@ export const siteIdentifierToUrl = (
 export const feedjsonUrlToRssUrl = (url: string) => {
   return url.replace("/feed.json", "/feed.xml");
 };
-export const urlToLanguageUrl = (url: string, languagePrefix: string) => {
-  const urlInfo = getUrlLanguage(url);
+export const urlToLanguageUrl = (
+  url: string,
+  languagePrefix: string,
+  versions: Version[],
+  languages: Language[],
+) => {
+  const urlInfo = getUrlLanguage(url, versions, languages);
   const urlObj = new URL(url);
   // check if url has a prefix
-  urlObj.pathname = `/${languagePrefix}${urlInfo[1].slice(1)}`;
+  urlObj.pathname = `/${languagePrefix}${urlInfo.version.prefix}${
+    urlInfo.pathname.slice(1)
+  }`;
+  return urlObj.toString();
+};
+
+export const urlToVersionUrl = (
+  url: string,
+  versionPrefix: string,
+  versions: Version[],
+  languages: Language[],
+) => {
+  const urlInfo = getUrlLanguage(url, versions, languages);
+  const urlObj = new URL(url);
+  // check if url has a prefix
+  urlObj.pathname = `/${urlInfo.language.prefix}${versionPrefix}`;
   return urlObj.toString();
 };
 export const getUrlLanguage = (
   url: string,
-): [Language, string] => {
+  versions: Version[],
+  lanuguages: Language[],
+): UrlInfo => {
   const urlObj = new URL(url);
   // get language code
   const langField = urlObj.pathname.split("/")[1];
   // check if language code is valid
-  let language = TARGET_SITE_LANGUAEGS[0];
+  let language = lanuguages[0];
   let pathname = urlObj.pathname;
-  for (const targetLang of TARGET_SITE_LANGUAEGS) {
+  for (const targetLang of lanuguages) {
     let prefix = targetLang.prefix;
     // remove trailing slash
     if (prefix.endsWith("/")) {
@@ -330,8 +354,30 @@ export const getUrlLanguage = (
       break;
     }
   }
-  return [language, pathname];
+
+  const versionField = pathname.split("/")[1];
+  // check if language code is valid
+  let version = versions[0];
+  for (const targetVersion of versions) {
+    let prefix = targetVersion.prefix;
+    // remove trailing slash
+    if (prefix.endsWith("/")) {
+      prefix = prefix.slice(0, -1);
+    }
+    if (prefix === versionField) {
+      version = targetVersion;
+      pathname = pathname.slice(targetVersion.prefix.length);
+      break;
+    }
+  }
+
+  return {
+    language,
+    version,
+    pathname,
+  };
 };
+
 export const pathToSiteIdentifier = (path: string) => {
   return path;
 };

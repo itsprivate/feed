@@ -171,6 +171,7 @@ export interface Feedjson {
   home_page_url: string;
   feed_url: string;
   items: FeedItem[];
+  _site_version: string;
   _tags?: string[];
   _site_tags?: string[];
   _archive?: string[];
@@ -197,4 +198,10 @@ export interface Type<T> extends Function {
 
 export interface GetFeedItemSyncOptions {
   versionCode?: string;
+}
+
+export interface UrlInfo {
+  language: Language;
+  version: Version;
+  pathname: string;
 }

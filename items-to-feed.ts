@@ -43,8 +43,18 @@ export default function itemsToFeed(
   const language = TARGET_SITE_LANGUAEGS.find((lang) =>
     lang.code === languageCode
   );
+
+  let versionCode = "default";
+  if (options && options.versionCode) {
+    versionCode = options.versionCode;
+  }
+  const version = config.versions.find((v) => v.code === versionCode);
+
   if (!language) {
     throw new Error(`language code ${languageCode} not found`);
+  }
+  if (!version) {
+    throw new Error(`version code ${versionCode} not found`);
   }
   const currentItemsJsonKeysSorted = currentItemsJsonKeys
     .sort((a, b) => {
@@ -80,10 +90,8 @@ export default function itemsToFeed(
       originalItem,
     );
     try {
-      const getFeedItemSyncOptions: GetFeedItemSyncOptions = {};
-      if (options && options.versionCode) {
-        getFeedItemSyncOptions.versionCode = options.versionCode;
-      }
+      const getFeedItemSyncOptions: GetFeedItemSyncOptions = { versionCode };
+
       const feedItem = itemInstance.getFeedItemSync(
         siteIdentifier,
         language,
@@ -101,7 +109,7 @@ export default function itemsToFeed(
     ? config.archive.siteIdentifier
     : siteIdentifier;
 
-  let siteTitle = currentTranslations.title;
+  let siteTitle = `${currentTranslations.title} ${version.name}`;
   if (options?.isArchive) {
     const pageMeta = getPageMeta(relativePath);
     if (pageMeta.type === "tag") {
@@ -127,14 +135,15 @@ export default function itemsToFeed(
     "icon": config.icon,
     "favicon": config.favicon,
     "language": language.code,
+    "_site_version": version.code,
     "home_page_url": siteIdentifierToUrl(
       homepageIdentifier,
-      "/" + language.prefix + homePageRelativePath,
+      "/" + language.prefix + version.prefix + homePageRelativePath,
       config,
     ),
     "feed_url": siteIdentifierToUrl(
       homepageIdentifier,
-      `/${language.prefix}${feedUrlRelativePath}`,
+      `/${language.prefix}${version.prefix}${feedUrlRelativePath}`,
       config,
     ),
     items,

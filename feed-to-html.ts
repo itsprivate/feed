@@ -11,6 +11,7 @@ import {
   tagToUrl,
   urlToLanguageUrl,
   urlToSiteIdentifier,
+  urlToVersionUrl,
 } from "./util.ts";
 import { Config, Feedjson } from "./interface.ts";
 import { TARGET_SITE_LANGUAEGS } from "./constant.ts";
@@ -44,10 +45,17 @@ export default function feedToHTML(
   if (!languageCode) {
     throw new Error(`language code not found for feedjson`);
   }
-  const languages = TARGET_SITE_LANGUAEGS;
+  const languages = config.languages;
   const language = languages.find((lang) => lang.code === languageCode);
   if (!language) {
     throw new Error(`language code ${languageCode} not found`);
+  }
+
+  const versions = config.versions;
+  const versionCode = feedJson._site_version;
+  const version = versions.find((version) => version.code === versionCode);
+  if (!version) {
+    throw new Error(`version code ${versionCode} not found`);
   }
   const currentTranslations = getGeneralTranslations(
     languageCode,
@@ -71,13 +79,21 @@ export default function feedToHTML(
     feedJson._max_image_height = siteConfig.max_image_height;
   }
 
+  // @ts-ignore: new meta
+  feedJson._is_lite = feedJson._site_version === "lite";
+
   // @ts-ignore: add meta data
   feedJson._languages = languages.map((item) => {
     const newItem = { ...item };
     // @ts-ignore: add meta data
     newItem.active = item.code === language.code;
     // @ts-ignore: add meta data
-    newItem.url = urlToLanguageUrl(homepage, item.prefix);
+    newItem.url = urlToLanguageUrl(
+      homepage,
+      item.prefix,
+      config.versions,
+      config.languages,
+    );
     return newItem;
   });
   // related sites is has common tags sites
@@ -135,6 +151,21 @@ export default function feedToHTML(
       };
     },
   );
+  // @ts-ignore: add meta data
+  feedJson._versions = config.versions.map((item) => {
+    const newItem = { ...item };
+    // @ts-ignore: add meta data
+    newItem.active = item.code === version.code;
+    // @ts-ignore: add meta data
+    newItem.url = urlToVersionUrl(
+      homepage,
+      item.prefix,
+      config.versions,
+      config.languages,
+    );
+    // @ts-ignore: add meta data
+    return newItem;
+  });
   //@ts-ignore: add meta data
   feedJson._other_sites = otherSites.map(
     (item, index) => {
@@ -149,7 +180,11 @@ export default function feedToHTML(
       return {
         //@ts-ignore: add meta data
         name: siteShortName || siteName,
-        url: siteIdentifierToUrl(item, "/" + language.prefix, config),
+        url: siteIdentifierToUrl(
+          item,
+          "/" + language.prefix + version.prefix,
+          config,
+        ),
         is_last: index === otherSites.length - 1,
       };
     },
@@ -201,10 +236,11 @@ export default function feedToHTML(
   const output = mustache.render(indexTemplateString, feedJson);
   // is dev
   if (!isDev()) {
-    return minifyHTML(output, {
-      minifyCSS: true,
-      minifyJS: true,
-    });
+    // pre-line conflict with css
+    // return minifyHTML(output, {
+    //   minifyCSS: true,
+    //   minifyJS: true,
+    // });
   }
   return output;
 }

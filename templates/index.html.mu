@@ -98,11 +98,21 @@
         padding-right: 1em;
       }
       .article {
-        padding: 0.5em 1em;
         border-radius: 0.5em;
+        {{#_is_lite}}
+        padding: 4px 1em;
+        {{/_is_lite}}
+        {{^_is_lite}}
+        padding: 0.5em 1em;
+        {{/_is_lite}}
       }
       .article footer{
+        {{#_is_lite}}
+        margin-top: 0;
+        {{/_is_lite}}
+        {{^_is_lite}}
         margin-top: 0.5em;
+        {{/_is_lite}}
       }
 
       .pre-line {
@@ -180,7 +190,12 @@
         font-weight: 500;
       }
       .mb {
+        {{#_is_lite}}
+        margin-bottom: 4px;
+        {{/_is_lite}}
+        {{^_is_lite}}
         margin-bottom: 0.5em;
+        {{/_is_lite}}
       }
       .px {
         padding-left: 1em;
@@ -224,6 +239,12 @@
       <div class="about-content contrast">
         <p class="p-summary site-description">{{ description }}</p>
         <p>
+        {{ version_label }}: {{#_versions}} {{#active}}
+          <span>{{ name }}</span>
+          {{/active}} {{^active}}
+          <a href="{{{url}}}">{{ name }} </a>
+          {{/active}} {{/_versions}}
+          <br />
           {{ languages_label }}: {{#_languages}} {{#active}}
           <span>{{ name }}</span>
           {{/active}} {{^active}}
@@ -251,7 +272,6 @@
       </div>
       <div class="p-summary entry-summary secondary pre-line small italic">{{{content_html}}}</div>
     </article>
-    <div class="px"><div class="border-bottom w-50"></div></div>
     {{/items}}
     <footer class="footer">
       <p class="muted small">{{ more_post_label }}</p>
