@@ -6,12 +6,41 @@ import { TranslationOptions } from "./interface.ts";
 import { TRANSLATED_ITEMS_PER_PAGE } from "./constant.ts";
 import { toZhHant } from "./to-zh-hant.ts";
 const homepage = "https://www.deepl.com/en/translator-mobile";
-const sourceLangSelect = "button[dl-test=translator-source-lang-btn]",
-  targetLangSelect = "button[dl-test=translator-target-lang-btn]",
-  sourceLangMenu = "div[dl-test=translator-source-lang-list]",
-  targetLangMenu = "div[dl-test=translator-target-lang-list]",
-  originalSentenceField = "textarea[dl-test=translator-source-input]",
-  targetSentenceField = "textarea[dl-test=translator-target-input]";
+// const sourceLangSelect = "button[dl-test=translator-source-lang-btn]",
+//   targetLangSelect = "button[dl-test=translator-target-lang-btn]",
+//   sourceLangMenu = "div[dl-test=translator-source-lang-list]",
+//   targetLangMenu = "div[dl-test=translator-target-lang-list]",
+//   originalSentenceField = "textarea[dl-test=translator-source-input]",
+//   targetSentenceField = "textarea[dl-test=translator-target-input]";
+// a/b test
+const bSourceLangSelect = 'button[aria-label="Select source language"]';
+interface Scheme {
+  sourceLangSelect: string;
+  targetLangSelect: string;
+  sourceLangMenu: string;
+  targetLangMenu: string;
+  originalSentenceField: string;
+  targetSentenceField: string;
+}
+const deepScheme: Record<string, Scheme> = {
+  a: {
+    sourceLangSelect: "button[dl-test=translator-source-lang-btn]",
+    targetLangSelect: "button[dl-test=translator-target-lang-btn]",
+    sourceLangMenu: "div[dl-test=translator-source-lang-list]",
+    targetLangMenu: "div[dl-test=translator-target-lang-list]",
+    originalSentenceField: "textarea[dl-test=translator-source-input]",
+    targetSentenceField: "textarea[dl-test=translator-target-input]",
+  },
+  b: {
+    sourceLangSelect: bSourceLangSelect,
+    targetLangSelect: 'button[aria-label="Select target language"]',
+    sourceLangMenu: "div[dl-test=translator-source-lang-list]",
+    targetLangMenu: "div[dl-test=translator-target-lang-list]",
+    originalSentenceField: "textarea[dl-test=translator-source-input]",
+    targetSentenceField: "textarea[dl-test=translator-target-input]",
+  },
+};
+
 export default class Translation {
   browser: Browser | null = null;
   page: Page | null = null;
@@ -21,6 +50,7 @@ export default class Translation {
   private currentSourceLanguage = "";
   private currentTargetLanguage = "";
   private localTranslations: Record<string, Record<string, string>> = {};
+  private scheme = "a";
   constructor(options: TranslationOptions = {}) {
     if (options.isMock !== undefined) {
       this.isMock = options.isMock;
@@ -53,7 +83,6 @@ export default class Translation {
     this.currentTargetLanguage = "";
     // init puppeteer
     const isHeadless = !(Deno.env.get("HEADLESS") === "0");
-    const iPhone = puppeteer.devices["iPhone 13"];
     if (!this.browser) {
       this.browser = await puppeteer.launch({
         devtools: true,
@@ -236,14 +265,32 @@ export default class Translation {
       isNeedInit = false;
       if (this.currentSourceLanguage !== sourceLanguage) {
         // click  black
-        await page.screenshot({ path: "temp/1.png" });
-        await page.waitForTimeout(100);
-        await page.waitForSelector(sourceLangSelect, { visible: true });
+        // await page.screenshot({ path: "temp/1.png" });
+        // await page.waitForTimeout(100);
 
-        await page.click(sourceLangSelect);
-        await page.waitForTimeout(500);
+        // check a/b test
 
-        await page.waitForSelector(sourceLangMenu, { visible: true });
+        // wait b first
+        try {
+          await page.waitForSelector(bSourceLangSelect, {
+            visible: true,
+            timeout: 3000,
+          });
+          this.scheme = "b";
+          log.info(`deepl scheme is b`);
+        } catch (_e) {
+          log.info(`use a scheme`);
+          await page.waitForSelector(deepScheme.a.sourceLangSelect, {
+            visible: true,
+          });
+        }
+
+        await page.click(deepScheme[this.scheme].sourceLangSelect);
+        // await page.waitForTimeout(100);
+
+        await page.waitForSelector(deepScheme[this.scheme].sourceLangMenu, {
+          visible: true,
+        });
         await page.waitForTimeout(500);
 
         try {
@@ -253,24 +300,28 @@ export default class Translation {
         }
         // await page.screenshot({ path: "screens/3.png" });
 
-        await page.waitForSelector(sourceLangMenu, { hidden: true });
+        await page.waitForSelector(deepScheme[this.scheme].sourceLangMenu, {
+          hidden: true,
+        });
         this.currentSourceLanguage = sourceLanguage;
       }
       await this.changeTargetLanguage(
         Translation.toDeeplLanguage(targetLanguage),
       );
 
-      await page.waitForSelector(originalSentenceField);
+      await page.waitForSelector(deepScheme[this.scheme].originalSentenceField);
       await page.$eval(
-        originalSentenceField,
+        deepScheme[this.scheme].originalSentenceField,
         (el, sentence) => (el.value = sentence),
         sentence,
       );
-      await page.waitForTimeout(1500);
+      await page.waitForTimeout(500);
 
       // await page.keyboard.press("Enter");
 
-      const textInputElement = await page.$(originalSentenceField);
+      const textInputElement = await page.$(
+        deepScheme[this.scheme].originalSentenceField,
+      );
       if (!textInputElement) {
         throw new Error("CANNOT_FIND_ORIGINAL_SENTENCE_FIELD");
       }
@@ -286,7 +337,7 @@ export default class Translation {
     );
 
     let result: string = await page.$eval(
-      targetSentenceField,
+      deepScheme[this.scheme].targetSentenceField,
       (el) => el.value,
     ) as unknown as string;
     result = (result as unknown as string).replace(/\n$/, "");
@@ -312,19 +363,21 @@ export default class Translation {
     );
     await elements[0].click();
 
-    await page.waitForTimeout(1000);
+    await page.waitForTimeout(100);
 
     return finalTranslatedResult;
   }
   async changeTargetLanguage(targetLanguage: string) {
     if (this.currentTargetLanguage !== targetLanguage) {
       const page = this.page!;
-      await page.click(targetLangSelect);
-      await page.waitForTimeout(1000);
+      await page.click(deepScheme[this.scheme].targetLangSelect);
+      // await page.waitForTimeout(100);
 
-      await page.waitForSelector(targetLangMenu, { visible: true });
+      await page.waitForSelector(deepScheme[this.scheme].targetLangMenu, {
+        visible: true,
+      });
 
-      await page.waitForTimeout(1000);
+      await page.waitForTimeout(500);
       try {
         await page.click(Translation.getTargetButtonSelector(targetLanguage));
       } catch (_) {

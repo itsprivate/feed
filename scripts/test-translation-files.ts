@@ -48,7 +48,7 @@ async function main() {
     const cachedKey = identifierToCachedKey(identifier);
     return rawFilesMap.has(cachedKey);
   });
-  console.log("duplicatedFiles", duplicatedFiles);
+  log.info("duplicatedFiles", duplicatedFiles);
 }
 if (import.meta.main) {
   main();

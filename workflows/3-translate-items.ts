@@ -4,7 +4,6 @@ import {
   callWithTimeout,
   getCurrentItemsFilePath,
   getDataFormatedPath,
-  getDataTranslatedPath,
   getFilesByTargetSiteIdentifiers,
   getTargetSiteIdentifiersByFilePath,
   readJSONFile,
@@ -26,6 +25,7 @@ export default async function translateItems(
       getDataFormatedPath(),
       sites,
     );
+
   if (files.length > 0) {
     const currentTranslationsMap = new Map<
       string,

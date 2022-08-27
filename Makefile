@@ -96,7 +96,7 @@ realtr:
 
 .Phony: realtrall
 realtrall:
-	DEBUG=1 HEADLESS=1 MOCK=0 FILES=4 deno run -A main.ts --stage translate
+	DEBUG=1 HEADLESS=0 MOCK=0 FILES=4 deno run -A main.ts --stage translate --site nytimes
 
 .Phony: buildcurrent
 buildcurrent:
