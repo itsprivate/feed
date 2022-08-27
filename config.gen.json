@@ -247,6 +247,7 @@
     "reddit": {
       "port": 8005,
       "redirect": true,
+      "max_image_height": 520,
       "tags": [
         "reddit",
         "source-reddit-top"

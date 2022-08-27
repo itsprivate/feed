@@ -23,7 +23,7 @@ export default async function buildSite(options: RunOptions) {
   const currentDataPath = getDataCurrentItemsPath();
   let siteIdentifiers: string[] = [];
   const indexTemplateString = await Deno.readTextFile(
-    "./templates/index.html",
+    "./templates/index.html.mu",
   );
   let changedSites: string[] | undefined;
   try {

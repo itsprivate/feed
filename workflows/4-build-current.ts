@@ -23,13 +23,6 @@ import { MAX_ITEMS_PER_PAGE } from "../constant.ts";
 export default async function buildCurrent(
   options: RunOptions,
 ) {
-  // clean changed sites json
-  try {
-    await Deno.remove(getChangedSitePaths());
-    log.debug(`clean changed sites json file ` + getChangedSitePaths());
-  } catch (_e) {
-    // ignore
-  }
   // get all 3-translated files
   // is exists translated files folder
   // ensure folder exists
@@ -262,6 +255,13 @@ export default async function buildCurrent(
     if (allEnvValue === "1") {
       // ignore write changed sites
     } else {
+      // clean changed sites json
+      // try {
+      //   await Deno.remove(getChangedSitePaths());
+      //   log.debug(`clean changed sites json file ` + getChangedSitePaths());
+      // } catch (_e) {
+      //   // ignore
+      // }
       await writeJSONFile(
         getChangedSitePaths(),
         changedSites,

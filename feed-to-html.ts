@@ -4,6 +4,7 @@ import {
   getCurrentTranslations,
   getFeedSiteIdentifiers,
   getGeneralTranslations,
+  isDev,
   issueToUrl,
   parsePageUrl,
   siteIdentifierToUrl,
@@ -13,7 +14,7 @@ import {
 } from "./util.ts";
 import { Config, Feedjson } from "./interface.ts";
 import { TARGET_SITE_LANGUAEGS } from "./constant.ts";
-import { mustache } from "./deps.ts";
+import { minifyHTML, mustache } from "./deps.ts";
 export default function feedToHTML(
   feedJson: Feedjson,
   config: Config,
@@ -25,7 +26,7 @@ export default function feedToHTML(
     throw new Error(`home_page_url not found for feedjson`);
   }
   const siteIdentifier = urlToSiteIdentifier(homepage, config);
-
+  const siteConfig = sitesMap[siteIdentifier];
   let isArchive = false;
 
   if (siteIdentifier === config.archive.siteIdentifier) {
@@ -63,6 +64,11 @@ export default function feedToHTML(
     newItem.order = order;
     return newItem;
   });
+
+  if (siteConfig.max_image_height) {
+    // @ts-ignore: new meta
+    feedJson._max_image_height = siteConfig.max_image_height;
+  }
 
   // @ts-ignore: add meta data
   feedJson._languages = languages.map((item) => {
@@ -192,5 +198,12 @@ export default function feedToHTML(
   // build index.html
   // @ts-ignore: js package does not have type for mustache
   const output = mustache.render(indexTemplateString, feedJson);
+  // is dev
+  if (!isDev()) {
+    return minifyHTML(output, {
+      minifyCSS: true,
+      minifyJS: true,
+    });
+  }
   return output;
 }

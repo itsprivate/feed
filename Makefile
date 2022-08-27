@@ -43,11 +43,11 @@ serveall:
 
 .Phony: servesite
 servesite:
-	deno run -A --watch=main.ts,templates/,config.yml main.ts --stage build_site,serve_site --site stocks
+	deno run -A --watch=main.ts,templates/,config.yml main.ts --stage build_site,serve_site --site ${site}
 
-.Phony: buildandserver
-buildandserver:
-	deno run -A --watch=main.ts,templates/,config.yml main.ts --stage translate,build_current,archive,build_site,serve_site --site devfeed
+.Phony: run
+run:
+	deno run -A --watch=main.ts,templates/,config.yml main.ts --stage translate,build_current,archive,build_site,serve_site --site reddit
 
 
 .Phony: site

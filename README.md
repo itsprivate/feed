@@ -91,11 +91,11 @@ make prod-publish
 ## TODO
 
 - [ ] add more feeds
-- [ ] add score
+- [x] add score
 - [x] tags
 - [ ] check cors
 - [x] support workers deploy
-- [ ] change archive lang to hackernews/en/
+- [x] change archive lang to hackernews/en/
 - [ ] cache image to imgur?
 - [ ] add latest build
 - [ ] add lite version
@@ -112,3 +112,4 @@ make prod-publish
 - [ ] issue generate support
 - [ ] twitter message support
 - [ ] config import
+- [ ] build index for all sites

@@ -35,6 +35,7 @@ export interface GeneralSiteConfig {
   tags?: string[];
 }
 export interface SiteConfig extends GeneralSiteConfig {
+  max_image_height?: number;
   dev?: boolean;
   port?: number;
   redirect?: boolean;

@@ -25,7 +25,7 @@ export default async function serveSite(port = 8000) {
   }
   // build index.html
   const indexTemplateString = await Deno.readTextFile(
-    "./templates/index.html",
+    "./templates/index.html.mu",
   );
   const notfoundTemplateString = await Deno.readTextFile(
     "./templates/404.html",
