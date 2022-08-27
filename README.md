@@ -79,6 +79,10 @@ make prod-awsuploadarchive
 # aws configure set s3.max_concurrent_requests 50
 # 50 is fine, seems 100 is too much
 
+# maybe also need to dufs storage
+
+make prod-zipuploadarchive
+
 
 # upload current
 make prod-uploadcurrent

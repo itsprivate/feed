@@ -303,4 +303,8 @@ createsite:
 # only for dev
 .Phony: prod-zipuploadarchive
 prod-zipuploadarchive:
-	zip -r archive.zip archive && sleep 1 && scp ./archive.zip $(DUFS_SERVER):$(DUFS_PATH)/archive.zip
+	zip -r -q archive.zip archive && sleep 1 && scp ./archive.zip $(DUFS_SERVER):$(DUFS_PATH)/archive.zip
+
+# after upload to dufs
+# cd ~/storage
+# unzip -q archive.zip
