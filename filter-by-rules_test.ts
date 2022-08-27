@@ -70,4 +70,15 @@ Deno.test("filterByRules #1", async (t) => {
     ]);
     assertEquals(items.length, 1);
   });
+
+  await t.step("filtered #6", () => {
+    const items = filterByRules([new RedditItem(redditItem)], [
+      {
+        type: "notInclude",
+        key: "getTags",
+        value: "stocks",
+      },
+    ]);
+    assertEquals(items.length, 0);
+  });
 });

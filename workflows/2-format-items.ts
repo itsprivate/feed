@@ -1,9 +1,11 @@
 import { fs, path } from "../deps.ts";
-import { RunOptions } from "../interface.ts";
+import { FormatedItem, ItemsJson, RunOptions } from "../interface.ts";
 import adapters from "../adapters/mod.ts";
 import {
+  getCurrentItemsFilePath,
   getDataFormatedPath,
   getDataRawPath,
+  getDataTranslatedPath,
   getFilesByTargetSiteIdentifiers,
   getTargetSiteIdentifiersByFilePath,
   identifierToCachedKey,
@@ -20,10 +22,11 @@ export default async function formatItems(
   // is exists raw files folder
   await fs.ensureDir(getDataRawPath());
   const sites = options.siteIdentifiers || [];
-  const { files } = await getFilesByTargetSiteIdentifiers(
-    getDataRawPath(),
-    sites,
-  );
+  const { files, targetSiteIdentifiers } =
+    await getFilesByTargetSiteIdentifiers(
+      getDataRawPath(),
+      sites,
+    );
 
   let total = 0;
   if (files.length > 0) {
@@ -66,6 +69,40 @@ export default async function formatItems(
       }
       await Deno.remove(file);
     }
+    // also load all current and translated image cache
+    for await (const entry of fs.walk(getDataTranslatedPath())) {
+      if (entry.isFile && entry.name.endsWith(".json")) {
+        const translationJson = await readJSONFile(entry.path) as FormatedItem;
+
+        if (translationJson.image) {
+          imageCachedMap[translationJson.url] = translationJson.image;
+        }
+      }
+    }
+
+    // get current Itemsjson
+    for (const siteIdentifier of targetSiteIdentifiers) {
+      const currentItemsPath = getCurrentItemsFilePath(siteIdentifier);
+      let currentItemsJson: ItemsJson = {
+        items: {},
+      };
+      try {
+        currentItemsJson = await readJSONFile(currentItemsPath);
+      } catch (e) {
+        log.debug(`read current items file failed, ${e.message}`);
+      }
+      for (const key of Object.keys(currentItemsJson.items)) {
+        if (currentItemsJson.items[key].image) {
+          imageCachedMap[currentItemsJson.items[key].url] = currentItemsJson
+            .items[key].image!;
+        }
+      }
+    }
+
+    log.info(
+      `found ${Object.keys(imageCachedMap).length} current  items image cache`,
+    );
+
     log.info(`start formating, ${files.length} files`);
     for (const file of files) {
       const filenmae = path.basename(file);
@@ -81,7 +118,9 @@ export default async function formatItems(
       );
       // no need to init, cause only get raw data need to init.
       // await item.init();
-      const itemJson = await item.getFormatedItem();
+      const itemJson = await item.getFormatedItem({
+        imageCachedMap,
+      });
 
       // write formated item to file
       await writeJSONFile(

@@ -60,20 +60,19 @@
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
           Helvetica, sans-serif;
       }
-
       img {
         max-width: 95%;
         {{#_max_image_height}}
         max-height: {{_max_image_height}}px;
         {{/_max_image_height}}
         {{^_max_image_height}}
-        max-height: 16em;
+        max-height: 14em;
         {{/_max_image_height}}
         border-radius: 0.5em;
         height: auto;
       }
       video {
-        max-width: 95%;
+        max-width: 90%;
         max-height: 32em;
         height: auto;
       }
@@ -248,20 +247,9 @@
     {{#items}}
     <article class="article h-entry hentry">
       <div class="mb">
-        {{#_is_text}}
-        <span class="p-name entry-title pre-line bold secondary"
-          >{{ order }}. {{{_title_html}}}</span
-        >
-        {{/_is_text}}
-        {{^_is_text}}
-        <a class="p-name entry-title bold no-underline u-url" href="{{{url}}}"
-          ><span>{{ order }}. </span>{{{title}}}</a
-        >
-        {{/_is_text}}
+        <a class="p-name entry-title bold no-underline u-url" href="{{{url}}}"><span>{{ order }}. </span>{{{title}}}</a>
       </div>
-      <div class="p-summary entry-summary secondary pre-line small italic">
-        {{{content_html}}}
-      </div>
+      <div class="p-summary entry-summary secondary pre-line small italic">{{{content_html}}}</div>
     </article>
     <div class="px"><div class="border-bottom w-50"></div></div>
     {{/items}}

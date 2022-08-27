@@ -94,7 +94,7 @@
       "port": 8000,
       "dev": true,
       "tags": [
-        "source-hackernews-index"
+        "source-hackernews-new"
       ],
       "archive": false,
       "translations": {
@@ -110,7 +110,7 @@
         }
       }
     },
-    "hackernews": {
+    "hnfront": {
       "port": 8001,
       "tags": [
         "hn",
@@ -364,33 +364,34 @@
       ],
       "translations": {
         "zh-Hans": {
-          "title": "谷歌全球新闻头条",
-          "description": "用中文浏览谷歌全球新闻(西方媒体)头条",
+          "title": "谷歌新闻头条",
+          "description": "第一时间用中文浏览谷歌新闻头条，国外权威媒体新闻头条，全球突发新闻",
           "keyworkds": "buzzing,西方媒体,国外新闻,世界新闻,突发新闻",
-          "short_title": "全球头条"
+          "short_title": "国外新闻头条"
         },
         "en": {
           "title": "Buzzing on World News",
-          "short_title": "全球头条",
+          "short_title": "World News",
           "description": "See what's buzzing on Google World News Headline in your native language",
           "keywords": "buzzing,Breaking News"
         },
         "zh-Hant": {
-          "title": "谷歌全球新聞頭條",
-          "short_title": "全球頭條",
-          "description": "用中文瀏覽谷歌全球新聞(西方媒體)頭條",
+          "title": "谷歌新聞頭條",
+          "short_title": "國外新聞頭條",
+          "description": "第一時間用中文瀏覽谷歌新聞頭條，國外權威媒體新聞頭條，全球突發新聞",
           "keywords": "buzzing,西方媒體,國外新聞,世界新聞,突發新聞",
           "keyworkds": "buzzing,西方媒體,國外新聞,世界新聞,突發新聞"
         },
         "ja": {
-          "title": "Googleグローバルニュースのヘッドライン",
-          "short_title": "全球头条",
+          "title": "Google ニュースの見出し",
+          "short_title": "海外ニュースの見出し",
           "description": "人気のGoogleグローバルニュースのヘッドライン記事を日本語で閲覧",
           "keywords": "buzzing,ホットニュース"
         }
       }
     },
     "ph": {
+      "max_image_height": 360,
       "port": 8009,
       "archive": true,
       "redirect": true,
@@ -407,7 +408,7 @@
         },
         "en": {
           "title": "Buzzing on Product Hunt",
-          "short_title": "PH热门",
+          "short_title": "Product Hunt",
           "description": "See what's buzzing on Product Hunt in your native language",
           "keywords": "Product Hunt,buzzing,explore APP"
         },
@@ -420,7 +421,7 @@
         },
         "ja": {
           "title": "Product Hunt 人気の作品",
-          "short_title": "PH热门",
+          "short_title": "PH人気の作品",
           "description": "人気のProduct Hunt作品を日本語で閲覧",
           "keywords": "buzzing,Product Hunt"
         }
@@ -444,7 +445,7 @@
         },
         "en": {
           "title": "Buzzing on Crypto",
-          "short_title": "加密货币",
+          "short_title": "Crypto",
           "description": "See what's buzzing on Crypto in your native language",
           "keywords": "buzzing,crypto,bitcoin,blockchain"
         },
@@ -457,7 +458,7 @@
         },
         "ja": {
           "title": "暗号通貨人気の応答",
-          "short_title": "加密货币",
+          "short_title": "暗号通貨",
           "description": "人気の暗号通貨記事を日本語で閲覧",
           "keywords": "buzzing,暗号通貨"
         }
@@ -480,7 +481,7 @@
         },
         "en": {
           "title": "Buzzing on Dev.to",
-          "short_title": "Dev热门",
+          "short_title": "Dev.to",
           "description": "See what's buzzing on Dev.to in your native language",
           "keywords": "buzzing,dev,dev.to"
         },
@@ -493,7 +494,7 @@
         },
         "ja": {
           "title": "Dev.to 人気の記事",
-          "short_title": "Dev热门",
+          "short_title": "Dev人気の記事",
           "description": "人気のDev.to技術記事を日本語で閲覧",
           "keywords": "buzzing,dev.to,プログラマー,技術,技術コミュニティ"
         }
@@ -516,7 +517,7 @@
         },
         "en": {
           "title": "Buzzing on Quora",
-          "short_title": "Quora热门",
+          "short_title": "Quora",
           "description": "See what's buzzing on Quora in your native language",
           "keywords": "buzzing,Quora"
         },
@@ -552,7 +553,7 @@
         },
         "en": {
           "title": "Buzzing on In-depth thinking",
-          "short_title": "深度思考",
+          "short_title": "Depth Thinking",
           "description": "See what's buzzing on In-depth thinking in your native language",
           "keywords": "buzzing,In-depth thinking"
         },
@@ -565,7 +566,7 @@
         },
         "ja": {
           "title": "深い思考人気の話し合います",
-          "short_title": "深度思考",
+          "short_title": "深い思考",
           "description": "人気の深い思考記事を日本語で閲覧",
           "keywords": "buzzing,深い思考"
         }
@@ -589,7 +590,7 @@
         },
         "en": {
           "title": "The New York Times Trends",
-          "short_title": "纽约时报",
+          "short_title": "NYTimes",
           "description": "See what's buzzing on The New York Times in your native language",
           "keywords": "buzzing,The New York Times"
         },
@@ -626,7 +627,7 @@
         },
         "en": {
           "title": "Buzzing on The Wall Street Journal",
-          "short_title": "华尔街日报",
+          "short_title": "WSJ",
           "description": "See what's buzzing on The Wall Street Journal in your native language",
           "keywords": "buzzing,The Wall Street Journal"
         },
@@ -639,7 +640,7 @@
         },
         "ja": {
           "title": "ウォール・ストリート・ジャーナル",
-          "short_title": "华尔街日报",
+          "short_title": "ウォールストリートジャーナル",
           "description": "人気のウォール・ストリート・ジャーナルを日本語で閲覧",
           "keywords": "buzzing,ウォール・ストリート・ジャーナル"
         }
@@ -663,7 +664,7 @@
         },
         "en": {
           "title": "Buzzing on The Economist",
-          "short_title": "经济学人",
+          "short_title": "Economist",
           "description": "See what's buzzing on The Economist in your native language",
           "keywords": "buzzing,The Economist"
         },
@@ -676,7 +677,7 @@
         },
         "ja": {
           "title": "エコノミスト人気の記事",
-          "short_title": "经济学人",
+          "short_title": "エコノミスト",
           "description": "人気のエコノミスト記事を日本語で閲覧",
           "keywords": "buzzing,エコノミスト"
         }
@@ -686,6 +687,7 @@
       "port": 8017,
       "archive": true,
       "redirect": true,
+      "max_image_height": 360,
       "tags": [
         "sideproject",
         "source-reddit-sideproject"
@@ -699,7 +701,7 @@
         },
         "en": {
           "title": "Buzzing on Side Project",
-          "short_title": "业余项目",
+          "short_title": "Side Project",
           "description": "See what's buzzing on Side Project in your native language",
           "keywords": "buzzing,Side Project"
         },
@@ -712,9 +714,43 @@
         },
         "ja": {
           "title": "サイドプロジェクト",
-          "short_title": "业余项目",
+          "short_title": "サイドプロジェクト",
           "description": "人気のサイドプロジェクトを日本語で閲覧",
           "keywords": "buzzing,サイドプロジェクト"
+        }
+      }
+    },
+    "hnnew": {
+      "port": 8018,
+      "redirect": true,
+      "tags": [
+        "hn",
+        "source-hackernews-new"
+      ],
+      "translations": {
+        "zh-Hans": {
+          "title": "Hacker News 最新提交",
+          "short_title": "HN最新",
+          "description": "用中文浏览Hacker News 最新提交, Points >= 2 ",
+          "keywords": "HackerNews 头条, Hacker News 中文, Hacker News Story"
+        },
+        "en": {
+          "title": "Hacker News Newest",
+          "short_title": "HN Newest",
+          "description": "Hacker News Newest",
+          "keywords": "HackerNews 头条, Hacker News 中文, Hacker News Story"
+        },
+        "ja": {
+          "title": "Hacker News の最新の投稿",
+          "short_title": "HN最新",
+          "description": "人気の Hacker News の最新 の投稿",
+          "keywords": "HackerNews 头条, Hacker News 中文, Hacker News Story"
+        },
+        "zh-Hant": {
+          "title": "Hacker News 最新提交",
+          "short_title": "HN最新",
+          "description": "用中文瀏覽Hacker News 最新提交, Points >= 2 ",
+          "keywords": "HackerNews 頭條, Hacker News 中文, Hacker News Story"
         }
       }
     }
@@ -735,6 +771,23 @@
       "url": "https://hn.algolia.com/api/v1/search_by_date?tags=front_page&hitsPerPage=50",
       "type": "hn",
       "id": "source-hackernews-index"
+    },
+    {
+      "id": "source-hackernews-new",
+      "url": "https://hn.algolia.com/api/v1/search_by_date?tags=(story,show_hn)&hitsPerPage=50&numericFilters=points>1",
+      "type": "hn",
+      "rules": [
+        {
+          "type": "notInclude",
+          "key": "getTags",
+          "value": "Ask HN"
+        },
+        {
+          "type": "notInclude",
+          "key": "getTags",
+          "value": "Job"
+        }
+      ]
     },
     {
       "url": "http://hn.algolia.com/api/v1/search_by_date?tags=(story,poll,show_hn,ask_hn)&numericFilters=points>=200&hitsPerPage=50",

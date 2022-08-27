@@ -7,6 +7,7 @@ import {
   getDataCurrentItemsPath,
   getDistFilePath,
   getDistPath,
+  isDev,
   pathToSiteIdentifier,
   readJSONFile,
   siteIdentifierToPath,
@@ -32,7 +33,7 @@ export default async function buildSite(options: RunOptions) {
   } catch (e) {
     log.debug(`read changedSitesPath json file error:`, e);
   }
-  if (changedSites) {
+  if (changedSites && !isDev()) {
     log.info(`got changed sites: ${changedSites}`);
     siteIdentifiers = changedSites;
   } else {
@@ -53,6 +54,7 @@ export default async function buildSite(options: RunOptions) {
       return (sites as string[]).includes(siteIdentifier);
     });
   }
+
   // clear dist folder
   try {
     await Deno.remove(getDistPath(), { recursive: true });

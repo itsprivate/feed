@@ -1,10 +1,11 @@
-import { fs, path } from "../deps.ts";
+import { fs } from "../deps.ts";
 import {
   getArchivedFilePath,
   getChangedSitePaths,
   getCurrentItemsFilePath,
   getCurrentToBeArchivedItemsFilePath,
   getDataCurrentItemsPath,
+  isDev,
   isWeekBiggerThan,
   loadS3ArchiveFile,
   pathToSiteIdentifier,
@@ -29,7 +30,7 @@ export default async function archive(options: RunOptions) {
   } catch (e) {
     log.debug(`read changedSitesPath json file error:`, e);
   }
-  if (!changedSites) {
+  if (!changedSites || isDev()) {
     log.info(`no changed sites file, scan all sites`);
     for await (const dirEntry of Deno.readDir(getDataCurrentItemsPath())) {
       if (dirEntry.isDirectory && !dirEntry.name.startsWith(".")) {
@@ -47,6 +48,7 @@ export default async function archive(options: RunOptions) {
       return (sites as string[]).includes(siteIdentifier);
     });
   }
+
   for (const siteIdentifier of siteIdentifiers) {
     const siteConfig = options.config.sites[siteIdentifier];
     if (siteConfig.archive === false) {

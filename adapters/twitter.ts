@@ -33,8 +33,8 @@ export default class twitter extends Item<TwitterItem> {
       // not for latest url
       for (let i = 0; i < tweet.entities.urls.length; i++) {
         const urlEntity = tweet.entities.urls[i];
-        // replace other url with expanded url
-        title = title.replace(urlEntity.url, urlEntity.expanded_url);
+        // replace other url with empty
+        title = title.replace(urlEntity.url, "");
       }
     }
 
@@ -83,8 +83,18 @@ export default class twitter extends Item<TwitterItem> {
   getTags(): string[] {
     return this.getAuthors().map((author) => author.name);
   }
-  getImage(): string | null {
-    return this.originalItem.entities.media?.[0]?.media_url_https || null;
+  getImage(): string | null | undefined {
+    const image = this.originalItem.entities.media?.[0]?.media_url_https;
+    if (!image) {
+      if (this.getUrl() !== this.getExternalUrl()) {
+        // return undefined, so parent can try to fetch image
+        return undefined;
+      } else {
+        return null;
+      }
+    } else {
+      return image;
+    }
   }
   getSensitive(): boolean {
     return this.originalItem.possibly_sensitive || false;

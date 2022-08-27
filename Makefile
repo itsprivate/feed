@@ -47,7 +47,15 @@ servesite:
 
 .Phony: run
 run:
-	deno run -A --watch=main.ts,templates/,config.yml main.ts --stage translate,build_current,archive,build_site,serve_site --site reddit
+	deno run -A --watch=main.ts,templates/,config.yml main.ts --stage format,translate,build_current,archive,build_site,serve_site --site devfeed
+
+.Phony: runsite
+runsite:
+	deno run -A --watch=main.ts,templates/,config.yml main.ts --stage format,translate,build_current,archive,build_site,serve_site --site ${site}
+
+.Phony: runall
+runall:
+	deno run -A --watch=main.ts,templates/,config.yml main.ts --stage format,translate,build_current,archive,build_site,serve_site
 
 
 .Phony: site
@@ -69,6 +77,9 @@ prod-serve:
 .Phony: fetch
 fetch:
 	deno run -A main.ts --stage fetch --site devfeed
+.Phony: fetchsite
+fetchsite:
+	deno run -A main.ts --stage fetch --site $(site)
 
 .Phony: stage
 stage:
@@ -78,6 +89,11 @@ stage:
 .Phony: format
 format:
 	deno run -A main.ts --stage format --site devfeed
+
+.Phony: formatsite
+formatsite:
+	deno run -A main.ts --stage format --site ${site}
+
 .Phony: formatall
 formatall:
 	deno run -A main.ts --stage format

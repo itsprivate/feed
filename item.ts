@@ -151,16 +151,17 @@ export default class Item<T> {
   async tryToLoadImage(
     imageCachedMap?: Record<string, string>,
   ): Promise<string | null> {
-    if (isMock()) {
-      this.image = null;
-      return null;
-    }
     const url = this.getUrl();
 
     if (imageCachedMap && imageCachedMap[url]) {
       this.image = imageCachedMap[url];
-      log.info(`load image from cache: ${url}`);
+      log.debug(`load image ${imageCachedMap[url]} from cache ${url}`);
       return this.image;
+    }
+
+    if (isMock()) {
+      this.image = null;
+      return null;
     }
 
     // add siteIdentifier referrer
