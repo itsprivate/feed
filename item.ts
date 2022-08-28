@@ -526,12 +526,12 @@ export default class Item<T> {
         )
       }</time></a>&nbsp;&nbsp;`;
 
-    let index = 0;
     const currentTranslations = getCurrentTranslations(
       siteIdentifier,
       language.code,
       config,
     );
+    let index = 0;
 
     // add links
     if (this.getLinks({ isUseHTML: true }).length > 0) {
@@ -545,35 +545,48 @@ export default class Item<T> {
         index++;
       }
     }
+    // add text tags
+    if (item.tags && Array.isArray(item.tags) && item.tags.length > 0) {
+      index = 0;
+      for (const tag of item.tags) {
+        if (tagToPascalCase(tag)) {
+          content_text += `${content_text ? " " : ""}#${tagToPascalCase(tag)}`;
+        }
+        index++;
+      }
+    }
     // add text links
     const linkMap: Record<string, boolean> = {};
     if (this.getLinks().length > 0) {
+      index = 0;
       for (const link of this.getLinks()) {
-        const isGreaterFirst = index >= 1;
         const linkName = currentTranslations[link.name] ??
           link.name;
         linkMap[link.url] = true;
+        // check if old.reddit
+        const linkUrlObj = new URL(link.url);
+        if (linkUrlObj.hostname === "old.reddit.com") {
+          linkUrlObj.hostname = "www.reddit.com";
+          linkMap[linkUrlObj.toString()] = true;
+        } else if (linkUrlObj.hostname === "www.reddit.com") {
+          linkUrlObj.hostname = "old.reddit.com";
+          linkMap[linkUrlObj.toString()] = true;
+        }
         content_text += `\n${linkName}: ${link.url}`;
         index++;
       }
     }
     // add tags
     if (item.tags && Array.isArray(item.tags) && item.tags.length > 0) {
-      content_text += "\n";
+      index = 0;
       for (const tag of item.tags) {
         const isGreaterFirst = index >= 1;
-        if (tagToPascalCase(tag)) {
-          content_text += `${isGreaterFirst ? " " : ""}#${
-            tagToPascalCase(tag)
-          }`;
-        }
         content_html += `${isGreaterFirst ? "&nbsp;&nbsp;" : ""}<a href="${
           tagToUrl(tag, siteIdentifier, language, version, config)
         }">#${tag}</a>`;
         index++;
       }
     }
-
     // check is need add original link
     if (!linkMap[this.getUrl()]) {
       // then add
