@@ -160,19 +160,19 @@
       "port": 8000,
       "dev": true,
       "tags": [
-        "source-hackernews-new"
+        "source-newyorker"
       ],
       "archive": false,
       "translations": {
         "zh-Hans": {
-          "title": "Reddit 热门",
-          "short_title": "Reddit 热门",
-          "description": "用中文浏览Reddit热门内容"
+          "title": "Dev Feed",
+          "short_title": "Feed",
+          "description": "Feed"
         },
         "zh-Hant": {
-          "title": "Reddit 熱門",
-          "short_title": "Reddit 熱門",
-          "description": "用中文瀏覽Reddit熱門內容"
+          "title": "Dev Feed",
+          "short_title": "Feed",
+          "description": "Feed"
         }
       }
     },
@@ -430,8 +430,8 @@
       ],
       "translations": {
         "zh-Hans": {
-          "title": "谷歌新闻头条",
-          "description": "第一时间用中文浏览谷歌新闻头条，国外权威媒体新闻头条，全球突发新闻",
+          "title": "国外新闻头条",
+          "description": "第一时间用中文浏览国外权威媒体新闻头条，全球突发新闻",
           "keyworkds": "buzzing,西方媒体,国外新闻,世界新闻,突发新闻",
           "short_title": "国外新闻头条"
         },
@@ -442,14 +442,14 @@
           "keywords": "buzzing,Breaking News"
         },
         "zh-Hant": {
-          "title": "谷歌新聞頭條",
+          "title": "國外新聞頭條",
           "short_title": "國外新聞頭條",
-          "description": "第一時間用中文瀏覽谷歌新聞頭條，國外權威媒體新聞頭條，全球突發新聞",
+          "description": "第一時間用中文瀏覽國外權威媒體新聞頭條，全球突發新聞",
           "keywords": "buzzing,西方媒體,國外新聞,世界新聞,突發新聞",
           "keyworkds": "buzzing,西方媒體,國外新聞,世界新聞,突發新聞"
         },
         "ja": {
-          "title": "Google ニュースの見出し",
+          "title": "海外ニュースの見出し",
           "short_title": "海外ニュースの見出し",
           "description": "人気のGoogleグローバルニュースのヘッドライン記事を日本語で閲覧",
           "keywords": "buzzing,ホットニュース"
@@ -820,6 +820,42 @@
           "keywords": "HackerNews 頭條, Hacker News 中文, Hacker News Story"
         }
       }
+    },
+    "newyorker": {
+      "port": 8019,
+      "archive": true,
+      "redirect": false,
+      "tags": [
+        "depth",
+        "news",
+        "source-newyorker"
+      ],
+      "translations": {
+        "zh-Hans": {
+          "title": "纽约客",
+          "description": "用中文浏览纽约客报道",
+          "keyworkds": "buzzing,纽约客,New Yorker",
+          "short_title": "纽约客"
+        },
+        "en": {
+          "title": "Buzzing on The New Yorker",
+          "short_title": "New Yorker",
+          "description": "See what's buzzing on The New Yorker in your native language",
+          "keywords": "buzzing,The New Yorker"
+        },
+        "ja": {
+          "title": "ニュース速報人気の記事",
+          "short_title": "ニュース速報",
+          "description": "人気のニュース速報記事を日本語で閲覧",
+          "keywords": "buzzing,ニュース速報"
+        },
+        "zh-Hant": {
+          "title": "紐約客",
+          "description": "用中文瀏覽紐約客報道",
+          "keyworkds": "buzzing,紐約客,New Yorker",
+          "short_title": "紐約客"
+        }
+      }
     }
   },
   "sources": [
@@ -1146,6 +1182,11 @@
           "value": "?"
         }
       ]
+    },
+    {
+      "url": "https://www.newyorker.com/feed/everything",
+      "type": "newyorker",
+      "id": "source-newyorker"
     }
   ]
 }

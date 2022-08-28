@@ -32,15 +32,15 @@ prod-buildfromformat:
 	PROD=1 deno run -A main.ts --stage format,translate,build_current,archive,build_site
 .Phony: start
 start:
-	deno run -A --watch=main.ts,templates/,config.yml main.ts --site devfeed
+	deno run -A main.ts --site devfeed
 
 .Phony: startsite
 startsite:
-	deno run -A --watch=main.ts,templates/,config.yml main.ts --site ${site}
+	deno run -A main.ts --site ${site}
 
 .Phony: startall
 startall:
-	deno run -A --watch=main.ts,templates/,config.yml main.ts
+	deno run -A main.ts
 
 .Phony: run
 run:

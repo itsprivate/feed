@@ -37,6 +37,11 @@ export default class rss extends Item<RSSItem> {
   }
 }
 export interface RSSItem {
+  "media:content": MediaContent[];
+  "media:keywords": string;
+  "dc:creator": string[];
+  "dc:publisher": string;
+  "media:thumbnail": MediaThumbnail;
   source: Source;
   id: string;
   title: Description;
@@ -48,6 +53,7 @@ export interface RSSItem {
   links: Link2[];
   _id?: string;
   _url?: string;
+  categories: Category[];
 }
 
 export interface Description {
@@ -61,4 +67,16 @@ export interface Link2 {
 export interface Source {
   url: string;
   value: string;
+}
+export interface MediaContent {
+}
+
+export interface MediaThumbnail {
+  url: string;
+  width: number;
+  height: number;
+}
+export interface Category {
+  term: string;
+  label: string;
 }

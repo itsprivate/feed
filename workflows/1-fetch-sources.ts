@@ -108,7 +108,10 @@ export default async function fetchSources(
     for (const sourceUrl of sourceUrls) {
       let total = 0;
       let originalJson;
-      if (sourceType === "rss" || sourceType === "googlenews") {
+      if (
+        sourceType === "rss" || sourceType === "googlenews" ||
+        sourceType === "newyorker"
+      ) {
         const originItemResult = await fetch(sourceUrl);
 
         const xml = await originItemResult.text();

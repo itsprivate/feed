@@ -100,13 +100,13 @@ sites:
     port: 8000
     dev: true
     tags:
-      - source-hackernews-new
+      - source-newyorker
     archive: false
     translations:
       "zh-Hans":
-        title: "Reddit 热门"
-        short_title: "Reddit 热门"
-        description: "用中文浏览Reddit热门内容"
+        title: "Dev Feed"
+        short_title: "Feed"
+        description: "Feed"
 
   hnfront:
     port: 8001
@@ -622,6 +622,30 @@ sites:
         short_title: "HN最新"
         description: "用中文浏览Hacker News 最新提交"
         keywords: "HackerNews 头条, Hacker News 中文, Hacker News Story"
+  newyorker:
+    port: 8019
+    archive: true
+    redirect: false
+    tags:
+      - depth
+      - news
+      - source-newyorker
+    translations:
+      zh-Hans:
+        title: 纽约客
+        description: 用中文浏览纽约客报道
+        keyworkds: "buzzing,纽约客,New Yorker"
+        short_title: 纽约客
+      en:
+        title: Buzzing on The New Yorker
+        short_title: New Yorker
+        description: See what's buzzing on The New Yorker in your native language
+        keywords: "buzzing,The New Yorker"
+      ja:
+        title: ニュース速報人気の記事
+        short_title: ニュース速報
+        description: 人気のニュース速報記事を日本語で閲覧
+        keywords: "buzzing,ニュース速報"
 
 sources:
   - url: https://news.google.com/rss/topics/CAAqJggKIiBDQkFTRWdvSUwyMHZNRGx1YlY4U0FtVnVHZ0pWVXlnQVAB?hl=en-US&gl=US&ceid=US:en
@@ -822,3 +846,6 @@ sources:
       - type: include
         key: getTitle
         value: "?"
+  - url: https://www.newyorker.com/feed/everything
+    type: newyorker
+    id: source-newyorker

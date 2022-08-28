@@ -6,6 +6,7 @@ import ph from "./ph.ts";
 import rss from "./rss.ts";
 import devto from "./devto.ts";
 import { Type } from "../interface.ts";
+import newyorker from "./newyorker.ts";
 import googlenews from "./googlenews.ts";
 export type ItemType = Item<RedditItem | HnItem>;
 const adapters: Record<string, Type<Item<RedditItem>>> = {
@@ -23,5 +24,7 @@ const adapters: Record<string, Type<Item<RedditItem>>> = {
   ph,
   // @ts-ignore: hard to type
   devto,
+  // @ts-ignore: hard to type
+  newyorker,
 };
 export default adapters;
