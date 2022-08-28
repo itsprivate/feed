@@ -590,7 +590,9 @@ export default class Item<T> {
     // check is need add original link
     if (!linkMap[this.getUrl()]) {
       // then add
-      content_text += `\nSource: ${this.getUrl()}`;
+      content_text += `\n${
+        currentTranslations.source_link_label || "Source"
+      }: ${this.getUrl()}`;
     }
 
     content_html += "</footer>";

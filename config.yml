@@ -39,6 +39,7 @@ translations:
     issue_title_label: "{{year}} 年 第 {{week}} 周精选（{{range}}） "
     Lite: 无图模式
     Default: 有图模式
+    source_link_label: 原文地址
   en:
     about_label: About
     subscription_label: Subscription
@@ -53,6 +54,7 @@ translations:
     less_label: Less
     Lite: Lite
     Default: Default
+    source_link_label: Source
   ja:
     about_label: このページについて
     subscription_label: 購読
@@ -67,6 +69,7 @@ translations:
     less_label: 閉じる
     Lite: ライト
     Default: デフォルト
+    source_link_label: ソース
 archive:
   port: 9000
   siteIdentifier: i

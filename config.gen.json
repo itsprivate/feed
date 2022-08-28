@@ -60,7 +60,8 @@
       "archive_title_label": "{{year}} 年 第 {{week}} 周归档（{{range}}） ",
       "issue_title_label": "{{year}} 年 第 {{week}} 周精选（{{range}}） ",
       "Lite": "无图模式",
-      "Default": "有图模式"
+      "Default": "有图模式",
+      "source_link_label": "原文地址"
     },
     "en": {
       "about_label": "About",
@@ -75,7 +76,8 @@
       "more_label": "More",
       "less_label": "Less",
       "Lite": "Lite",
-      "Default": "Default"
+      "Default": "Default",
+      "source_link_label": "Source"
     },
     "ja": {
       "about_label": "このページについて",
@@ -90,7 +92,8 @@
       "more_label": "もっと",
       "less_label": "閉じる",
       "Lite": "ライト",
-      "Default": "デフォルト"
+      "Default": "デフォルト",
+      "source_link_label": "ソース"
     },
     "zh-Hant": {
       "about_label": "關於",
@@ -108,7 +111,8 @@
       "archive_title_label": "{{year}} 年 第 {{week}} 周歸檔（{{range}}） ",
       "issue_title_label": "{{year}} 年 第 {{week}} 周精選（{{range}}） ",
       "Lite": "無圖模式",
-      "Default": "有圖模式"
+      "Default": "有圖模式",
+      "source_link_label": "原文地址"
     }
   },
   "archive": {
