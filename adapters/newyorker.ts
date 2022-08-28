@@ -22,11 +22,11 @@ export default class newyorker extends RSS {
         }
       });
     }
-    if (this.originalItem["media:keywords"]) {
-      this.originalItem["media:keywords"].split(",").map((item) => {
-        tags.push(item.trim());
-      });
-    }
+    // if (this.originalItem["media:keywords"]) {
+    //   this.originalItem["media:keywords"].split(",").map((item) => {
+    //     tags.push(item.trim());
+    //   });
+    // }
     // unique
     tags = [...new Set(tags)];
     return tags;
