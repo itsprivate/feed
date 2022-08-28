@@ -24,7 +24,7 @@ prod-build:
 	 PROD=1 deno run -A main.ts --build
 .Phony: prod-buildsite
 prod-buildsite:
-	 PROD=1 deno run -A main.ts --build --site wsj
+	 PROD=1 deno run -A main.ts --build --site ${site}
 
 
 .Phony: prod-buildfromformat
