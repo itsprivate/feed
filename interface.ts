@@ -205,3 +205,6 @@ export interface UrlInfo {
   version: Version;
   pathname: string;
 }
+export interface LinkOptions {
+  isUseHTML?: boolean;
+}

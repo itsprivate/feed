@@ -334,3 +334,8 @@ Deno.test("url pattern #31", () => {
   const result = urlPattern.exec(url);
   assertEquals(result?.pathname.groups.id, "DmyqLp6rgss");
 });
+Deno.test("slug #32", () => {
+  assertEquals(slug("HelloWorld"), "hello-world");
+  assertEquals(slug("KidsAre-FuckingStupid"), "kids-are-fucking-stupid");
+  assertEquals(slug("I Love-hate you"), "i-love-hate-you");
+});

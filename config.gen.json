@@ -739,6 +739,7 @@
     "hnnew": {
       "port": 8018,
       "redirect": true,
+      "archive": true,
       "tags": [
         "hn",
         "source-hackernews-new"
@@ -802,6 +803,11 @@
           "type": "notInclude",
           "key": "getTags",
           "value": "Job"
+        },
+        {
+          "type": "notInclude",
+          "key": "getTags",
+          "value": "Show HN"
         }
       ]
     },

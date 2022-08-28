@@ -1,0 +1,22 @@
+name: Test Actions
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+  repository_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - id: feedrepo
+        uses: pozetroninc/github-action-get-latest-release@v0.6.0
+        with:
+          repository: ${{github.repository}}
+          excludes: prerelease, draft
+      - name: echo release
+        run: echo ${{ steps.feedrepo.outputs.release }}
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{steps.feedrepo.outputs.release}}

@@ -9,6 +9,7 @@ import {
   GetFormatedItemOptions,
   Language,
   Link,
+  LinkOptions,
   Video,
 } from "./interface.ts";
 import {
@@ -23,6 +24,7 @@ import {
   getItemTranslations,
   getRedirectedUrl,
   isMock,
+  tagToPascalCase,
   tagToUrl,
   tryToRemoveUnnecessaryParams,
 } from "./util.ts";
@@ -219,7 +221,7 @@ export default class Item<T> {
   getAuthors(): Author[] {
     return [];
   }
-  getLinks(): Link[] {
+  getLinks(_options?: LinkOptions): Link[] {
     return [];
   }
 
@@ -425,7 +427,7 @@ export default class Item<T> {
     }
 
     let summary = "";
-
+    let content_text = "";
     let content_html = "";
     if (!isLite && item._video) {
       const sources = item._video.sources;
@@ -498,11 +500,14 @@ export default class Item<T> {
       }
       content_html +=
         `<div>${finalTitle} (<a href="${itemUrl}">${itemUrlObj.hostname}</a>)</div>`;
-      summary += `${
-        formatHumanTime(
-          new Date(item._original_published as string),
-        )
-      } - ${originalTranslationObj.title}`;
+      // summary += `${
+      //   formatHumanTime(
+      //     new Date(item._original_published as string),
+      //   )
+      // } - ${originalTranslationObj.title}`;
+
+      summary += `${originalTranslationObj.title}`;
+      content_text += `${originalTranslationObj.title}`;
     }
     content_html +=
       `<footer><a href="${itemUrl}"><time class="dt-published published" datetime="${item._original_published}">${
@@ -517,35 +522,58 @@ export default class Item<T> {
       language.code,
       config,
     );
+
     // add links
-    if (this.getLinks().length > 0) {
-      for (const link of this.getLinks()) {
+    if (this.getLinks({ isUseHTML: true }).length > 0) {
+      for (const link of this.getLinks({ isUseHTML: true })) {
         const isGreaterFirst = index >= 1;
         const linkName = currentTranslations[link.name] ??
           link.name;
-        summary += `${linkName}: ${link.url}\n`;
         content_html += `${
           isGreaterFirst ? "&nbsp;&nbsp;" : ""
         }<a href="${link.url}">${linkName}</a>`;
         index++;
       }
     }
-
+    // add text links
+    const linkMap: Record<string, boolean> = {};
+    if (this.getLinks().length > 0) {
+      for (const link of this.getLinks()) {
+        const isGreaterFirst = index >= 1;
+        const linkName = currentTranslations[link.name] ??
+          link.name;
+        linkMap[link.url] = true;
+        content_text += `\n${linkName}: ${link.url}`;
+        index++;
+      }
+    }
     // add tags
-    if (item.tags && Array.isArray(item.tags)) {
+    if (item.tags && Array.isArray(item.tags) && item.tags.length > 0) {
+      content_text += "\n";
       for (const tag of item.tags) {
         const isGreaterFirst = index >= 1;
-        summary += ` #${tag}`;
+        if (tagToPascalCase(tag)) {
+          content_text += `${isGreaterFirst ? " " : ""}#${
+            tagToPascalCase(tag)
+          }`;
+        }
         content_html += `${isGreaterFirst ? "&nbsp;&nbsp;" : ""}<a href="${
           tagToUrl(tag, siteIdentifier, language, config)
         }">#${tag}</a>`;
         index++;
       }
     }
+
+    // check is need add original link
+    if (!linkMap[this.getUrl()]) {
+      // then add
+      content_text += `\nSource: ${this.getUrl()}`;
+    }
+
     content_html += "</footer>";
 
     item.summary = summary;
-    item.content_text = summary;
+    item.content_text = content_text;
     item.content_html = content_html;
     // add feed 1.0 adapter author
     if (

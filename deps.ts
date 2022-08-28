@@ -64,6 +64,8 @@ const slug = transliteration.slugify;
 export { slug };
 export { default as kebabCase } from "https://jspm.dev/lodash@4.17.21/kebabCase";
 
+export { default as camelCase } from "https://jspm.dev/lodash@4.17.21/camelCase";
+
 export { default as mustache } from "https://jspm.dev/mustache@4.2.0";
 export { default as jsonfeedToAtom } from "https://jspm.dev/jsonfeed-to-atom@1.2.2";
 export { default as jsonfeedToRSS } from "https://jspm.dev/jsonfeed-to-rss@3.0.6";

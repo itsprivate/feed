@@ -1,4 +1,5 @@
 import {
+  camelCase,
   DateTimeFormatter,
   DigestClient,
   dotenvConfig,
@@ -636,6 +637,18 @@ export const slug = function (tag: string): string {
   // @ts-ignore: npm module
   return slugFn(kebabCase(tag));
 };
+
+export const tagToPascalCase = function (tag: string): string {
+  // @ts-ignore: npm module
+  const camel = camelCase(slug(tag));
+  if (camel) {
+    // upper first letter
+    return camel.charAt(0).toUpperCase() + camel.slice(1);
+  } else {
+    return "";
+  }
+};
+
 export async function sha1(message: string) {
   const encoder = new TextEncoder();
   const data = encoder.encode(message);

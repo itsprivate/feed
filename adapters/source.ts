@@ -1,6 +1,6 @@
-import { Embed, FormatedItem, Link, Video } from "../interface.ts";
+import { Embed, FormatedItem, Link, LinkOptions, Video } from "../interface.ts";
 import Item from "../item.ts";
-import { parseItemIdentifier } from "../util.ts";
+import { formatNumber, parseItemIdentifier } from "../util.ts";
 export default class source extends Item<FormatedItem> {
   getSensitive(): boolean {
     return this.originalItem._sensitive || false;
@@ -80,20 +80,28 @@ export default class source extends Item<FormatedItem> {
       return undefined;
     }
   }
-  getLinks(): Link[] {
+  getLinks(options?: LinkOptions): Link[] {
     const type = this.getType();
     const links: Link[] = [];
     const externalLink = this.getExternalUrl();
+    let linkSymbol = "👉";
+    if (options && options.isUseHTML) {
+      linkSymbol = "&uarr;";
+    }
     let externalLinkName = "";
     if (type === "hn") {
       if (this.getScore()) {
-        externalLinkName = `&uarr; ${this.getScore()} HN Points`;
+        externalLinkName = `${linkSymbol} ${
+          formatNumber(this.getScore())
+        } HN Points`;
       } else {
         externalLinkName = "HN Link";
       }
     } else if (type === "reddit") {
       if (this.getScore() && this.getExternalUrl()) {
-        externalLinkName = `&uarr; ${this.getScore()} Reddit Upvotes`;
+        externalLinkName = `${linkSymbol} ${
+          formatNumber(this.getScore())
+        } Reddit Upvotes`;
       } else {
         externalLinkName = `Reddit Link`;
       }
@@ -101,7 +109,9 @@ export default class source extends Item<FormatedItem> {
       if (
         this.getScore() && this.getExternalUrl()
       ) {
-        externalLinkName = `&uarr; ${this.getScore()} Twitter Like`;
+        externalLinkName = `${linkSymbol} ${
+          formatNumber(this.getScore())
+        } Twitter Like`;
       } else {
         externalLinkName = `Twitter Link`;
       }
