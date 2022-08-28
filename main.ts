@@ -74,6 +74,8 @@ export default async function main() {
   }
   if (args.site) {
     sites = args.site.split(",");
+  } else if (Deno.env.get("SITE")) {
+    sites = Deno.env.get("site")?.split(",");
   }
   const config = await getGenConfig();
   const sitesMap = config.sites;
