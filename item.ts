@@ -510,11 +510,6 @@ export default class Item<T> {
       }
       content_html +=
         `<div>${finalTitle} (<a href="${itemUrl}">${itemUrlObj.hostname}</a>)</div>`;
-      // summary += `${
-      //   formatHumanTime(
-      //     new Date(item._original_published as string),
-      //   )
-      // } - ${originalTranslationObj.title}`;
 
       summary += `${originalTranslationObj.title}`;
       content_text += `${originalTranslationObj.title}`;
@@ -547,18 +542,15 @@ export default class Item<T> {
     }
     // add text tags
     if (item.tags && Array.isArray(item.tags) && item.tags.length > 0) {
-      index = 0;
       for (const tag of item.tags) {
         if (tagToPascalCase(tag)) {
           content_text += `${content_text ? " " : ""}#${tagToPascalCase(tag)}`;
         }
-        index++;
       }
     }
     // add text links
     const linkMap: Record<string, boolean> = {};
     if (this.getLinks().length > 0) {
-      index = 0;
       for (const link of this.getLinks()) {
         const linkName = currentTranslations[link.name] ??
           link.name;
@@ -573,12 +565,10 @@ export default class Item<T> {
           linkMap[linkUrlObj.toString()] = true;
         }
         content_text += `\n${linkName}: ${link.url}`;
-        index++;
       }
     }
     // add tags
     if (item.tags && Array.isArray(item.tags) && item.tags.length > 0) {
-      index = 0;
       for (const tag of item.tags) {
         const isGreaterFirst = index >= 1;
         content_html += `${isGreaterFirst ? "&nbsp;&nbsp;" : ""}<a href="${
