@@ -315,8 +315,8 @@ sites:
       - source-google-news
     translations:
       zh-Hans:
-        title: 谷歌新闻头条
-        description: 第一时间用中文浏览谷歌新闻头条，国外权威媒体新闻头条，全球突发新闻
+        title: 国外新闻头条
+        description: 第一时间用中文浏览国外权威媒体新闻头条，全球突发新闻
         keyworkds: "buzzing,西方媒体,国外新闻,世界新闻,突发新闻"
         short_title: 国外新闻头条
       en:
@@ -327,12 +327,12 @@ sites:
           language
         keywords: "buzzing,Breaking News"
       zh-Hant:
-        title: 谷歌新聞頭條
+        title: 國外新聞頭條
         short_title: 國外新聞頭條
         description: 第一時間用中文瀏覽谷歌新聞頭條，國外權威媒體新聞頭條，全球突發新聞
         keywords: "buzzing,西方媒體,國外新聞,世界新聞,突發新聞"
       ja:
-        title: Google ニュースの見出し
+        title: 海外ニュースの見出し
         short_title: 海外ニュースの見出し
         description: 人気のGoogleグローバルニュースのヘッドライン記事を日本語で閲覧
         keywords: "buzzing,ホットニュース"
