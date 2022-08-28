@@ -27,6 +27,8 @@ export default class newyorker extends RSS {
         tags.push(item.trim());
       });
     }
+    // unique
+    tags = [...new Set(tags)];
     return tags;
   }
   getImage(): string | null | undefined {
