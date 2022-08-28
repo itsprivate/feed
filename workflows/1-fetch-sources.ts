@@ -5,6 +5,7 @@ import {
   getCurrentItemsFilePath,
   getDataTranslatedPath,
   identifierToCachedKey,
+  isDev,
   readJSONFile,
   writeJSONFile,
 } from "../util.ts";
@@ -30,38 +31,47 @@ export default async function fetchSources(
   const targetSiteIdentifiersMap = new Map<string, string[]>();
   for (const siteIdentifier of siteIdentifiers) {
     const siteConfig = sitesMap[siteIdentifier];
+    const siteIsOnlyDev = siteConfig.dev && !isDev();
     const siteTags = siteConfig.tags || [];
     const siteSources: Source[] = [];
-    for (const siteTag of siteTags) {
-      const source = sourcesMap.get(siteTag);
-      if (source) {
-        siteSources.push(source);
+    if (!siteIsOnlyDev) {
+      // only take prod
+      for (const siteTag of siteTags) {
+        const source = sourcesMap.get(siteTag);
+        if (source) {
+          siteSources.push(source);
 
-        if (!targetSiteIdentifiersMap.has(siteTag)) {
-          targetSiteIdentifiersMap.set(siteTag, []);
-        }
-        if (!targetSiteIdentifiersMap.get(siteTag)!.includes(siteIdentifier)) {
-          targetSiteIdentifiersMap.get(siteTag)!.push(siteIdentifier);
+          if (!targetSiteIdentifiersMap.has(siteTag)) {
+            targetSiteIdentifiersMap.set(siteTag, []);
+          }
+          if (
+            !targetSiteIdentifiersMap.get(siteTag)!.includes(siteIdentifier)
+          ) {
+            targetSiteIdentifiersMap.get(siteTag)!.push(siteIdentifier);
+          }
         }
       }
-    }
-    if (siteSources.length === 0) {
-      log.info(`site ${siteIdentifier} has no sources, skip fetch sources`);
+
+      if (siteSources.length === 0) {
+        log.info(`site ${siteIdentifier} has no sources, skip fetch sources`);
+      } else {
+        filteredSources = filteredSources.concat(siteSources);
+        // get current Itemsjson
+        const currentItemsPath = getCurrentItemsFilePath(siteIdentifier);
+        let currentItemsJson: ItemsJson = {
+          items: {},
+        };
+        try {
+          currentItemsJson = await readJSONFile(currentItemsPath);
+        } catch (e) {
+          log.debug(`read current items file failed, ${e.message}`);
+        }
+        for (const key of Object.keys(currentItemsJson.items)) {
+          currentKeysMap.set(identifierToCachedKey(key), true);
+        }
+      }
     } else {
-      filteredSources = filteredSources.concat(siteSources);
-      // get current Itemsjson
-      const currentItemsPath = getCurrentItemsFilePath(siteIdentifier);
-      let currentItemsJson: ItemsJson = {
-        items: {},
-      };
-      try {
-        currentItemsJson = await readJSONFile(currentItemsPath);
-      } catch (e) {
-        log.debug(`read current items file failed, ${e.message}`);
-      }
-      for (const key of Object.keys(currentItemsJson.items)) {
-        currentKeysMap.set(identifierToCachedKey(key), true);
-      }
+      log.info(`site ${siteIdentifier} is dev only, skip fetch sources`);
     }
   }
 

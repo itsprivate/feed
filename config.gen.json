@@ -116,7 +116,7 @@
       "tags": [
         "source-hackernews-new"
       ],
-      "archive": true,
+      "archive": false,
       "translations": {
         "zh-Hans": {
           "title": "Reddit 热门",
