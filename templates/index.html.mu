@@ -4,12 +4,12 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{{ title }} - {{ description }}</title>
+    <title>{{ title }}</title>
     {{#keywords}}
     <meta name="keywords" content="{{ keywords }}" />
     {{/keywords}}
-    <meta itemprop="name" content="{{{name}}}" />
-    <meta itemprop="image" content="{{{image}}}" />
+    <meta itemprop="name" content="{{{title}}}" />
+    <meta itemprop="image" content="{{{_image}}}" />
     <meta
       itemprop="description"
       name="description"
@@ -18,8 +18,8 @@
     <meta property="og:url" content="{{{home_page_url}}}" />
     <meta property="og:type" content="website" />
     <meta property="og:title" content="{{ title }}" />
-    <meta property="og:image" content="{{{icon}}}" />
-    <meta property="og:image:alt" content="{{ title }} Logo" />
+    <meta property="og:image" content="{{{_image}}}" />
+    <meta property="og:image:alt" content="{{ title }}" />
     <meta property="og:description" content="{{ description }}" />
     <meta property="og:site_name" content="{{ title }}" />
     <meta name="twitter:card" content="summary" />
@@ -27,8 +27,8 @@
     <meta name="twitter:url" content="{{{home_page_url}}}" />
     <meta name="twitter:title" content="{{ title }}" />
     <meta name="twitter:description" content="{{ description }}" />
-    <meta name="twitter:image" content="{{{icon}}}" />
-    <meta name="twitter:image:alt" content="{{ title }} Logo" />
+    <meta name="twitter:image" content="{{{_image}}}" />
+    <meta name="twitter:image:alt" content="{{ title }}" />
     <meta property="og:locale" content="{{ language }}" />
     <link
       rel="alternate"
@@ -96,6 +96,7 @@
         margin-bottom: 2em;
         padding-left: 1em;
         padding-right: 1em;
+        padding-top: 2em;
       }
       .article {
         border-radius: 0.5em;
@@ -213,8 +214,8 @@
   </head>
   <body>
     <header class="header">
-      <a class="contrast no-underline small" href="{{{home_page_url}}}">{{
-        title
+      <a class="contrast no-underline small" href="{{{_site_url}}}">{{
+        _site_title
       }}</a>
       <span> · </span>
       <a id="about" href="#about" class="about muted small">{{
@@ -263,18 +264,20 @@
           <a href="https://www.owenyoung.com">Owen</a>
         </p>
       </div>
+      {{#_page_title}}
+      <h3>{{.}}</h3>
+      {{/_page_title}}
     </header>
 
     {{#items}}
     <article class="article h-entry hentry">
       <div class="mb">
-        <a class="p-name entry-title bold no-underline u-url" href="{{{url}}}"><span>{{ order }}. </span>{{{title}}}</a>
+        <a class="p-name entry-title bold no-underline u-url" href="{{{url}}}">{{#order}}<span>{{ . }}. </span>{{/order}}{{{title}}}</a>
       </div>
       <div class="p-summary entry-summary secondary pre-line small italic">{{{content_html}}}</div>
     </article>
     {{/items}}
     <footer class="footer">
-      <p class="muted small">{{ more_post_label }}</p>
       {{#_issue_list.0}}
       <details>
         <summary>{{ issues_label }}</summary>

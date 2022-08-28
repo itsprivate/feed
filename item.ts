@@ -24,6 +24,7 @@ import {
   getItemTranslations,
   getRedirectedUrl,
   isMock,
+  postToUrl,
   tagToPascalCase,
   tagToUrl,
   tryToRemoveUnnecessaryParams,
@@ -385,7 +386,10 @@ export default class Item<T> {
       }
     }
     const isLite = versionCode === "lite";
-
+    const version = config.versions.find((v) => v.code === versionCode);
+    if (!version) {
+      throw new Error(`version ${versionCode} not found`);
+    }
     const formatedItem = this.getFormatedItemSync();
     const item: FeedItem = {
       title: "",
@@ -394,6 +398,12 @@ export default class Item<T> {
       content_html: "",
       ...formatedItem,
     };
+
+    // format id to url
+
+    if (item.id) {
+      item.id = postToUrl(item.id, siteIdentifier, language, version, config);
+    }
 
     const itemUrl = this.getUrl();
     const itemUrlObj = new URL(itemUrl);
@@ -510,7 +520,7 @@ export default class Item<T> {
       content_text += `${originalTranslationObj.title}`;
     }
     content_html +=
-      `<footer><a href="${itemUrl}"><time class="dt-published published" datetime="${item._original_published}">${
+      `<footer><a href="${item.id}"><time class="dt-published published" datetime="${item._original_published}">${
         formatHumanTime(
           new Date(item._original_published as string),
         )
@@ -558,7 +568,7 @@ export default class Item<T> {
           }`;
         }
         content_html += `${isGreaterFirst ? "&nbsp;&nbsp;" : ""}<a href="${
-          tagToUrl(tag, siteIdentifier, language, config)
+          tagToUrl(tag, siteIdentifier, language, version, config)
         }">#${tag}</a>`;
         index++;
       }

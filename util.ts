@@ -5,11 +5,14 @@ import {
   dotenvConfig,
   fs,
   kebabCase,
+  mustache,
   path,
+  posixPath,
   S3Bucket,
   slug as slugFn,
   YAML,
 } from "./deps.ts";
+import { NotFound } from "./error.ts";
 import {
   DEV_MODE_HANDLED_ITEMS,
   ROOT_DOMAIN,
@@ -21,6 +24,7 @@ import {
   FilteredFile,
   Language,
   PageMeta,
+  ParsedArchiveUrl,
   ParsedFilename,
   SiteConfig,
   UrlInfo,
@@ -192,7 +196,7 @@ export const getGenConfig = async function (): Promise<Config> {
   const config = await readJSONFile("./config.gen.json") as Config;
   return config;
 };
-const formatBeijing = (date: Date, formatString: string) => {
+export const formatBeijing = (date: Date, formatString: string) => {
   date = new Date(date.getTime() + 8 * 60 * 60 * 1000);
   const formatter = new DateTimeFormatter(formatString);
   return formatter.format(date, {
@@ -311,7 +315,7 @@ export const urlToLanguageUrl = (
   versions: Version[],
   languages: Language[],
 ) => {
-  const urlInfo = getUrlLanguage(url, versions, languages);
+  const urlInfo = parsePageUrl(url, versions, languages);
   const urlObj = new URL(url);
   // check if url has a prefix
   urlObj.pathname = `/${languagePrefix}${urlInfo.version.prefix}${
@@ -326,13 +330,15 @@ export const urlToVersionUrl = (
   versions: Version[],
   languages: Language[],
 ) => {
-  const urlInfo = getUrlLanguage(url, versions, languages);
+  const urlInfo = parsePageUrl(url, versions, languages);
   const urlObj = new URL(url);
   // check if url has a prefix
-  urlObj.pathname = `/${urlInfo.language.prefix}${versionPrefix}`;
+  urlObj.pathname = `/${urlInfo.language.prefix}${versionPrefix}${
+    urlInfo.pathname.slice(1)
+  }`;
   return urlObj.toString();
 };
-export const getUrlLanguage = (
+export const parsePageUrl = (
   url: string,
   versions: Version[],
   lanuguages: Language[],
@@ -371,11 +377,14 @@ export const getUrlLanguage = (
       break;
     }
   }
+  urlObj.pathname = pathname;
+  const newUrl = urlObj.toString();
 
   return {
     language,
     version,
     pathname,
+    url: newUrl,
   };
 };
 
@@ -417,24 +426,31 @@ export const getPageMeta = (itemsRelativePath: string): PageMeta => {
   const pathArr = itemsRelativePath.split("/");
   let pageType = "index";
   let meta: Record<string, string> = {};
-  if (pathArr.length >= 1) {
-    const rootField = pathArr[0];
+  if (pathArr.length >= 2) {
+    const rootField = pathArr[2];
     if (rootField === "tags") {
       pageType = "tag";
       meta = {
-        tagIdentifier: pathArr[1],
+        tagIdentifier: pathArr[2],
       };
     } else if (rootField === "archive") {
       pageType = "archive";
       meta = {
-        year: pathArr[1],
-        week: pathArr[2],
+        year: pathArr[3],
+        week: pathArr[4],
       };
-    } else if (rootField === "issue") {
-      pageType = "issue";
+    } else if (rootField === "issues") {
+      pageType = "issues";
       meta = {
-        year: pathArr[1],
-        week: pathArr[2],
+        year: pathArr[3],
+        week: pathArr[4],
+      };
+    } else if (rootField === "posts") {
+      pageType = "posts";
+      meta = {
+        year: pathArr[3],
+        week: pathArr[4],
+        id: pathArr[5],
       };
     }
   }
@@ -536,12 +552,11 @@ export const getCurrentTranslations = function (
   config: Config,
 ): Record<string, string> {
   let currentTranslations: Record<string, string> = {};
-  const translations = config.translations;
   const sitesMap = config.sites;
   const siteConfig = sitesMap[siteIdentifier];
 
   // merge site translations
-  const generalTranslations = translations[languageCode] ?? {};
+  const generalTranslations = getGeneralTranslations(languageCode, config);
   let siteTranslations = {};
   if (siteConfig.translations) {
     siteTranslations = siteConfig.translations[languageCode] ??
@@ -565,7 +580,10 @@ export const getGeneralTranslations = function (
   // merge site translations
   const generalTranslations = translations[languageCode] ?? {};
 
+  const defaultTranslations = translations["zh-Hans"] ?? {};
+
   currentTranslations = {
+    ...defaultTranslations,
     ...generalTranslations,
   };
 
@@ -675,11 +693,12 @@ export function tagToUrl(
   tag: string,
   siteIdentifier: string,
   language: Language,
+  version: Version,
   config: Config,
 ): string {
   return `${
     getArchiveSitePrefix(config)
-  }/${language.prefix}${siteIdentifier}/tags/${
+  }/${language.prefix}${version.prefix}${siteIdentifier}/tags/${
     // @ts-ignore: npm module
     slug(tag)}/`;
 }
@@ -687,67 +706,84 @@ export function archiveToUrl(
   archiveKey: string,
   siteIdentifier: string,
   language: Language,
+  version: Version,
   config: Config,
 ): string {
   return `${
     getArchiveSitePrefix(config)
-  }/${language.prefix}${siteIdentifier}/archive/${archiveKey}/`;
+  }/${language.prefix}${version.prefix}${siteIdentifier}/archive/${archiveKey}/`;
 }
 
 export function issueToUrl(
   issue: string,
   siteIdentifier: string,
   language: Language,
+  version: Version,
   config: Config,
 ): string {
   return `${
     getArchiveSitePrefix(config)
-  }/${language.prefix}${siteIdentifier}/issues/${issue}/`;
+  }/${language.prefix}${version.prefix}${siteIdentifier}/issues/${issue}/`;
 }
-
-export function parsePageUrl(urlStr: string) {
-  const url = new URL(urlStr);
-  // get language code
-  const langField = url.pathname.split("/")[1];
-  // check if language code is valid
-  let language = TARGET_SITE_LANGUAEGS[0];
-  let pathname = url.pathname;
-  for (const targetLang of TARGET_SITE_LANGUAEGS) {
-    let prefix = targetLang.prefix;
-    // remove trailing slash
-    if (prefix.endsWith("/")) {
-      prefix = prefix.slice(0, -1);
-    }
-    if (prefix === langField) {
-      language = targetLang;
-      pathname = url.pathname.slice(targetLang.prefix.length);
-      break;
-    }
-  }
-
-  // support version lite
-
-  const versionField = pathname.split("/")[1];
-  let version = "current";
-  if (versionField === "lite") {
-    version = "lite";
-    pathname = pathname.slice("/lite".length);
-    // add start slash
-    if (!pathname.startsWith("/")) {
-      pathname = "/" + pathname;
-    }
-  }
-
-  const newUrl = new URL(url);
-  newUrl.pathname = pathname;
-
-  return {
-    language: language,
-    pathname: pathname,
-    url: newUrl.href,
-    version: version,
-  };
+export function postToUrl(
+  id: string,
+  siteIdentifier: string,
+  language: Language,
+  version: Version,
+  config: Config,
+): string {
+  const parsed = parseItemIdentifier(id);
+  const utcDate = new Date(
+    Date.UTC(Number(parsed.year), Number(parsed.month) - 1, Number(parsed.day)),
+  );
+  const week = weekOfYear(utcDate);
+  return `${
+    getArchiveSitePrefix(config)
+  }/${language.prefix}${version.prefix}${siteIdentifier}/posts/${week.path}/${id}/`;
 }
+// export function parsePageUrl(urlStr: string) {
+//   const url = new URL(urlStr);
+//   // get language code
+//   const langField = url.pathname.split("/")[1];
+//   // check if language code is valid
+//   let language = TARGET_SITE_LANGUAEGS[0];
+//   let pathname = url.pathname;
+//   for (const targetLang of TARGET_SITE_LANGUAEGS) {
+//     let prefix = targetLang.prefix;
+//     // remove trailing slash
+//     if (prefix.endsWith("/")) {
+//       prefix = prefix.slice(0, -1);
+//     }
+//     if (prefix === langField) {
+//       language = targetLang;
+//       pathname = url.pathname.slice(targetLang.prefix.length);
+//       break;
+//     }
+//   }
+
+//   // support version lite
+
+//   const versionField = pathname.split("/")[1];
+//   let version = "current";
+//   if (versionField === "lite") {
+//     version = "lite";
+//     pathname = pathname.slice("/lite".length);
+//     // add start slash
+//     if (!pathname.startsWith("/")) {
+//       pathname = "/" + pathname;
+//     }
+//   }
+
+//   const newUrl = new URL(url);
+//   newUrl.pathname = pathname;
+
+//   return {
+//     language: language,
+//     pathname: pathname,
+//     url: newUrl.href,
+//     version: version,
+//   };
+// }
 export const formatNumber = (num: number): string => {
   const formatter = Intl.NumberFormat("en", { notation: "compact" });
   return formatter.format(num);
@@ -930,4 +966,162 @@ export function tryToRemoveUnnecessaryParams(
   // utm_term
   urlObj.searchParams.delete("utm_term");
   return urlObj.href;
+}
+export const exists = async (filename: string): Promise<boolean> => {
+  try {
+    await Deno.stat(filename);
+    // successful, file or directory must exist
+    return true;
+  } catch (error) {
+    if (error instanceof Deno.errors.NotFound) {
+      // file or directory does not exist
+      return false;
+    } else {
+      // unexpected error, maybe permissions, pass it along
+      throw error;
+    }
+  }
+};
+
+export function archiveToTitle(issuePath: string, label: string): string {
+  const splited = issuePath.split("/");
+  const year = splited[0];
+  const week = splited[1];
+  // @ts-ignore: npm module
+  return mustache.render(label, {
+    year,
+    week,
+    range: weekToRange(issuePath),
+  });
+}
+export function startDateOfWeek(date: Date, start_day = 1) {
+  // Returns the start of the week containing a 'date'. Monday 00:00 UTC is
+  // considered to be the boundary between adjacent weeks, unless 'start_day' is
+  // specified. A Date object is returned.
+
+  date = new Date(date);
+  const day_of_month = date.getUTCDate();
+  const day_of_week = date.getUTCDay();
+  const difference_in_days = (
+    day_of_week >= start_day
+      ? day_of_week - start_day
+      : day_of_week - start_day + 7
+  );
+  date.setUTCDate(day_of_month - difference_in_days);
+  date.setUTCHours(0);
+  date.setUTCMinutes(0);
+  date.setUTCSeconds(0);
+  date.setUTCMilliseconds(0);
+  return date;
+}
+export function weekToRange(weekID: string): string {
+  const splited = weekID.split("/");
+  const year = Number(splited[0]);
+  const week = Number(splited[1]);
+  // Get first day of year
+  const yearStart = new Date(Date.UTC(year, 0, 1));
+
+  // year start monday date
+
+  const yearStartMondayDate = startDateOfWeek(yearStart);
+
+  const yearStartMondayFullYear = yearStartMondayDate.getUTCFullYear();
+
+  let yearFirstWeekMonday = yearStartMondayDate;
+  if (yearStartMondayFullYear !== year) {
+    // then year first week monday is next +7
+    yearFirstWeekMonday = new Date(yearStartMondayDate.getTime() + WEEK);
+  }
+
+  const weekMonday = yearFirstWeekMonday.getTime() + WEEK * (week - 1);
+  const weekSunday = weekMonday + WEEK - 1;
+
+  const start = formatBeijing(new Date(weekMonday), "MM.dd");
+  const end = formatBeijing(new Date(weekSunday), "MM.dd");
+  return `${start} - ${end}`;
+}
+export function parseArchiveUrl(
+  url: string,
+  versions: Version[],
+  languages: Language[],
+): ParsedArchiveUrl {
+  const routeInfo = parsePageUrl(
+    url,
+    versions,
+    languages,
+  );
+  const pattern = new URLPattern({
+    pathname: "/:siteIdentifier/:scope/*",
+  });
+  const parsedRoute = pattern.exec({
+    pathname: routeInfo.pathname,
+  });
+  log.debug("parsedRoute", parsedRoute);
+  if (!parsedRoute) {
+    throw new NotFound("Not found matached route");
+  }
+  const parsedPathnameGroups = parsedRoute.pathname.groups;
+  const siteIdentifier = parsedPathnameGroups.siteIdentifier;
+  const scope = parsedPathnameGroups.scope;
+  const value = parsedPathnameGroups[0];
+  let itemsFilePath = "";
+  let pageType = "index.html";
+  let id = "";
+  if (
+    scope === "tags" || scope === "issues" || scope === "archive" ||
+    scope === "posts"
+  ) {
+    let rootFolder = scope;
+    if (scope === "posts") {
+      rootFolder = "archive";
+    }
+
+    // get items.json path
+    if (value.endsWith("/")) {
+      itemsFilePath = `${rootFolder}/${value}items.json`;
+    } else {
+      // replace .html with .json
+      const basename = posixPath.basename(value);
+      const parentPath = posixPath.dirname(value);
+      pageType = basename;
+
+      itemsFilePath = `${rootFolder}/${parentPath}/items.json`;
+    }
+
+    if (scope === "posts") {
+      const parentPath = posixPath.dirname(itemsFilePath);
+      id = posixPath.basename(parentPath);
+      itemsFilePath = posixPath.join(
+        posixPath.dirname(parentPath),
+        "items.json",
+      );
+    }
+  }
+  const meta: Record<string, string> = {};
+  if (id) {
+    meta.id = id;
+  }
+  if (itemsFilePath) {
+    let pagePathname = routeInfo.pathname;
+
+    if (pagePathname.endsWith(pageType)) {
+      pagePathname = pagePathname.slice(0, -pageType.length);
+    }
+    // pathname /feed.json
+    // pagePathName will be /
+    // pathname /feed.xml
+    // pagePathName will be /
+    // pagePathname,
+    return {
+      ...routeInfo,
+      siteIdentifier,
+      itemsFilePath: getArchivedFilePath(siteIdentifier, itemsFilePath),
+      pageType,
+      scope,
+      meta,
+      pagePathname,
+    };
+  } else {
+    throw new NotFound("Not found matached route");
+  }
 }

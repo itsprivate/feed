@@ -83,7 +83,7 @@ export default async function main() {
       return (sites as string[]).includes(siteIdentifier);
     });
   }
-  log.info("start build ", siteIdentifiers, "with stage:", stage);
+  log.info("sites: ", siteIdentifiers, "with stage:", stage);
 
   const runOptions: RunOptions = { siteIdentifiers: siteIdentifiers, config };
   let allPostTasks: Task[] = [];

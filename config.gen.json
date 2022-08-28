@@ -56,7 +56,9 @@
       "issues_label": "往期精选",
       "more_label": "更多",
       "less_label": "收起",
-      "more_post_label": "好吧, 如果你还没看够... 以下👇"
+      "more_post_label": "好吧, 如果你还没看够... 以下👇",
+      "archive_title_label": "{{year}} 年 第 {{week}} 周归档（{{range}}） ",
+      "issue_title_label": "{{year}} 年 第 {{week}} 周精选（{{range}}） "
     },
     "en": {
       "about_label": "About",
@@ -96,7 +98,9 @@
       "issues_label": "往期精選",
       "more_label": "更多",
       "less_label": "收起",
-      "more_post_label": "好吧, 如果你還沒看夠... 以下👇"
+      "more_post_label": "好吧, 如果你還沒看夠... 以下👇",
+      "archive_title_label": "{{year}} 年 第 {{week}} 周歸檔（{{range}}） ",
+      "issue_title_label": "{{year}} 年 第 {{week}} 周精選（{{range}}） "
     }
   },
   "archive": {
@@ -112,7 +116,7 @@
       "tags": [
         "source-hackernews-new"
       ],
-      "archive": false,
+      "archive": true,
       "translations": {
         "zh-Hans": {
           "title": "Reddit 热门",

@@ -30,6 +30,7 @@ export interface RunOptions {
 export interface ItemsToFeedOptions {
   isArchive?: boolean;
   versionCode?: string;
+  isPost?: boolean;
 }
 export interface GeneralSiteConfig {
   port?: number;
@@ -204,7 +205,19 @@ export interface UrlInfo {
   language: Language;
   version: Version;
   pathname: string;
+  url: string;
 }
 export interface LinkOptions {
   isUseHTML?: boolean;
+}
+export interface ParsedArchiveUrl {
+  siteIdentifier: string;
+  itemsFilePath: string;
+  language: Language;
+  version: Version;
+  pathname: string;
+  pagePathname: string;
+  pageType: string;
+  scope: string;
+  meta: Record<string, string>;
 }

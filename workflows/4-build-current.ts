@@ -1,13 +1,13 @@
-import { fs, path } from "../deps.ts";
+import { async, fs, path } from "../deps.ts";
 import { FormatedItem, ItemsJson, RunOptions } from "../interface.ts";
 import getLatestItems from "../latest-items.ts";
 import {
   arrayToObj,
+  exists,
   getArchivedFilePath,
   getChangedSitePaths,
   getCurrentItemsFilePath,
   getCurrentToBeArchivedItemsFilePath,
-  getDataCurrentItemsPath,
   getDataTranslatedPath,
   getFilesByTargetSiteIdentifiers,
   loadS3ArchiveFile,
@@ -40,7 +40,7 @@ export default async function buildCurrent(
     const siteConfig = options.config.sites[siteIdentifier];
     if (files.length > 0) {
       log.info(
-        `start build ${siteIdentifier} items, got ${files.length} translated items`,
+        `start collect ${siteIdentifier} current items, got ${files.length} translated items`,
       );
 
       // move items to current items folder
@@ -56,29 +56,119 @@ export default async function buildCurrent(
         // ignore
         log.debug(`read json file error: ${e}`);
       }
-
-      const currentToBeArchivedFilePath = getCurrentToBeArchivedItemsFilePath(
-        siteIdentifier,
-      );
-      let currentToBeArchivedItemsJson: ItemsJson = { items: {} };
-      try {
-        currentToBeArchivedItemsJson = await readJSONFile(
-          currentToBeArchivedFilePath,
-        );
-      } catch (e) {
-        // ignore
-        log.debug(`read json file error: ${e}`);
-      }
-
       let currentArchive: string[] = currentItemsJson.archive || [];
       const currentTags: string[] = currentItemsJson.tags || [];
 
       let total = 0;
       // merge items to current itemsJson
       const tagFiles: Record<string, ItemsJson> = {};
+      const archiveFiles: Record<string, ItemsJson> = {};
+
       let archiveItemsCount = 0;
       const newTagItemsCountMap: Record<string, number> = {};
       let isTagsChanged = false;
+      const archivePost = async (item: FormatedItem) => {
+        // start archive
+        const itemDate = new Date(item.date_published);
+        const weekOfItem = weekOfYear(itemDate);
+        const archivedFolder = weekOfItem.path;
+        const archiveFilePath = getArchivedFilePath(
+          siteIdentifier,
+          `archive/${archivedFolder}/items.json`,
+        );
+        if (archiveFiles[archiveFilePath]) {
+          archiveFiles[archiveFilePath].items[item.id] = item;
+        } else {
+          let archiveFileJson: ItemsJson = { items: {} };
+
+          // load remote tag files
+          const isArchiveFileExists = await exists(archiveFilePath);
+          if (!isArchiveFileExists) {
+            // try to get current archived file, merge them
+            // load remote tag files
+            await loadS3ArchiveFile(archiveFilePath);
+          }
+
+          try {
+            archiveFileJson = await readJSONFile(archiveFilePath);
+          } catch (e) {
+            // ignore
+            log.debug(
+              `can not found tag file: ${archiveFilePath}, will create ${e}`,
+            );
+          }
+          archiveFileJson.items[item.id] = item;
+          archiveFiles[archiveFilePath] = archiveFileJson;
+        }
+
+        if (!currentArchive.includes(archivedFolder)) {
+          currentArchive.unshift(archivedFolder);
+        }
+        log.debug(
+          `archived ${item.id} to ${archivedFolder}, total: ${
+            Object.keys(archiveFiles[archiveFilePath].items).length
+          } items `,
+        );
+        archiveItemsCount++;
+        if (archiveItemsCount % 100 === 0) {
+          log.info(`archived ${archiveItemsCount} items`);
+        }
+      };
+      const tagPost = async (tag: string, item: FormatedItem) => {
+        const tagFilePath = getArchivedFilePath(
+          siteIdentifier,
+          // @ts-ignore: npm module
+          `tags/${slug(tag)}/items.json`,
+        );
+        if (tagFiles[tagFilePath]) {
+          tagFiles[tagFilePath].items[item.id] = item;
+        } else {
+          let tagFileJson: ItemsJson = {
+            meta: {
+              name: tag,
+            },
+            items: {},
+          };
+
+          // load remote tag files
+          const isTagFileExists = await exists(tagFilePath);
+          if (!isTagFileExists) {
+            // try to get current tagd file, merge them
+            // load remote tag files
+            await loadS3ArchiveFile(tagFilePath);
+          }
+
+          try {
+            tagFileJson = await readJSONFile(tagFilePath);
+          } catch (e) {
+            // ignore
+            log.debug(
+              `can not found tag file: ${tagFilePath}, will create ${e}`,
+            );
+          }
+          tagFileJson.items[item.id] = item;
+          tagFiles[tagFilePath] = tagFileJson;
+        }
+      };
+
+      const currentToBeArchivedFilePath = getCurrentToBeArchivedItemsFilePath(
+        siteIdentifier,
+      );
+      // history items, fix it.
+      let currentToBeArchivedItemsJson: ItemsJson = { items: {} };
+      try {
+        currentToBeArchivedItemsJson = await readJSONFile(
+          currentToBeArchivedFilePath,
+        );
+        if (currentToBeArchivedItemsJson.items) {
+          for (const key in currentToBeArchivedItemsJson.items) {
+            await archivePost(currentToBeArchivedItemsJson.items[key]);
+          }
+        }
+      } catch (e) {
+        // ignore
+        log.debug(`read json file error: ${e}`);
+      }
 
       for (const file of files) {
         const item = await readJSONFile(file) as FormatedItem;
@@ -93,54 +183,14 @@ export default async function buildCurrent(
         if (total <= MAX_ITEMS_PER_PAGE) {
           currentItemsJson.items[id] = item;
           if (siteConfig.archive !== false) {
-            currentToBeArchivedItemsJson.items[id] = item;
+            await archivePost(item);
           }
         } else {
           // other direct move to archive
 
           if (siteConfig.archive !== false) {
             // move to archive
-            const itemDate = new Date(item.date_published);
-            const weekOfItem = weekOfYear(itemDate);
-            const archivedFolder = weekOfItem.path;
-            const archiveFilePath = getArchivedFilePath(
-              siteIdentifier,
-              `archive/${archivedFolder}/items.json`,
-            );
-            let archiveFileJson: ItemsJson = { items: {} };
-            // check is archiveFilePath exits
-
-            const isArchiveFileExists = await exists(archiveFilePath);
-            if (!isArchiveFileExists) {
-              // try to get current archived file, merge them
-              // load remote tag files
-              await loadS3ArchiveFile(archiveFilePath);
-            }
-            try {
-              archiveFileJson = await readJSONFile(archiveFilePath);
-            } catch (e) {
-              // ignore
-              log.debug(
-                `can not found tag file: ${archiveFilePath}, will create ${e}`,
-              );
-            }
-            archiveFileJson.items[id] = item;
-            if (!currentArchive.includes(archivedFolder)) {
-              currentArchive.unshift(archivedFolder);
-            }
-            log.debug(
-              `archived ${
-                Object.keys(archiveFileJson.items).length
-              } items to ${archivedFolder}`,
-            );
-            archiveItemsCount++;
-            if (archiveItemsCount % 100 === 0) {
-              log.info(`archived ${archiveItemsCount} items`);
-            }
-            await writeJSONFile(
-              archiveFilePath,
-              archiveFileJson,
-            );
+            await archivePost(item);
           }
         }
         if (tags && Array.isArray(tags) && tags.length > 0) {
@@ -153,33 +203,7 @@ export default async function buildCurrent(
               newTagItemsCountMap[tag] += 1;
             }
             if (newTagItemsCountMap[tag] <= MAX_ITEMS_PER_PAGE) {
-              const tagFilePath = getArchivedFilePath(
-                siteIdentifier,
-                // @ts-ignore: npm module
-                `tags/${slug(tag)}/items.json`,
-              );
-              if (tagFiles[tagFilePath]) {
-                tagFiles[tagFilePath].items[id] = item;
-              } else {
-                let tagFileJson: ItemsJson = {
-                  meta: {
-                    name: tag,
-                  },
-                  items: {},
-                };
-                // load remote tag files
-                await loadS3ArchiveFile(tagFilePath);
-                try {
-                  tagFileJson = await readJSONFile(tagFilePath);
-                } catch (e) {
-                  // ignore
-                  log.debug(
-                    `can not found tag file: ${tagFilePath}, will create ${e}`,
-                  );
-                }
-                tagFileJson.items[id] = item;
-                tagFiles[tagFilePath] = tagFileJson;
-              }
+              await tagPost(tag, item);
             }
 
             if (!currentTags.includes(tag)) {
@@ -221,6 +245,16 @@ export default async function buildCurrent(
           },
         );
       }
+
+      // write archive files
+      // write archiveFiles
+      const archiveFilePaths = Object.keys(archiveFiles);
+      for (const archiveFilePath of archiveFilePaths) {
+        await writeJSONFile(
+          archiveFilePath,
+          archiveFiles[archiveFilePath],
+        );
+      }
       // write new current items to file
 
       await writeJSONFile(
@@ -234,17 +268,6 @@ export default async function buildCurrent(
       // for garbage collection
       // @ts-ignore: type is not assignable
       currentItemsJson = null;
-
-      if (siteConfig.archive !== false) {
-        // write current to be archived items to file
-        await writeJSONFile(
-          currentToBeArchivedFilePath,
-          currentToBeArchivedItemsJson,
-        );
-        // for garbage collection
-        // @ts-ignore: type is not assignable
-        currentToBeArchivedItemsJson = null;
-      }
     }
     changedSites.push(siteIdentifier);
 
@@ -273,18 +296,3 @@ export default async function buildCurrent(
     await Deno.remove(file);
   }
 }
-const exists = async (filename: string): Promise<boolean> => {
-  try {
-    await Deno.stat(filename);
-    // successful, file or directory must exist
-    return true;
-  } catch (error) {
-    if (error instanceof Deno.errors.NotFound) {
-      // file or directory does not exist
-      return false;
-    } else {
-      // unexpected error, maybe permissions, pass it along
-      throw error;
-    }
-  }
-};

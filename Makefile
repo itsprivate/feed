@@ -26,24 +26,21 @@ prod-build:
 prod-buildsite:
 	 PROD=1 deno run -A main.ts --build --site wsj
 
-.Phony: start
-start:
-	deno run -A --watch=main.ts,templates/,config.yml main.ts --stage format,translate,build_current,archive,build_site,serve_site
 
 .Phony: prod-buildfromformat
 prod-buildfromformat:
 	PROD=1 deno run -A main.ts --stage format,translate,build_current,archive,build_site
+.Phony: start
+start:
+	deno run -A --watch=main.ts,templates/,config.yml main.ts --site devfeed
 
-.Phony: serve
-serve:
-	deno run -A --watch=main.ts,templates/,config.yml main.ts --site devfeed --stage build_site,serve_site
-.Phony: serveall
-serveall:
-	deno run -A --watch=main.ts,templates/,config.yml main.ts --stage build_site,serve_site
+.Phony: startsite
+startsite:
+	deno run -A --watch=main.ts,templates/,config.yml main.ts --site ${site}
 
-.Phony: servesite
-servesite:
-	deno run -A --watch=main.ts,templates/,config.yml main.ts --stage build_site,serve_site --site ${site}
+.Phony: startall
+startall:
+	deno run -A --watch=main.ts,templates/,config.yml main.ts
 
 .Phony: run
 run:
@@ -57,18 +54,17 @@ runsite:
 runall:
 	deno run -A --watch=main.ts,templates/,config.yml main.ts --stage format,translate,build_current,archive,build_site,serve_site
 
+.Phony: serve
+serve:
+	deno run -A --watch=main.ts,templates/,config.yml main.ts --site devfeed --stage build_site,serve_site
+.Phony: serveall
+serveall:
+	deno run -A --watch=main.ts,templates/,config.yml main.ts --stage build_site,serve_site
 
-.Phony: site
-site:
-	deno run -A --watch=main.ts,templates/,config.yml main.ts --stage format,translate,build_current,archive,build_site,serve_site --site $(site)
+.Phony: servesite
+servesite:
+	deno run -A --watch=main.ts,templates/,config.yml main.ts --stage build_site,serve_site --site ${site}
 
-.Phony: all
-all:
-	FILES=50 deno run -A main.ts --site $(site)
-
-.Phony: realall
-realall:
-	FILES=50 deno run -A main.ts
 
 .Phony: prod-serve
 prod-serve:
@@ -83,6 +79,11 @@ fetch:
 .Phony: fetchsite
 fetchsite:
 	deno run -A main.ts --stage fetch --site $(site)
+
+.Phony: fetchall
+fetchall:
+	deno run -A main.ts --stage fetch
+
 
 .Phony: stage
 stage:

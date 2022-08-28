@@ -1,4 +1,4 @@
-import { jsonfeedToRSS, path } from "../deps.ts";
+import { jsonfeedToAtom, jsonfeedToRSS, path } from "../deps.ts";
 import { ItemsJson, RunOptions } from "../interface.ts";
 import itemsToFeed from "../items-to-feed.ts";
 import {
@@ -92,7 +92,7 @@ export default async function buildSite(options: RunOptions) {
       for (const language of languages) {
         for (const version of versions) {
           const feedJson = itemsToFeed(
-            itemsRelativePath,
+            `/`,
             currentItemsJson,
             siteIdentifier,
             language.code,
@@ -108,6 +108,14 @@ export default async function buildSite(options: RunOptions) {
           );
           await writeJSONFile(feedPath, feedJson);
 
+          // format summary, content_text newline with <br>
+
+          feedJson.items = feedJson.items.map((item) => {
+            item.summary = item.summary.replace(/\n/g, "&lt;br&gt;");
+            item.content_text = item.content_text.replace(/\n/g, "&lt;br&gt;");
+            return item;
+          });
+
           // build atom.xml
           // no need
           // @ts-ignore: npm module
@@ -121,7 +129,7 @@ export default async function buildSite(options: RunOptions) {
 
           // build feed.xml
           // @ts-ignore: npm module
-          const rssOutput = jsonfeedToRSS(feedJson, {
+          const feedOutput = jsonfeedToAtom(feedJson, {
             language: feedJson.language,
           });
           // const rssOutput = "";
@@ -130,7 +138,7 @@ export default async function buildSite(options: RunOptions) {
             siteIdentifier,
             `${language.prefix}${version.prefix}feed.xml`,
           );
-          await writeTextFile(rssPath, rssOutput);
+          await writeTextFile(rssPath, feedOutput);
 
           const indexPath = getDistFilePath(
             siteIdentifier,

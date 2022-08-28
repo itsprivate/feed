@@ -19,7 +19,10 @@ import { ItemsJson, RunOptions } from "../interface.ts";
 
 export default async function archive(options: RunOptions) {
   const now = new Date();
-
+  const t = true;
+  if (t) {
+    return;
+  }
   let siteIdentifiers: string[] = [];
   // ensure folder exists
   await fs.ensureDir(getDataCurrentItemsPath());

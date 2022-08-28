@@ -10,6 +10,7 @@ import {
   ItemsToFeedOptions,
 } from "./interface.ts";
 import {
+  archiveToTitle,
   formatHumanTime,
   getCurrentTranslations,
   getItemTranslations,
@@ -23,7 +24,7 @@ import Item from "./item.ts";
 import log from "./log.ts";
 import { TARGET_SITE_LANGUAEGS } from "./constant.ts";
 export default function itemsToFeed(
-  relativePath: string,
+  pageRelativePathname: string,
   currentItemsJson: ItemsJson,
   siteIdentifier: string,
   languageCode: string,
@@ -43,10 +44,13 @@ export default function itemsToFeed(
   const language = TARGET_SITE_LANGUAEGS.find((lang) =>
     lang.code === languageCode
   );
-
   let versionCode = "default";
   if (options && options.versionCode) {
     versionCode = options.versionCode;
+  }
+  let isPost = false;
+  if (options && options.isPost) {
+    isPost = options.isPost;
   }
   const version = config.versions.find((v) => v.code === versionCode);
 
@@ -105,52 +109,84 @@ export default function itemsToFeed(
       log.debug(`ignore item ${key}`);
     }
   });
-  const homepageIdentifier = options?.isArchive
+  const hostpageIdentifier = options?.isArchive
     ? config.archive.siteIdentifier
     : siteIdentifier;
 
   let siteTitle = `${currentTranslations.title}`;
   if (version.code !== "default") {
-    siteTitle = `${currentTranslations.title} - ${version.name}`;
+    siteTitle = `${currentTranslations.title} ${version.name}`;
   }
+  let siteDescription = currentTranslations.description;
+  let pageTitle = "";
   if (options?.isArchive) {
-    const pageMeta = getPageMeta(relativePath);
+    const pageMeta = getPageMeta(pageRelativePathname);
     if (pageMeta.type === "tag") {
       const tagName = currentItemsJson.meta?.name;
       if (tagName) {
-        siteTitle = `${siteTitle} · #${tagName}`;
+        siteTitle = `#${tagName} - ${siteTitle}`;
+        pageTitle = `#${tagName}`;
       } else {
-        siteTitle = `${siteTitle} · #${pageMeta.meta.tagIdentifier}`;
+        siteTitle = `#${pageMeta.meta.tagIdentifier} - ${siteTitle}`;
+        pageTitle = `#${pageMeta.meta.tagIdentifier}`;
+      }
+    } else if (pageMeta.type === "index") {
+      siteTitle = `${siteTitle} - ${siteDescription}`;
+    } else if (pageMeta.type === "issues") {
+      pageTitle = archiveToTitle(
+        `${pageMeta.meta.year}/${pageMeta.meta.week}`,
+        currentTranslations.issue_title_label,
+      );
+      siteTitle = `${pageTitle} - ${siteTitle}`;
+    } else if (pageMeta.type === "archive") {
+      pageTitle = archiveToTitle(
+        `${pageMeta.meta.year}/${pageMeta.meta.week}`,
+        currentTranslations.archive_title_label,
+      );
+      siteTitle = `${pageTitle} - ${siteTitle}`;
+    } else if (pageMeta.type === "posts") {
+      if (items.length > 0) {
+        siteTitle = `${items[0]._title_prefix ?? ""}${items[0].title ?? ""}${
+          items[0]._title_suffix ?? ""
+        } - ${siteTitle}`;
+        siteDescription = items[0].summary || siteDescription;
       }
     }
+  } else {
+    // index
+    siteTitle = `${siteTitle} - ${siteDescription}`;
   }
-  let homePageRelativePath = itemsPathToURLPath(relativePath).slice(1);
-  let feedUrlRelativePath = `${itemsPathToURLPath(relativePath)}feed.json`
-    .slice(1);
-  if (options?.isArchive) {
-    homePageRelativePath = `${siteIdentifier}/${homePageRelativePath}`;
-    feedUrlRelativePath = `${siteIdentifier}/${feedUrlRelativePath}`;
-  }
+
   const feedJson: Feedjson = {
     "version": "https://jsonfeed.org/version/1",
     "title": siteTitle,
-    "description": currentTranslations.description,
+    "description": siteDescription,
     "icon": config.icon,
     "favicon": config.favicon,
     "language": language.code,
     "_site_version": version.code,
     "home_page_url": siteIdentifierToUrl(
-      homepageIdentifier,
-      "/" + language.prefix + version.prefix + homePageRelativePath,
+      hostpageIdentifier,
+      "/" + language.prefix + version.prefix + pageRelativePathname.slice(1),
       config,
     ),
     "feed_url": siteIdentifierToUrl(
-      homepageIdentifier,
-      `/${language.prefix}${version.prefix}${feedUrlRelativePath}`,
+      hostpageIdentifier,
+      `/${language.prefix}${version.prefix}${
+        pageRelativePathname.slice(1)
+      }feed.json`,
       config,
     ),
     items,
   };
+  // find images, if any
+  if (items.length > 0) {
+    const imageItem = items.find((item) => item.image);
+    if (imageItem) {
+      // @ts-ignore: add meta
+      feedJson._image = imageItem.image;
+    }
+  }
   if (siteConfig.tags) {
     feedJson._site_tags = siteConfig.tags;
   }
@@ -162,6 +198,10 @@ export default function itemsToFeed(
   }
   if (currentItemsJson.issues) {
     feedJson._issues = currentItemsJson.issues;
+  }
+  if (pageTitle) {
+    // @ts-ignore: add meta
+    feedJson._page_title = pageTitle;
   }
   return feedJson;
 }

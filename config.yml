@@ -35,6 +35,9 @@ translations:
     more_label: 更多
     less_label: 收起
     more_post_label: 好吧, 如果你还没看够... 以下👇
+    archive_title_label: "{{year}} 年 第 {{week}} 周归档（{{range}}） "
+    issue_title_label: "{{year}} 年 第 {{week}} 周精选（{{range}}） "
+
   en:
     about_label: About
     subscription_label: Subscription
@@ -70,7 +73,7 @@ sites:
     dev: true
     tags:
       - source-hackernews-new
-    archive: false
+    archive: true
     translations:
       "zh-Hans":
         title: "Reddit 热门"

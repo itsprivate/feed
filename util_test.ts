@@ -1,6 +1,6 @@
-import { assert } from "https://deno.land/std@0.151.0/_util/assert.ts";
 import { assertEquals } from "./deps.ts";
 import {
+  formatBeijing,
   formatNumber,
   getDuplicatedFiles,
   getFullDay,
@@ -9,9 +9,12 @@ import {
   isMock,
   isWeekBiggerThan,
   loadS3ArchiveFile,
+  parseItemIdentifier,
   resortArchiveKeys,
   slug,
+  startDateOfWeek,
   weekOfYear,
+  weekToRange,
 } from "./util.ts";
 
 Deno.test("loadS3ArchiveFile #1", async () => {
@@ -338,4 +341,32 @@ Deno.test("slug #32", () => {
   assertEquals(slug("HelloWorld"), "hello-world");
   assertEquals(slug("KidsAre-FuckingStupid"), "kids-are-fucking-stupid");
   assertEquals(slug("I Love-hate you"), "i-love-hate-you");
+});
+
+Deno.test("regex #33", () => {
+  const summary = "test\nnew line\nsecond".replace(/\n/g, "&lt;br&gt;");
+  assertEquals(summary, "test&lt;br&gt;new line&lt;br&gt;second");
+});
+
+Deno.test("utc date #34", () => {
+  const id = "en_hn_2022_08_22_test";
+  const parsed = parseItemIdentifier(id);
+  const utcDate = Date.UTC(
+    Number(parsed.year),
+    Number(parsed.month) - 1,
+    Number(parsed.day),
+  );
+  const date = new Date(utcDate);
+  assertEquals(date.getUTCDate(), 22);
+});
+
+Deno.test("weekToRange #35", () => {
+  const range = weekToRange("2021/1");
+  assertEquals(range, "01.04 - 01.11");
+});
+
+Deno.test("formatBeijing #36", () => {
+  const date = new Date(Date.UTC(2021, 0, 1, 18));
+  const str = formatBeijing(date, "yyyy-MM-dd HH:mm");
+  assertEquals(str, "2021-01-02 02:00");
 });

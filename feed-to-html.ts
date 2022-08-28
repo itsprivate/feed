@@ -7,6 +7,7 @@ import {
   isDev,
   issueToUrl,
   parsePageUrl,
+  siteIdentifierToDomain,
   siteIdentifierToUrl,
   tagToUrl,
   urlToLanguageUrl,
@@ -26,19 +27,18 @@ export default function feedToHTML(
   if (!homepage) {
     throw new Error(`home_page_url not found for feedjson`);
   }
-  const siteIdentifier = urlToSiteIdentifier(homepage, config);
+  let siteIdentifier = urlToSiteIdentifier(homepage, config);
   let siteConfig = sitesMap[siteIdentifier] || {};
   let isArchive = false;
 
   if (siteIdentifier === config.archive.siteIdentifier) {
     isArchive = true;
   }
-  let subsite = "";
   if (isArchive) {
-    const routeInfo = parsePageUrl(homepage);
+    const routeInfo = parsePageUrl(homepage, config.versions, config.languages);
     const splited = routeInfo.pathname.split("/");
-    subsite = splited[1];
-    siteConfig = sitesMap[subsite] || {};
+    siteIdentifier = splited[1];
+    siteConfig = sitesMap[siteIdentifier] || {};
   }
 
   const languageCode = feedJson.language;
@@ -68,9 +68,11 @@ export default function feedToHTML(
 
   feedJson.items = feedJson.items.map((item, index) => {
     const newItem = { ...item };
-    const order = index + 1;
-    // @ts-ignore: new meta
-    newItem.order = order;
+    if (feedJson.items.length > 1) {
+      const order = index + 1;
+      // @ts-ignore: new meta
+      newItem.order = order;
+    }
     return newItem;
   });
 
@@ -145,12 +147,32 @@ export default function feedToHTML(
       return {
         //@ts-ignore: add meta data
         name: siteShortName || siteName,
-        url: siteIdentifierToUrl(item, "/" + language.prefix, config),
+        url: siteIdentifierToUrl(
+          item,
+          "/" + language.prefix + version.prefix,
+          config,
+        ),
         is_last: index === relatedSites.length - 1,
         active: item === siteIdentifier,
       };
     },
   );
+
+  const siteTranslations = getCurrentTranslations(
+    siteIdentifier,
+    language.code,
+    config,
+  );
+  const siteUrl = siteIdentifierToUrl(
+    siteIdentifier,
+    "/" + language.prefix + version.prefix,
+    config,
+  );
+
+  // @ts-ignore: add meta data
+  feedJson._site_title = siteTranslations.title;
+  // @ts-ignore: add meta data
+  feedJson._site_url = siteUrl;
   // @ts-ignore: add meta data
   feedJson._versions = config.versions.map((item) => {
     const newItem = { ...item };
@@ -202,7 +224,13 @@ export default function feedToHTML(
     feedJson._tag_list = feedJson._tags.map((tag, index) => {
       return {
         name: tag,
-        url: tagToUrl(tag, subsite || siteIdentifier, language, config),
+        url: tagToUrl(
+          tag,
+          siteIdentifier,
+          language,
+          version,
+          config,
+        ),
         is_last: index === feedJson._tags!.length - 1,
       };
     });
@@ -213,7 +241,13 @@ export default function feedToHTML(
     feedJson._archive_list = feedJson._archive.map((item, index) => {
       return {
         name: item,
-        url: archiveToUrl(item, subsite || siteIdentifier, language, config),
+        url: archiveToUrl(
+          item,
+          siteIdentifier,
+          language,
+          version,
+          config,
+        ),
         is_last: index === feedJson._archive!.length - 1,
       };
     });
@@ -225,7 +259,13 @@ export default function feedToHTML(
     feedJson._issue_list = feedJson._issues.map((item, index) => {
       return {
         name: item,
-        url: issueToUrl(item, subsite || siteIdentifier, language, config),
+        url: issueToUrl(
+          item,
+          siteIdentifier,
+          language,
+          version,
+          config,
+        ),
         is_last: index === feedJson._issues!.length - 1,
       };
     });
