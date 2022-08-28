@@ -66,7 +66,7 @@
         margin: 0 auto;
         padding: 0;
         background-color: #fffff8;
-        line-height: 1.5;
+        line-height: 1.5em;
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
           Helvetica, sans-serif;
       }
@@ -270,8 +270,16 @@
           <a href="{{{feed_url}}}">JSON Feed</a>
           {{/feed_url}}
           <br />
+          {{social_label}}: 
+          <ul>
+          {{#_social_links}}<li><a href="{{url}}">{{name}}</a></li>{{/_social_links}}
+          </ul>
+  
+          <br />
+          {{ latest_build_at_lable}}: {{_latest_build_time}}
+                  <br />
           {{ powered_by_label }}:
-          <a href="https://www.owenyoung.com">Owen</a>
+          <a href="https://www.owenyoung.com">Owen</a> (<a href="https://twitter.com/OwenYoungZh">Twitter</a>)
         </p>
       </div>
       {{#_page_title}}

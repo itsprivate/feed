@@ -4,6 +4,20 @@ root_domain: buzzing.cc
 page_size: 200
 translated_items_per_page: 100
 max_files_per_site: -1
+social_links:
+  - name: Twitter @BuzzingCC
+    url: https://twitter.com/buzzingcc
+  - name: "Telegram @buzzingcc"
+    url: "https://t.me/buzzingcc"
+  - name: "Twitter @Hacker News 中文精选"
+    url: "https://twitter.com/HackerNewsZh"
+  - name: "Twitter @国外新闻 Bot"
+    url: "https://twitter.com/NewsBotZh"
+  - name: Twitter @问Reddit
+    url: https://twitter.com/AskRedditZh
+  - name: 加入 Telegram 讨论群
+    url: https://t.me/joinchat/GVK5UiDwPUAwMjkx
+
 versions:
   - prefix: ""
     code: "default"
@@ -40,6 +54,8 @@ translations:
     Lite: 无图模式
     Default: 有图模式
     source_link_label: 原文地址
+    latest_build_at_lable: 最后更新于
+    social_label: 社交媒体
   en:
     about_label: About
     subscription_label: Subscription
@@ -55,6 +71,8 @@ translations:
     Lite: Lite
     Default: Default
     source_link_label: Source
+    latest_build_at_lable: Latest updated at
+    social_label: Social
   ja:
     about_label: このページについて
     subscription_label: 購読
@@ -70,6 +88,8 @@ translations:
     Lite: ライト
     Default: デフォルト
     source_link_label: ソース
+    latest_build_at_lable: 最終更新日
+    social_label: ソーシャル
 archive:
   port: 9000
   siteIdentifier: i

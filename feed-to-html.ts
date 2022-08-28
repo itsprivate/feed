@@ -267,6 +267,14 @@ export default function feedToHTML(
     });
   }
 
+  // add latest build time
+  // @ts-ignore: add meta data
+  feedJson._latest_build_time = new Date().toISOString();
+
+  // add social links
+  // @ts-ignore: add meta data
+  feedJson._social_links = config.social_links;
+
   // build index.html
   // @ts-ignore: js package does not have type for mustache
   const output = mustache.render(indexTemplateString, feedJson);

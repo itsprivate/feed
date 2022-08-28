@@ -100,9 +100,9 @@ make prod-publish
 - [ ] check cors
 - [x] support workers deploy
 - [x] change archive lang to hackernews/en/
-- [ ] cache image to imgur?
-- [ ] add latest build
-- [ ] add lite version
+- [x] cache image to imgur?
+- [x] add latest build
+- [x] add lite version
 - [x] show issues
 - [x] show tags
 - [x] show archives
@@ -110,10 +110,10 @@ make prod-publish
 - [ ] sitemap support
 - [ ] support search
 - [x] archive backup
-- [ ] current backup
+- [x] current backup
 - [x] add links meta
-- [ ] relative links for most links
+- [x] relative links for most links
 - [ ] issue generate support
-- [ ] twitter message support
+- [x] twitter message support
 - [x] config import
 - [ ] build www.buzzing.cc index for all sites

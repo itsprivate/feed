@@ -5,6 +5,32 @@
   "page_size": 200,
   "translated_items_per_page": 100,
   "max_files_per_site": -1,
+  "social_links": [
+    {
+      "name": "Twitter @BuzzingCC",
+      "url": "https://twitter.com/buzzingcc"
+    },
+    {
+      "name": "Telegram @buzzingcc",
+      "url": "https://t.me/buzzingcc"
+    },
+    {
+      "name": "Twitter @Hacker News 中文精选",
+      "url": "https://twitter.com/HackerNewsZh"
+    },
+    {
+      "name": "Twitter @国外新闻 Bot",
+      "url": "https://twitter.com/NewsBotZh"
+    },
+    {
+      "name": "Twitter @问Reddit",
+      "url": "https://twitter.com/AskRedditZh"
+    },
+    {
+      "name": "加入 Telegram 讨论群",
+      "url": "https://t.me/joinchat/GVK5UiDwPUAwMjkx"
+    }
+  ],
   "versions": [
     {
       "prefix": "",
@@ -61,7 +87,9 @@
       "issue_title_label": "{{year}} 年 第 {{week}} 周精选（{{range}}） ",
       "Lite": "无图模式",
       "Default": "有图模式",
-      "source_link_label": "原文地址"
+      "source_link_label": "原文地址",
+      "latest_build_at_lable": "最后更新于",
+      "social_label": "社交媒体"
     },
     "en": {
       "about_label": "About",
@@ -77,7 +105,9 @@
       "less_label": "Less",
       "Lite": "Lite",
       "Default": "Default",
-      "source_link_label": "Source"
+      "source_link_label": "Source",
+      "latest_build_at_lable": "Latest updated at",
+      "social_label": "Social"
     },
     "ja": {
       "about_label": "このページについて",
@@ -93,7 +123,9 @@
       "less_label": "閉じる",
       "Lite": "ライト",
       "Default": "デフォルト",
-      "source_link_label": "ソース"
+      "source_link_label": "ソース",
+      "latest_build_at_lable": "最終更新日",
+      "social_label": "ソーシャル"
     },
     "zh-Hant": {
       "about_label": "關於",
@@ -112,7 +144,9 @@
       "issue_title_label": "{{year}} 年 第 {{week}} 周精選（{{range}}） ",
       "Lite": "無圖模式",
       "Default": "有圖模式",
-      "source_link_label": "原文地址"
+      "source_link_label": "原文地址",
+      "latest_build_at_lable": "最後更新於",
+      "social_label": "社交媒體"
     }
   },
   "archive": {
