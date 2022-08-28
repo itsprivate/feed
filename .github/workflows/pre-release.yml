@@ -1,4 +1,4 @@
-name: "pre-release"
+name: pre release
 on:
   repository_dispatch:
   workflow_dispatch:
