@@ -658,12 +658,20 @@ export const slug = function (tag: string): string {
 
 export const tagToPascalCase = function (tag: string): string {
   // @ts-ignore: npm module
-  const camel = camelCase(slug(tag));
-  if (camel) {
-    // upper first letter
-    return camel.charAt(0).toUpperCase() + camel.slice(1);
+  const slugStr = slug(tag);
+  const splited = slugStr.split("-");
+
+  if (splited.length > 1) {
+    // @ts-ignore: npm module
+    const camel = camelCase(slugStr);
+    if (camel) {
+      // upper first letter
+      return camel.charAt(0).toUpperCase() + camel.slice(1);
+    } else {
+      return "";
+    }
   } else {
-    return "";
+    return slugStr;
   }
 };
 
