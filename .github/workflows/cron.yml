@@ -37,7 +37,7 @@ jobs:
           path: |
             ~/.deno
             ~/.cache/deno
-          key: ${{ runner.os }}-deno-${{ hashFiles('**/deps.ts') }}
+          key: ${{ runner.os }}-deno-${{ hashFiles('**/*deps.ts') }}
       - run: make prod-load
         env:
           R2_ACCESS_KEY_ID: ${{secrets.R2_ACCESS_KEY_ID}}

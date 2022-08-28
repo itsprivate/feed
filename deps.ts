@@ -34,10 +34,6 @@ export * as posixPath from "https://deno.land/std@0.152.0/path/posix.ts";
 export { config as dotenvConfig } from "https://deno.land/std@0.152.0/dotenv/mod.ts";
 // third party modules
 
-export {
-  Language,
-  minifyHTML,
-} from "https://deno.land/x/minifier@v1.1.1/mod.ts";
 export { default as SimpleTwitter } from "https://deno.land/x/simple_twitter_deno@0.05/simple_twitter_deno.ts";
 export { DigestClient } from "https://deno.land/x/digest_fetch@v1.2.1/mod.ts";
 export {

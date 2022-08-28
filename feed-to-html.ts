@@ -7,7 +7,6 @@ import {
   isDev,
   issueToUrl,
   parsePageUrl,
-  siteIdentifierToDomain,
   siteIdentifierToUrl,
   tagToUrl,
   urlToLanguageUrl,
@@ -15,8 +14,7 @@ import {
   urlToVersionUrl,
 } from "./util.ts";
 import { Config, Feedjson } from "./interface.ts";
-import { TARGET_SITE_LANGUAEGS } from "./constant.ts";
-import { minifyHTML, mustache } from "./deps.ts";
+import { mustache } from "./deps.ts";
 export default function feedToHTML(
   feedJson: Feedjson,
   config: Config,
@@ -176,6 +174,9 @@ export default function feedToHTML(
   // @ts-ignore: add meta data
   feedJson._versions = config.versions.map((item) => {
     const newItem = { ...item };
+
+    newItem.name = currentTranslations[item.name] || item.name;
+
     // @ts-ignore: add meta data
     newItem.active = item.code === version.code;
     // @ts-ignore: add meta data
@@ -212,13 +213,8 @@ export default function feedToHTML(
     },
   );
   // @ts-ignore: add meta data
-  feedJson._rss_url = feedjsonUrlToRssUrl(feedJson.feed_url);
-  // @ts-ignore: add meta data
-  // feedJson._atom_url = siteIdentifierToUrl(
-  //   siteIdentifier,
-  //   "/" + language.prefix + "atom.xml",
-  //   config,
-  // );
+  feedJson._atom_url = feedjsonUrlToRssUrl(feedJson.feed_url);
+
   if (feedJson._tags) {
     // @ts-ignore: add meta data
     feedJson._tag_list = feedJson._tags.map((tag, index) => {

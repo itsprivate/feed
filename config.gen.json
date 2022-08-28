@@ -58,7 +58,9 @@
       "less_label": "收起",
       "more_post_label": "好吧, 如果你还没看够... 以下👇",
       "archive_title_label": "{{year}} 年 第 {{week}} 周归档（{{range}}） ",
-      "issue_title_label": "{{year}} 年 第 {{week}} 周精选（{{range}}） "
+      "issue_title_label": "{{year}} 年 第 {{week}} 周精选（{{range}}） ",
+      "Lite": "无图模式",
+      "Default": "有图模式"
     },
     "en": {
       "about_label": "About",
@@ -71,7 +73,9 @@
       "archive_label": "Archive",
       "issues_label": "Past issues",
       "more_label": "More",
-      "less_label": "Less"
+      "less_label": "Less",
+      "Lite": "Lite",
+      "Default": "Default"
     },
     "ja": {
       "about_label": "このページについて",
@@ -84,7 +88,9 @@
       "archive_label": "アーカイブ",
       "issues_label": "過去の問題",
       "more_label": "もっと",
-      "less_label": "閉じる"
+      "less_label": "閉じる",
+      "Lite": "ライト",
+      "Default": "デフォルト"
     },
     "zh-Hant": {
       "about_label": "關於",
@@ -100,7 +106,9 @@
       "less_label": "收起",
       "more_post_label": "好吧, 如果你還沒看夠... 以下👇",
       "archive_title_label": "{{year}} 年 第 {{week}} 周歸檔（{{range}}） ",
-      "issue_title_label": "{{year}} 年 第 {{week}} 周精選（{{range}}） "
+      "issue_title_label": "{{year}} 年 第 {{week}} 周精選（{{range}}） ",
+      "Lite": "無圖模式",
+      "Default": "有圖模式"
     }
   },
   "archive": {

@@ -112,7 +112,14 @@ export default async function buildSite(options: RunOptions) {
 
           feedJson.items = feedJson.items.map((item) => {
             item.summary = item.summary.replace(/\n/g, "&lt;br&gt;");
-            item.content_text = item.content_text.replace(/\n/g, "&lt;br&gt;");
+            // @ts-ignore: must
+            delete item.content_text;
+            if (item.date_modified === item.date_published) {
+              // @ts-ignore: must
+              delete item.date_modified;
+            }
+
+            //= item.content_text.replace(/\n/g, "&lt;br&gt;");
             return item;
           });
 

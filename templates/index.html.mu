@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{{ title }}</title>
+    <title>{{ title }}{{_title_suffix}}</title>
     {{#keywords}}
     <meta name="keywords" content="{{ keywords }}" />
     {{/keywords}}
@@ -30,17 +30,27 @@
     <meta name="twitter:image" content="{{{_image}}}" />
     <meta name="twitter:image:alt" content="{{ title }}" />
     <meta property="og:locale" content="{{ language }}" />
+    {{#_rss_url}}
     <link
       rel="alternate"
       href="{{{_rss_url}}}"
       type="application/rss+xml"
-      title="{{ title }} - RSS"
+      title="{{ title }}"
     />
+    {{/_rss_url}}
+    {{#_atom_url}}
+     <link
+      rel="alternate"
+      href="{{{_atom_url}}}"
+      type="application/atom+xml"
+      title="{{ title }}"
+    />
+    {{/_atom_url}}
     <link
       rel="alternate"
       href="{{{feed_url}}}"
       type="application/feed+json"
-      title="{{ title }} - JSON Feed 1"
+      title="{{ title }}"
     />
     <link
       rel="apple-touch-icon"
@@ -253,7 +263,7 @@
           {{/active}} {{/_languages}}
           <br />
           {{ subscription_label }}: {{#_rss_url}}
-          <a href="{{{_rss_url}}}">RSS</a>
+          <a href="{{{_rss_url}}}">Atom</a>
           {{/_rss_url}} {{#_atom_url}}
           <a href="{{{_atom_url}}}">Atom</a>
           {{/_atom_url}} {{#feed_url}}

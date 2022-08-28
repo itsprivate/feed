@@ -113,10 +113,12 @@ export default function itemsToFeed(
     ? config.archive.siteIdentifier
     : siteIdentifier;
 
-  let siteTitle = `${currentTranslations.title}`;
+  let siteName = `${currentTranslations.title}`;
+  let siteTitleSuffix = "";
   if (version.code !== "default") {
-    siteTitle = `${currentTranslations.title} ${version.name}`;
+    siteName = `${currentTranslations.title} ${version.name}`;
   }
+  let siteTitle = "";
   let siteDescription = currentTranslations.description;
   let pageTitle = "";
   if (options?.isArchive) {
@@ -124,37 +126,46 @@ export default function itemsToFeed(
     if (pageMeta.type === "tag") {
       const tagName = currentItemsJson.meta?.name;
       if (tagName) {
-        siteTitle = `#${tagName} - ${siteTitle}`;
+        siteTitle = `#${tagName}`;
         pageTitle = `#${tagName}`;
       } else {
-        siteTitle = `#${pageMeta.meta.tagIdentifier} - ${siteTitle}`;
+        siteTitle = `#${pageMeta.meta.tagIdentifier}`;
         pageTitle = `#${pageMeta.meta.tagIdentifier}`;
       }
+      siteTitleSuffix = ` - ${siteName}`;
     } else if (pageMeta.type === "index") {
-      siteTitle = `${siteTitle} - ${siteDescription}`;
+      siteTitle = `${siteName}`;
+      siteTitleSuffix = ` - ${siteDescription}`;
     } else if (pageMeta.type === "issues") {
       pageTitle = archiveToTitle(
         `${pageMeta.meta.year}/${pageMeta.meta.week}`,
         currentTranslations.issue_title_label,
       );
-      siteTitle = `${pageTitle} - ${siteTitle}`;
+      siteTitle = `${pageTitle}`;
+      siteTitleSuffix = ` - ${siteName}`;
     } else if (pageMeta.type === "archive") {
       pageTitle = archiveToTitle(
         `${pageMeta.meta.year}/${pageMeta.meta.week}`,
         currentTranslations.archive_title_label,
       );
-      siteTitle = `${pageTitle} - ${siteTitle}`;
+      siteTitle = `${pageTitle}`;
+      siteTitleSuffix = ` - ${siteName}`;
     } else if (pageMeta.type === "posts") {
       if (items.length > 0) {
         siteTitle = `${items[0]._title_prefix ?? ""}${items[0].title ?? ""}${
           items[0]._title_suffix ?? ""
-        } - ${siteTitle}`;
+        }`;
         siteDescription = items[0].summary || siteDescription;
+        siteTitleSuffix = ` - ${siteName}`;
       }
     }
   } else {
     // index
-    siteTitle = `${siteTitle} - ${siteDescription}`;
+    siteTitle = `${siteTitle}`;
+    siteTitleSuffix = ` - ${siteDescription}`;
+  }
+  if (!siteTitle) {
+    siteTitle = siteName;
   }
 
   const feedJson: Feedjson = {
@@ -179,6 +190,10 @@ export default function itemsToFeed(
     ),
     items,
   };
+  if (siteTitleSuffix) {
+    // @ts-ignore: add meta
+    feedJson._title_suffix = siteTitleSuffix;
+  }
   // find images, if any
   if (items.length > 0) {
     const imageItem = items.find((item) => item.image);
