@@ -8,7 +8,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    concurrency: build
+    concurrency: pre-release
     steps:
       - name: Check out repository code
         uses: actions/checkout@v3
