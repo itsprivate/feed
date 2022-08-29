@@ -226,9 +226,31 @@
       .w-50 {
         width: 50%;
       }
+      .fixed{
+        position: fixed;
+        bottom: 2em;
+        right: 0.5em;  
+        font-size: bold;
+        z-index:1;
+      }
+      .inline-block{
+        display: block;
+      }
+      @media print{    
+        .fixed{
+            display: none;
+        }
+        header{
+            display: none;
+        }
+        .footer{
+            display: none;
+        }
+      }
     </style>
   </head>
   <body>
+    <div id="top"></div>
     <header class="header">
       <a class="contrast no-underline small" href="{{{_site_url}}}">{{
         _site_title
@@ -342,5 +364,14 @@
       </details>
       {{/_archive_list.0}}
     </footer>
+    <div id="bottom"></div>
+    <div class="fixed">
+      <div class="mb">
+        <a class="no-underline contrast" title="Go to Top" href="#top">&uarr;</a>
+      </div>
+      <div>
+        <a class="no-underline contrast" title="Go to Bottom" href="#bottom">&darr;</a>
+    </div>
+   </div>
   </body>
 </html>
