@@ -1,4 +1,4 @@
-import { jsonfeedToAtom, jsonfeedToRSS, path } from "../deps.ts";
+import { jsonfeedToAtom, path } from "../deps.ts";
 import { ItemsJson, RunOptions } from "../interface.ts";
 import itemsToFeed from "../items-to-feed.ts";
 import {
@@ -19,6 +19,7 @@ import log from "../log.ts";
 import { TARGET_SITE_LANGUAEGS } from "../constant.ts";
 import feedToHTML from "../feed-to-html.ts";
 import generateRedirects from "../generate-redirects.ts";
+import copyStaticAssets from "../copy-static-assets.ts";
 export default async function buildSite(options: RunOptions) {
   const config = options.config;
   const currentDataPath = getDataCurrentItemsPath();
@@ -175,6 +176,9 @@ export default async function buildSite(options: RunOptions) {
         `skip build ${siteIdentifier}, cause no items to be build`,
       );
     }
+
+    // copy static assets
+    await copyStaticAssets(siteIdentifier);
 
     // generate redirects for old sites
     await generateRedirects(siteIdentifier, config);

@@ -8,8 +8,10 @@
     {{#keywords}}
     <meta name="keywords" content="{{ keywords }}" />
     {{/keywords}}
-    <meta itemprop="name" content="{{{title}}}" />
+    <meta itemprop="name" content="{{title}}" />
+    {{#_image}}
     <meta itemprop="image" content="{{{_image}}}" />
+    {{/_image}}
     <meta
       itemprop="description"
       name="description"
@@ -18,8 +20,10 @@
     <meta property="og:url" content="{{{home_page_url}}}" />
     <meta property="og:type" content="website" />
     <meta property="og:title" content="{{ title }}" />
+    {{#_image}}
     <meta property="og:image" content="{{{_image}}}" />
     <meta property="og:image:alt" content="{{ title }}" />
+    {{/_image}}
     <meta property="og:description" content="{{ description }}" />
     <meta property="og:site_name" content="{{ title }}" />
     <meta name="twitter:card" content="summary" />
@@ -27,8 +31,10 @@
     <meta name="twitter:url" content="{{{home_page_url}}}" />
     <meta name="twitter:title" content="{{ title }}" />
     <meta name="twitter:description" content="{{ description }}" />
+    {{#_image}}
     <meta name="twitter:image" content="{{{_image}}}" />
     <meta name="twitter:image:alt" content="{{ title }}" />
+    {{/_image}}
     <meta property="og:locale" content="{{ language }}" />
     {{#_rss_url}}
     <link
