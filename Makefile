@@ -141,11 +141,11 @@ prod-load:
 
 .Phony: upload
 upload:
-	make uploadcurrent && make uploadarchive
+	make uploadarchive && make uploadcurrent
 
 .Phony: prod-upload
 prod-upload:
-	make prod-uploadcurrent && make prod-uploadarchive
+	make prod-uploadarchive && make prod-uploadcurrent
 
 
 .Phony: loadcurrent
