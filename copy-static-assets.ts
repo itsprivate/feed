@@ -10,8 +10,7 @@ export default async function copyStaticAssets(siteIdentifier: string) {
         path.relative("./static", entry.path),
       );
       index++;
-      console.log("distPath", distPath);
-      // await fs.copy(entry.path, distPath);
+      await fs.copy(entry.path, distPath);
     }
   }
   log.info(`copied ${index} static files to dist`);
