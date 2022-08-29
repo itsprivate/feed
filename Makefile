@@ -174,19 +174,19 @@ prod-awsuploadarchive:
 
 .Phony: dufsuploadarchive
 dufsuploadarchive:
-	curl --digest -u $(DUFS_SECRETS) -T ./dev-archive $(DUFS_URL)/dev-archive
+	curl --max-time 100 --digest -u $(DUFS_SECRETS) -T ./dev-archive $(DUFS_URL)/dev-archive
 
 .Phony: prod-dufsuploadarchive
 prod-dufsuploadarchive:
-	curl -T ./archive $(DUFS_URL)/archive
+	curl --max-time 100 -T ./archive $(DUFS_URL)/archive
 
 .Phony: uploadcurrent
 uploadcurrent:
-	make compresscurrent && curl --digest -u $(DUFS_SECRETS) -T ./dev-current.zip $(DUFS_URL)/dev-current.zip &&  wrangler r2 object put dev-feed/dev-current.zip -f ./dev-current.zip
+	make compresscurrent && curl --max-time 100 --digest --max-time 100 -u $(DUFS_SECRETS) -T ./dev-current.zip $(DUFS_URL)/dev-current.zip &&  wrangler r2 object put dev-feed/dev-current.zip -f ./dev-current.zip
 
 .Phony: prod-uploadcurrent
 prod-uploadcurrent:
-	make prod-compresscurrent && curl --digest -u $(DUFS_SECRETS) -T ./current.zip $(DUFS_URL)/current.zip && wrangler r2 object put feed/current.zip -f ./current.zip
+	make prod-compresscurrent && curl --max-time 100 --digest -u $(DUFS_SECRETS) -T ./current.zip $(DUFS_URL)/current.zip && wrangler r2 object put feed/current.zip -f ./current.zip
 
 .Phony: uploadpublic
 uploadpublic:
