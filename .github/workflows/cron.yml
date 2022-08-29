@@ -1,6 +1,7 @@
 name: cron tasks
 on:
   repository_dispatch:
+    types: [schedule]
   workflow_dispatch:
     inputs:
       force_all:
