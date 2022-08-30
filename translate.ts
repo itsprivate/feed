@@ -157,6 +157,7 @@ export default class Translation {
       true,
       {},
     );
+    this.currentTranslated++;
     return translated;
   }
   static getTargetButtonSelector(targetLanguage: string) {
