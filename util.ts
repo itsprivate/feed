@@ -103,6 +103,9 @@ export const getArchivePath = () => {
   const dataPath = isDev() ? "dev-archive" : "archive";
   return dataPath;
 };
+export const getProdArchivePath = () => {
+  return "archive";
+};
 export const getDistPath = () => {
   const dataPath = isDev() ? "dev-public" : "public";
   return dataPath;
@@ -142,7 +145,9 @@ export const getDataTranslatedPath = () => {
 export const getDataCurrentItemsPath = () => {
   return `${getDataPath()}/4-data`;
 };
-
+export const getDevDataCurrentItemsPath = () => {
+  return `dev-current/4-data`;
+};
 export const getDataCurrentChangedItemsPath = () => {
   return `${getDataPath()}/5-changed-data`;
 };

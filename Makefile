@@ -68,7 +68,11 @@ servesite:
 
 .Phony: prod-serve
 prod-serve:
-	PROD=1 deno run main.ts --serve
+	PROD=1 deno run -A main.ts --serve --site hnnew
+
+.Phony: prod-serveall
+prod-serveall:
+	PROD=1 deno run -A main.ts --serve
 .Phony: prod-servesite
 prod-servesite:
 	PROD=1 deno run -A --watch=main.ts,templates/,config.yml main.ts --serve --site ${site}
@@ -301,6 +305,12 @@ temp-uploadarchive:
 createsite:
 	wrangler pages project create $(site) --production-branch main
 
+.Phony: rebuild
+rebuild:
+	TODEV=1 deno run -A ./scripts/rebuild-current.ts
+.Phony: prod-rebuild
+prod-rebuild:
+	PROD=1 deno run -A ./scripts/rebuild-current.ts
 # only for dev
 .Phony: prod-zipuploadarchive
 prod-zipuploadarchive:

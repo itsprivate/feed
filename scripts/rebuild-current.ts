@@ -1,21 +1,18 @@
-import { dotenvConfig, fs, path } from "../deps.ts";
+import { fs, path } from "../deps.ts";
 import {
   arrayToObj,
-  getArchivedFilePath,
-  getArchivePath,
-  getCurrentTagsFilePath,
-  getCurrentToBeArchivedItemsFilePath,
   getDataCurrentItemsPath,
+  getDevDataCurrentItemsPath,
   getDistPath,
-  loadS3ArchiveFile,
+  getProdArchivePath,
   pathToSiteIdentifier,
   readJSONFile,
   resortArchiveKeys,
-  slug,
   writeJSONFile,
 } from "../util.ts";
 import log from "../log.ts";
-import { ItemsJson } from "../interface.ts";
+import { MAX_ITEMS_PER_PAGE } from "../constant.ts";
+import { FormatedItem, ItemsJson } from "../interface.ts";
 import getLatestItems from "../latest-items.ts";
 
 export async function rebuildCurrent() {
@@ -23,7 +20,7 @@ export async function rebuildCurrent() {
   await fs.ensureDir(getDistPath());
   // ensure folder exists
   const siteIdentifiers: string[] = [];
-  for await (const dirEntry of Deno.readDir(getArchivePath())) {
+  for await (const dirEntry of Deno.readDir(getProdArchivePath())) {
     if (dirEntry.isDirectory && !dirEntry.name.startsWith(".")) {
       siteIdentifiers.push(pathToSiteIdentifier(dirEntry.name));
     }
@@ -31,11 +28,11 @@ export async function rebuildCurrent() {
 
   for (const siteIdentifier of siteIdentifiers) {
     // first load all tags to
-    const tagsFolder = getArchivePath() + "/" + siteIdentifier + "/tags";
+    const tagsFolder = getProdArchivePath() + "/" + siteIdentifier + "/tags";
     // ensure folder exists
     await fs.ensureDir(tagsFolder);
 
-    let currentTags: string[] = [];
+    const currentTags: string[] = [];
     // walk folder
     for await (const entry of fs.walk(tagsFolder)) {
       if (entry.isFile && entry.name.endsWith(".json")) {
@@ -45,13 +42,17 @@ export async function rebuildCurrent() {
             currentTags.push(itemsJson.meta.name);
           }
         }
-        await writeJSONFile(entry.path, itemsJson);
       }
     }
+    log.info(`Found ${currentTags.length} tags for ${siteIdentifier}`);
 
     // get current issues
     let currentIssues: string[] = [];
-    const issuesFolder = getArchivePath() + "/" + siteIdentifier + "/issues";
+    const issuesFolder = path.join(
+      getProdArchivePath(),
+      siteIdentifier,
+      "issues",
+    );
     // ensure folder exists
     await fs.ensureDir(issuesFolder);
     for await (const entry of fs.walk(issuesFolder)) {
@@ -66,10 +67,15 @@ export async function rebuildCurrent() {
         }
       }
     }
+    log.info(`Found ${currentIssues.length} issues for ${siteIdentifier}`);
 
     // get current archive
     let currentArchive: string[] = [];
-    const archiveFolder = getArchivePath() + "/" + siteIdentifier + "/archive";
+    const archiveFolder = path.join(
+      getProdArchivePath(),
+      siteIdentifier,
+      "archive",
+    );
     // ensure folder exists
     await fs.ensureDir(archiveFolder);
     for await (const entry of fs.walk(archiveFolder)) {
@@ -84,35 +90,55 @@ export async function rebuildCurrent() {
         }
       }
     }
+    log.info(
+      `Found ${currentArchive.length} archive items for ${siteIdentifier}`,
+    );
     // resort archive
 
     currentArchive = resortArchiveKeys(currentArchive);
 
     currentIssues = resortArchiveKeys(currentIssues);
 
-    let items = {};
+    let items: Record<string, FormatedItem> = {};
     if (currentArchive.length > 0) {
-      const latestArchiveFilePath = getArchivedFilePath(
-        siteIdentifier,
-        "archive/" + currentArchive[0] + "/items.json",
-      );
-      const itemsJson = await readJSONFile(latestArchiveFilePath);
-      items = itemsJson.items;
-    }
+      // get latest items
+      for (let i = 0; i < currentArchive.length; i++) {
+        if (Object.keys(items).length >= MAX_ITEMS_PER_PAGE) {
+          break;
+        }
 
+        const latestArchiveFilePath = path.join(
+          getProdArchivePath(),
+          siteIdentifier,
+          "archive",
+          currentArchive[i],
+          "items.json",
+        );
+        const itemsJson = await readJSONFile(latestArchiveFilePath);
+        items = { ...items, ...itemsJson.items };
+      }
+    }
+    const finalItems = arrayToObj(getLatestItems(items));
+    log.info(
+      `Found ${Object.keys(finalItems).length} items for ${siteIdentifier}`,
+    );
     const newItems: ItemsJson = {
-      items: items,
+      items: finalItems,
       tags: currentTags,
       issues: currentIssues,
       archive: currentArchive,
     };
 
     // write to current
-    const currentFilepath = getDataCurrentItemsPath();
+    let currentFilepath = getDataCurrentItemsPath();
+    if (Deno.env.get("TODEV") === "1") {
+      currentFilepath = getDevDataCurrentItemsPath();
+    }
     await writeJSONFile(
-      `${currentFilepath}/${siteIdentifier}/items.json`,
+      path.join(currentFilepath, siteIdentifier, "items.json"),
       newItems,
     );
+    log.info(`Wrote ${siteIdentifier} items.json success`);
   }
 }
 
