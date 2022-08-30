@@ -7,7 +7,7 @@ if (Deno.env.get("FILES")) {
 }
 export const DEV_MODE_HANDLED_ITEMS = handledItemsCount;
 
-let translatedItemsPerPage = isDev() ? 10 : -1;
+let translatedItemsPerPage = isDev() ? 10 : 100;
 if (Deno.env.get("TRANSLATED_ITEMS_PER_PAGE")) {
   translatedItemsPerPage = Number(Deno.env.get("TRANSLATED_ITEMS_PER_PAGE"));
 }

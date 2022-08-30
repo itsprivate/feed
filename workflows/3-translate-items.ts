@@ -230,9 +230,10 @@ export default async function translateItems(
             isTranslateSuccess = false;
             failedTotal++;
             log.warn(
-              `translate ${file} ${value} failed, ignore, try it next time`,
+              `${total}/${files.length} translate ${file} ${value} failed`,
             );
             log.warn(e);
+            throw e;
           }
         }
       }
