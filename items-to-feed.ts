@@ -121,7 +121,18 @@ export default function itemsToFeed(
   let siteTitle = "";
   let siteDescription = currentTranslations.description;
   let pageTitle = "";
+
   if (options?.isArchive) {
+    let longestTitle = "";
+    // find first title, if any
+    if (items.length > 0) {
+      longestTitle = items[0].title;
+      for (let i = 1; i < items.length; i++) {
+        if (items[i].title.length > longestTitle.length) {
+          longestTitle = items[i].title;
+        }
+      }
+    }
     const pageMeta = getPageMeta(pageRelativePathname);
     if (pageMeta.type === "tag") {
       const tagName = currentItemsJson.meta?.name;
@@ -133,6 +144,9 @@ export default function itemsToFeed(
         pageTitle = `#${pageMeta.meta.tagIdentifier}`;
       }
       siteTitleSuffix = ` - ${siteName}`;
+      if (longestTitle) {
+        siteDescription = longestTitle;
+      }
     } else if (pageMeta.type === "index") {
       siteTitle = `${siteName}`;
       siteTitleSuffix = ` - ${siteDescription}`;
@@ -143,6 +157,9 @@ export default function itemsToFeed(
       );
       siteTitle = `${pageTitle}`;
       siteTitleSuffix = ` - ${siteName}`;
+      if (longestTitle) {
+        siteDescription = longestTitle;
+      }
     } else if (pageMeta.type === "archive") {
       pageTitle = archiveToTitle(
         `${pageMeta.meta.year}/${pageMeta.meta.week}`,
@@ -150,6 +167,9 @@ export default function itemsToFeed(
       );
       siteTitle = `${pageTitle}`;
       siteTitleSuffix = ` - ${siteName}`;
+      if (longestTitle) {
+        siteDescription = longestTitle;
+      }
     } else if (pageMeta.type === "posts") {
       if (items.length > 0) {
         siteTitle = `${items[0]._title_prefix ?? ""}${items[0].title ?? ""}${
