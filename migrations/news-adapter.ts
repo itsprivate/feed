@@ -1,7 +1,7 @@
 import Item from "../item.ts";
 
 import log from "../log.ts";
-import { sha1 } from "../util.ts";
+import { request, sha1 } from "../util.ts";
 
 export default class reddit extends Item<NewsItem> {
   private id: string = super.getId();
@@ -26,7 +26,7 @@ export default class reddit extends Item<NewsItem> {
       this.id = id;
     }
     // init to get the real url
-    const fetchResult = await fetch(this.getUrl(), {
+    const fetchResult = await request(this.getUrl(), {
       redirect: "manual",
     });
     log.debug(`google news fetch result: `, super.getUrl(), fetchResult.status);

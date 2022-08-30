@@ -46,6 +46,17 @@ enum Day {
   Fri,
   Sat,
 }
+export async function request(
+  url: string,
+  init?: RequestInit,
+) {
+  const c = new AbortController();
+  const id = setTimeout(() => c.abort(), 30000);
+  const r = await fetch(url, { ...init, signal: c.signal });
+  clearTimeout(id);
+  return r;
+}
+
 export const get = (obj: unknown, path: string, defaultValue = undefined) => {
   const travel = (regexp: RegExp) =>
     String.prototype.split
@@ -946,7 +957,7 @@ export function identifierToCachedKey(identifier: string): string {
   return `${parsed.language}_${parsed.type}__${parsed.id}`;
 }
 export async function getRedirectedUrl(url: string): Promise<string> {
-  const fetchResult = await fetch(url, {
+  const fetchResult = await request(url, {
     redirect: "manual",
   });
   log.debug(`redirected url fetch result: `, url, fetchResult.status);

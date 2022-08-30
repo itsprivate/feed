@@ -25,6 +25,7 @@ import {
   getRedirectedUrl,
   isMock,
   postToUrl,
+  request,
   tagToPascalCase,
   tagToUrl,
   tryToRemoveUnnecessaryParams,
@@ -172,7 +173,7 @@ export default class Item<T> {
     log.debug(`try to load image for ${url}`);
     let resource: { text: string; contentType: string };
     try {
-      resource = await fetch(url, {
+      resource = await request(url, {
         referrer: `https://www.google.com`,
       }).then(async (res) => {
         if (res.ok) {
@@ -205,7 +206,7 @@ export default class Item<T> {
       const metadata = getMetadata(doc, url);
       if (metadata.image) {
         // check image is valid
-        const imageResult = await fetch(metadata.image, {
+        const imageResult = await request(metadata.image, {
           method: "HEAD",
         });
         if (imageResult.ok) {

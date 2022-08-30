@@ -8,8 +8,8 @@ import {
   isDebug,
   isDev,
   parseArchiveUrl,
-  parsePageUrl,
   readJSONFile,
+  request,
   siteIdentifierToUrl,
 } from "./util.ts";
 import log from "./log.ts";
@@ -133,7 +133,7 @@ export default async function serveSite(port = 8000) {
             "/feed.json",
             config,
           );
-          const feedJsonResponse = await fetch(feedJsonpath);
+          const feedJsonResponse = await request(feedJsonpath);
           currentSiteFeedJson = await feedJsonResponse.json();
         }
       } catch (e) {

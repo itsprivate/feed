@@ -1,3 +1,4 @@
+import { request } from "../util.ts";
 export default async function fetchPHData() {
   const myHeaders = new Headers();
   const phToken = Deno.env.get("PRODUCTHUNT_TOKEN");
@@ -59,7 +60,7 @@ export default async function fetchPHData() {
       after,
     },
   });
-  const originalJson = await fetch(
+  const originalJson = await request(
     "https://api.producthunt.com/v2/api/graphql",
     {
       method: "POST",

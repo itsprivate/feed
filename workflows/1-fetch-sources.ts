@@ -7,6 +7,7 @@ import {
   identifierToCachedKey,
   isDev,
   readJSONFile,
+  request,
   writeJSONFile,
 } from "../util.ts";
 import filterByRules from "../filter-by-rules.ts";
@@ -112,7 +113,7 @@ export default async function fetchSources(
         sourceType === "rss" || sourceType === "googlenews" ||
         sourceType === "newyorker"
       ) {
-        const originItemResult = await fetch(sourceUrl);
+        const originItemResult = await request(sourceUrl);
 
         const xml = await originItemResult.text();
         originalJson = await parseFeed(xml);
@@ -159,7 +160,7 @@ export default async function fetchSources(
         // producthunt graphql api
         originalJson = await fetchPHData();
       } else {
-        const originItemResult = await fetch(sourceUrl);
+        const originItemResult = await request(sourceUrl);
         originalJson = await originItemResult.json();
       }
       // get items

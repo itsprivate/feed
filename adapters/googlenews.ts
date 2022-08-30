@@ -1,5 +1,5 @@
 import RSS from "./rss.ts";
-import { sha1 } from "../util.ts";
+import { request, sha1 } from "../util.ts";
 import log from "../log.ts";
 export default class googlenews extends RSS {
   private id: string = super.getId();
@@ -69,7 +69,7 @@ export default class googlenews extends RSS {
       id = await sha1(title);
       this.id = id;
     }
-    const fetchResult = await fetch(super.getUrl(), {
+    const fetchResult = await request(super.getUrl(), {
       redirect: "manual",
     });
     log.debug(`google news fetch result: `, super.getUrl(), fetchResult.status);
