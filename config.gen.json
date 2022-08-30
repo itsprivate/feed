@@ -164,8 +164,7 @@
       "port": 8000,
       "dev": true,
       "tags": [
-        "source-reddit-mealtimevideos",
-        "source-reddit-videos"
+        "source-hackernews-new"
       ],
       "archive": false,
       "translations": {

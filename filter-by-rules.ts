@@ -1,9 +1,10 @@
 import { Rule } from "./interface.ts";
 import { get } from "./util.ts";
+import Item from "./item.ts";
 export default function filterByRules<T>(
-  originalItems: T[],
+  originalItems: Item<T>[],
   rules: Rule[],
-): T[] {
+): Item<T>[] {
   let limitRule: Rule | undefined;
   for (const rule of rules) {
     if (rule.type === "limit") {
@@ -17,6 +18,10 @@ export default function filterByRules<T>(
   }
   const newItems = [];
   for (const item of originalItems) {
+    // check is valid
+    if (!item.isValid()) {
+      continue;
+    }
     // check rules
     let isAllRulesFine = true;
     for (const rule of rules) {

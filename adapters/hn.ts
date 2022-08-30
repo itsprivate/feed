@@ -8,6 +8,13 @@ export default class hn extends Item<HnItem> {
   getId(): string {
     return this.originalItem.objectID as string;
   }
+  isValid(): boolean {
+    const title = this.getTitle();
+    if (title === "Delete") {
+      return false;
+    }
+    return true;
+  }
   getTitle(): string {
     const title = this.originalItem.title as string;
     for (const prefix of prefixies) {

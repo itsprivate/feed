@@ -204,10 +204,19 @@ export default class Item<T> {
       );
       const metadata = getMetadata(doc, url);
       if (metadata.image) {
-        this.image = metadata.image;
-        log.debug(`found image ${this.image} for ${url}`);
-        return metadata.image;
+        // check image is valid
+        const imageResult = await fetch(metadata.image, {
+          method: "HEAD",
+        });
+        if (imageResult.ok) {
+          this.image = metadata.image;
+          log.debug(`found image ${this.image} for ${url}`);
+          return metadata.image;
+        } else {
+          this.image = null;
+        }
       } else {
+        log.debug(`not found image for ${url}`);
         this.image = null;
       }
       return null;
@@ -368,7 +377,9 @@ export default class Item<T> {
 
     return formatedItem;
   }
-
+  isValid(): boolean {
+    return true;
+  }
   getFeedItemSync(
     siteIdentifier: string,
     language: Language,
