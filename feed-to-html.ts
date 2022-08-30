@@ -189,6 +189,7 @@ export default function feedToHTML(
     // @ts-ignore: add meta data
     return newItem;
   });
+  // add advice link
   //@ts-ignore: add meta data
   feedJson._other_sites = otherSites.map(
     (item, index) => {
@@ -208,10 +209,17 @@ export default function feedToHTML(
           "/" + language.prefix + version.prefix,
           config,
         ),
-        is_last: index === otherSites.length - 1,
+        is_last: false,
       };
     },
   );
+  // @ts-ignore: add meta data
+  feedJson._other_sites.push({
+    name: currentTranslations.advice_label,
+    url: "https://t.me/joinchat/GVK5UiDwPUAwMjkx",
+    is_last: true,
+  });
+
   // @ts-ignore: add meta data
   feedJson._atom_url = feedjsonUrlToRssUrl(feedJson.feed_url);
 

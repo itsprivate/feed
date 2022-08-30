@@ -92,6 +92,14 @@ make createsite site=ask
 make prod-publish
 ```
 
+## Create New Site
+
+```bash
+make createsite site=site_name
+# add config
+# add custom name
+```
+
 ## TODO
 
 - [ ] add more feeds

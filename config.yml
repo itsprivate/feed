@@ -56,6 +56,7 @@ translations:
     source_link_label: 原文地址
     latest_build_at_lable: 最后更新于
     social_label: 社交媒体
+    advice_label: 提议更多喜欢的站点?
   en:
     about_label: About
     subscription_label: Subscription
@@ -73,6 +74,7 @@ translations:
     source_link_label: Source
     latest_build_at_lable: Latest updated at
     social_label: Social
+    advice_label: Suggest a new site?
   ja:
     about_label: このページについて
     subscription_label: 購読
@@ -90,6 +92,7 @@ translations:
     source_link_label: ソース
     latest_build_at_lable: 最終更新日
     social_label: ソーシャル
+    advice_label: 新しいサイトを提案しますか?
 archive:
   port: 9000
   siteIdentifier: i
@@ -100,7 +103,8 @@ sites:
     port: 8000
     dev: true
     tags:
-      - source-newyorker
+      - source-reddit-mealtimevideos
+      - source-reddit-videos
     archive: false
     translations:
       "zh-Hans":
@@ -647,6 +651,32 @@ sites:
         description: 人気のニュース速報記事を日本語で閲覧
         keywords: "buzzing,ニュース速報"
 
+  videos:
+    port: 8020
+    archive: true
+    redirect: false
+    tags:
+      - videos
+      - reddit
+      - source-reddit-videos
+      - source-reddit-mealtimevideos
+    translations:
+      zh-Hans:
+        title: 下饭视频
+        description: 用中文浏览国外的热门下饭视频
+        keyworkds: "buzzing,Videos,Reddit,Mealtime Videos"
+        short_title: 下饭视频
+      en:
+        title: Buzzing on Videos
+        short_title: Videos
+        description: See what's buzzing on Videos in your native language
+        keywords: "buzzing,Videos"
+      ja:
+        title: ビデオ人気の記事
+        short_title: ビデオ
+        description: 人気のビデオ記事を日本語で閲覧
+        keywords: "buzzing,ビデオ"
+
 sources:
   - url: https://news.google.com/rss/topics/CAAqJggKIiBDQkFTRWdvSUwyMHZNRGx1YlY4U0FtVnVHZ0pWVXlnQVAB?hl=en-US&gl=US&ceid=US:en
     type: googlenews
@@ -849,3 +879,17 @@ sources:
   - url: https://www.newyorker.com/feed/everything
     type: newyorker
     id: source-newyorker
+  - id: source-reddit-mealtimevideos
+    type: reddit
+    url: https://www.reddit.com/r/mealtimevideos/top/.json?raw_json=1
+    rules:
+      - type: greaterEqual
+        key: getWeightedScore
+        value: "50"
+  - id: source-reddit-videos
+    type: reddit
+    url: https://www.reddit.com/r/videos/top/.json?raw_json=1
+    rules:
+      - type: greaterEqual
+        key: getWeightedScore
+        value: "200"
