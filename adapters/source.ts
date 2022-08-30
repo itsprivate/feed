@@ -180,6 +180,14 @@ export default class source extends Item<FormatedItem> {
       } else {
         externalLinkName = `Twitter Link`;
       }
+    } else if (type === "ph") {
+      if (this.getScore() && this.getExternalUrl()) {
+        externalLinkName = `${linkSymbol} ${
+          formatNumber(this.getScore())
+        } PH Upvotes`;
+      } else {
+        externalLinkName = `PH Link`;
+      }
     }
 
     if (externalLink && externalLinkName) {
