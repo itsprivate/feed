@@ -6,9 +6,9 @@ import {
 } from "../util.ts";
 import log from "../log.ts";
 export default async function uploadCurrentData() {
-  const R2_BUCKET = getCurrentBucketName();
-  log.info(`start upload current data to ${R2_BUCKET}`);
-  const s3Bucket = await getCurrentDataS3Bucket(R2_BUCKET);
+  const AWS_BUCKET = getCurrentBucketName();
+  log.info(`start upload current data to ${AWS_BUCKET}`);
+  const s3Bucket = await getCurrentDataS3Bucket(AWS_BUCKET);
 
   // walk current folder
   await fs.ensureDir(getDataPath());
@@ -27,7 +27,7 @@ export default async function uploadCurrentData() {
     }
   }
   log.info(
-    `finish upload current data ${total} files to ${R2_BUCKET}`,
+    `finish upload current data ${total} files to ${AWS_BUCKET}`,
   );
 }
 

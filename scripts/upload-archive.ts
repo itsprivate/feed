@@ -10,8 +10,8 @@ import {
 import log from "../log.ts";
 import { DEV_MODE_HANDLED_ITEMS } from "../constant.ts";
 export default async function uploadArchive() {
-  const R2_BUCKET = getArchivedBucketName();
-  const s3Bucket = await getArchiveS3Bucket(R2_BUCKET);
+  const AWS_BUCKET = getArchivedBucketName();
+  const s3Bucket = await getArchiveS3Bucket(AWS_BUCKET);
   const client = getDufsClient();
   // walk current folder
   await fs.ensureDir(getArchivePath());
@@ -40,14 +40,14 @@ export default async function uploadArchive() {
       await s3Bucket.putObject(entry.path, await Deno.readFile(entry.path), {
         contentType: contentTypeString,
       });
-      log.info(`Uploaded ${entry.path} to ${R2_BUCKET} successfully`);
+      log.info(`Uploaded ${entry.path} to ${AWS_BUCKET} successfully`);
 
       // remove file
       // await Deno.remove(entry.path);
     }
   }
   log.info(
-    `finish upload archive data ${total} files to ${R2_BUCKET}`,
+    `finish upload archive data ${total} files to ${AWS_BUCKET}`,
   );
 }
 

@@ -505,11 +505,11 @@ export const urlToFilePath = (url: string): string => {
 };
 export const getArchiveS3Bucket = (bucket: string): S3Bucket => {
   const params = {
-    accessKeyID: Deno.env.get("ARCHIVE_ACCESS_KEY_ID")!,
-    secretKey: Deno.env.get("ARCHIVE_SECRET_ACCESS_KEY")!,
+    accessKeyID: Deno.env.get("AWS_ACCESS_KEY_ID")!,
+    secretKey: Deno.env.get("AWS_SECRET_ACCESS_KEY")!,
     bucket: bucket,
-    region: Deno.env.get("ARCHIVE_REGION")!,
-    endpointURL: Deno.env.get("ARCHIVE_ENDPOINT")!,
+    region: Deno.env.get("AWS_DEFAULT_REGION")!,
+    endpointURL: Deno.env.get("AWS_ENDPOINT")!,
   };
   const s3Bucket = new S3Bucket(
     params,
@@ -521,19 +521,19 @@ export const getCurrentDataS3Bucket = (
 ): S3Bucket => {
   const s3Bucket = new S3Bucket(
     {
-      accessKeyID: Deno.env.get("R2_ACCESS_KEY_ID")!,
-      secretKey: Deno.env.get("R2_SECRET_ACCESS_KEY")!,
+      accessKeyID: Deno.env.get("AWS_ACCESS_KEY_ID")!,
+      secretKey: Deno.env.get("AWS_SECRET_ACCESS_KEY")!,
       bucket: bucket,
-      region: Deno.env.get("R2_REGION")!,
-      endpointURL: Deno.env.get("R2_ENDPOINT")!,
+      region: Deno.env.get("AWS_DEFAULT_REGION")!,
+      endpointURL: Deno.env.get("AWS_ENDPOINT")!,
     },
   );
   return s3Bucket;
 };
 
 export const loadS3ArchiveFile = async (fileRelativePath: string) => {
-  const R2_BUCKET = getArchivedBucketName();
-  const s3Bucket = getArchiveS3Bucket(R2_BUCKET);
+  const AWS_BUCKET = getArchivedBucketName();
+  const s3Bucket = getArchiveS3Bucket(AWS_BUCKET);
   const object = await s3Bucket.headObject(fileRelativePath);
   if (object && object.etag) {
     const getObject = await s3Bucket.getObject(fileRelativePath);
@@ -548,12 +548,12 @@ export const loadS3ArchiveFile = async (fileRelativePath: string) => {
 };
 
 export function getCurrentBucketName() {
-  const R2_BUCKET = isDev() ? "dev-feed" : "feed";
-  return R2_BUCKET;
+  const AWS_BUCKET = isDev() ? "dev-feed" : "feed";
+  return AWS_BUCKET;
 }
 export function getArchivedBucketName() {
-  const R2_BUCKET = isDev() ? "dev-feedarchive" : "feedarchive";
-  return R2_BUCKET;
+  const AWS_BUCKET = isDev() ? "dev-feedarchive" : "feedarchive";
+  return AWS_BUCKET;
 }
 export function getArchiveSitePrefix(config: Config) {
   if (isDev()) {

@@ -6,8 +6,8 @@ import {
 } from "../util.ts";
 import log from "../log.ts";
 export default async function uploadPublicToR2() {
-  const R2_BUCKET = getCurrentBucketName();
-  const s3Bucket = await getCurrentDataS3Bucket(R2_BUCKET);
+  const AWS_BUCKET = getCurrentBucketName();
+  const s3Bucket = await getCurrentDataS3Bucket(AWS_BUCKET);
 
   // walk dist folder
   await fs.ensureDir(getDistPath());
@@ -36,7 +36,7 @@ export default async function uploadPublicToR2() {
       await s3Bucket.putObject(file, await Deno.readFile(file), {
         contentType: contentTypeString,
       });
-      log.info(`upload ${file} to ${R2_BUCKET} success`);
+      log.info(`upload ${file} to ${AWS_BUCKET} success`);
     }
 
     log.info(`uploaded ${files.length} files`);

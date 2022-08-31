@@ -12,9 +12,9 @@ import log from "../log.ts";
 import { dotenvConfig } from "../deps.ts";
 
 export default async function loadCurrentData(_options?: RunOptions) {
-  const R2_BUCKET = getCurrentBucketName();
-  log.info(`start load current data from ${R2_BUCKET}`);
-  const s3Bucket = getCurrentDataS3Bucket(R2_BUCKET);
+  const AWS_BUCKET = getCurrentBucketName();
+  log.info(`start load current data from ${AWS_BUCKET}`);
+  const s3Bucket = getCurrentDataS3Bucket(AWS_BUCKET);
   const objects = await s3Bucket.listObjects({
     prefix: getDataPath() + "/",
   });
@@ -37,7 +37,7 @@ export default async function loadCurrentData(_options?: RunOptions) {
       }
     }
     log.info(
-      `load current data ${objects.contents.length} files from ${R2_BUCKET} success`,
+      `load current data ${objects.contents.length} files from ${AWS_BUCKET} success`,
     );
   }
 }
