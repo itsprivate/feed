@@ -186,7 +186,11 @@ prod-uploadcurrent:
 
 .Phony: prod-delete-hidden
 prod-delete-hidden:
-	aws s3 rm s3://feed --recursive  --endpoint-url $(AWS_ENDPOINT) --exclude "*" --include "*.DS_Store"
+	aws s3 rm s3://feed --recursive  --endpoint-url $(AWS_ENDPOINT) --exclude "*" --include "*.DS_Store" --dryrun
+
+.Phony: prod-delete-folder
+prod-delete-folder:
+	aws s3 rm s3://feed/current --recursive  --endpoint-url $(AWS_ENDPOINT)
 
 .Phony: uploadpublic
 uploadpublic:
