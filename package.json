@@ -1,0 +1,26 @@
+{
+  "name": "feed",
+  "version": "0.0.1",
+  "description": "## Development",
+  "main": "common.js",
+  "directories": {
+    "example": "example"
+  },
+  "devDependencies": {
+    "hello-world-npm": "^1.1.1"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/itsprivate/feed.git"
+  },
+  "keywords": [],
+  "author": "Owen Young <theowenyoung@gmail.com> (https://www.owenyoung.com/)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/itsprivate/feed/issues"
+  },
+  "homepage": "https://github.com/itsprivate/feed#readme"
+}
