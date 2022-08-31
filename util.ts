@@ -552,7 +552,7 @@ export function getCurrentBucketName() {
   return AWS_BUCKET;
 }
 export function getArchivedBucketName() {
-  const AWS_BUCKET = isDev() ? "dev-feedarchive" : "feedarchive";
+  const AWS_BUCKET = isDev() ? "dev-feed" : "feed";
   return AWS_BUCKET;
 }
 export function getArchiveSitePrefix(config: Config) {
