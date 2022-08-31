@@ -9,7 +9,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    concurrency: build
+    concurrency: upload-archive
     steps:
       - name: Check out repository code
         uses: actions/checkout@v3
