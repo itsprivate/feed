@@ -25,8 +25,7 @@ jobs:
       - name: create test files
         run: |
           mkdir -p archive
-          echo "hello world" > archive/hello.txt
-          echo "hello world" > archive/hello2.txt
+          echo '{"hello":"world"}' > archive/hello.json
       # - uses: isbang/setup-awscli@v0.1.0
       # - run: make prod-awsuploadarchive
       #   env:
