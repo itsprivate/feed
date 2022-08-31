@@ -884,11 +884,11 @@ sources:
     rules:
       - type: greaterEqual
         key: getWeightedScore
-        value: "50"
+        value: "30"
   - id: source-reddit-videos
     type: reddit
     url: https://www.reddit.com/r/videos/top/.json?raw_json=1
     rules:
       - type: greaterEqual
         key: getWeightedScore
-        value: "200"
+        value: "80"
