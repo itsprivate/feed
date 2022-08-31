@@ -1,8 +1,8 @@
-import { getDataPath } from "../util.ts";
+import { getCachePath } from "../util.ts";
 import log from "../log.ts";
 import { decompress } from "../bad-deps.ts";
-export default async function decompressCurrentData() {
-  const zipName = getDataPath() + ".zip";
+export default async function decompressCurrentCacheData() {
+  const zipName = getCachePath() + ".zip";
   const stat = await Deno.stat(zipName);
 
   await decompress(zipName);
@@ -15,5 +15,5 @@ export default async function decompressCurrentData() {
   );
 }
 if (import.meta.main) {
-  await decompressCurrentData();
+  await decompressCurrentCacheData();
 }

@@ -1,19 +1,24 @@
 # custom
-/dev-current/
-dev-current.zip
+/prod-current/
+prod-current.zip
+prod-cache.zip
+/prod-archive*/
+**/*.zip
 current.zip
 archive.zip
 /archive*/
-dev-archive.zip
+prod-archive.zip
 /current/
+/cache/
+/prod-cache/
 private.txt
-/dev-archive/
+/prod-archive/
 /archive/
 temp.json
 /public/
-/dev-public/
+/prod-public/
 /temp/
-/dev-temp/
+/prod-temp/
 # Logs
 logs
 *.log

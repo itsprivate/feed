@@ -1,23 +1,26 @@
-import { getDataPath } from "../util.ts";
+import { getCachePath } from "../util.ts";
 import log from "../log.ts";
 import { compress } from "../bad-deps.ts";
 import { path } from "../deps.ts";
-export default async function compressCurrentData() {
-  const zipName = getDataPath() + ".zip";
-  // remove all empty dir getDataPath() recursively
-  await removeEmptyDirectories(getDataPath());
-  await compress(getDataPath(), zipName, {
+export default async function compressCurrentCacheData() {
+  const zipName = getCachePath() + ".zip";
+  // remove all empty dir getCachePath() recursively
+  await removeEmptyDirectories(getCachePath());
+  await compress(getCachePath(), zipName, {
     overwrite: true,
   });
   const stat = await Deno.stat(zipName);
   log.info(
-    `finish zip current data to ${getDataPath() + ".zip"}, size: ${
+    `finish zip current data to ${getCachePath() + ".zip"}, size: ${
       (stat.size / 1000000).toFixed(2)
     } MB`,
   );
 }
 
-async function removeEmptyDirectories(directory: string) {
+async function removeEmptyDirectories(
+  directory: string,
+  isRoot = true,
+) {
   // lstat does not follow symlinks (in contrast to stat)
   const fileStats = await Deno.lstat(directory);
   if (!fileStats.isDirectory) {
@@ -35,7 +38,7 @@ async function removeEmptyDirectories(directory: string) {
     const recursiveRemovalPromises = [];
     for (const fileName of fileNames) {
       recursiveRemovalPromises.push(
-        removeEmptyDirectories(path.join(directory, fileName.name)),
+        removeEmptyDirectories(path.join(directory, fileName.name), false),
       );
     }
 
@@ -52,12 +55,12 @@ async function removeEmptyDirectories(directory: string) {
     break;
   }
 
-  if (isRealEmpty) {
+  if (isRealEmpty && !isRoot) {
     log.info("Removing empty folder: ", directory);
     await Deno.remove(directory);
   }
 }
 
 if (import.meta.main) {
-  await compressCurrentData();
+  await compressCurrentCacheData();
 }

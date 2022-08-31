@@ -87,7 +87,7 @@ export const isDebug = () => {
   return Deno.env.get("DEBUG") === "1";
 };
 export const getDataPath = () => {
-  const dataPath = isDev() ? "dev-current" : "current";
+  const dataPath = isDev() ? "current" : "prod-current";
   return dataPath;
 };
 export const getFeedSiteIdentifiers = (config: Config) => {
@@ -100,18 +100,28 @@ export const getFeedSiteIdentifiers = (config: Config) => {
   return siteIdentifiers;
 };
 export const getArchivePath = () => {
-  const dataPath = isDev() ? "dev-archive" : "archive";
+  const dataPath = isDev() ? "archive" : "prod-archive";
   return dataPath;
 };
 export const getProdArchivePath = () => {
-  return "archive";
+  return "prod-archive";
 };
 export const getDistPath = () => {
-  const dataPath = isDev() ? "dev-public" : "public";
+  const dataPath = isDev() ? "public" : "prod-public";
   return dataPath;
 };
+// this directory is used to store processing files
+// like formated, translated, etc.
+// most time this will not be store files
+// only when failed at some step, we will store the processed files here
+export const getCachePath = () => {
+  const dataPath = isDev() ? "cache" : "prod-cache";
+  return dataPath;
+};
+
+// this directory will not be load when build
 export const getTempPath = () => {
-  const dataPath = isDev() ? "dev-temp" : "temp";
+  const dataPath = isDev() ? "temp" : "prod-temp";
   return dataPath;
 };
 export const getChangedSitePaths = () => {
@@ -124,7 +134,7 @@ export const getDistFilePath = (siteIdentifier: string, file: string) => {
   return path.join(getDistPath(), siteIdentifierToPath(siteIdentifier), file);
 };
 export const getDataRawPath = () => {
-  return `${getDataPath()}/1-raw`;
+  return `${getCachePath()}/1-raw`;
 };
 export const tryGetSiteByFolderPath = (folderPath: string): string | null => {
   const basename = path.basename(folderPath);
@@ -135,27 +145,25 @@ export const tryGetSiteByFolderPath = (folderPath: string): string | null => {
   }
 };
 export const getDataFormatedPath = () => {
-  return `${getDataPath()}/2-formated`;
+  return `${getCachePath()}/2-formated`;
 };
 
 export const getDataTranslatedPath = () => {
-  return `${getDataPath()}/3-translated`;
+  return `${getCachePath()}/3-translated`;
 };
 
 export const getDataCurrentItemsPath = () => {
-  return `${getDataPath()}/4-data`;
+  return `${getDataPath()}/items`;
 };
 export const getDevDataCurrentItemsPath = () => {
-  return `dev-current/4-data`;
+  return `current/items`;
 };
-export const getDataCurrentChangedItemsPath = () => {
-  return `${getDataPath()}/5-changed-data`;
-};
+
 export const getMigratedIssueMapPath = () => {
   if (isDev()) {
-    return `./migrations/dev-issue-map.json`;
-  } else {
     return `./migrations/issue-map.json`;
+  } else {
+    return `./migrations/prod-issue-map.json`;
   }
 };
 export const getCurrentItemsFilePath = (siteIdentifier: string) => {
@@ -548,12 +556,10 @@ export const loadS3ArchiveFile = async (fileRelativePath: string) => {
 };
 
 export function getCurrentBucketName() {
-  const AWS_BUCKET = isDev() ? "dev-feed" : "feed";
-  return AWS_BUCKET;
+  return "feed";
 }
 export function getArchivedBucketName() {
-  const AWS_BUCKET = isDev() ? "dev-feed" : "feed";
-  return AWS_BUCKET;
+  return "feed";
 }
 export function getArchiveSitePrefix(config: Config) {
   if (isDev()) {

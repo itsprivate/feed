@@ -128,7 +128,7 @@ buildcurrent:
 
 .Phony: dev
 dev:
-	wrangler pages dev dev-public/${site}
+	wrangler pages dev public/${site}
 
 .Phony: install
 install:
@@ -154,10 +154,10 @@ prod-upload:
 
 .Phony: loadcurrent
 loadcurrent:
-	aws s3 cp s3://feed/dev-current ./dev-current --endpoint-url $(AWS_ENDPOINT) --recursive
+	aws s3 cp s3://feed/cache.zip ./cache.zip --endpoint-url $(AWS_ENDPOINT) && make decompresscache && aws s3 cp s3://feed/current ./current --endpoint-url $(AWS_ENDPOINT) --recursive --exclude ".*"
 .Phony: prod-loadcurrent
 prod-loadcurrent:
-	aws s3 cp s3://feed/current ./current --endpoint-url $(AWS_ENDPOINT) --recursive
+	aws s3 cp s3://feed/prod-cache.zip ./prod-cache.zip --endpoint-url $(AWS_ENDPOINT) && make decompresscache && aws s3 cp s3://feed/prod-current ./prod-current --endpoint-url $(AWS_ENDPOINT) --recursive --exclude ".*"
 
 .Phony: loadarchivehttp
 loadarchivehttp:
@@ -169,28 +169,24 @@ prod-loadarchivehttp:
 
 .Phony: prod-loadarchive
 prod-loadarchive:
-	aws s3 cp s3://feed/archive ./archive --endpoint-url $(AWS_ENDPOINT) --recursive
+	aws s3 cp s3://feed/prod-archive ./prod-archive --endpoint-url $(AWS_ENDPOINT) --recursive --exclude ".*"
 
 .Phony: prod-awsuploadarchive
 prod-awsuploadarchive:
-	aws s3 cp ./archive s3://feed/archive --endpoint-url $(AWS_ENDPOINT) --recursive
-
-.Phony: dufsuploadarchive
-dufsuploadarchive:
-	curl --max-time 100 --digest -u $(DUFS_SECRETS) -T ./dev-archive $(DUFS_URL)/dev-archive
-
-.Phony: prod-dufsuploadarchive
-prod-dufsuploadarchive:
-	curl --max-time 100 -T ./archive $(DUFS_URL)/archive
+	aws s3 cp ./prod-archive s3://feed/prod-archive --endpoint-url $(AWS_ENDPOINT) --recursive --exclude ".*"
 
 .Phony: uploadcurrent
 uploadcurrent:
-	make compresscurrent && curl --digest --max-time 100 -u $(DUFS_SECRETS) -T ./dev-current.zip $(DUFS_URL)/dev-current.zip && aws s3 cp ./dev-current  s3://feed/dev-current --endpoint-url $(AWS_ENDPOINT) --recursive
+	make compresscache && curl --digest --max-time 100 -u $(DUFS_SECRETS) -T ./cache.zip $(DUFS_URL)/cache.zip && aws s3 cp ./cache.zip  s3://feed/cache.zip --endpoint-url $(AWS_ENDPOINT) && aws s3 cp ./current  s3://feed/current --endpoint-url $(AWS_ENDPOINT) --recursive --exclude ".*"
 
 
 .Phony: prod-uploadcurrent
 prod-uploadcurrent:
-	make prod-compresscurrent && curl --max-time 100 --digest -u $(DUFS_SECRETS) -T ./current.zip $(DUFS_URL)/current.zip && aws s3 cp ./current  s3://feed/current --endpoint-url $(AWS_ENDPOINT) --recursive
+	make prod-compresscache && curl --digest --max-time 100 -u $(DUFS_SECRETS) -T ./prod-cache.zip $(DUFS_URL)/prod-cache.zip && aws s3 cp ./prod-cache.zip  s3://feed/prod-cache.zip --endpoint-url $(AWS_ENDPOINT) && aws s3 cp ./prod-current  s3://feed/prod-current --endpoint-url $(AWS_ENDPOINT) --recursive --exclude ".*"
+
+.Phony: prod-delete-hidden
+prod-delete-hidden:
+	aws s3 rm s3://feed --recursive  --endpoint-url $(AWS_ENDPOINT) --exclude "*" --include "*.DS_Store"
 
 .Phony: uploadpublic
 uploadpublic:
@@ -211,23 +207,23 @@ prod-uploadarchive:
 
 
 
-.Phony: compresscurrent
-compresscurrent:
-	deno run -A ./scripts/compress-current.ts
+.Phony: compresscache
+compresscache:
+	deno run -A ./scripts/compress-cache.ts
 
 
-.Phony: prod-compresscurrent
-prod-compresscurrent:
-	PROD=1 deno run -A ./scripts/compress-current.ts
+.Phony: prod-compresscache
+prod-compresscache:
+	PROD=1 deno run -A ./scripts/compress-cache.ts
 
 
-.Phony: decompresscurrent
-decompresscurrent:
-	deno run -A ./scripts/decompress-current.ts
+.Phony: decompresscache
+decompresscache:
+	deno run -A ./scripts/decompress-cache.ts
 
-.Phony: prod-decompresscurrent
-prod-decompresscurrent:
-	PROD=1 deno run -A ./scripts/decompress-current.ts
+.Phony: prod-decompresscache
+prod-decompresscache:
+	PROD=1 deno run -A ./scripts/decompress-cache.ts
 
 
 
@@ -261,11 +257,11 @@ deletearchive:
 
 .Phony: prod-servearchive
 prod-servearchive:
-	PROD=1 deno run -A --watch=main.ts,templates/ ./dev-archive-site.ts
+	PROD=1 deno run -A --watch=main.ts,templates/ ./local-archive-site.ts
 
 .Phony: servearchive
 servearchive:
-	LOCAL=1 deno run -A --watch=main.ts,templates/ ./dev-archive-site.ts
+	LOCAL=1 deno run -A --watch=main.ts,templates/ ./local-archive-site.ts
 
 .Phony: checkfmt
 checkfmt:
@@ -285,10 +281,10 @@ config:
 
 .Phony: clean
 clean:
-	rm -rf current/ archive/ public/ dev-current.zip current.zip dev-current/ dev-archive/
+	rm -rf current/ archive/ public/ dev/public/ prod-current/ prod-archive/ cache.zip prod-cache.zip cache/ prod-cache/
 
-.Phony: prod-initcurrent
-prod-initcurrent:
+.Phony: prod-initcachezip
+prod-initcachezip:
 	make prod-uploadcurrent
 
 
@@ -314,7 +310,7 @@ prod-rebuild:
 # only for dev
 .Phony: prod-zipuploadarchive
 prod-zipuploadarchive:
-	zip -r -q archive.zip archive && sleep 1 && scp ./archive.zip $(DUFS_SERVER):$(DUFS_PATH)/archive.zip
+	zip -r -q prod-archive.zip prod-archive && sleep 1 && scp ./prod-archive.zip $(DUFS_SERVER):$(DUFS_PATH)/prod-archive.zip
 
 # after upload to dufs
 # cd ~/storage
