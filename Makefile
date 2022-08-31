@@ -157,7 +157,7 @@ loadcurrent:
 	aws s3 cp s3://feed/cache.zip ./cache.zip --endpoint-url $(AWS_ENDPOINT) && make decompresscache && aws s3 cp s3://feed/current ./current --endpoint-url $(AWS_ENDPOINT) --recursive --exclude ".*"
 .Phony: prod-loadcurrent
 prod-loadcurrent:
-	aws s3 cp s3://feed/prod-cache.zip ./prod-cache.zip --endpoint-url $(AWS_ENDPOINT) && make decompresscache && aws s3 cp s3://feed/prod-current ./prod-current --endpoint-url $(AWS_ENDPOINT) --recursive --exclude ".*"
+	aws s3 cp s3://feed/prod-cache.zip ./prod-cache.zip --endpoint-url $(AWS_ENDPOINT) && make prod-decompresscache && aws s3 cp s3://feed/prod-current ./prod-current --endpoint-url $(AWS_ENDPOINT) --recursive --exclude ".*"
 
 .Phony: loadarchivehttp
 loadarchivehttp:
