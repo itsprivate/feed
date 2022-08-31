@@ -136,11 +136,11 @@ install:
 
 .Phony: load
 load:
-	make loadcurrent && make decompresscurrent
+	make loadcurrent
 
 .Phony: prod-load
 prod-load:
-	make prod-loadcurrent && make prod-decompresscurrent
+	make prod-loadcurrent
 
 
 .Phony: upload
@@ -154,11 +154,10 @@ prod-upload:
 
 .Phony: loadcurrent
 loadcurrent:
-	wrangler r2 object get dev-feed/dev-current.zip
-	
+	aws s3 cp s3://feed/dev-current ./dev-current --endpoint-url $(AWS_ENDPOINT) --recursive
 .Phony: prod-loadcurrent
 prod-loadcurrent:
-	wrangler r2 object get feed/current.zip
+	aws s3 cp s3://feed/current ./current --endpoint-url $(AWS_ENDPOINT) --recursive
 
 .Phony: loadarchivehttp
 loadarchivehttp:
@@ -170,11 +169,11 @@ prod-loadarchivehttp:
 
 .Phony: prod-loadarchive
 prod-loadarchive:
-	aws s3 cp s3://feedarchive/archive ./archive --endpoint-url https://s3.nl-ams.scw.cloud --recursive
+	aws s3 cp s3://feed/archive ./archive --endpoint-url $(AWS_ENDPOINT) --recursive
 
 .Phony: prod-awsuploadarchive
 prod-awsuploadarchive:
-	aws s3 cp ./archive s3://feedarchive/archive --endpoint-url https://s3.nl-ams.scw.cloud --recursive
+	aws s3 cp ./archive s3://feed/archive --endpoint-url $(AWS_ENDPOINT) --recursive
 
 .Phony: dufsuploadarchive
 dufsuploadarchive:
@@ -186,11 +185,12 @@ prod-dufsuploadarchive:
 
 .Phony: uploadcurrent
 uploadcurrent:
-	make compresscurrent && curl --max-time 100 --digest --max-time 100 -u $(DUFS_SECRETS) -T ./dev-current.zip $(DUFS_URL)/dev-current.zip &&  wrangler r2 object put dev-feed/dev-current.zip -f ./dev-current.zip
+	make compresscurrent && curl --digest --max-time 100 -u $(DUFS_SECRETS) -T ./dev-current.zip $(DUFS_URL)/dev-current.zip && aws s3 cp ./dev-current  s3://feed/dev-current --endpoint-url $(AWS_ENDPOINT) --recursive
+
 
 .Phony: prod-uploadcurrent
 prod-uploadcurrent:
-	make prod-compresscurrent && curl --max-time 100 --digest -u $(DUFS_SECRETS) -T ./current.zip $(DUFS_URL)/current.zip && wrangler r2 object put feed/current.zip -f ./current.zip
+	make prod-compresscurrent && curl --max-time 100 --digest -u $(DUFS_SECRETS) -T ./current.zip $(DUFS_URL)/current.zip && aws s3 cp ./current  s3://feed/current --endpoint-url $(AWS_ENDPOINT) --recursive
 
 .Phony: uploadpublic
 uploadpublic:
@@ -287,9 +287,9 @@ config:
 clean:
 	rm -rf current/ archive/ public/ dev-current.zip current.zip dev-current/ dev-archive/
 
-.Phony: prod-initcurrentzip
-prod-initcurrentzip:
-	PROD=1 deno run -A ./scripts/init-current-zip.ts && make prod-uploadcurrent
+.Phony: prod-initcurrent
+prod-initcurrent:
+	make prod-uploadcurrent
 
 
 .Phony: prod-movereddit
