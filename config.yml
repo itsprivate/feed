@@ -714,7 +714,7 @@ sources:
     rules:
       - type: greaterEqual
         key: getWeightedScore
-        value: "85000"
+        value: "75000"
   - url: https://www.reddit.com/r/AskReddit/top/.json?raw_json=1
     type: reddit
     id: source-reddit-ask

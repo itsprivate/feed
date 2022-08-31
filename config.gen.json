@@ -961,7 +961,7 @@
         {
           "type": "greaterEqual",
           "key": "getWeightedScore",
-          "value": "85000"
+          "value": "75000"
         }
       ]
     },
