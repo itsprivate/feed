@@ -229,10 +229,14 @@ prod-decompresscache:
 
 .Phony: publish
 publish:
-	wrangler pages publish public/$(site) --project-name $(site)
+	wrangler pages publish public/$(site) --project-name dev-$(site)
 
 .Phony: prod-publish
 prod-publish:
+	wrangler pages publish prod-public/$(site) --project-name $(site)
+
+.Phony: prod-publishall
+prod-publishall:
 	make prod-build && PROD=1 deno run -A ./scripts/publish.ts
 
 .Phony: test
@@ -270,10 +274,6 @@ checkfmt:
 .Phony: fmt
 fmt:
 	deno fmt
-
-.Phony: test-file
-test-file:
-	mkdir -p current/4-data/devfeed/ && touch current/4-data/devfeed/test.json && mkdir -p archive/devfeed/tags/job/ && touch archive/devfeed/tags/job/test.json && mkdir -p public/devfeed && touch public/devfeed/index.html 
 
 .Phony: config
 config:

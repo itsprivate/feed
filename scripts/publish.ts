@@ -42,7 +42,7 @@ export default async function publishToPages() {
     );
 
     const p = Deno.run({
-      cmd: ["make", "publish", "site=" + siteIdentifier],
+      cmd: ["make", "prod-publish", "site=" + siteIdentifier],
     });
     const status = await p.status();
     log.info("publish status: ", status);
