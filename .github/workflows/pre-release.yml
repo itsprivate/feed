@@ -36,9 +36,9 @@ jobs:
       - name: Build Site
         run: make prod-build
       - name: zip current folder
-        run: zip -r -q current.zip ./current
+        run: zip -r -q prod-current.zip ./prod-current
       - name: zip public folder
-        run: zip -r -q public.zip public
+        run: zip -r -q prod-public.zip prod-public
       - name: Upload public, current to release assets
         uses: "marvinpinto/action-automatic-releases@v1.2.1"
         with:
@@ -47,5 +47,5 @@ jobs:
           prerelease: true
           title: "Development Build"
           files: |
-            current.zip
-            public.zip
+            prod-current.zip
+            prod-public.zip

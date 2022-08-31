@@ -97,7 +97,7 @@ jobs:
           exit 1
       - name: Publish pages
         if: true
-        run: make prod-publish
+        run: make prod-publishall
         env:
           SITE: ${{ github.event.inputs.site }}
           CLOUDFLARE_ACCOUNT_ID: ${{secrets.CLOUDFLARE_ACCOUNT_ID}}
