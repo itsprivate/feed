@@ -236,6 +236,10 @@
       .inline-block{
         display: block;
       }
+      .nsfw{
+        color: #d10023;
+        font-size:small;
+      }
       @media print{    
         .fixed{
             display: none;
@@ -318,7 +322,7 @@
     {{#items}}
     <article class="article h-entry hentry">
       <div class="mb">
-        <a class="p-name entry-title bold no-underline u-url" href="{{{url}}}">{{#order}}<span>{{ . }}. </span>{{/order}}{{{title}}}</a>
+        <a class="p-name entry-title bold no-underline u-url" href="{{{url}}}">{{#order}}<span>{{ . }}. </span>{{/order}}{{{title}}}</a>{{#_sensitive}}<span>&nbsp;(</span><span class="nsfw">NSFW</span><span>)</span>{{/_sensitive}}
       </div>
       <div class="p-summary entry-summary secondary pre-line small italic">{{{content_html}}}</div>
     </article>

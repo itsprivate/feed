@@ -451,66 +451,70 @@ export default class Item<T> {
     let summary = "";
     let content_text = "";
     let content_html = "";
-    if (!isLite && item._video) {
-      const sources = item._video.sources;
-      const height = item._video.height;
-      const width = item._video.width;
-      const poster = item._video.poster;
-      content_html = `<video playsinline controls preload="none"`;
-      if (width) {
-        content_html += ` width="${width}"`;
-      }
-      if (height) {
-        content_html += ` height="${height}"`;
-      }
-      if (poster) {
-        content_html += ` poster="${poster}"`;
-      }
-
-      content_html += `>`;
-      for (const source of sources) {
-        content_html += `<source src="${source.url}"`;
-        if (source.type) {
-          content_html += ` type="${source.type}"`;
+    const isSensitive = item._sensitive || false;
+    if (!isSensitive && !isLite) {
+      if (item._video) {
+        const sources = item._video.sources;
+        const height = item._video.height;
+        const width = item._video.width;
+        const poster = item._video.poster;
+        content_html = `<video playsinline controls preload="none"`;
+        if (width) {
+          content_html += ` width="${width}"`;
         }
+        if (height) {
+          content_html += ` height="${height}"`;
+        }
+        if (poster) {
+          content_html += ` poster="${poster}"`;
+        }
+
         content_html += `>`;
-      }
-      content_html += "your browser does not support the video tag.</video>";
-    } else if (!isLite && item._embed) {
-      // add embed code
-      const embedType = item._embed.type;
-      const embedProvider = item._embed.provider;
-      const embedUrl = item._embed.url;
-
-      if (embedType === "video" && embedProvider === "youtube" && embedUrl) {
-        const embedUrlObj = new URL(embedUrl);
-        const embedUrlParams = embedUrlObj.searchParams;
-        const embedUrlVideoId = embedUrlParams.get("v");
-        if (embedUrlVideoId) {
-          content_html += `<iframe
-          class="embed-video"
-          loading="lazy"
-          src="https://www.youtube.com/embed/${embedUrlVideoId}&autoplay=1"
-          srcdoc="<style>*{padding:0;margin:0;overflow:hidden}html,body{height:100%}img,span{position:absolute;width:100%;top:0;bottom:0;margin:auto}span{height:1.5em;text-align:center;font:48px/1.5 sans-serif;color:white;text-shadow:0 0 0.5em black}</style><a href=https://www.youtube.com/embed/${embedUrlVideoId}?autoplay=1><img src=https://img.youtube.com/vi/${embedUrlVideoId}/hqdefault.jpg loading='lazy' alt='Youtube Preview Image'><span>▶</span></a>"
-          frameborder="0"
-          allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-          allowfullscreen
-        ></iframe>`;
-        } else {
-          throw new Error("youtube video id not found: " + embedUrl);
+        for (const source of sources) {
+          content_html += `<source src="${source.url}"`;
+          if (source.type) {
+            content_html += ` type="${source.type}"`;
+          }
+          content_html += `>`;
         }
-      } else {
-        throw new Error(
-          "not supported embed type: " + embedProvider + embedType + " , " +
-            embedUrl,
-        );
-      }
-    } else if (!isLite && item.image) {
-      const imageUrl = new URL(item.image);
+        content_html += "your browser does not support the video tag.</video>";
+      } else if (item._embed) {
+        // add embed code
+        const embedType = item._embed.type;
+        const embedProvider = item._embed.provider;
+        const embedUrl = item._embed.url;
 
-      content_html +=
-        `<div><img loading="lazy" class="u-photo" src="${item.image}" alt="${imageUrl.hostname} image"></div>`;
+        if (embedType === "video" && embedProvider === "youtube" && embedUrl) {
+          const embedUrlObj = new URL(embedUrl);
+          const embedUrlParams = embedUrlObj.searchParams;
+          const embedUrlVideoId = embedUrlParams.get("v");
+          if (embedUrlVideoId) {
+            content_html += `<iframe
+            class="embed-video"
+            loading="lazy"
+            src="https://www.youtube.com/embed/${embedUrlVideoId}&autoplay=1"
+            srcdoc="<style>*{padding:0;margin:0;overflow:hidden}html,body{height:100%}img,span{position:absolute;width:100%;top:0;bottom:0;margin:auto}span{height:1.5em;text-align:center;font:48px/1.5 sans-serif;color:white;text-shadow:0 0 0.5em black}</style><a href=https://www.youtube.com/embed/${embedUrlVideoId}?autoplay=1><img src=https://img.youtube.com/vi/${embedUrlVideoId}/hqdefault.jpg loading='lazy' alt='Youtube Preview Image'><span>▶</span></a>"
+            frameborder="0"
+            allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen
+          ></iframe>`;
+          } else {
+            throw new Error("youtube video id not found: " + embedUrl);
+          }
+        } else {
+          throw new Error(
+            "not supported embed type: " + embedProvider + embedType + " , " +
+              embedUrl,
+          );
+        }
+      } else if (item.image) {
+        const imageUrl = new URL(item.image);
+
+        content_html +=
+          `<div><img loading="lazy" class="u-photo" src="${item.image}" alt="${imageUrl.hostname} image"></div>`;
+      }
     }
+
     content_html += ``;
     if (item._original_language !== language.code) {
       let finalTitle = originalTranslationObj.title;
