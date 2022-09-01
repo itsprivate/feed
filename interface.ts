@@ -151,6 +151,7 @@ export interface FormatedItem {
   _title_prefix?: string;
   _title_suffix?: string;
   _translations?: Record<string, Record<string, string>>;
+  _links: Link[];
 }
 type ValueOf<T> = T[keyof T];
 export type ItemKey = keyof FormatedItem;

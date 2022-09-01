@@ -315,6 +315,7 @@ export default class Item<T> {
       _original_published: this.getOriginalPublished(),
       _original_language: this.getOriginalLanguage(),
       _translations: translations,
+      _links: this.getLinks({ isUseHTML: true }),
     };
 
     const tags = this.getTags();
