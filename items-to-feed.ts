@@ -187,8 +187,8 @@ export default function itemsToFeed(
     "version": "https://jsonfeed.org/version/1",
     "title": siteTitle,
     "description": siteDescription,
-    "icon": config.icon,
-    "favicon": config.favicon,
+    "icon": siteIdentifierToUrl(siteIdentifier, "/icon.png", config),
+    "favicon": siteIdentifierToUrl(siteIdentifier, "/favicon.ico", config),
     "language": language.code,
     "_site_version": version.code,
     "home_page_url": siteIdentifierToUrl(

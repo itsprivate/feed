@@ -16,7 +16,6 @@ import {
   writeJSONFile,
   writeTextFile,
 } from "../util.ts";
-import generateIcons from "../generate-icons.ts";
 import log from "../log.ts";
 import feedToHTML from "../feed-to-html.ts";
 import { indexSubDomain } from "../constant.ts";
@@ -67,8 +66,8 @@ export default async function buildSite(options: RunOptions) {
       "version": "https://jsonfeed.org/version/1",
       "title": currentIndexTranslations.title,
       "description": currentIndexTranslations.description,
-      "icon": config.icon,
-      "favicon": config.favicon,
+      "icon": siteIdentifierToUrl(indexSubDomain, "/icon.png", config),
+      "favicon": siteIdentifierToUrl(indexSubDomain, "/favicon.ico", config),
       "language": language.code,
       "_site_version": "default",
       "home_page_url": siteIdentifierToUrl(
@@ -211,14 +210,6 @@ export default async function buildSite(options: RunOptions) {
       config.versions.slice(0, 1),
     );
     await writeTextFile(indexPath, indexHTML);
-
-    // copy static files
-    try {
-      await generateIcons(indexSubDomain);
-    } catch (e) {
-      log.error("can not generate icons for ", indexSubDomain);
-      throw e;
-    }
 
     // latest item date_modified is greater Monday
     // we will run archive task, try to archive all items of their week

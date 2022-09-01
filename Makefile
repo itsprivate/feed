@@ -323,3 +323,8 @@ prod-zipuploadarchive:
 # after upload to dufs
 # cd ~/storage
 # unzip -q archive.zip
+
+
+.Phony: generateassets
+generateassets:
+	deno run -A ./scripts/generate-assets.ts

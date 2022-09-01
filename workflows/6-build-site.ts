@@ -2,19 +2,16 @@ import { jsonfeedToAtom, path } from "../deps.ts";
 import { ItemsJson, RunOptions } from "../interface.ts";
 import itemsToFeed from "../items-to-feed.ts";
 import {
-  getChangedSitePaths,
   getCurrentItemsFilePath,
   getDataCurrentItemsPath,
   getDistFilePath,
   getDistPath,
-  isDev,
   pathToSiteIdentifier,
   readJSONFile,
   siteIdentifierToPath,
   writeJSONFile,
   writeTextFile,
 } from "../util.ts";
-import generateIcons from "../generate-icons.ts";
 import log from "../log.ts";
 import feedToHTML from "../feed-to-html.ts";
 import generateRedirects from "../generate-redirects.ts";
@@ -160,14 +157,6 @@ export default async function buildSite(options: RunOptions) {
             config.versions,
           );
           await writeTextFile(indexPath, indexHTML);
-
-          // copy static files
-          try {
-            await generateIcons(siteIdentifier);
-          } catch (e) {
-            log.error("can not generate icons for ", siteIdentifier);
-            throw e;
-          }
         }
       }
       log.info(
