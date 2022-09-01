@@ -755,7 +755,7 @@ sources:
     rules:
       - type: greaterEqual
         key: getWeightedScore
-        value: "75000"
+        value: "55000"
   - url: https://www.reddit.com/r/AskReddit/top/.json?raw_json=1
     type: reddit
     id: source-reddit-ask
@@ -925,14 +925,14 @@ sources:
     rules:
       - type: greaterEqual
         key: getWeightedScore
-        value: "30"
+        value: "5"
   - id: source-reddit-videos
     type: reddit
     url: https://www.reddit.com/r/videos/top/.json?raw_json=1
     rules:
       - type: greaterEqual
         key: getWeightedScore
-        value: "80"
+        value: "50"
 social_links:
   - name: Twitter @BuzzingCC
     url: https://twitter.com/buzzingcc
