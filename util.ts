@@ -2,7 +2,6 @@ import {
   camelCase,
   DateTimeFormatter,
   DigestClient,
-  dotenvConfig,
   fs,
   kebabCase,
   mustache,
@@ -13,11 +12,7 @@ import {
   YAML,
 } from "./deps.ts";
 import { NotFound } from "./error.ts";
-import {
-  DEV_MODE_HANDLED_ITEMS,
-  ROOT_DOMAIN,
-  TARGET_SITE_LANGUAEGS,
-} from "./constant.ts";
+import { DEV_MODE_HANDLED_ITEMS, ROOT_DOMAIN } from "./constant.ts";
 import log from "./log.ts";
 import {
   Config,
@@ -26,6 +21,7 @@ import {
   PageMeta,
   ParsedArchiveUrl,
   ParsedFilename,
+  ParsedFilenameWithTime,
   SiteConfig,
   UrlInfo,
   Version,
@@ -95,7 +91,8 @@ export const getFeedSiteIdentifiers = (config: Config) => {
   const keys = Object.keys(sitesMap);
   const siteIdentifiers = keys.filter((key) => {
     const site = sitesMap[key];
-    return !(site.dev);
+
+    return !(site.dev) && !(site.standalone);
   });
   return siteIdentifiers;
 };
@@ -281,17 +278,13 @@ export const urlToSiteIdentifier = (url: string, config: Config) => {
   const urlObj = new URL(url);
 
   if (urlObj.hostname === "localhost") {
-    if (Number(config.archive?.port) === Number(urlObj.port)) {
-      return config.archive.siteIdentifier!;
-    } else {
-      for (const siteDdentifier in config.sites) {
-        const siteConfig = config.sites[siteDdentifier];
-        if (Number(siteConfig.port) === Number(urlObj.port)) {
-          return siteDdentifier;
-        }
+    for (const siteDdentifier in config.sites) {
+      const siteConfig = config.sites[siteDdentifier];
+      if (Number(siteConfig.port) === Number(urlObj.port)) {
+        return siteDdentifier;
       }
-      throw new Error("Cannot find siteIdentifier for " + url);
     }
+    throw new Error("Cannot find siteIdentifier for " + url);
   } else {
     let hostname = urlObj.hostname;
     if (urlObj.hostname.startsWith("dev-")) {
@@ -306,13 +299,10 @@ export const siteIdentifierToUrl = (
   config: Config,
 ): string => {
   let port: number;
-  if (siteIdentifier === "i") {
-    // archive site
-    port = config.archive.port || 9000;
-  } else {
-    const siteConfig = config.sites[siteIdentifier];
-    port = siteConfig.port || 8000;
-  }
+
+  const siteConfig = config.sites[siteIdentifier];
+  port = siteConfig.port || 8000;
+
   // pathname add start slash
   if (!pathname.startsWith("/")) {
     pathname = "/" + pathname;
@@ -563,9 +553,9 @@ export function getArchivedBucketName() {
 }
 export function getArchiveSitePrefix(config: Config) {
   if (isDev()) {
-    return `http://localhost:${config.archive.port}`;
+    return `http://localhost:${config.sites.i.port}`;
   } else {
-    return `https://${config.archive.siteIdentifier}.${ROOT_DOMAIN}`;
+    return `https://i.${ROOT_DOMAIN}`;
   }
 }
 export const getCurrentTranslations = function (
@@ -611,6 +601,17 @@ export const getGeneralTranslations = function (
 
   return currentTranslations;
 };
+export function resortSites(siteIdentifiers: string[], config: Config) {
+  // by priority
+  // lower is more priority
+  const sitesMap = config.sites;
+  const sortedSites = siteIdentifiers.sort((a, b) => {
+    const aPriority = sitesMap[a].priority ?? 50;
+    const bPriority = sitesMap[b].priority ?? 50;
+    return aPriority - bPriority;
+  });
+  return sortedSites;
+}
 export const resortArchiveKeys = function (currentArchive: string[]): string[] {
   // write currentArchive file
   // resort currentArchive by time
@@ -771,49 +772,7 @@ export function postToUrl(
     getArchiveSitePrefix(config)
   }/${language.prefix}${version.prefix}${siteIdentifier}/posts/${week.path}/${id}/`;
 }
-// export function parsePageUrl(urlStr: string) {
-//   const url = new URL(urlStr);
-//   // get language code
-//   const langField = url.pathname.split("/")[1];
-//   // check if language code is valid
-//   let language = TARGET_SITE_LANGUAEGS[0];
-//   let pathname = url.pathname;
-//   for (const targetLang of TARGET_SITE_LANGUAEGS) {
-//     let prefix = targetLang.prefix;
-//     // remove trailing slash
-//     if (prefix.endsWith("/")) {
-//       prefix = prefix.slice(0, -1);
-//     }
-//     if (prefix === langField) {
-//       language = targetLang;
-//       pathname = url.pathname.slice(targetLang.prefix.length);
-//       break;
-//     }
-//   }
 
-//   // support version lite
-
-//   const versionField = pathname.split("/")[1];
-//   let version = "current";
-//   if (versionField === "lite") {
-//     version = "lite";
-//     pathname = pathname.slice("/lite".length);
-//     // add start slash
-//     if (!pathname.startsWith("/")) {
-//       pathname = "/" + pathname;
-//     }
-//   }
-
-//   const newUrl = new URL(url);
-//   newUrl.pathname = pathname;
-
-//   return {
-//     language: language,
-//     pathname: pathname,
-//     url: newUrl.href,
-//     version: version,
-//   };
-// }
 export const formatNumber = (num: number): string => {
   const formatter = Intl.NumberFormat("en", { notation: "compact" });
   return formatter.format(num);
@@ -960,6 +919,45 @@ export function parseItemIdentifier(
     year,
     month,
     day,
+  };
+}
+
+export function parseItemIdentifierWithTime(
+  fileBasename: string,
+): ParsedFilenameWithTime {
+  // remove extension
+  let filename = fileBasename;
+  if (filename.endsWith(".json")) {
+    filename = filename.slice(0, -5);
+  }
+  const parts = filename.split("__");
+  // first will be safe part, other will be the id parts
+  const safePart = parts[0];
+  const symParts = safePart.split("_");
+  const language = symParts[0];
+  const type = symParts[1];
+  const year = symParts[2];
+  const month = symParts[3];
+  const day = symParts[4];
+  const hour = symParts[5];
+  const minute = symParts[6];
+  const second = symParts[7];
+  const millisecond = symParts[8];
+  const order = symParts[9];
+  const idParts = parts.slice(1);
+  const id = idParts.join("__");
+  return {
+    id,
+    language,
+    type,
+    year,
+    month,
+    day,
+    hour,
+    minute,
+    second,
+    millisecond,
+    order,
   };
 }
 export function identifierToCachedKey(identifier: string): string {

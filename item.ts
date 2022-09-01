@@ -34,7 +34,6 @@ import { DOMParser, getMetadata, tweetPatch } from "./deps.ts";
 import log from "./log.ts";
 export default class Item<T> {
   originalItem: T;
-  private now: Date = new Date();
   private image: string | null | undefined;
   private realUrl: string | null | undefined;
   constructor(originalItem: T) {
@@ -48,6 +47,14 @@ export default class Item<T> {
 
   getItemIdentifier(): string {
     return `${this.getOriginalLanguage()}_${this.getType()}_${this.getPublishedYear()}_${this.getPublishedMonth()}_${this.getPublishedDay()}__${this.getId()}`;
+  }
+  getItemIdentifierWithTime(order: number): string {
+    const publishedDate = this.getPublishedDate();
+    const hour = publishedDate.getHours();
+    const minute = publishedDate.getMinutes();
+    const second = publishedDate.getSeconds();
+    const millisecond = publishedDate.getMilliseconds();
+    return `${this.getOriginalLanguage()}_${this.getType()}_${this.getPublishedYear()}_${this.getPublishedMonth()}_${this.getPublishedDay()}_${hour}_${minute}_${second}_${millisecond}_${order}__${this.getId()}`;
   }
   getCachedKey(): string {
     return `${this.getOriginalLanguage()}_${this.getType()}__${this.getId()}`;
@@ -83,7 +90,7 @@ export default class Item<T> {
     return this.getPublishedDate().toISOString();
   }
   getPublishedDate(): Date {
-    return this.now;
+    return new Date();
   }
 
   getPublishedYear(): string {
@@ -96,7 +103,7 @@ export default class Item<T> {
     return getFullDay(this.getPublishedDate());
   }
   getModifiedDate(): Date {
-    return this.now;
+    return new Date();
   }
   getModified(): string {
     return this.getModifiedDate().toISOString();
@@ -243,13 +250,13 @@ export default class Item<T> {
     return undefined;
   }
 
-  getRawPath(targetSiteIdentifiers: string[]): string {
+  getRawPath(targetSiteIdentifiers: string[], order: number): string {
     if (targetSiteIdentifiers.length === 0) {
       throw new Error("targetSiteIdentifiers can not be empty");
     }
     return `${getDataRawPath()}/${this.getModifiedYear()}/${this.getModifiedMonth()}/${this.getModifiedDay()}/${
       targetSiteIdentifiers.join("_")
-    }/${this.getItemIdentifier()}.json`;
+    }/${this.getItemIdentifierWithTime(order)}.json`;
   }
   getRawItem(): T {
     return this.originalItem;

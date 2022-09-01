@@ -1,4 +1,4 @@
-import { fs, path } from "../deps.ts";
+import { fs } from "../deps.ts";
 import {
   getChangedSitePaths,
   getDistPath,
@@ -6,6 +6,7 @@ import {
   readJSONFile,
 } from "../util.ts";
 import log from "../log.ts";
+import { indexSubDomain } from "../constant.ts";
 export default async function publishToPages() {
   // walk dist folder
   await fs.ensureDir(getDistPath());
@@ -20,7 +21,7 @@ export default async function publishToPages() {
   }
   if (changedSites) {
     log.info(`got changed sites: ${changedSites}`);
-    siteIdentifiers = changedSites;
+    siteIdentifiers = changedSites.concat(indexSubDomain);
   } else {
     log.info(`no changed sites file, scan all sites`);
 

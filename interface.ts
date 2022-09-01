@@ -44,6 +44,8 @@ export interface SiteConfig extends GeneralSiteConfig {
   domain?: string;
   archive?: boolean;
   translations?: Record<string, Record<string, string>>;
+  standalone?: boolean;
+  priority?: number;
 }
 export interface WeekOfYear {
   year: number;
@@ -71,6 +73,7 @@ export interface Version {
 export interface Config {
   icon: string;
   favicon: string;
+  advice_url: string;
   root_domain: string;
   translated_items_per_page: number;
   max_files_per_site: number;
@@ -78,7 +81,6 @@ export interface Config {
   sources: Source[];
   sites: Record<string, SiteConfig>;
   translations: Record<string, Record<string, string>>;
-  archive: ArchiveSiteConfig;
   dev: DevOverwrite;
   page_size: number;
   languages: Language[];
@@ -100,7 +102,13 @@ export interface ParsedFilename {
   month: string;
   day: string;
 }
-
+export interface ParsedFilenameWithTime extends ParsedFilename {
+  hour: string;
+  minute: string;
+  second: string;
+  millisecond: string;
+  order: string;
+}
 export interface Task {
   meta: Record<string, string>;
   type: string;

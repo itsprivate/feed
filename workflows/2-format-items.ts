@@ -10,7 +10,7 @@ import {
   getTargetSiteIdentifiersByFilePath,
   identifierToCachedKey,
   isDev,
-  parseItemIdentifier,
+  parseItemIdentifierWithTime,
   readJSONFile,
   writeJSONFile,
 } from "../util.ts";
@@ -22,11 +22,10 @@ export default async function formatItems(
   // is exists raw files folder
   await fs.ensureDir(getDataRawPath());
   const sites = options.siteIdentifiers || [];
-  const { files, targetSiteIdentifiers } =
-    await getFilesByTargetSiteIdentifiers(
-      getDataRawPath(),
-      sites,
-    );
+  let { files, targetSiteIdentifiers } = await getFilesByTargetSiteIdentifiers(
+    getDataRawPath(),
+    sites,
+  );
 
   let total = 0;
   if (files.length > 0) {
@@ -104,10 +103,42 @@ export default async function formatItems(
     );
 
     log.info(`start formating, ${files.length} files`);
+
+    // resort files by time, old to time, cause published time will be old to new
+    files = files.sort((a, b) => {
+      const aParsed = parseItemIdentifierWithTime(path.basename(a, ".json"));
+      const bParsed = parseItemIdentifierWithTime(path.basename(b, ".json"));
+      const aOrder = Number(aParsed.order);
+      const bOrder = Number(bParsed.order);
+      const aTime = new Date(
+        Date.UTC(
+          Number(aParsed.year),
+          Number(aParsed.month),
+          Number(aParsed.day),
+          Number(aParsed.hour),
+          Number(aParsed.minute),
+          Number(aParsed.second),
+          Number(aParsed.millisecond),
+        ),
+      ).getTime();
+      const bTime = new Date(
+        Date.UTC(
+          Number(bParsed.year),
+          Number(bParsed.month),
+          Number(bParsed.day),
+          Number(bParsed.hour),
+          Number(bParsed.minute),
+          Number(bParsed.second),
+          Number(bParsed.millisecond),
+        ),
+      ).getTime();
+      return (aTime + aOrder) - (bTime + bOrder);
+    });
+
     for (const file of files) {
       const filenmae = path.basename(file);
       const targetSiteIdentifiers = getTargetSiteIdentifiersByFilePath(file);
-      const parsedFilename = parseItemIdentifier(filenmae);
+      const parsedFilename = parseItemIdentifierWithTime(filenmae);
       const originalItem = await readJSONFile(file) as Record<
         string,
         unknown

@@ -7,18 +7,22 @@ import {
   isDev,
   issueToUrl,
   parsePageUrl,
+  resortSites,
   siteIdentifierToUrl,
   tagToUrl,
   urlToLanguageUrl,
   urlToSiteIdentifier,
   urlToVersionUrl,
 } from "./util.ts";
-import { Config, Feedjson } from "./interface.ts";
+import { Config, Feedjson, Language, Version } from "./interface.ts";
 import { mustache } from "./deps.ts";
+import { archiveSubDomain, indexSubDomain } from "./constant.ts";
 export default function feedToHTML(
   feedJson: Feedjson,
   config: Config,
   indexTemplateString: string,
+  languages: Language[],
+  versions: Version[],
 ): string {
   const sitesMap = config.sites;
   const homepage = feedJson.home_page_url;
@@ -29,7 +33,7 @@ export default function feedToHTML(
   let siteConfig = sitesMap[siteIdentifier] || {};
   let isArchive = false;
 
-  if (siteIdentifier === config.archive.siteIdentifier) {
+  if (siteIdentifier === archiveSubDomain) {
     isArchive = true;
   }
   if (isArchive) {
@@ -43,13 +47,11 @@ export default function feedToHTML(
   if (!languageCode) {
     throw new Error(`language code not found for feedjson`);
   }
-  const languages = config.languages;
   const language = languages.find((lang) => lang.code === languageCode);
   if (!language) {
     throw new Error(`language code ${languageCode} not found`);
   }
 
-  const versions = config.versions;
   const versionCode = feedJson._site_version;
   const version = versions.find((version) => version.code === versionCode);
   if (!version) {
@@ -87,6 +89,7 @@ export default function feedToHTML(
     const newItem = { ...item };
     // @ts-ignore: add meta data
     newItem.active = item.code === language.code;
+
     // @ts-ignore: add meta data
     newItem.url = urlToLanguageUrl(
       homepage,
@@ -97,30 +100,40 @@ export default function feedToHTML(
     return newItem;
   });
   // related sites is has common tags sites
-  const otherSites: string[] = [];
-  const relatedSites = getFeedSiteIdentifiers(config).filter((site) => {
-    const siteTags = sitesMap[site].tags;
-    const currentSiteTags = feedJson._site_tags;
-    if (sitesMap[site].dev === true) {
-      return false;
-    }
-    // ignore self
-    if (site === siteIdentifier) {
-      return false;
-    }
-    if (siteTags && currentSiteTags) {
-      const isRelated = siteTags.some((tag) => currentSiteTags.includes(tag));
-      if (isRelated) {
-        return true;
-      } else {
-        otherSites.push(site);
-        return false;
-      }
-    } else {
-      otherSites.push(site);
-      return false;
-    }
-  });
+  let otherSites: string[] = [];
+  let relatedSites = getFeedSiteIdentifiers(config).concat(indexSubDomain)
+    .filter(
+      (site) => {
+        const siteTags = sitesMap[site].tags;
+
+        const currentSiteTags = feedJson._site_tags;
+        if (sitesMap[site].dev === true) {
+          return false;
+        }
+        // ignore self
+        if (site === siteIdentifier) {
+          return false;
+        }
+
+        if (siteTags && siteTags.includes("all")) {
+          return true;
+        }
+        if (siteTags && currentSiteTags) {
+          const isRelated = siteTags.some((tag) =>
+            currentSiteTags.includes(tag)
+          );
+          if (isRelated) {
+            return true;
+          } else {
+            otherSites.push(site);
+            return false;
+          }
+        } else {
+          otherSites.push(site);
+          return false;
+        }
+      },
+    );
   // resort ,self is no.1
   // relatedSites.sort((a, b) => {
   //   if (a === siteIdentifier) {
@@ -132,6 +145,9 @@ export default function feedToHTML(
   //   return 0;
   // });
 
+  // resort
+  relatedSites = resortSites(relatedSites, config);
+  otherSites = resortSites(otherSites, config);
   //@ts-ignore: add meta data
   feedJson._related_sites = relatedSites.map(
     (item, index) => {
@@ -172,7 +188,7 @@ export default function feedToHTML(
   // @ts-ignore: add meta data
   feedJson._site_url = siteUrl;
   // @ts-ignore: add meta data
-  feedJson._versions = config.versions.map((item) => {
+  feedJson._versions = versions.map((item) => {
     const newItem = { ...item };
 
     newItem.name = currentTranslations[item.name] || item.name;
@@ -216,7 +232,7 @@ export default function feedToHTML(
   // @ts-ignore: add meta data
   feedJson._other_sites.push({
     name: currentTranslations.advice_label,
-    url: "https://t.me/joinchat/GVK5UiDwPUAwMjkx",
+    url: config.advice_url,
     is_last: true,
   });
 

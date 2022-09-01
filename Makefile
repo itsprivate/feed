@@ -57,9 +57,13 @@ runall:
 .Phony: serve
 serve:
 	deno run -A --watch=main.ts,templates/,config.yml main.ts --site devfeed --stage build_site,serve_site
+
+.Phony: serveindex
+serveindex:
+	deno run -A --watch=main.ts,templates/,config.yml main.ts --stage build_index_site,serve_site
 .Phony: serveall
 serveall:
-	deno run -A --watch=main.ts,templates/,config.yml main.ts --stage build_site,serve_site
+	deno run -A main.ts --stage build_site,build_index_site,serve_site
 
 .Phony: servesite
 servesite:

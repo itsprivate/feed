@@ -12,8 +12,9 @@ import fetchSources from "./workflows/1-fetch-sources.ts";
 import formatItems from "./workflows/2-format-items.ts";
 import translateItems from "./workflows/3-translate-items.ts";
 import buildCurrent from "./workflows/4-build-current.ts";
-import archive from "./workflows/5-archive.ts";
+// import archive from "./workflows/5-archive.ts";
 import buildSite from "./workflows/6-build-site.ts";
+import buildIndexSite from "./workflows/7_0-build-index-site.ts";
 import serveSite from "./workflows/7-serve-site.ts";
 import { RunOptions, Task } from "./interface.ts";
 import buildConfig from "./build-config.ts";
@@ -33,17 +34,19 @@ export default async function main() {
       "format",
       "translate",
       "build_current",
-      "archive",
+      // "archive",
     ]);
   } else if (args.build) {
     // only build stage
     stage = stage.concat([
       "build_site",
+      "build_index_site",
     ]);
   } else if (args.serve) {
     // only build stage
     stage = stage.concat([
       "build_site",
+      "build_index_site",
       "serve_site",
     ]);
   } else {
@@ -54,6 +57,7 @@ export default async function main() {
       "build_current",
       "archive",
       "build_site",
+      "build_index_site",
     ]);
     if (isDev()) {
       stage.push("serve_site");
@@ -85,6 +89,10 @@ export default async function main() {
       return (sites as string[]).includes(siteIdentifier);
     });
   }
+  // filter
+  siteIdentifiers = siteIdentifiers.filter((siteIdentifier) => {
+    return !sitesMap[siteIdentifier].standalone;
+  });
   log.info("sites: ", siteIdentifiers, "with stage:", stage);
 
   const runOptions: RunOptions = { siteIdentifiers: siteIdentifiers, config };
@@ -121,13 +129,13 @@ export default async function main() {
       log.info("skip build_current stage");
     }
 
-    // 5. archive items
-    if (stage.includes("archive")) {
-      log.info(`start archive items`);
-      await archive(runOptions);
-    } else {
-      log.info("skip archive stage");
-    }
+    // // 5. archive items
+    // if (stage.includes("archive")) {
+    //   log.info(`start archive items`);
+    //   await archive(runOptions);
+    // } else {
+    //   log.info("skip archive stage");
+    // }
 
     // 6. build site
     if (stage.includes("build_site")) {
@@ -150,6 +158,15 @@ export default async function main() {
     }
   }
 
+  // build index
+
+  if (stage.includes("build_index_site")) {
+    log.info(`start build index site`);
+    await buildIndexSite(runOptions);
+  } else {
+    log.info("skip build_index_site stage");
+  }
+
   // 7. serve site
   if (
     stage.includes("serve_site") &&
@@ -159,6 +176,10 @@ export default async function main() {
     for (const siteIdentifier of siteIdentifiers) {
       const siteConfig = sitesMap[siteIdentifier];
       serveSite(siteIdentifier, siteConfig.port || 8000);
+    }
+
+    if (stage.includes("build_index_site")) {
+      serveSite("www", config.sites.www.port || 9001);
     }
   } else {
     log.info("skip serve_site stage");

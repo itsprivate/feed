@@ -16,7 +16,6 @@ import {
 } from "../util.ts";
 import generateIcons from "../generate-icons.ts";
 import log from "../log.ts";
-import { TARGET_SITE_LANGUAEGS } from "../constant.ts";
 import feedToHTML from "../feed-to-html.ts";
 import generateRedirects from "../generate-redirects.ts";
 import copyStaticAssets from "../copy-static-assets.ts";
@@ -27,27 +26,28 @@ export default async function buildSite(options: RunOptions) {
   const indexTemplateString = await Deno.readTextFile(
     "./templates/index.html.mu",
   );
-  let changedSites: string[] | undefined;
-  try {
-    const changedSitesPath = getChangedSitePaths();
-    changedSites = await readJSONFile(changedSitesPath);
-  } catch (e) {
-    log.debug(`read changedSitesPath json file error:`, e);
-  }
-  if (changedSites && !isDev()) {
-    log.info(`got changed sites: ${changedSites}`);
-    siteIdentifiers = changedSites;
-  } else {
-    log.info(`no changed sites file, scan all sites`);
+  // build all sites cause buzzing index need it.
+  // let changedSites: string[] | undefined;
+  // try {
+  //   const changedSitesPath = getChangedSitePaths();
+  //   changedSites = await readJSONFile(changedSitesPath);
+  // } catch (e) {
+  //   log.debug(`read changedSitesPath json file error:`, e);
+  // }
+  // if (changedSites && !isDev()) {
+  //   log.info(`got changed sites: ${changedSites}`);
+  //   siteIdentifiers = changedSites;
+  // } else {
+  //   log.info(`no changed sites file, scan all sites`);
 
-    for await (const dirEntry of Deno.readDir(currentDataPath)) {
-      if (dirEntry.isDirectory && !dirEntry.name.startsWith(".")) {
-        // only build changed folder
+  for await (const dirEntry of Deno.readDir(currentDataPath)) {
+    if (dirEntry.isDirectory && !dirEntry.name.startsWith(".")) {
+      // only build changed folder
 
-        siteIdentifiers.push(pathToSiteIdentifier(dirEntry.name));
-      }
+      siteIdentifiers.push(pathToSiteIdentifier(dirEntry.name));
     }
   }
+  // }
 
   const sites = options.siteIdentifiers;
   if (sites && Array.isArray(sites)) {
@@ -88,7 +88,7 @@ export default async function buildSite(options: RunOptions) {
 
     if (currentItemsJsonKeys.length > 0) {
       // multiple languages support
-      const languages = TARGET_SITE_LANGUAEGS;
+      const languages = config.languages;
       const versions = config.versions;
       for (const language of languages) {
         for (const version of versions) {
@@ -156,6 +156,8 @@ export default async function buildSite(options: RunOptions) {
             feedJson,
             config,
             indexTemplateString,
+            config.languages,
+            config.versions,
           );
           await writeTextFile(indexPath, indexHTML);
 

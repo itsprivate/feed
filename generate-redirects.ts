@@ -1,21 +1,19 @@
 import issueMap from "./migrations/issue-map.json" assert { type: "json" };
 import { Config } from "./interface.ts";
-import { TARGET_SITE_LANGUAEGS } from "./constant.ts";
-import log from "./log.ts";
+import { archiveSubDomain } from "./constant.ts";
 import { getDistFilePath, writeTextFile } from "./util.ts";
 export default async function generateRedirects(
   siteIdentifier: string,
   config: Config,
 ) {
-  const siteConfig = config.sites[siteIdentifier];
   const rootDomain = config.root_domain;
-  const archiveDomain = config.archive.siteIdentifier;
+  const archiveDomain = archiveSubDomain;
   let redirects = ``;
   // if (siteConfig.redirect !== true) {
   //   log.info(`skip generate redirects for ${siteIdentifier}`);
   //   return;
   // }
-  for (const language of TARGET_SITE_LANGUAEGS) {
+  for (const language of config.languages) {
     const targetPrefix =
       `https://${archiveDomain}.${rootDomain}/${language.prefix}${siteIdentifier}`;
 

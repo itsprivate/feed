@@ -4,37 +4,7 @@ root_domain: buzzing.cc
 page_size: 200
 translated_items_per_page: 100
 max_files_per_site: -1
-social_links:
-  - name: Twitter @BuzzingCC
-    url: https://twitter.com/buzzingcc
-  - name: "Telegram @buzzingcc"
-    url: "https://t.me/buzzingcc"
-  - name: "Twitter @Hacker News 中文精选"
-    url: "https://twitter.com/HackerNewsZh"
-  - name: "Twitter @国外新闻 Bot"
-    url: "https://twitter.com/NewsBotZh"
-  - name: Twitter @问Reddit
-    url: https://twitter.com/AskRedditZh
-  - name: 加入 Telegram 讨论群
-    url: https://t.me/joinchat/GVK5UiDwPUAwMjkx
-
-versions:
-  - prefix: ""
-    code: "default"
-    name: "Default"
-  - prefix: "lite/"
-    code: "lite"
-    name: "Lite"
-dev:
-  max_files_per_site: 4
-  translated_items_per_page: 2
-languages:
-  [
-    { code: "zh-Hans", name: "简体中文", prefix: "" },
-    { code: "zh-Hant", name: "繁体中文", prefix: "zh-Hant/" },
-    { code: "en", name: "English", prefix: "en/" },
-    { code: "ja", name: "日本語", prefix: "ja/" },
-  ]
+advice_url: "https://t.me/joinchat/GVK5UiDwPUAwMjkx"
 translations:
   zh-Hans:
     about_label: 关于
@@ -57,6 +27,7 @@ translations:
     latest_build_at_lable: 最后更新于
     social_label: 社交媒体
     advice_label: 提议更多喜欢的站点?
+    more_posts_label: 剩余 {{count}} 篇...
   en:
     about_label: About
     subscription_label: Subscription
@@ -75,6 +46,7 @@ translations:
     latest_build_at_lable: Latest updated at
     social_label: Social
     advice_label: Suggest a new site?
+    more_posts_label: "{{count}} more..."
   ja:
     about_label: このページについて
     subscription_label: 購読
@@ -93,11 +65,41 @@ translations:
     latest_build_at_lable: 最終更新日
     social_label: ソーシャル
     advice_label: 新しいサイトを提案しますか?
-archive:
-  port: 9000
-  siteIdentifier: i
-  tags: []
+    more_posts_label: "{{count}}件のその他..."
+
 sites:
+  i:
+    port: 9000
+    standalone: true
+    tags: []
+  www:
+    port: 9001
+    standalone: true
+    priority: 0
+    tags:
+      - all
+      - www
+    translations:
+      "zh-Hans":
+        title: "Buzzing"
+        short_title: "Buzzing 首页"
+        description: "用中文浏览国外社交媒体里的热门讨论，母语快速导读， 感兴趣再进原文深度阅读"
+        keywords: "HackerNews 头条, Hacker News 中文, Hacker News Story"
+      "en":
+        title: "Hacker News Front Page"
+        short_title: "HN Front Page"
+        description: "Hacker News Front Page Feed"
+        keywords: "HackerNews 头条, Hacker News 中文, Hacker News Story"
+      "ja":
+        title: "Hacker News トップ"
+        short_title: "HN トップ"
+        description: "Hacker News トップのニュース"
+        keywords: "HackerNews 头条, Hacker News 中文, Hacker News Story"
+      "zh-Hant":
+        title: "Hacker News 首頁"
+        short_title: "HN 首頁"
+        description: "用中文浏览Hacker News 首頁最新文章"
+        keywords: "HackerNews 头条, Hacker News 中文, Hacker News Story"
   devfeed:
     redirect: true
     port: 8000
@@ -113,6 +115,7 @@ sites:
 
   hnfront:
     port: 8001
+    priority: 19
     tags:
       - hn
       - source-hackernews-index
@@ -138,10 +141,12 @@ sites:
         description: "用中文浏览Hacker News 首頁最新文章"
         keywords: "HackerNews 头条, Hacker News 中文, Hacker News Story"
   hn:
+    priority: 10
     port: 8002
     redirect: true
     tags:
       - hn
+      - www
       - source-hackernews-best
     translations:
       zh-Hans:
@@ -194,6 +199,7 @@ sites:
 
   showhn:
     port: 8004
+    priority: 20
     tags:
       - hn
       - source-hackernews-show
@@ -221,10 +227,12 @@ sites:
 
   reddit:
     port: 8005
+    priority: 15
     redirect: true
     max_image_height: 520
     tags:
       - reddit
+      - www
       - source-reddit-top
     translations:
       zh-Hans:
@@ -250,6 +258,7 @@ sites:
 
   ask:
     port: 8007
+    priority: 18
     redirect: true
     tags:
       - reddit
@@ -279,9 +288,11 @@ sites:
   stocks:
     port: 8008
     redirect: true
+    priority: 13
     tags:
       - reddit
       - finance
+      - www
       - source-reddit-stocks
       - source-twitter-stocks
       - source-reddit-wallstreetbets
@@ -311,10 +322,12 @@ sites:
         keywords: "buzzing,米国株式市場"
   news:
     port: 8006
+    priority: 11
     archive: true
     redirect: true
     tags:
       - news
+      - www
       - source-google-news
     translations:
       zh-Hans:
@@ -343,6 +356,7 @@ sites:
     max_image_height: 360
     port: 8009
     archive: true
+    priority: 18
     redirect: true
     tags:
       - tech
@@ -372,6 +386,7 @@ sites:
     port: 8010
     archive: true
     redirect: true
+    priority: 100
     tags:
       - tech
       - source-crypto-reddit
@@ -428,6 +443,7 @@ sites:
   quora:
     port: 8012
     archive: true
+    priority: 102
     redirect: true
     tags:
       - ask
@@ -457,9 +473,11 @@ sites:
     port: 8013
     archive: true
     redirect: true
+    priority: 17
     tags:
       - depth
       - source-reddit-depth
+      - www
     translations:
       zh-Hans:
         title: 深度思考
@@ -514,6 +532,7 @@ sites:
     port: 8015
     archive: true
     redirect: true
+    priority: 90
     tags:
       - depth
       - news
@@ -543,6 +562,7 @@ sites:
     port: 8016
     archive: true
     redirect: true
+    priority: 90
     tags:
       - depth
       - news
@@ -572,6 +592,7 @@ sites:
     port: 8017
     archive: true
     redirect: true
+    priority: 20
     max_image_height: 360
     tags:
       - sideproject
@@ -600,6 +621,7 @@ sites:
   hnnew:
     port: 8018
     redirect: true
+    priority: 16
     archive: true
     tags:
       - hn
@@ -654,8 +676,10 @@ sites:
     port: 8020
     archive: true
     redirect: false
+    priority: 14
     tags:
       - videos
+      - www
       - reddit
       - source-reddit-videos
       - source-reddit-mealtimevideos
@@ -675,6 +699,23 @@ sites:
         short_title: ビデオ
         description: 人気のビデオ記事を日本語で閲覧
         keywords: "buzzing,ビデオ"
+versions:
+  - prefix: ""
+    code: "default"
+    name: "Default"
+  - prefix: "lite/"
+    code: "lite"
+    name: "Lite"
+dev:
+  max_files_per_site: 4
+  translated_items_per_page: 2
+languages:
+  [
+    { code: "zh-Hans", name: "简体中文", prefix: "" },
+    { code: "zh-Hant", name: "繁体中文", prefix: "zh-Hant/" },
+    { code: "en", name: "English", prefix: "en/" },
+    { code: "ja", name: "日本語", prefix: "ja/" },
+  ]
 
 sources:
   - url: https://news.google.com/rss/topics/CAAqJggKIiBDQkFTRWdvSUwyMHZNRGx1YlY4U0FtVnVHZ0pWVXlnQVAB?hl=en-US&gl=US&ceid=US:en
@@ -892,3 +933,16 @@ sources:
       - type: greaterEqual
         key: getWeightedScore
         value: "80"
+social_links:
+  - name: Twitter @BuzzingCC
+    url: https://twitter.com/buzzingcc
+  - name: "Telegram @buzzingcc"
+    url: "https://t.me/buzzingcc"
+  - name: "Twitter @Hacker News 中文精选"
+    url: "https://twitter.com/HackerNewsZh"
+  - name: "Twitter @国外新闻 Bot"
+    url: "https://twitter.com/NewsBotZh"
+  - name: Twitter @问Reddit
+    url: https://twitter.com/AskRedditZh
+  - name: 加入 Telegram 讨论群
+    url: https://t.me/joinchat/GVK5UiDwPUAwMjkx

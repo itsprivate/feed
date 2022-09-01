@@ -5,70 +5,7 @@
   "page_size": 200,
   "translated_items_per_page": 100,
   "max_files_per_site": -1,
-  "social_links": [
-    {
-      "name": "Twitter @BuzzingCC",
-      "url": "https://twitter.com/buzzingcc"
-    },
-    {
-      "name": "Telegram @buzzingcc",
-      "url": "https://t.me/buzzingcc"
-    },
-    {
-      "name": "Twitter @Hacker News 中文精选",
-      "url": "https://twitter.com/HackerNewsZh"
-    },
-    {
-      "name": "Twitter @国外新闻 Bot",
-      "url": "https://twitter.com/NewsBotZh"
-    },
-    {
-      "name": "Twitter @问Reddit",
-      "url": "https://twitter.com/AskRedditZh"
-    },
-    {
-      "name": "加入 Telegram 讨论群",
-      "url": "https://t.me/joinchat/GVK5UiDwPUAwMjkx"
-    }
-  ],
-  "versions": [
-    {
-      "prefix": "",
-      "code": "default",
-      "name": "Default"
-    },
-    {
-      "prefix": "lite/",
-      "code": "lite",
-      "name": "Lite"
-    }
-  ],
-  "dev": {
-    "max_files_per_site": 4,
-    "translated_items_per_page": 2
-  },
-  "languages": [
-    {
-      "code": "zh-Hans",
-      "name": "简体中文",
-      "prefix": ""
-    },
-    {
-      "code": "zh-Hant",
-      "name": "繁体中文",
-      "prefix": "zh-Hant/"
-    },
-    {
-      "code": "en",
-      "name": "English",
-      "prefix": "en/"
-    },
-    {
-      "code": "ja",
-      "name": "日本語",
-      "prefix": "ja/"
-    }
-  ],
+  "advice_url": "https://t.me/joinchat/GVK5UiDwPUAwMjkx",
   "translations": {
     "zh-Hans": {
       "about_label": "关于",
@@ -90,7 +27,8 @@
       "source_link_label": "原文地址",
       "latest_build_at_lable": "最后更新于",
       "social_label": "社交媒体",
-      "advice_label": "提议更多喜欢的站点?"
+      "advice_label": "提议更多喜欢的站点?",
+      "more_posts_label": "剩余 {{count}} 篇..."
     },
     "en": {
       "about_label": "About",
@@ -109,7 +47,8 @@
       "source_link_label": "Source",
       "latest_build_at_lable": "Latest updated at",
       "social_label": "Social",
-      "advice_label": "Suggest a new site?"
+      "advice_label": "Suggest a new site?",
+      "more_posts_label": "{{count}} more..."
     },
     "ja": {
       "about_label": "このページについて",
@@ -128,7 +67,8 @@
       "source_link_label": "ソース",
       "latest_build_at_lable": "最終更新日",
       "social_label": "ソーシャル",
-      "advice_label": "新しいサイトを提案しますか?"
+      "advice_label": "新しいサイトを提案しますか?",
+      "more_posts_label": "{{count}}件のその他..."
     },
     "zh-Hant": {
       "about_label": "關於",
@@ -150,15 +90,52 @@
       "source_link_label": "原文地址",
       "latest_build_at_lable": "最後更新於",
       "social_label": "社交媒體",
-      "advice_label": "提議更多喜歡的站點?"
+      "advice_label": "提議更多喜歡的站點?",
+      "more_posts_label": "剩餘 {{count}} 篇..."
     }
   },
-  "archive": {
-    "port": 9000,
-    "siteIdentifier": "i",
-    "tags": []
-  },
   "sites": {
+    "i": {
+      "port": 9000,
+      "standalone": true,
+      "tags": [],
+      "translations": {}
+    },
+    "www": {
+      "port": 9001,
+      "standalone": true,
+      "priority": 0,
+      "tags": [
+        "all",
+        "www"
+      ],
+      "translations": {
+        "zh-Hans": {
+          "title": "Buzzing",
+          "short_title": "Buzzing 首页",
+          "description": "用中文浏览国外社交媒体里的热门讨论，母语快速导读， 感兴趣再进原文深度阅读",
+          "keywords": "HackerNews 头条, Hacker News 中文, Hacker News Story"
+        },
+        "en": {
+          "title": "Hacker News Front Page",
+          "short_title": "HN Front Page",
+          "description": "Hacker News Front Page Feed",
+          "keywords": "HackerNews 头条, Hacker News 中文, Hacker News Story"
+        },
+        "ja": {
+          "title": "Hacker News トップ",
+          "short_title": "HN トップ",
+          "description": "Hacker News トップのニュース",
+          "keywords": "HackerNews 头条, Hacker News 中文, Hacker News Story"
+        },
+        "zh-Hant": {
+          "title": "Buzzing",
+          "short_title": "Buzzing 首頁",
+          "description": "用中文瀏覽國外社交媒體裡的熱門討論，母語快速導讀， 感興趣再進原文深度閱讀",
+          "keywords": "HackerNews 頭條, Hacker News 中文, Hacker News Story"
+        }
+      }
+    },
     "devfeed": {
       "redirect": true,
       "port": 8000,
@@ -182,6 +159,7 @@
     },
     "hnfront": {
       "port": 8001,
+      "priority": 19,
       "tags": [
         "hn",
         "source-hackernews-index"
@@ -214,10 +192,12 @@
       }
     },
     "hn": {
+      "priority": 10,
       "port": 8002,
       "redirect": true,
       "tags": [
         "hn",
+        "www",
         "source-hackernews-best"
       ],
       "translations": {
@@ -283,6 +263,7 @@
     },
     "showhn": {
       "port": 8004,
+      "priority": 20,
       "tags": [
         "hn",
         "source-hackernews-show"
@@ -316,10 +297,12 @@
     },
     "reddit": {
       "port": 8005,
+      "priority": 15,
       "redirect": true,
       "max_image_height": 520,
       "tags": [
         "reddit",
+        "www",
         "source-reddit-top"
       ],
       "translations": {
@@ -352,6 +335,7 @@
     },
     "ask": {
       "port": 8007,
+      "priority": 18,
       "redirect": true,
       "tags": [
         "reddit",
@@ -388,9 +372,11 @@
     "stocks": {
       "port": 8008,
       "redirect": true,
+      "priority": 13,
       "tags": [
         "reddit",
         "finance",
+        "www",
         "source-reddit-stocks",
         "source-twitter-stocks",
         "source-reddit-wallstreetbets",
@@ -426,10 +412,12 @@
     },
     "news": {
       "port": 8006,
+      "priority": 11,
       "archive": true,
       "redirect": true,
       "tags": [
         "news",
+        "www",
         "source-google-news"
       ],
       "translations": {
@@ -464,6 +452,7 @@
       "max_image_height": 360,
       "port": 8009,
       "archive": true,
+      "priority": 18,
       "redirect": true,
       "tags": [
         "tech",
@@ -501,6 +490,7 @@
       "port": 8010,
       "archive": true,
       "redirect": true,
+      "priority": 100,
       "tags": [
         "tech",
         "source-crypto-reddit",
@@ -573,6 +563,7 @@
     "quora": {
       "port": 8012,
       "archive": true,
+      "priority": 102,
       "redirect": true,
       "tags": [
         "ask",
@@ -610,9 +601,11 @@
       "port": 8013,
       "archive": true,
       "redirect": true,
+      "priority": 17,
       "tags": [
         "depth",
-        "source-reddit-depth"
+        "source-reddit-depth",
+        "www"
       ],
       "translations": {
         "zh-Hans": {
@@ -683,6 +676,7 @@
       "port": 8015,
       "archive": true,
       "redirect": true,
+      "priority": 90,
       "tags": [
         "depth",
         "news",
@@ -720,6 +714,7 @@
       "port": 8016,
       "archive": true,
       "redirect": true,
+      "priority": 90,
       "tags": [
         "depth",
         "news",
@@ -757,6 +752,7 @@
       "port": 8017,
       "archive": true,
       "redirect": true,
+      "priority": 20,
       "max_image_height": 360,
       "tags": [
         "sideproject",
@@ -793,6 +789,7 @@
     "hnnew": {
       "port": 8018,
       "redirect": true,
+      "priority": 16,
       "archive": true,
       "tags": [
         "hn",
@@ -865,8 +862,10 @@
       "port": 8020,
       "archive": true,
       "redirect": false,
+      "priority": 14,
       "tags": [
         "videos",
+        "www",
         "reddit",
         "source-reddit-videos",
         "source-reddit-mealtimevideos"
@@ -899,6 +898,44 @@
       }
     }
   },
+  "versions": [
+    {
+      "prefix": "",
+      "code": "default",
+      "name": "Default"
+    },
+    {
+      "prefix": "lite/",
+      "code": "lite",
+      "name": "Lite"
+    }
+  ],
+  "dev": {
+    "max_files_per_site": 4,
+    "translated_items_per_page": 2
+  },
+  "languages": [
+    {
+      "code": "zh-Hans",
+      "name": "简体中文",
+      "prefix": ""
+    },
+    {
+      "code": "zh-Hant",
+      "name": "繁体中文",
+      "prefix": "zh-Hant/"
+    },
+    {
+      "code": "en",
+      "name": "English",
+      "prefix": "en/"
+    },
+    {
+      "code": "ja",
+      "name": "日本語",
+      "prefix": "ja/"
+    }
+  ],
   "sources": [
     {
       "url": "https://news.google.com/rss/topics/CAAqJggKIiBDQkFTRWdvSUwyMHZNRGx1YlY4U0FtVnVHZ0pWVXlnQVAB?hl=en-US&gl=US&ceid=US:en",
@@ -1252,6 +1289,32 @@
           "value": "80"
         }
       ]
+    }
+  ],
+  "social_links": [
+    {
+      "name": "Twitter @BuzzingCC",
+      "url": "https://twitter.com/buzzingcc"
+    },
+    {
+      "name": "Telegram @buzzingcc",
+      "url": "https://t.me/buzzingcc"
+    },
+    {
+      "name": "Twitter @Hacker News 中文精选",
+      "url": "https://twitter.com/HackerNewsZh"
+    },
+    {
+      "name": "Twitter @国外新闻 Bot",
+      "url": "https://twitter.com/NewsBotZh"
+    },
+    {
+      "name": "Twitter @问Reddit",
+      "url": "https://twitter.com/AskRedditZh"
+    },
+    {
+      "name": "加入 Telegram 讨论群",
+      "url": "https://t.me/joinchat/GVK5UiDwPUAwMjkx"
     }
   ]
 }

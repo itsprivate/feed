@@ -10,6 +10,7 @@ import {
   request,
   writeJSONFile,
 } from "../util.ts";
+import Item from "../item.ts";
 import filterByRules from "../filter-by-rules.ts";
 import { fs, parseFeed, SimpleTwitter } from "../deps.ts";
 import log from "../log.ts";
@@ -80,6 +81,7 @@ export default async function fetchSources(
   filteredSources = Array.from(new Set(filteredSources.map((item) => item.id)))
     .map((id) => sourcesMap.get(id)!);
   let sourceOrder = 0;
+  let itemOrder = 0;
   for (const source of filteredSources) {
     sourceOrder++;
     const sourceId = source.id;
@@ -195,7 +197,7 @@ export default async function fetchSources(
           )
         ),
         rules,
-      );
+      ) as Item<unknown>[];
       log.info(
         `got ${originalItems.length} valid items by rules`,
       );
@@ -206,29 +208,33 @@ export default async function fetchSources(
         const aDate = a.getOriginalPublishedDate();
         const bDate = b.getOriginalPublishedDate();
         if (aDate > bDate) {
-          return -1;
+          return 1;
         }
         if (aDate < bDate) {
-          return 1;
+          return -1;
         }
         return 0;
       });
 
-      for (const item of originalItems) {
+      for (const item of (originalItems as Item<unknown>[])) {
         await item.init();
 
         if (!currentKeysMap.get(item.getCachedKey())) {
           // not exists
           // save original item to file
           await writeJSONFile(
-            item.getRawPath(targetSiteIdentifiersMap.get(sourceId)!),
+            item.getRawPath(targetSiteIdentifiersMap.get(sourceId)!, itemOrder),
             item.getRawItem(),
           );
           log.debug(
             `fetched raw data to ${
-              item.getRawPath(targetSiteIdentifiersMap.get(sourceId)!)
+              item.getRawPath(
+                targetSiteIdentifiersMap.get(sourceId)!,
+                itemOrder,
+              )
             }`,
           );
+          itemOrder++;
           total++;
         } else {
           log.debug(`${item.getCachedKey()} exists, skip`);

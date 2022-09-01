@@ -22,7 +22,7 @@ import {
 import SourceItemAdapter from "./adapters/source.ts";
 import Item from "./item.ts";
 import log from "./log.ts";
-import { TARGET_SITE_LANGUAEGS } from "./constant.ts";
+import { archiveSubDomain } from "./constant.ts";
 export default function itemsToFeed(
   pageRelativePathname: string,
   currentItemsJson: ItemsJson,
@@ -31,19 +31,13 @@ export default function itemsToFeed(
   config: Config,
   options?: ItemsToFeedOptions,
 ): Feedjson {
-  let siteConfig: GeneralSiteConfig;
-  if (siteIdentifier === config.archive.siteIdentifier) {
-    siteConfig = config.archive;
-  } else {
-    siteConfig = config.sites[siteIdentifier];
-  }
+  const siteConfig: GeneralSiteConfig = config.sites[siteIdentifier];
+
   //check if need to archive items
   const currentItemsJsonKeys = Object.keys(
     currentItemsJson.items,
   );
-  const language = TARGET_SITE_LANGUAEGS.find((lang) =>
-    lang.code === languageCode
-  );
+  const language = config.languages.find((lang) => lang.code === languageCode);
   let versionCode = "default";
   if (options && options.versionCode) {
     versionCode = options.versionCode;
@@ -110,7 +104,7 @@ export default function itemsToFeed(
     }
   });
   const hostpageIdentifier = options?.isArchive
-    ? config.archive.siteIdentifier
+    ? archiveSubDomain
     : siteIdentifier;
 
   let siteName = `${currentTranslations.title}`;

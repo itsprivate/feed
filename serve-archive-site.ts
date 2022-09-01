@@ -2,11 +2,9 @@ import { jsonfeedToRSS, posixPath, serve } from "./deps.ts";
 
 import {
   getArchivedBucketName,
-  getArchivedFilePath,
   getArchiveS3Bucket,
   getCurrentItemsFilePath,
   isDebug,
-  isDev,
   parseArchiveUrl,
   readJSONFile,
   request as fetchRequest,
@@ -170,7 +168,13 @@ export default async function serveSite(port = 8000) {
           }),
         );
       }
-      const html = feedToHTML(feedjson, config, indexTemplateString);
+      const html = feedToHTML(
+        feedjson,
+        config,
+        indexTemplateString,
+        config.languages,
+        config.versions,
+      );
       return new Response(html, {
         status: 200,
         headers: {

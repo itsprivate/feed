@@ -13,11 +13,12 @@ import {
 } from "../util.ts";
 import log from "../log.ts";
 import Translation from "../translate.ts";
-import { TARGET_SITE_LANGUAEGS } from "../constant.ts";
 import SourceItemAdapter from "../adapters/source.ts";
+
 export default async function translateItems(
   options: RunOptions,
 ) {
+  const config = options.config;
   // get all 2-formated files
   // is exists formated files folder
   await fs.ensureDir(getDataFormatedPath());
@@ -167,7 +168,7 @@ export default async function translateItems(
         for (const field of originalTranslationKeys) {
           // first check if this field is translated
           const todoLanguages = [];
-          for (const language of TARGET_SITE_LANGUAEGS) {
+          for (const language of config.languages) {
             if (language.code === item._original_language) {
               continue;
             }
