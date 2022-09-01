@@ -24,7 +24,7 @@ for (const testItem of list) {
 
     // published modified must equal
     await t.step(`${item.getType()} published modified must equal`, () => {
-      assertEquals(item.getPublished(), item.getModified());
+      assertEquals(item.getPublishedDay(), item.getPublishedDay());
     });
 
     // title mush not empty
