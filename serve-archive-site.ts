@@ -9,7 +9,7 @@ import {
   isDev,
   parseArchiveUrl,
   readJSONFile,
-  request,
+  request as fetchRequest,
   siteIdentifierToUrl,
 } from "./util.ts";
 import log from "./log.ts";
@@ -133,7 +133,7 @@ export default async function serveSite(port = 8000) {
             "/feed.json",
             config,
           );
-          const feedJsonResponse = await request(feedJsonpath);
+          const feedJsonResponse = await fetchRequest(feedJsonpath);
           currentSiteFeedJson = await feedJsonResponse.json();
         }
       } catch (e) {
