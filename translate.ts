@@ -336,11 +336,21 @@ export default class Translation {
     await this.changeTargetLanguage(
       Translation.toDeeplLanguage(targetLanguage),
     );
-    // wait for copy button
-    await page.waitForSelector(
-      "button[aria-label='Copy to clipboard']",
-      { visible: true },
-    );
+    try {
+      // wait for copy button
+      await page.waitForSelector(
+        "button[aria-label='Copy to clipboard']",
+        { visible: true },
+      );
+    } catch (_e) {
+      // can not find copy button
+      // try b scheme
+      await page.waitForSelector(
+        "button[class='lmt__translations_as_text__copy_button']",
+        { visible: true },
+      );
+    }
+
     // wait for result
     await page.waitForTimeout(200);
 
