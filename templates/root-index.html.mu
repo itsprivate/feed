@@ -318,7 +318,7 @@
       <h4 class="px">{{{title}}}&nbsp;(<a class="contrast" href="{{{home_page_url}}}">{{hostname}}</a>)</h4>
       {{#items}}
       <article class="article h-entry hentry">
-         <span>{{_human_time}}: </span> <a class="p-name contrast entry-title u-url" href="{{{url}}}">{{#order}}<span>{{ . }}. </span>{{/order}}{{{title}}}</a>{{#_sensitive}}<span>&nbsp;(</span><span class="nsfw">NSFW</span><span>)</span>{{/_sensitive}}
+         <span class="muted">{{_human_time}}&nbsp;</span> <a class="no-underline p-name contrast entry-title u-url" href="{{{url}}}">{{#order}}<span>{{ . }}. </span>{{/order}}{{{title}}}</a>{{#_sensitive}}<span>&nbsp;(</span><span class="nsfw">NSFW</span><span>)</span>{{/_sensitive}}
          {{#_links}}
           &nbsp;<a class="muted small" href="{{{url}}}">{{{name}}}</a>
          {{/_links}}
