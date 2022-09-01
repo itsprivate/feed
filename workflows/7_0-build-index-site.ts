@@ -146,6 +146,11 @@ export default async function buildSite(options: RunOptions) {
           pathname,
           config,
         ),
+        "atom_url": siteIdentifierToUrl(
+          siteIdentifier,
+          `${pathname}feed.xml`,
+          config,
+        ),
         "home_page_lite_url": siteIdentifierToUrl(
           siteIdentifier,
           pathname + version.prefix,

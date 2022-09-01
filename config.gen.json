@@ -28,7 +28,7 @@
       "latest_build_at_lable": "最后更新于",
       "social_label": "社交媒体",
       "advice_label": "提议更多喜欢的站点?",
-      "more_posts_label": "剩余 {{count}} 篇...",
+      "more_posts_label": "剩余 {{count}} 篇 ...",
       "sources_label": "数据来源"
     },
     "en": {
@@ -70,7 +70,7 @@
       "latest_build_at_lable": "最終更新日",
       "social_label": "ソーシャル",
       "advice_label": "新しいサイトを提案しますか?",
-      "more_posts_label": "{{count}}件のその他...",
+      "more_posts_label": "{{count}}件のその他 ...",
       "sources_label": "ソース"
     },
     "zh-Hant": {
@@ -94,7 +94,7 @@
       "latest_build_at_lable": "最後更新於",
       "social_label": "社交媒體",
       "advice_label": "提議更多喜歡的站點?",
-      "more_posts_label": "剩餘 {{count}} 篇...",
+      "more_posts_label": "剩餘 {{count}} 篇 ...",
       "sources_label": "數據來源"
     }
   },
