@@ -310,7 +310,7 @@ export default class Item<T> {
     const item: FormatedItem = {
       id: this.getItemIdentifier(),
       url: this.realUrl || this.getUrl(),
-      date_published: this.getModified(),
+      date_published: this.getPublished(),
       date_modified: this.getModified(),
       _original_published: this.getOriginalPublished(),
       _original_language: this.getOriginalLanguage(),
