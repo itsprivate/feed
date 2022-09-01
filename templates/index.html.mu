@@ -279,37 +279,56 @@
         {{#_other_sites.0}}
       </div>
       {{/_other_sites.0}}
-      <div class="about-content contrast">
+      <div class="about-content contrast small">
         <p class="p-summary site-description">{{ description }}</p>
         <p>
-        {{ version_label }}: {{#_versions}} {{#active}}
-          <span>{{ name }}</span>
-          {{/active}} {{^active}}
-          <a href="{{{url}}}">{{ name }} </a>
-          {{/active}} {{/_versions}}
-          <br />
-          {{ languages_label }}: {{#_languages}} {{#active}}
-          <span>{{ name }}</span>
-          {{/active}} {{^active}}
-          <a href="{{{url}}}">{{ name }}</a>
-          {{/active}} {{/_languages}}
-          <br />
-          {{ subscription_label }}: {{#_rss_url}}
-          <a href="{{{_rss_url}}}">Atom</a>
-          {{/_rss_url}} {{#_atom_url}}
-          <a href="{{{_atom_url}}}">Atom</a>
-          {{/_atom_url}} {{#feed_url}}
-          <a href="{{{feed_url}}}">JSON Feed</a>
+        {{ version_label }}: 
+          <ul>
+          {{#_versions}}
+            <li>
+              {{#active}}
+                <span>{{ name }}</span>
+              {{/active}}
+              {{^active}}
+                <a href="{{{url}}}">{{ name }} </a>
+              {{/active}}
+            </li>
+          {{/_versions}}
+          </ul>
+          {{ languages_label }}: 
+          <ul>
+          {{#_languages}}
+            <li>
+              {{#active}}
+                <span>{{ name }}</span>
+              {{/active}} 
+              {{^active}}
+                <a href="{{{url}}}">{{ name }}</a>
+              {{/active}}
+            </li>
+          {{/_languages}}
+          </ul>
+          {{ subscription_label }}: 
+          <ul>
+          {{#_atom_url}}
+            <li><a href="{{{_atom_url}}}">Atom/RSS Feed</a></li>
+          {{/_atom_url}}
+          {{#feed_url}}
+            <li><a href="{{{feed_url}}}">JSON Feed</a></li>
           {{/feed_url}}
-          <br />
+          </ul>
           {{social_label}}: 
           <ul>
           {{#_social_links}}<li><a href="{{url}}">{{name}}</a></li>{{/_social_links}}
           </ul>
-  
+          {{#_sources.0}}
+          {{ sources_label }}: 
+           <ul>
+          {{#_sources}}<li><a href="{{url}}">{{name}}</a></li>{{/_sources}}
+          </ul>          
+          {{/_sources.0}}
+          {{latest_build_at_lable}}: {{_latest_build_time}}
           <br />
-          {{ latest_build_at_lable}}: {{_latest_build_time}}
-                  <br />
           {{ powered_by_label }}:
           <a href="https://www.owenyoung.com">Owen</a> (<a href="https://twitter.com/OwenYoungZh">Twitter</a>)
         </p>

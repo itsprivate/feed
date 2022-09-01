@@ -1,4 +1,10 @@
-import { ItemsJson, RunOptions, Source, Task } from "../interface.ts";
+import {
+  ItemsJson,
+  RunOptions,
+  Source,
+  SourceAPIConfig,
+  Task,
+} from "../interface.ts";
 import adapters from "../adapters/mod.ts";
 import {
   get,
@@ -85,8 +91,8 @@ export default async function fetchSources(
   for (const source of filteredSources) {
     sourceOrder++;
     const sourceId = source.id;
-    let sourceUrls = source.url as string[];
-    if (typeof sourceUrls === "string") {
+    let sourceUrls = source.api as SourceAPIConfig[];
+    if (!Array.isArray(sourceUrls)) {
       sourceUrls = [sourceUrls];
     }
 
@@ -108,7 +114,8 @@ export default async function fetchSources(
     }
     log.debug(sourceId + ` current keys length: ${currentKeysMap.size}`);
     // fetch source, and parse it to item;
-    for (const sourceUrl of sourceUrls) {
+    for (const sourceApiConfig of sourceUrls) {
+      const sourceUrl = sourceApiConfig.url;
       let total = 0;
       let originalJson;
       if (

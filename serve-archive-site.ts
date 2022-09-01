@@ -19,6 +19,7 @@ import {
   ItemsJson,
   ParsedArchiveUrl,
 } from "./interface.ts";
+import { indexSubDomain } from "./constant.ts";
 import notfound from "./notfound.ts";
 import config from "./config.gen.json" assert { type: "json" };
 export default async function serveSite(port = 8000) {
@@ -46,7 +47,11 @@ export default async function serveSite(port = 8000) {
       );
     } catch (e) {
       if (e.name === "NotFound") {
-        return notfound(notfoundTemplateString, config, e.message);
+        // redirect to www.
+        return Response.redirect(
+          siteIdentifierToUrl(indexSubDomain, "/", config),
+          301,
+        );
       } else {
         throw e;
       }

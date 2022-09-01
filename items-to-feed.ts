@@ -15,9 +15,9 @@ import {
   getCurrentTranslations,
   getItemTranslations,
   getPageMeta,
+  getSourceLinks,
   itemsPathToURLPath,
   siteIdentifierToUrl,
-  tagToUrl,
 } from "./util.ts";
 import SourceItemAdapter from "./adapters/source.ts";
 import Item from "./item.ts";
@@ -202,6 +202,7 @@ export default function itemsToFeed(
       }feed.json`,
       config,
     ),
+    _sources: getSourceLinks(siteIdentifier, config),
     items,
   };
   if (siteTitleSuffix) {

@@ -18,11 +18,14 @@ import {
   Config,
   FilteredFile,
   Language,
+  Link,
   PageMeta,
   ParsedArchiveUrl,
   ParsedFilename,
   ParsedFilenameWithTime,
   SiteConfig,
+  Source,
+  SourceAPIConfig,
   UrlInfo,
   Version,
   WeekOfYear,
@@ -1152,4 +1155,36 @@ export function parseArchiveUrl(
   } else {
     throw new NotFound("Not found matached route");
   }
+}
+
+export function getSourceLinks(siteIdentifier: string, config: Config): Link[] {
+  const links: Link[] = [];
+  const sourceLinksMap: Record<string, Source> = {};
+  for (const source of config.sources) {
+    sourceLinksMap[source.id] = source;
+  }
+
+  const siteConfig = config.sites[siteIdentifier];
+
+  if (!siteConfig) {
+    throw new NotFound("Site " + siteIdentifier + " not found");
+  }
+  const siteTags = siteConfig.tags || [];
+  for (const tag of siteTags) {
+    const source = sourceLinksMap[tag];
+    if (source) {
+      if (!Array.isArray(source.api)) {
+        source.api = [source.api];
+      }
+
+      for (const api of source.api) {
+        links.push({
+          name: api.name,
+          url: api.home_page_url,
+        });
+      }
+    }
+  }
+
+  return links;
 }

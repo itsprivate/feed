@@ -2,11 +2,11 @@ import { groupBy, jsonfeedToAtom, mustache, path } from "../deps.ts";
 import { FeedItem, Feedjson, RunOptions } from "../interface.ts";
 import {
   formatHumanTime,
-  getChangedSitePaths,
   getCurrentTranslations,
   getDataCurrentItemsPath,
   getDistFilePath,
   getDistPath,
+  getSourceLinks,
   isDev,
   pathToSiteIdentifier,
   readJSONFile,
@@ -82,11 +82,12 @@ export default async function buildSite(options: RunOptions) {
         config,
       ),
       items: [],
+      _sources: [],
     };
     // @ts-ignore: add meta
     feedJson._advice_url = config.advice_url;
     // @ts-ignore: add meta
-    feedJson._title_suffix = currentIndexTranslations.description;
+    feedJson._title_suffix = " - " + currentIndexTranslations.description;
     if (indexConfig.tags) {
       feedJson._site_tags = indexConfig.tags;
     }

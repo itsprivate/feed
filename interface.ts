@@ -3,8 +3,13 @@ export interface Rule {
   key?: string;
   value: string | number | boolean;
 }
+export interface SourceAPIConfig {
+  url: string;
+  home_page_url: string;
+  name: string;
+}
 export interface Source {
-  url: string | string[];
+  api: SourceAPIConfig | SourceAPIConfig[];
   type: string;
   itemsPath?: string;
   rules?: Rule[];
@@ -186,6 +191,7 @@ export interface Feedjson {
   _site_tags?: string[];
   _archive?: string[];
   _issues?: string[];
+  _sources: Link[];
 }
 export interface ItemsJson {
   meta?: Record<string, string>;
