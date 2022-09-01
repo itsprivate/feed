@@ -33,7 +33,19 @@ export default async function publishToPages() {
       }
     }
   }
+  // resort site
+  siteIdentifiers = siteIdentifiers.sort((a, b) => {
+    if (a === indexSubDomain) {
+      return 1;
+    }
+    if (b === indexSubDomain) {
+      return -1;
+    }
+    return a.localeCompare(b);
+  });
+  log.info("to be published sites:", siteIdentifiers);
   let index = 1;
+
   for (const siteIdentifier of siteIdentifiers) {
     log.info(
       `${index}/${siteIdentifiers.length}`,
