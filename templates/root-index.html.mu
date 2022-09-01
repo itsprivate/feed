@@ -337,9 +337,9 @@
       </article>
       {{/items}}
       {{#remaining_count}}
-      <div class="article">
-        <a class="contrast" href="{{{home_page_url}}}">{{{remaining_label}}}</a>
-        <span>&nbsp;(</span><a class="contrast" href="{{{home_page_lite_url}}}">{{{Lite}}}</a><span>&nbsp;/&nbsp;</span><a class="contrast" href="{{{atom_url}}}">{{{subscription_label}}}</a> <span>)</span>  
+      <div class="article muted secondary small">
+        <a href="{{{home_page_url}}}">{{{remaining_label}}}</a>
+        <span>&nbsp;</span><a class="small" href="{{{home_page_lite_url}}}">{{{Lite}}}</a><span>&nbsp;·&nbsp;</span><a class="small" href="{{{atom_url}}}">{{{subscription_label}}}</a> <span></span>  
       </div>
       {{/remaining_count}}
     {{/_groups}}

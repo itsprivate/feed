@@ -15,6 +15,12 @@ export default class source extends Item<FormatedItem> {
   getOriginalLanguage(): string {
     return this.originalItem._original_language || "en";
   }
+  getPublishedDate(): Date {
+    return new Date(this.originalItem.date_published);
+  }
+  getModifiedDate(): Date {
+    return new Date(this.originalItem.date_modified);
+  }
   getId(): string {
     const parsedId = parseItemIdentifier(this.originalItem.id);
     return parsedId.id;

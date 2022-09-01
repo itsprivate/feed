@@ -56,9 +56,10 @@ export default function itemsToFeed(
   }
   const currentItemsJsonKeysSorted = currentItemsJsonKeys
     .sort((a, b) => {
-      const aModified = currentItemsJson.items[a]["date_published"]!;
-      const bModified = currentItemsJson.items[b]["date_published"]!;
-      return new Date(aModified) > new Date(bModified) ? -1 : 1;
+      const aModified = currentItemsJson.items[a].date_published!;
+      const bModified = currentItemsJson.items[b].date_published!;
+
+      return new Date(bModified).getTime() - new Date(aModified).getTime();
     });
   const currentTranslations = getCurrentTranslations(
     siteIdentifier,
