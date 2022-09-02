@@ -134,7 +134,7 @@ export default class Translation {
     for (const targetLanguage of targetLanguages) {
       finalTranslatedResult[targetLanguage] = sentence;
     }
-    if (this.isMock) {
+    if (this.isMock || !sentence) {
       return finalTranslatedResult;
     }
     if (!this.page) {
