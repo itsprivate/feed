@@ -18,6 +18,14 @@ export default class twitter extends Item<TwitterItem> {
   getId(): string {
     return this.originalItem.id_str as string;
   }
+  isValid(): boolean {
+    const title = this.getTitle();
+    if (!title) {
+      // there is no title, so it is not valid
+      return false;
+    }
+    return true;
+  }
   getTitle(): string {
     const tweet = this.originalItem;
     let title = this.originalItem.full_text as string;
