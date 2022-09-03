@@ -8,12 +8,11 @@
     {{#keywords}}
     <meta name="keywords" content="{{ keywords }}" />
     {{/keywords}}
-    <meta itemprop="name" content="{{title}}" />
+    <meta name="name" content="{{title}}" />
     {{#_image}}
-    <meta itemprop="image" content="{{{_image}}}" />
+    <meta name="image" content="{{{_image}}}" />
     {{/_image}}
     <meta
-      itemprop="description"
       name="description"
       content="{{{description}}}"
     />
@@ -66,7 +65,6 @@
     />
     <link rel="icon" href="{{{favicon}}}" />
     <style>
-      @charset "UTF-8";
       body {
         max-width: 45em;
         margin: 0 auto;
@@ -224,7 +222,7 @@
         position: fixed;
         bottom: 2em;
         right: 0.5em;  
-        font-size: bold;
+        font-weight: bold;
         z-index:1;
       }
       .inline-block{
@@ -233,6 +231,9 @@
       .nsfw{
         color: #d10023;
         font-size:small;
+      }
+      .mt0{
+        margin-top: 0;
       }
       @media print{    
         .fixed{
@@ -275,7 +276,7 @@
       {{/_other_sites.0}}
       <div class="about-content contrast small">
         <p class="p-summary site-description">{{ description }}</p>
-        <p>
+        <div>
         {{#_versions.1}}
         {{ version_label }}: {{#_versions}} {{#active}}
           <span>{{ name }}</span>
@@ -320,21 +321,21 @@
           <br />
           {{ powered_by_label }}:
           <a href="https://www.owenyoung.com">Owen</a> (<a href="https://twitter.com/OwenYoungZh">Twitter</a>)
-        </p>
+        </div>
       </div>
       {{#_page_title}}
       <h3>{{.}}</h3>
       {{/_page_title}}
     </header>
     {{#_groups}}
-      <h4 class="px">{{{title}}}&nbsp;(<a class="contrast" href="{{{home_page_url}}}">{{hostname}}</a>)</h4>
+      <h3 class="px">{{{title}}}&nbsp;(<a class="contrast" href="{{{home_page_url}}}">{{hostname}}</a>)</h3>
       {{#items}}
-      <article class="article h-entry hentry">
+      <div class="article h-entry hentry">
          <span class="muted">{{_human_time}}&nbsp;</span> <a class="no-underline p-name contrast entry-title u-url" href="{{{url}}}">{{#order}}<span>{{ . }}. </span>{{/order}}{{{title}}}</a>{{#_sensitive}}<span>&nbsp;(</span><span class="nsfw">NSFW</span><span>)</span>{{/_sensitive}}
          {{#_links}}
           &nbsp;<a class="muted small" href="{{{url}}}">{{{name}}}</a>
          {{/_links}}
-      </article>
+      </div>
       {{/items}}
       {{#remaining_count}}
       <div class="article muted secondary small">

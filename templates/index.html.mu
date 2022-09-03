@@ -8,12 +8,11 @@
     {{#keywords}}
     <meta name="keywords" content="{{ keywords }}" />
     {{/keywords}}
-    <meta itemprop="name" content="{{title}}" />
+    <meta name="name" content="{{title}}" />
     {{#_image}}
-    <meta itemprop="image" content="{{{_image}}}" />
+    <meta name="image" content="{{{_image}}}" />
     {{/_image}}
     <meta
-      itemprop="description"
       name="description"
       content="{{{description}}}"
     />
@@ -66,7 +65,6 @@
     />
     <link rel="icon" href="{{{favicon}}}" />
     <style>
-      @charset "UTF-8";
       body {
         max-width: 45em;
         margin: 0 auto;
@@ -230,7 +228,7 @@
         position: fixed;
         bottom: 2em;
         right: 0.5em;  
-        font-size: bold;
+        font-weight: bold;
         z-index:1;
       }
       .inline-block{
@@ -239,6 +237,9 @@
       .nsfw{
         color: #d10023;
         font-size:small;
+      }
+      .mt0{
+        margin-top: 0;
       }
       @media print{    
         .fixed{
@@ -250,6 +251,7 @@
         .footer{
             display: none;
         }
+
       }
     </style>
   </head>
@@ -281,7 +283,7 @@
       {{/_other_sites.0}}
       <div class="about-content contrast small">
         <p class="p-summary site-description">{{ description }}</p>
-        <p>
+        <div>
         {{ version_label }}: 
           <ul>
           {{#_versions}}
@@ -331,7 +333,7 @@
           <br />
           {{ powered_by_label }}:
           <a href="https://www.owenyoung.com">Owen</a> (<a href="https://twitter.com/OwenYoungZh">Twitter</a>)
-        </p>
+        </div>
       </div>
       {{#_page_title}}
       <h3>{{.}}</h3>
@@ -340,9 +342,9 @@
 
     {{#items}}
     <article class="article h-entry hentry">
-      <div class="mb">
+      <h4 class="mb mt0">
         <a class="p-name entry-title bold no-underline u-url" href="{{{url}}}">{{#order}}<span>{{ . }}. </span>{{/order}}{{{title}}}</a>{{#_sensitive}}<span>&nbsp;(</span><span class="nsfw">NSFW</span><span>)</span>{{/_sensitive}}
-      </div>
+      </h4>
       <div class="p-summary entry-summary secondary pre-line small italic">{{{content_html}}}</div>
     </article>
     {{/items}}
