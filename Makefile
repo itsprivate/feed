@@ -118,6 +118,10 @@ archivesite:
 tr:
 	deno run -A main.ts --stage translate --site wsj
 
+.Phony: trsite
+trsite:
+	deno run -A main.ts --stage translate --site ${site}
+
 .Phony: realtr
 realtr:
 	HEADLESS=1 MOCK=0 FILES=4 deno run -A main.ts --stage translate --site devfeed
