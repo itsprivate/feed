@@ -927,7 +927,7 @@ sources:
     rules:
       - type: greaterEqual
         key: getWeightedScore
-        value: "60"
+        value: "20"
   - id: source-crypto-reddit
     api:
       - url: https://www.reddit.com/r/CryptoCurrency/top/.json?raw_json=1
