@@ -145,7 +145,7 @@
       "port": 8000,
       "dev": true,
       "tags": [
-        "source-lobste"
+        "source-reddit-linux"
       ],
       "archive": false,
       "translations": {
@@ -936,6 +936,41 @@
           "keywords": "Lobste 頭條, Lobste 中文, Lobste Story"
         }
       }
+    },
+    "linux": {
+      "port": 8022,
+      "priority": 25,
+      "archive": true,
+      "tags": [
+        "linux",
+        "source-reddit-linux"
+      ],
+      "translations": {
+        "zh-Hans": {
+          "title": "Linux",
+          "short_title": "Linux",
+          "description": "用中文浏览 Linux Reddit 小组最新提交",
+          "keywords": "Linux 头条, Linux 中文, Linux 小组"
+        },
+        "en": {
+          "title": "Linux",
+          "short_title": "Linux",
+          "description": "See what's buzzing on Linux subreddit in your native language",
+          "keywords": "Linux, Linux Subreddit"
+        },
+        "ja": {
+          "title": "Linux",
+          "short_title": "Linux",
+          "description": "人気の Linux subreddit の最新 の投稿",
+          "keywords": "Linux 头条, Linux 中文, Linux Story"
+        },
+        "zh-Hant": {
+          "title": "Linux",
+          "short_title": "Linux",
+          "description": "用中文瀏覽 Linux Reddit 小組最新提交",
+          "keywords": "Linux 頭條, Linux 中文, Linux 小組"
+        }
+      }
     }
   },
   "versions": [
@@ -1534,6 +1569,22 @@
         "name": "Lobste.rs",
         "home_page_url": "https://lobste.rs/"
       }
+    },
+    {
+      "id": "source-reddit-linux",
+      "type": "reddit",
+      "api": {
+        "url": "https://www.reddit.com/r/linux/new/.json?raw_json=1",
+        "name": "Linux Subreddit",
+        "home_page_url": "https://www.reddit.com/r/linux/"
+      },
+      "rules": [
+        {
+          "type": "greaterEqual",
+          "key": "getWeightedScore",
+          "value": "10"
+        }
+      ]
     }
   ]
 }
