@@ -1,6 +1,4 @@
 {
-  "icon": "https://www.buzzing.cc/icon.png",
-  "favicon": "https://www.buzzing.cc/favicon.ico",
   "root_domain": "buzzing.cc",
   "page_size": 200,
   "translated_items_per_page": 100,
@@ -1280,7 +1278,7 @@
         {
           "type": "greaterEqual",
           "key": "getWeightedScore",
-          "value": "60"
+          "value": "20"
         }
       ]
     },

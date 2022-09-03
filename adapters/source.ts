@@ -102,7 +102,10 @@ export default class source extends Item<FormatedItem> {
           urlObj.pathname = `/watch`;
           isMatched = true;
         }
-        if (urlObj.hostname === "youtube.com") {
+        if (
+          urlObj.hostname === "youtube.com" ||
+          urlObj.hostname === "www.youtube.com"
+        ) {
           urlObj.hostname = "www.youtube.com";
           // test is watch url
           const urlPattern = new URLPattern({
