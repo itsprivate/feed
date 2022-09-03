@@ -752,7 +752,7 @@ sources:
   - api:
       url: http://hn.algolia.com/api/v1/search_by_date?tags=(story,poll,show_hn,ask_hn)&numericFilters=points>=200&hitsPerPage=50
       name: Hacker News Popular
-      home_page_url: https://hn.algolia.com/api/v1/search_by_date?tags=(story,poll,show_hn,ask_hn)&numericFilters=points%3E=200&hitsPerPage=50
+      home_page_url: https://news.ycombinator.com/best
     type: hn
     id: source-hackernews-best
   - id: source-hackernews-ask
