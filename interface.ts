@@ -156,7 +156,6 @@ export interface FormatedItem {
   _title_prefix?: string;
   _title_suffix?: string;
   _translations?: Record<string, Record<string, string>>;
-  _links: Link[];
 }
 type ValueOf<T> = T[keyof T];
 export type ItemKey = keyof FormatedItem;
@@ -207,6 +206,7 @@ export interface FeedItem extends FormatedItem {
   summary: string;
   content_text: string;
   content_html: string;
+  _links?: Link[];
 }
 export interface Type<T> extends Function {
   new (...args: unknown[]): T;

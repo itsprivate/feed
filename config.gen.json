@@ -122,13 +122,13 @@
         },
         "en": {
           "title": "Buzzing",
-          "short_title": "Buzzing",
+          "short_title": "Buzzing Home",
           "description": "See hot discussions in your native language",
           "keywords": "Buzzing,reddit,social media,native language"
         },
         "ja": {
           "title": "Buzzing",
-          "short_title": "Buzzing",
+          "short_title": "Buzzing Home",
           "description": "母国語で熱い議論を見る",
           "keywords": "Buzzing,reddit,ソーシャルメディア,母国語"
         },
@@ -145,7 +145,7 @@
       "port": 8000,
       "dev": true,
       "tags": [
-        "source-hackernews-new"
+        "source-lobste"
       ],
       "archive": false,
       "translations": {
@@ -901,6 +901,41 @@
           "short_title": "下飯視頻"
         }
       }
+    },
+    "lobste": {
+      "port": 8021,
+      "priority": 25,
+      "archive": true,
+      "tags": [
+        "hn",
+        "source-lobste"
+      ],
+      "translations": {
+        "zh-Hans": {
+          "title": "Lobste 最新提交",
+          "short_title": "Lobste",
+          "description": "用中文浏览 Lobste 最新提交",
+          "keywords": "Lobste 头条, Lobste 中文, Lobste Story"
+        },
+        "en": {
+          "title": "Lobste Newest",
+          "short_title": "Lobste Newest",
+          "description": "Lobste Newest",
+          "keywords": "Lobste 头条, Lobste 中文, Lobste Story"
+        },
+        "ja": {
+          "title": "Lobste の最新の投稿",
+          "short_title": "Lobste 最新",
+          "description": "人気の Lobste の最新 の投稿",
+          "keywords": "Lobste 头条, Lobste 中文, Lobste Story"
+        },
+        "zh-Hant": {
+          "title": "Lobste 最新提交",
+          "short_title": "Lobste",
+          "description": "用中文瀏覽 Lobste 最新提交",
+          "keywords": "Lobste 頭條, Lobste 中文, Lobste Story"
+        }
+      }
     }
   },
   "versions": [
@@ -939,6 +974,32 @@
       "code": "ja",
       "name": "日本語",
       "prefix": "ja/"
+    }
+  ],
+  "social_links": [
+    {
+      "name": "Twitter @BuzzingCC",
+      "url": "https://twitter.com/buzzingcc"
+    },
+    {
+      "name": "Telegram @buzzingcc",
+      "url": "https://t.me/buzzingcc"
+    },
+    {
+      "name": "Twitter @Hacker News 中文精选",
+      "url": "https://twitter.com/HackerNewsZh"
+    },
+    {
+      "name": "Twitter @国外新闻 Bot",
+      "url": "https://twitter.com/NewsBotZh"
+    },
+    {
+      "name": "Twitter @问Reddit",
+      "url": "https://twitter.com/AskRedditZh"
+    },
+    {
+      "name": "加入 Telegram 讨论群",
+      "url": "https://t.me/joinchat/GVK5UiDwPUAwMjkx"
     }
   ],
   "sources": [
@@ -996,7 +1057,7 @@
       "api": {
         "url": "http://hn.algolia.com/api/v1/search_by_date?tags=(story,poll,show_hn,ask_hn)&numericFilters=points>=200&hitsPerPage=50",
         "name": "Hacker News Popular",
-        "home_page_url": "https://hn.algolia.com/api/v1/search_by_date?tags=(story,poll,show_hn,ask_hn)&numericFilters=points%3E=200&hitsPerPage=50"
+        "home_page_url": "https://news.ycombinator.com/best"
       },
       "type": "hn",
       "id": "source-hackernews-best"
@@ -1464,32 +1525,15 @@
           "value": "50"
         }
       ]
-    }
-  ],
-  "social_links": [
-    {
-      "name": "Twitter @BuzzingCC",
-      "url": "https://twitter.com/buzzingcc"
     },
     {
-      "name": "Telegram @buzzingcc",
-      "url": "https://t.me/buzzingcc"
-    },
-    {
-      "name": "Twitter @Hacker News 中文精选",
-      "url": "https://twitter.com/HackerNewsZh"
-    },
-    {
-      "name": "Twitter @国外新闻 Bot",
-      "url": "https://twitter.com/NewsBotZh"
-    },
-    {
-      "name": "Twitter @问Reddit",
-      "url": "https://twitter.com/AskRedditZh"
-    },
-    {
-      "name": "加入 Telegram 讨论群",
-      "url": "https://t.me/joinchat/GVK5UiDwPUAwMjkx"
+      "id": "source-lobste",
+      "type": "lobste",
+      "api": {
+        "url": "https://lobste.rs/rss",
+        "name": "Lobste.rs",
+        "home_page_url": "https://lobste.rs/"
+      }
     }
   ]
 }

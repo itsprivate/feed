@@ -29,10 +29,18 @@ export default class rss extends Item<RSSItem> {
   }
 
   getTags(): string[] {
-    // check if specific tags are present in the item
-    // like Show HN, Ask HN, etc.
-    const tags: string[] = [];
+    let tags: string[] = [];
 
+    if (
+      this.originalItem.categories &&
+      Array.isArray(this.originalItem.categories)
+    ) {
+      this.originalItem.categories.forEach((item) => {
+        tags.push(item.label);
+      });
+    }
+    // unique
+    tags = [...new Set(tags)];
     return tags;
   }
 }
@@ -50,6 +58,8 @@ export interface RSSItem {
   publishedRaw: string;
   updated: string;
   updatedRaw: string;
+  comments?: string;
+  author: Author;
   links: Link2[];
   _id?: string;
   _url?: string;

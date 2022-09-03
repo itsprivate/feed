@@ -168,6 +168,8 @@ export default class source extends Item<FormatedItem> {
       } else {
         externalLinkName = "HN Link";
       }
+    } else if (type === "lobste") {
+      externalLinkName = "Lobste Comment";
     } else if (type === "reddit") {
       if (this.getScore() && this.getExternalUrl()) {
         externalLinkName = `${linkSymbol} ${

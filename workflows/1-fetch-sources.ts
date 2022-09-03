@@ -120,7 +120,7 @@ export default async function fetchSources(
       let originalJson;
       if (
         sourceType === "rss" || sourceType === "googlenews" ||
-        sourceType === "newyorker"
+        sourceType === "newyorker" || sourceType === "lobste"
       ) {
         const originItemResult = await request(sourceUrl);
 

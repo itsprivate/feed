@@ -1,0 +1,32 @@
+{
+  "id": "https://lobste.rs/s/q8wxrn",
+  "title": {
+    "value": "Helix Release 22.08 Highlights"
+  },
+  "description": {
+    "value": "&#60;p&#62;&#60;a href=&#34;https://lobste.rs/s/q8wxrn/helix_release_22_08_highlights&#34;&#62;Comments&#60;/a&#62;&#60;/p&#62;"
+  },
+  "comments": "https://lobste.rs/s/q8wxrn/helix_release_22_08_highlights",
+  "published": "2022-09-01T06:05:35.000Z",
+  "publishedRaw": "Thu, 01 Sep 2022 01:05:35 -0500",
+  "updated": "2022-09-01T06:05:35.000Z",
+  "updatedRaw": "Thu, 01 Sep 2022 01:05:35 -0500",
+  "author": {
+    "name": "adaszko@users.lobste.rs (adaszko)"
+  },
+  "links": [
+    {
+      "href": "https://helix-editor.com/news/release-22-08-highlights/"
+    }
+  ],
+  "categories": [
+    {
+      "term": "vim",
+      "label": "vim"
+    },
+    {
+      "term": "release",
+      "label": "release"
+    }
+  ]
+}

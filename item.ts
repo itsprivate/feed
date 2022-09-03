@@ -315,7 +315,6 @@ export default class Item<T> {
       _original_published: this.getOriginalPublished(),
       _original_language: this.getOriginalLanguage(),
       _translations: translations,
-      _links: this.getLinks({ isUseHTML: true }),
     };
 
     const tags = this.getTags();
@@ -418,6 +417,13 @@ export default class Item<T> {
       content_html: "",
       ...formatedItem,
     };
+
+    if (
+      this.getLinks({ isUseHTML: true }) &&
+      this.getLinks({ isUseHTML: true }).length > 0
+    ) {
+      item._links = this.getLinks({ isUseHTML: true });
+    }
 
     // format id to url
 

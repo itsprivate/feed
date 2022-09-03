@@ -8,6 +8,7 @@ import devto from "./devto.ts";
 import { Type } from "../interface.ts";
 import newyorker from "./newyorker.ts";
 import googlenews from "./googlenews.ts";
+import lobste from "./lobste.ts";
 export type ItemType = Item<RedditItem | HnItem>;
 const adapters: Record<string, Type<Item<RedditItem>>> = {
   // @ts-ignore: hard to type
@@ -26,5 +27,7 @@ const adapters: Record<string, Type<Item<RedditItem>>> = {
   devto,
   // @ts-ignore: hard to type
   newyorker,
+  // @ts-ignore: hard to type
+  lobste,
 };
 export default adapters;
