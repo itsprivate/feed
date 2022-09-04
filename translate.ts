@@ -116,10 +116,17 @@ export default class Translation {
       this.page.setExtraHTTPHeaders({ referer: "https://www.google.com/" });
 
       await this.page.goto(homepage, { waitUntil: "domcontentloaded" });
-
-      await this.page.waitForXPath(
-        "//span[@data-testid='deepl-ui-tooltip-target']",
-      );
+      try {
+        await this.page.waitForXPath(
+          "//span[@data-testid='deepl-ui-tooltip-target']",
+        );
+      } catch (e) {
+        log.info("deepl-ui-tooltip-target not found, try to screeen shot");
+        await this.page.screenshot({
+          path: "temp/deepl-ui-tooltip-target.png",
+        });
+        throw e;
+      }
     }
     log.info("init puppeteer page success");
   }
