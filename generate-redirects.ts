@@ -14,13 +14,9 @@ export default async function generateRedirects(
   //   return;
   // }
   redirects += `/rss.xml /feed.xml 302\n`;
-  for (const language of config.languages) {
+  for (const language of config.languages.reverse()) {
     const targetPrefix =
       `https://${archiveDomain}.${rootDomain}/${language.prefix}${siteIdentifier}`;
-
-    // generate tags
-    redirects += `/${language.prefix}tags/* ${targetPrefix}/tags/:splat 302\n`;
-
     // generate issues
 
     const issueSitesKyes = Object.keys(issueMap);
@@ -37,6 +33,14 @@ export default async function generateRedirects(
         }
       }
     }
+  }
+
+  for (const language of config.languages.reverse()) {
+    const targetPrefix =
+      `https://${archiveDomain}.${rootDomain}/${language.prefix}${siteIdentifier}`;
+
+    // generate tags
+    redirects += `/${language.prefix}tags/* ${targetPrefix}/tags/:splat 302\n`;
   }
 
   // generate rss.xml to feed.xml
