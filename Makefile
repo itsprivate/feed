@@ -137,7 +137,9 @@ buildcurrent:
 .Phony: dev
 dev:
 	wrangler pages dev public/${site}
-
+.Phony: devprod
+devprod:
+	wrangler pages dev prod-public/${site}
 .Phony: install
 install:
 	PUPPETEER_PRODUCT=chrome deno run -A https://deno.land/x/puppeteer@14.1.1/install.ts

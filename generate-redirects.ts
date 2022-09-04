@@ -13,13 +13,10 @@ export default async function generateRedirects(
   //   log.info(`skip generate redirects for ${siteIdentifier}`);
   //   return;
   // }
+  redirects += `/rss.xml /feed.xml 302\n`;
   for (const language of config.languages) {
     const targetPrefix =
       `https://${archiveDomain}.${rootDomain}/${language.prefix}${siteIdentifier}`;
-
-    // generate rss.xml to feed.xml
-
-    redirects += `*/rss.xml */feed.xml 302\n`;
 
     // generate tags
     redirects += `/${language.prefix}tags/* ${targetPrefix}/tags/:splat 302\n`;
@@ -41,6 +38,10 @@ export default async function generateRedirects(
       }
     }
   }
+
+  // generate rss.xml to feed.xml
+
+  redirects += `/*/rss.xml /:splat/feed.xml 302\n`;
   // trim last new line
   if (redirects.endsWith(`\n`)) {
     redirects = redirects.slice(0, -1);
