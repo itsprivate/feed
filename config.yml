@@ -807,7 +807,7 @@ sources:
         key: getTags
         value: "Show HN"
   - api:
-      url: http://hn.algolia.com/api/v1/search_by_date?tags=(story,poll,show_hn,ask_hn)&numericFilters=points>=200&hitsPerPage=50
+      url: http://hn.algolia.com/api/v1/search_by_date?tags=(story,poll,show_hn,ask_hn)&numericFilters=points>=150&hitsPerPage=50
       name: Hacker News Popular
       home_page_url: https://news.ycombinator.com/best
     type: hn
