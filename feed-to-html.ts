@@ -158,14 +158,25 @@ export default function feedToHTML(
       );
       const siteShortName = siteTranslations.short_title;
       const siteName = siteTranslations.title;
+
+      // www does not has lite version
+      let url = siteIdentifierToUrl(
+        item,
+        "/" + language.prefix + version.prefix,
+        config,
+      );
+      if (item === indexSubDomain) {
+        url = siteIdentifierToUrl(
+          item,
+          "/" + language.prefix,
+          config,
+        );
+      }
+
       return {
         //@ts-ignore: add meta data
         name: siteShortName || siteName,
-        url: siteIdentifierToUrl(
-          item,
-          "/" + language.prefix + version.prefix,
-          config,
-        ),
+        url,
         is_last: index === relatedSites.length - 1,
         active: item === siteIdentifier,
       };
