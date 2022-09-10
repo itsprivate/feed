@@ -9,6 +9,7 @@ import adapters from "../adapters/mod.ts";
 import {
   get,
   getCurrentItemsFilePath,
+  getDataRawPath,
   getDataTranslatedPath,
   identifierToCachedKey,
   isDev,
@@ -36,6 +37,7 @@ export default async function fetchSources(
   }
 
   const currentKeysMap = new Map<string, boolean>();
+  const currentRawKeysMap = new Map<string, string[]>();
   const targetSiteIdentifiersMap = new Map<string, string[]>();
   for (const siteIdentifier of siteIdentifiers) {
     const siteConfig = sitesMap[siteIdentifier];
@@ -82,7 +84,33 @@ export default async function fetchSources(
       log.info(`site ${siteIdentifier} is dev only, skip fetch sources`);
     }
   }
+  // also get current translated path
+  // is exists translated file
+  // ensure folder exists
+  await fs.ensureDir(getDataTranslatedPath());
+  for await (
+    const entry of fs.walk(getDataTranslatedPath())
+  ) {
+    if (entry.isFile && entry.name.endsWith(".json")) {
+      const key = entry.name.replace(/\.json$/, "");
+      currentKeysMap.set(identifierToCachedKey(key), true);
+    }
+  }
+  // also get current raw keys
+  await fs.ensureDir(getDataRawPath());
+  for await (
+    const entry of fs.walk(getDataRawPath())
+  ) {
+    if (entry.isFile && entry.name.endsWith(".json")) {
+      const key = entry.name.replace(/\.json$/, "");
+      const itemKey = identifierToCachedKey(key);
+      if (currentRawKeysMap.has(itemKey)) {
+        currentRawKeysMap.set(itemKey, []);
+      }
 
+      currentRawKeysMap.get(itemKey)?.push(entry.path);
+    }
+  }
   // unique filteredSources
   filteredSources = Array.from(new Set(filteredSources.map((item) => item.id)))
     .map((id) => sourcesMap.get(id)!);
@@ -100,18 +128,6 @@ export default async function fetchSources(
     let itemsPath = source.itemsPath || "";
     const rules = source.rules || [];
 
-    // also get current translated path
-    // is exists translated file
-    // ensure folder exists
-    await fs.ensureDir(getDataTranslatedPath());
-    for await (
-      const entry of fs.walk(getDataTranslatedPath())
-    ) {
-      if (entry.isFile) {
-        const key = entry.name.replace(/\.json$/, "");
-        currentKeysMap.set(identifierToCachedKey(key), true);
-      }
-    }
     log.debug(sourceId + ` current keys length: ${currentKeysMap.size}`);
     // fetch source, and parse it to item;
     for (const sourceApiConfig of sourceUrls) {
@@ -225,6 +241,16 @@ export default async function fetchSources(
 
       for (const item of (originalItems as Item<unknown>[])) {
         await item.init();
+        // check if current raw already has one, delete others
+
+        if (currentRawKeysMap.has(item.getCachedKey())) {
+          // delete all cached files
+          const cachedFiles = currentRawKeysMap.get(item.getCachedKey())!;
+          for (const cachedFile of cachedFiles) {
+            await Deno.remove(cachedFile);
+            log.info(`remove duplicated raw file: ${cachedFile}`);
+          }
+        }
 
         if (!currentKeysMap.get(item.getCachedKey())) {
           // not exists

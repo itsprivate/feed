@@ -1038,7 +1038,7 @@ sources:
     rules:
       - type: greaterEqual
         key: getWeightedScore
-        value: "400"
+        value: "500"
   - api:
       url: s2fmultiple
       name: S2F Multiple Twitter
