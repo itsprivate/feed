@@ -68,6 +68,8 @@ export default async function formatItems(
       }
       await Deno.remove(file);
     }
+    // ensure translated folder exists
+    await fs.ensureDir(getDataTranslatedPath());
     // also load all current and translated image cache
     for await (const entry of fs.walk(getDataTranslatedPath())) {
       if (entry.isFile && entry.name.endsWith(".json")) {
@@ -149,9 +151,16 @@ export default async function formatItems(
       );
       // no need to init, cause only get raw data need to init.
       // await item.init();
-      const itemJson = await item.getFormatedItem({
-        imageCachedMap,
-      });
+      let itemJson;
+      try {
+        itemJson = await item.getFormatedItem({
+          imageCachedMap,
+        });
+      } catch (e) {
+        log.warn(`try to format ${file} error`);
+        log.warn(e);
+        continue;
+      }
 
       // write formated item to file
       await writeJSONFile(

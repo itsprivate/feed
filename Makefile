@@ -5,6 +5,9 @@ endif
 .Phony: source
 source:
 	deno run -A main.ts --source --site devfeed
+.Phony: source-all
+source-all:
+	deno run -A main.ts --source
 
 .Phony: prod-source
 prod-source:
@@ -172,7 +175,7 @@ prod-loadcurrent:
 .Phony: loadarchivehttp
 loadarchivehttp:
 	deno run -A scripts/load-archive.ts
-	
+
 .Phony: prod-loadarchivehttp
 prod-loadarchivehttp:
 	PROD=1 deno run -A scripts/load-archive.ts
