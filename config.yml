@@ -1021,9 +1021,6 @@ sources:
       - url: MarketWatch
         name: Market Watch Twitter
         home_page_url: https://twitter.com/MarketWatch
-      - url: The_Real_Fly
-        name: The Real Fly Twitter
-        home_page_url: https://twitter.com/The_Real_Fly
       - url: awealthofcs
         name: A Wealth of CS Twitter
         home_page_url: https://twitter.com/awealthofcs
