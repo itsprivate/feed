@@ -974,7 +974,7 @@ sources:
     rules:
       - type: greaterEqual
         key: getWeightedScore
-        value: "20"
+        value: "5"
   - api:
       url: nytimes
       name: New York Times Twitter
