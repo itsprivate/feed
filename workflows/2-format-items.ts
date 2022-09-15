@@ -2,6 +2,7 @@ import { fs, path } from "../deps.ts";
 import { FormatedItem, ItemsJson, RunOptions } from "../interface.ts";
 import adapters from "../adapters/mod.ts";
 import {
+  callWithTimeout,
   getCurrentItemsFilePath,
   getDataFormatedPath,
   getDataRawPath,
@@ -153,9 +154,10 @@ export default async function formatItems(
       // await item.init();
       let itemJson;
       try {
-        itemJson = await item.getFormatedItem({
-          imageCachedMap,
-        });
+        itemJson = await callWithTimeout(
+          item.getFormatedItem.bind(item, { imageCachedMap }),
+          10000,
+        );
       } catch (e) {
         log.warn(`try to format ${file} error`);
         log.warn(e);
