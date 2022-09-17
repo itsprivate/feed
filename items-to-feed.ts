@@ -167,9 +167,7 @@ export default function itemsToFeed(
       }
     } else if (pageMeta.type === "posts") {
       if (items.length > 0) {
-        siteTitle = `${items[0]._title_prefix ?? ""}${items[0].title ?? ""}${
-          items[0]._title_suffix ?? ""
-        }`;
+        siteTitle = `${items[0].title ?? ""}`;
         siteDescription = items[0].summary || siteDescription;
         siteTitleSuffix = ` - ${siteName}`;
       }
