@@ -162,7 +162,7 @@ export default async function fetchSources(
           include_rts: true,
           tweet_mode: "extended",
           // since_id,
-          count: 100,
+          // count: 25,
           ...source.params,
         };
         const result = await new Promise((resolve, reject) => {
