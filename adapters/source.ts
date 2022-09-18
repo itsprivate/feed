@@ -181,7 +181,7 @@ export default class source extends Item<FormatedItem> {
       } else {
         externalLinkName = `Reddit Link`;
       }
-    } else if (type === "twitter") {
+    } else if (type === "twitter" || type === "thechinaproject") {
       if (
         this.getScore() && this.getExternalUrl()
       ) {
