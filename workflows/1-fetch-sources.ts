@@ -50,7 +50,6 @@ export default async function fetchSources(
         const source = sourcesMap.get(siteTag);
         if (source) {
           siteSources.push(source);
-
           if (!targetSiteIdentifiersMap.has(siteTag)) {
             targetSiteIdentifiersMap.set(siteTag, []);
           }
@@ -143,7 +142,7 @@ export default async function fetchSources(
         const xml = await originItemResult.text();
         originalJson = await parseFeed(xml);
         itemsPath = "entries";
-      } else if (sourceType === "twitter") {
+      } else if (sourceType === "twitter" || sourceType === "thechinaproject") {
         const bearerToken = Deno.env.get("TWITTER_BEARER_TOKEN");
         if (!bearerToken) {
           throw new Error("TWITTER_BEARER_TOKEN is not set");
@@ -253,28 +252,37 @@ export default async function fetchSources(
         }
 
         if (!currentKeysMap.get(item.getCachedKey())) {
-          // not exists
-          // save original item to file
-          await writeJSONFile(
-            item.getRawPath(targetSiteIdentifiersMap.get(sourceId)!, itemOrder),
-            item.getRawItem(),
-          );
-          log.debug(
-            `fetched raw data to ${
+          // filter again, cause some attributes is geted by init()
+          const filterdItems = filterByRules([item], rules);
+          if (filterdItems.length > 0) {
+            // not exists
+            // save original item to file
+            await writeJSONFile(
               item.getRawPath(
                 targetSiteIdentifiersMap.get(sourceId)!,
                 itemOrder,
-              )
-            }`,
-          );
-          itemOrder++;
-          total++;
+              ),
+              item.getRawItem(),
+            );
+            log.debug(
+              `fetched raw data to ${
+                item.getRawPath(
+                  targetSiteIdentifiersMap.get(sourceId)!,
+                  itemOrder,
+                )
+              }`,
+            );
+            itemOrder++;
+            total++;
+          } else {
+            log.info(`remove item ${item.getUrl()} by rules`);
+          }
         } else {
           log.debug(`${item.getCachedKey()} exists, skip`);
         }
       }
       log.info(
-        `saved ${total} items by unique keys`,
+        `saved ${total} items by unique keys and second filter`,
       );
     }
   }

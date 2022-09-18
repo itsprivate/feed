@@ -9,6 +9,7 @@ import { Type } from "../interface.ts";
 import newyorker from "./newyorker.ts";
 import googlenews from "./googlenews.ts";
 import lobste from "./lobste.ts";
+import thechinaproject from "./thechinaproject.ts";
 export type ItemType = Item<RedditItem | HnItem>;
 const adapters: Record<string, Type<Item<RedditItem>>> = {
   // @ts-ignore: hard to type
@@ -29,5 +30,7 @@ const adapters: Record<string, Type<Item<RedditItem>>> = {
   newyorker,
   // @ts-ignore: hard to type
   lobste,
+  // @ts-ignore: hard to type
+  thechinaproject,
 };
 export default adapters;

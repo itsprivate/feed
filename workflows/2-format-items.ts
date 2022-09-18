@@ -156,7 +156,7 @@ export default async function formatItems(
       try {
         itemJson = await callWithTimeout(
           item.getFormatedItem.bind(item, { imageCachedMap }),
-          10000,
+          30000,
         );
       } catch (e) {
         log.warn(`try to format ${file} error`);

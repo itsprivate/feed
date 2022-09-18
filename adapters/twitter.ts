@@ -1,6 +1,9 @@
 import { Author, Video } from "../interface.ts";
 import Item from "../item.ts";
+import { request } from "../util.ts";
+import log from "../log.ts";
 export default class twitter extends Item<TwitterItem> {
+  private url = "";
   constructor(item: TwitterItem) {
     if (item.quoted_status) {
       throw new Error("Quoted tweets are not supported");
@@ -19,14 +22,38 @@ export default class twitter extends Item<TwitterItem> {
     return this.originalItem.id_str as string;
   }
   isValid(): boolean {
-    const title = this.getTitle();
+    const title = this.getFallbackTitle();
     if (!title) {
       // there is no title, so it is not valid
       return false;
     }
     return true;
   }
-  getTitle(): string {
+  async init(): Promise<void> {
+    await super.init();
+    // check if already init
+
+    const url = this.getUrl();
+
+    const urlObj = new URL(url);
+
+    const hostname = urlObj.hostname;
+    if (hostname === "on.wsj.com") {
+      const fetchResult = await request(url);
+      log.debug(
+        `twitter url fetch result: `,
+        url,
+        fetchResult.status,
+        fetchResult.url,
+      );
+      const fetchedUrlObj = new URL(fetchResult.url);
+      // remove search params
+      fetchedUrlObj.search = "";
+      this.url = fetchedUrlObj.href;
+    }
+  }
+
+  getFallbackTitle(): string {
     const tweet = this.originalItem;
     let title = this.originalItem.full_text as string;
 
@@ -56,8 +83,36 @@ export default class twitter extends Item<TwitterItem> {
   getNumComments(): number {
     return this.originalItem.retweet_count;
   }
+  getRawItem(): TwitterItem {
+    if (this.url) {
+      if (this.originalItem.entities.urls.length > 0) {
+        this.originalItem.entities
+          .urls[this.originalItem.entities.urls.length - 1].expanded_url =
+            this.url;
+      }
+    }
+    return this.originalItem;
+  }
+  isNeedToGetRedirectedUrl(): boolean {
+    const url = this.getUrl();
 
+    const urlObj = new URL(url);
+
+    const hostname = urlObj.hostname;
+
+    if (
+      hostname === "nyti.ms" || hostname === "econ.st" ||
+      hostname === "on.wsj.com"
+    ) {
+      return true;
+    } else {
+      return false;
+    }
+  }
   getUrl(): string {
+    if (this.url) {
+      return this.url;
+    }
     // check entities for urls
     const tweet = this.originalItem;
     if (tweet.entities.urls.length > 0) {

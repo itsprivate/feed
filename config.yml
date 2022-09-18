@@ -101,7 +101,7 @@ sites:
     port: 8000
     dev: true
     tags:
-      - source-reddit-linux
+      - source-thechinaproj
     archive: false
     translations:
       "zh-Hans":
@@ -474,7 +474,6 @@ sites:
     tags:
       - depth
       - source-reddit-depth
-      - www
     translations:
       zh-Hans:
         title: 精神食粮
@@ -742,6 +741,31 @@ sites:
         short_title: "Linux"
         description: "人気の Linux subreddit の最新 の投稿"
         keywords: "Linux 头条, Linux 中文, Linux Story"
+  china:
+    port: 8023
+    priority: 12
+    archive: true
+    tags:
+      - china
+      - www
+      - source-thechinaproj
+      - source-reddit-china
+    translations:
+      "zh-Hans":
+        title: "外国人怎么看中国？"
+        short_title: "中国"
+        description: "用中文浏览国外有关中国话题的热门讨论"
+        keywords: "中国,关于中国"
+      "en":
+        title: "What do foreigners think of China?"
+        short_title: "China"
+        description: "See what's buzzing on China topic in your native language"
+        keywords: "China"
+      "ja":
+        title: "外国人は中国をどう見ているのか？"
+        short_title: "中国"
+        description: "人気の中国の最新 の投稿"
+        keywords: "中国"
 versions:
   - prefix: ""
     code: "default"
@@ -999,6 +1023,9 @@ sources:
       - type: greaterEqual
         key: getWeightedScore
         value: "150"
+      - type: notEqual
+        key: getUrl
+        value: "https://www.wsj.com/"
   - api:
       url: TheEconomist
       name: The Economist Twitter
@@ -1066,7 +1093,7 @@ sources:
     type: twitter
     rules:
       - type: include
-        key: getTitle
+        key: getFallbackTitle
         value: "?"
   - api:
       url: https://www.newyorker.com/feed/everything
@@ -1110,3 +1137,25 @@ sources:
       - type: greaterEqual
         key: getWeightedScore
         value: "10"
+  - api:
+      url: thechinaproj
+      name: thechinaproj Twitter
+      home_page_url: https://twitter.com/thechinaproj
+    params:
+      include_rts: true
+    id: source-thechinaproj
+    type: thechinaproject
+    rules:
+      - type: greaterEqual
+        key: getWeightedScore
+        value: "2"
+  - id: source-reddit-china
+    type: reddit
+    api:
+      url: https://www.reddit.com/r/china/top/.json?raw_json=1
+      name: China Subreddit
+      home_page_url: https://www.reddit.com/r/China/
+    rules:
+      - type: greaterEqual
+        key: getWeightedScore
+        value: "15"

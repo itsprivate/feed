@@ -56,6 +56,14 @@ export default class reddit extends Item<RedditItem> {
         // );
       }
     }
+    // check is url end with jpg png
+    const url = this.getUrl();
+    if (
+      url.endsWith(".jpg") || url.endsWith(".png") || url.endsWith(".gif") ||
+      url.endsWith(".jpeg")
+    ) {
+      image = url;
+    }
     return image;
   }
   getVideo(): Video | undefined {

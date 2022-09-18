@@ -969,18 +969,14 @@ export function identifierToCachedKey(identifier: string): string {
   return `${parsed.language}_${parsed.type}__${parsed.id}`;
 }
 export async function getRedirectedUrl(url: string): Promise<string> {
-  const fetchResult = await request(url, {
-    redirect: "manual",
-  });
-  log.debug(`redirected url fetch result: `, url, fetchResult.status);
-  if (
-    (fetchResult.status === 301 || fetchResult.status === 302) &&
-    fetchResult.headers.get("location")
-  ) {
-    return fetchResult.headers.get("location")!;
-  } else {
-    return url;
-  }
+  const fetchResult = await request(url);
+  log.debug(
+    `redirected url fetch result: `,
+    url,
+    fetchResult.status,
+    fetchResult.url,
+  );
+  return fetchResult.url;
 }
 
 export function tryToRemoveUnnecessaryParams(

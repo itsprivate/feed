@@ -18,6 +18,7 @@ export interface Source {
 }
 export interface GetFormatedItemOptions {
   imageCachedMap?: Record<string, string>;
+  titleCachedMap?: Record<string, string>;
 }
 export interface Language {
   code: string;

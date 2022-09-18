@@ -36,6 +36,7 @@ export default class Item<T> {
   originalItem: T;
   private image: string | null | undefined;
   private realUrl: string | null | undefined;
+  private title: string | null | undefined;
   constructor(originalItem: T) {
     this.originalItem = originalItem;
   }
@@ -120,9 +121,6 @@ export default class Item<T> {
   getId(): string {
     return "";
   }
-  getTitle(): string {
-    return "";
-  }
   getTitlePrefix(): string {
     // this will not be translated
     return "";
@@ -138,13 +136,16 @@ export default class Item<T> {
     }
     return "";
   }
+  getRealUrl(): string {
+    return this.realUrl || this.getUrl();
+  }
   getSiteIdentifier(): string {
-    return new URL(this.getUrl()).hostname;
+    return new URL(this.getRealUrl()).hostname;
   }
   getImage(): string | undefined | null {
     // undefined means not init
     // null means no image
-    const url = this.getUrl();
+    const url = this.getRealUrl();
     const urlObj = new URL(url);
     const domain = urlObj.hostname;
     const disableImages = [
@@ -163,7 +164,7 @@ export default class Item<T> {
   async tryToLoadImage(
     imageCachedMap?: Record<string, string>,
   ): Promise<string | null> {
-    const url = this.getUrl();
+    const url = this.getRealUrl();
 
     if (imageCachedMap && imageCachedMap[url]) {
       this.image = imageCachedMap[url];
@@ -235,6 +236,90 @@ export default class Item<T> {
       return null;
     }
   }
+  getFallbackTitle(): string {
+    return "";
+  }
+  getTitle(): string | undefined | null {
+    // undefined means not init
+    // null means no image
+    const url = this.getRealUrl();
+    const urlObj = new URL(url);
+    const domain = urlObj.hostname;
+    const disableUrls = [];
+    if (this.title === null) {
+      return this.getFallbackTitle();
+    } else {
+      return this.title;
+    }
+  }
+  async tryToLoadTitle(
+    imageCachedMap?: Record<string, string>,
+  ): Promise<string | null> {
+    const url = this.getRealUrl();
+
+    if (imageCachedMap && imageCachedMap[url]) {
+      this.title = imageCachedMap[url];
+      log.debug(`load title ${imageCachedMap[url]} from cache ${url}`);
+      return this.title;
+    }
+
+    if (isMock()) {
+      this.title = null;
+      return null;
+    }
+
+    // add siteIdentifier referrer
+    log.debug(`try to load title for ${url}`);
+    let resource: { text: string; contentType: string };
+    try {
+      resource = await request(url, {
+        referrer: `https://www.google.com`,
+      }).then(async (res) => {
+        if (res.ok) {
+          const contentType = res.headers.get("content-type");
+          if (contentType && contentType.includes("text/html")) {
+            const text = await res.text();
+            return {
+              text: text,
+              contentType: contentType,
+            };
+          } else {
+            throw new Error(
+              `fetch ${url} failed, content type is not text/html, it is ${contentType}`,
+            );
+          }
+        } else {
+          throw new Error(`fetch ${url} failed`);
+        }
+      });
+    } catch (e) {
+      log.debug(e.message);
+      this.title = null;
+      return null;
+    }
+    try {
+      const doc = new DOMParser().parseFromString(
+        resource.text,
+        "text/html",
+      );
+      const metadata = getMetadata(doc, url);
+      if (metadata.title) {
+        this.title = metadata.title;
+      } else if (doc && doc.title) {
+        // console.log("doc.title", doc.title);
+        this.title = doc.title;
+      } else {
+        log.debug(`not found title for ${url}`);
+        this.title = null;
+      }
+      return null;
+    } catch (_e) {
+      log.debug(`parse ${url} html failed`);
+      log.debug(_e);
+      this.title = null;
+      return null;
+    }
+  }
 
   getAuthors(): Author[] {
     return [];
@@ -288,7 +373,7 @@ export default class Item<T> {
   }
   getTranslation(): Record<string, string> {
     return {
-      "title": this.getTitle(),
+      "title": this.getTitle() || this.getFallbackTitle(),
     };
   }
   getFullTranslations(): Record<string, Record<string, string>> | undefined {
@@ -306,10 +391,9 @@ export default class Item<T> {
       translations[this.getOriginalLanguage()] = this.getTranslation();
     }
     const image = this.getImage();
-
     const item: FormatedItem = {
       id: this.getItemIdentifier(),
-      url: this.realUrl || this.getUrl(),
+      url: this.getRealUrl(),
       date_published: this.getPublished(),
       date_modified: this.getModified(),
       _original_published: this.getOriginalPublished(),
@@ -358,10 +442,23 @@ export default class Item<T> {
     }
     return item;
   }
+  getTitleTrimedSuffix(): string {
+    return "";
+  }
   async getFormatedItem(
     options?: GetFormatedItemOptions,
   ): Promise<FormatedItem> {
     const formatedItem = this.getFormatedItemSync();
+    if (this.isNeedToGetRedirectedUrl()) {
+      if (this.realUrl === undefined) {
+        // try to get redirected url
+        const originalUrl = this.getUrl();
+        const redirectedUrl = await getRedirectedUrl(originalUrl);
+        this.realUrl = tryToRemoveUnnecessaryParams(redirectedUrl);
+        formatedItem.url = this.realUrl;
+      }
+    }
+
     if (this.getImage() === undefined) {
       let imageCachedMap: Record<string, string> = {};
       if (options && options.imageCachedMap) {
@@ -372,14 +469,34 @@ export default class Item<T> {
         formatedItem.image = this.image;
       }
     }
-
-    if (this.isNeedToGetRedirectedUrl()) {
-      if (this.realUrl === undefined) {
-        // try to get redirected url
-        const originalUrl = this.getUrl();
-        const redirectedUrl = await getRedirectedUrl(originalUrl);
-        this.realUrl = tryToRemoveUnnecessaryParams(redirectedUrl);
-        formatedItem.url = this.realUrl;
+    if (this.getTitle() === undefined) {
+      let imageCachedMap: Record<string, string> = {};
+      if (options && options.titleCachedMap) {
+        imageCachedMap = options.titleCachedMap;
+      }
+      await this.tryToLoadTitle(imageCachedMap);
+      if (this.title) {
+        if (
+          formatedItem._translations &&
+          formatedItem._translations[this.getOriginalLanguage()]
+        ) {
+          formatedItem._translations[this.getOriginalLanguage()].title =
+            this.title;
+        }
+      }
+    }
+    // if need to trim title suffix
+    if (this.getTitleTrimedSuffix()) {
+      if (
+        formatedItem._translations &&
+        formatedItem._translations[this.getOriginalLanguage()]
+      ) {
+        let currentTitle =
+          formatedItem._translations[this.getOriginalLanguage()].title;
+        if (currentTitle.endsWith(this.getTitleTrimedSuffix())) {
+          formatedItem._translations[this.getOriginalLanguage()].title =
+            currentTitle.slice(0, -this.getTitleTrimedSuffix().length);
+        }
       }
     }
 
@@ -431,7 +548,7 @@ export default class Item<T> {
       item.id = postToUrl(item.id, siteIdentifier, language, version, config);
     }
 
-    const itemUrl = this.getUrl();
+    const itemUrl = this.getRealUrl();
     const itemUrlObj = new URL(itemUrl);
     const translationObj = getItemTranslations(
       item._translations || {},
@@ -608,11 +725,11 @@ export default class Item<T> {
       }
     }
     // check is need add original link
-    if (!linkMap[this.getUrl()]) {
+    if (!linkMap[this.getRealUrl()]) {
       // then add
       content_text += `\n${
         currentTranslations.source_link_label || "Source"
-      }: ${this.getUrl()}`;
+      }: ${this.getRealUrl()}`;
     }
 
     content_html += "</footer>";
