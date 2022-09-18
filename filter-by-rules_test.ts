@@ -64,7 +64,7 @@ Deno.test("filterByRules #1", async (t) => {
     const items = filterByRules([new TwitterItem(quoraTweetItem)], [
       {
         type: "include",
-        key: "getTitle",
+        key: "getFallbackTitle",
         value: "?",
       },
     ]);
