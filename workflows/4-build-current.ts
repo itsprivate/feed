@@ -51,11 +51,12 @@ export default async function buildCurrent(
         items: {},
       };
       try {
-        currentItemsJson = await readJSONFile(currentItemsPath);
+        currentItemsJson = await readJSONFile(currentItemsPath) as ItemsJson;
       } catch (e) {
         // ignore
         log.debug(`read json file error: ${e}`);
       }
+
       let currentArchive: string[] = currentItemsJson.archive || [];
       const currentTags: string[] = currentItemsJson.tags || [];
 
@@ -150,34 +151,28 @@ export default async function buildCurrent(
           tagFiles[tagFilePath] = tagFileJson;
         }
       };
-
-      const currentToBeArchivedFilePath = getCurrentToBeArchivedItemsFilePath(
-        siteIdentifier,
-      );
-      // history items, fix it.
-      let currentToBeArchivedItemsJson: ItemsJson = { items: {} };
-      try {
-        currentToBeArchivedItemsJson = await readJSONFile(
-          currentToBeArchivedFilePath,
-        );
-        if (currentToBeArchivedItemsJson.items) {
-          for (const key in currentToBeArchivedItemsJson.items) {
-            await archivePost(currentToBeArchivedItemsJson.items[key]);
-          }
-        }
-      } catch (e) {
-        // ignore
-        log.debug(`read json file error: ${e}`);
-      }
-
+      const urlsMap: Map<string, boolean> = new Map();
+      const itemsKeys = Object.keys(currentItemsJson.items);
+      itemsKeys.forEach((key) => {
+        urlsMap.set(currentItemsJson.items[key].url, true);
+      });
       for (const file of files) {
         const item = await readJSONFile(file) as FormatedItem;
         const id = item["id"];
+
         // handle tags
         const tags = item["tags"];
         total++;
         if (total % 100 === 0) {
           log.info(`processed ${total} items`);
+        }
+
+        // check current items cahced keys, delete duplicated items by urls
+        // cause some site, they have different id, but the same urls, we thought that is duplicated.
+        if (urlsMap.has(item.url)) {
+          log.info(`${item.url} is duplicated, will drop it.`);
+          filesNeedToBeDeleted.add(file);
+          continue;
         }
         // only add first 500 items to archive list
         if (total <= MAX_ITEMS_PER_PAGE) {
