@@ -221,7 +221,7 @@
       .fixed{
         position: fixed;
         bottom: 2em;
-        right: 0.5em;  
+        right: 0.5em;
         font-weight: bold;
         z-index:1;
       }
@@ -235,7 +235,7 @@
       .mt0{
         margin-top: 0;
       }
-      @media print{    
+      @media print{
         .fixed{
             display: none;
         }
@@ -285,20 +285,20 @@
           {{/active}} {{/_versions}}
           <br />
         {{/_versions.1}}
-                 {{ languages_label }}: 
+                 {{ languages_label }}:
           <ul>
           {{#_languages}}
             <li>
               {{#active}}
                 <span>{{ name }}</span>
-              {{/active}} 
+              {{/active}}
               {{^active}}
                 <a href="{{{url}}}">{{ name }}</a>
               {{/active}}
             </li>
           {{/_languages}}
           </ul>
-          {{ subscription_label }}: 
+          {{ subscription_label }}:
           <ul>
           {{#_atom_url}}
             <li><a href="{{{_atom_url}}}">Atom/RSS Feed</a></li>
@@ -307,15 +307,15 @@
             <li><a href="{{{feed_url}}}">JSON Feed</a></li>
           {{/feed_url}}
           </ul>
-          {{social_label}}: 
+          {{social_label}}:
           <ul>
           {{#_social_links}}<li><a href="{{url}}">{{name}}</a></li>{{/_social_links}}
           </ul>
           {{#_sources.0}}
-          {{ sources_label }}: 
+          {{ sources_label }}:
            <ul>
           {{#_sources}}<li><a href="{{url}}">{{name}}</a></li>{{/_sources}}
-          </ul>          
+          </ul>
           {{/_sources.0}}
           {{latest_build_at_lable}}: {{_latest_build_time}}
           <br />
@@ -331,7 +331,7 @@
       <h3 class="px">{{{title}}}&nbsp;(<a class="contrast" href="{{{home_page_url}}}">{{hostname}}</a>)</h3>
       {{#items}}
       <div class="article h-entry hentry">
-         <span class="muted">{{_human_time}}&nbsp;</span> <a class="no-underline p-name contrast entry-title u-url" href="{{{url}}}">{{#order}}<span>{{ . }}. </span>{{/order}}{{{title}}}</a>{{#_sensitive}}<span>&nbsp;(</span><span class="nsfw">NSFW</span><span>)</span>{{/_sensitive}}
+         <a class="muted" href="{{{id}}}">{{_human_time}}&nbsp;</a> <a class="no-underline p-name contrast entry-title u-url" href="{{{url}}}">{{#order}}<span>{{ . }}. </span>{{/order}}{{{title}}}</a>{{#_sensitive}}<span>&nbsp;(</span><span class="nsfw">NSFW</span><span>)</span>{{/_sensitive}}
          {{#_links}}
           &nbsp;<a class="muted small" href="{{{url}}}">{{{name}}}</a>
          {{/_links}}
@@ -340,14 +340,14 @@
       {{#remaining_count}}
       <div class="article muted secondary small">
         <a href="{{{home_page_url}}}">{{{remaining_label}}}</a>
-        <span>&nbsp;</span><a class="small" href="{{{home_page_lite_url}}}">{{{Lite}}}</a><span>&nbsp;·&nbsp;</span><a class="small" href="{{{atom_url}}}">{{{subscription_label}}}</a> <span></span>  
+        <span>&nbsp;</span><a class="small" href="{{{home_page_lite_url}}}">{{{Lite}}}</a><span>&nbsp;·&nbsp;</span><a class="small" href="{{{atom_url}}}">{{{subscription_label}}}</a> <span></span>
       </div>
       {{/remaining_count}}
     {{/_groups}}
     <footer class="footer">
 
       <a class="muted" href="{{{_advice_url}}}">{{{advice_label}}}</a>
-      
+
     </footer>
     <div id="bottom"></div>
     <div class="fixed">
