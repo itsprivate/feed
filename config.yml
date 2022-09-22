@@ -806,7 +806,7 @@ sources:
     id: source-google-news
     rules:
       - type: limit
-        value: "3"
+        value: "5"
   - api:
       url: https://hn.algolia.com/api/v1/search_by_date?tags=front_page&hitsPerPage=50
       name: Hacker News Front Page
