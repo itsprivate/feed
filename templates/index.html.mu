@@ -398,8 +398,5 @@
         <a class="no-underline contrast" title="Go to Bottom" href="#bottom">&darr;</a>
     </div>
    </div>
-   <!-- Cloudflare Web Analytics -->
-   <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "1d3268363cdd483e955289405d5a089f"}'></script>
-   <!-- End Cloudflare Web Analytics -->
   </body>
 </html>
