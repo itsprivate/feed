@@ -73,6 +73,23 @@ sites:
     port: 9000
     standalone: true
     tags: []
+  picks:
+    standalone: true
+    tags: ["all"]
+    ppriority: 1
+    translations:
+      'zh-Hans':
+        title: '编辑精选'
+        short_title: '编辑精选'
+        url: "https://www.owenyoung.com/categories/journal/"
+      'en':
+        title: "Editor's Picks"
+        short_title: "Editor's Picks"
+        url: "https://www.owenyoung.com/categories/journal/"
+      'ja':
+        title: 'エディターズピック'
+        url: "https://www.owenyoung.com/categories/journal/"
+
   www:
     port: 9001
     standalone: true

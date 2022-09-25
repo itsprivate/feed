@@ -101,7 +101,10 @@ export default function feedToHTML(
   });
   // related sites is has common tags sites
   let otherSites: string[] = [];
-  let relatedSites = getFeedSiteIdentifiers(config).concat(indexSubDomain)
+  let relatedSites = getFeedSiteIdentifiers(config).concat([
+    indexSubDomain,
+    "picks",
+  ])
     .filter(
       (site) => {
         const siteTags = sitesMap[site].tags;
@@ -171,6 +174,9 @@ export default function feedToHTML(
           "/" + language.prefix,
           config,
         );
+      }
+      if (siteTranslations.url) {
+        url = siteTranslations.url;
       }
 
       return {

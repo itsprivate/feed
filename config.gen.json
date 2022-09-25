@@ -103,6 +103,34 @@
       "tags": [],
       "translations": {}
     },
+    "picks": {
+      "standalone": true,
+      "tags": [
+        "all"
+      ],
+      "ppriority": 1,
+      "translations": {
+        "zh-Hans": {
+          "title": "编辑精选",
+          "short_title": "编辑精选",
+          "url": "https://www.owenyoung.com/categories/journal/"
+        },
+        "en": {
+          "title": "Editor's Picks",
+          "short_title": "Editor's Picks",
+          "url": "https://www.owenyoung.com/categories/journal/"
+        },
+        "ja": {
+          "title": "エディターズピック",
+          "url": "https://www.owenyoung.com/categories/journal/"
+        },
+        "zh-Hant": {
+          "title": "編輯精選",
+          "short_title": "編輯精選",
+          "url": "https://www.owenyoung.com/categories/journal/"
+        }
+      }
+    },
     "www": {
       "port": 9001,
       "standalone": true,
@@ -1083,7 +1111,7 @@
       "rules": [
         {
           "type": "limit",
-          "value": "3"
+          "value": "5"
         }
       ]
     },
