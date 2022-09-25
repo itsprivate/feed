@@ -233,27 +233,27 @@
       "translations": {
         "zh-Hans": {
           "title": "Hacker News 热门",
-          "description": "用中文浏览 Hacker News 热门内容, Points >= 150",
+          "description": "用中文浏览 Hacker News 热门内容, Points >= 100",
           "keyworkds": "Hacker News,HN,Hacker News 热门,互联网热门,科技",
           "short_title": "HN 热门"
         },
         "en": {
           "title": "Buzzing on Hacker News",
           "short_title": "Best HN",
-          "description": "See what's buzzing on Hacker News in your native language, Points >= 150",
+          "description": "See what's buzzing on Hacker News in your native language, Points >= 100",
           "keywords": "Hacker News,HN,buzzing"
         },
         "zh-Hant": {
           "title": "Hacker News 熱門",
           "short_title": "HN 熱門",
-          "description": "用中文瀏覽 Hacker News 熱門內容, Points >= 150",
+          "description": "用中文瀏覽 Hacker News 熱門內容, Points >= 100",
           "keywords": "Hacker News,HN,Hacker News 熱門,互聯網熱門,科技",
           "keyworkds": "Hacker News,HN,Hacker News 熱門,互聯網熱門,科技"
         },
         "ja": {
           "title": "Hacker News 人気の記事",
           "short_title": "HN人気",
-          "description": "人気のHacker News記事を日本語で閲覧, Points >= 150",
+          "description": "人気のHacker News記事を日本語で閲覧, Points >= 100",
           "keywords": "buzzing,Hacker News "
         }
       }
@@ -1152,7 +1152,7 @@
     },
     {
       "api": {
-        "url": "http://hn.algolia.com/api/v1/search_by_date?tags=(story,poll,show_hn,ask_hn)&numericFilters=points>=150&hitsPerPage=50",
+        "url": "http://hn.algolia.com/api/v1/search_by_date?tags=(story,poll,show_hn,ask_hn)&numericFilters=points>=100&hitsPerPage=50",
         "name": "Hacker News Popular",
         "home_page_url": "https://news.ycombinator.com/best"
       },
