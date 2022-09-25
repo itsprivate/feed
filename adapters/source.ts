@@ -42,6 +42,14 @@ export default class source extends Item<FormatedItem> {
   }
 
   getUrl(): string {
+    const urlObj = new URL(this.originalItem.url);
+    const hostname = urlObj.hostname;
+    if (
+      (hostname === "i.redd.it" || hostname === "v.redd.it") &&
+      this.getExternalUrl()
+    ) {
+      return this.getExternalUrl()!;
+    }
     return this.originalItem.url as string;
   }
   getExternalUrl() {
