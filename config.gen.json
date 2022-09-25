@@ -108,7 +108,7 @@
       "tags": [
         "all"
       ],
-      "ppriority": 1,
+      "priority": 0,
       "translations": {
         "zh-Hans": {
           "title": "编辑精选",
