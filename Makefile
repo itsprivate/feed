@@ -224,7 +224,7 @@ uploadarchive:
 
 .Phony: prod-uploadarchive
 prod-uploadarchive:
-	PROD=1 deno run -A ./scripts/upload-archive.ts
+	PROD=1 deno run -A ./scripts/upload-archive.ts && make prod-awsuploadarchive
 
 
 

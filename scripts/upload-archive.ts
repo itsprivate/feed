@@ -32,7 +32,7 @@ export default async function uploadArchive() {
       if (total % 100 === 0 && total > 0) {
         log.info(`uploaded ${total} archived files`);
       }
-      if (Deno.env.get("ONLY_DUFS") === "1") {
+      if (Deno.env.get("ONLY_DUFS") === "1" || true) {
         continue;
       }
       const ext = path.extname(entry.path);
