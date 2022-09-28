@@ -1041,7 +1041,9 @@
       "tags": [
         "feminism",
         "ask",
-        "source-reddit-askfeminist"
+        "reddit",
+        "source-reddit-askfeminist",
+        "source-reddit-feminism"
       ],
       "translations": {
         "zh-Hans": {
@@ -1723,10 +1725,26 @@
       "id": "source-reddit-askfeminist",
       "type": "reddit",
       "api": {
-        "url": "https://www.reddit.com/r/AskFeminists/top/.json?t=year&raw_json=1",
+        "url": "https://www.reddit.com/r/AskFeminists/top/.json?raw_json=1",
         "name": "Ask Feminists Subreddit",
         "home_page_url": "https://www.reddit.com/r/AskFeminists/"
       }
+    },
+    {
+      "id": "source-reddit-feminism",
+      "type": "reddit",
+      "api": {
+        "url": "https://www.reddit.com/r/Feminism/top/.json?raw_json=1",
+        "name": "Feminism Subreddit",
+        "home_page_url": "https://www.reddit.com/r/Feminism/"
+      },
+      "rules": [
+        {
+          "type": "greaterEqual",
+          "key": "getWeightedScore",
+          "value": "200"
+        }
+      ]
     }
   ]
 }
