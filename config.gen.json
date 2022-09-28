@@ -367,6 +367,7 @@
       "port": 8007,
       "priority": 18,
       "redirect": true,
+      "max_image_height": 520,
       "tags": [
         "reddit",
         "source-reddit-ask",
@@ -404,6 +405,7 @@
       "port": 8008,
       "redirect": true,
       "priority": 13,
+      "max_image_height": 520,
       "tags": [
         "reddit",
         "finance",
@@ -1038,6 +1040,7 @@
       "port": 8024,
       "priority": 22,
       "archive": true,
+      "max_image_height": 520,
       "tags": [
         "feminism",
         "ask",

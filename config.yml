@@ -273,6 +273,7 @@ sites:
     port: 8007
     priority: 18
     redirect: true
+    max_image_height: 520
     tags:
       - reddit
       - source-reddit-ask
@@ -303,6 +304,7 @@ sites:
     port: 8008
     redirect: true
     priority: 13
+    max_image_height: 520
     tags:
       - reddit
       - finance
@@ -787,6 +789,7 @@ sites:
     port: 8024
     priority: 22
     archive: true
+    max_image_height: 520
     tags:
       - feminism
       - ask
