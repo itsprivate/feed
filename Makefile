@@ -91,6 +91,10 @@ fetch:
 fetchsite:
 	deno run -A main.ts --stage fetch --site $(site)
 
+.Phony: prod-fetchsite
+prod-fetchsite:
+	PROD=1 deno run -A main.ts --stage fetch --site $(site)
+
 .Phony: fetchall
 fetchall:
 	deno run -A main.ts --stage fetch

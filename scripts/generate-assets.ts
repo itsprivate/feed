@@ -6,7 +6,7 @@ export default async function generateIcons() {
   const config = await getConfig();
 
   for (const siteIdentifier of Object.keys(config.sites)) {
-    if (siteIdentifier === "i") {
+    if (siteIdentifier === "i" || siteIdentifier === "picks") {
       continue;
     }
     const source = `./assets-by-site-src/${siteIdentifier}/icon.png`;

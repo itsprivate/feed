@@ -1033,6 +1033,42 @@
           "keywords": "中國,關於中國"
         }
       }
+    },
+    "feminism": {
+      "port": 8024,
+      "priority": 22,
+      "archive": true,
+      "tags": [
+        "feminism",
+        "ask",
+        "source-reddit-askfeminist"
+      ],
+      "translations": {
+        "zh-Hans": {
+          "title": "国外女权主义讨论",
+          "short_title": "女权主义",
+          "description": "用中文浏览国外有关女权主义的讨论",
+          "keywords": "女权,女权主义"
+        },
+        "en": {
+          "title": "Feminism",
+          "short_title": "Feminism",
+          "description": "See what's buzzing on Feminism in your native language",
+          "keywords": "Feminism"
+        },
+        "ja": {
+          "title": "女性主義",
+          "short_title": "女性主義",
+          "description": "人気の女性主義の最新 の投稿",
+          "keywords": "女性主義"
+        },
+        "zh-Hant": {
+          "title": "國外女權主義討論",
+          "short_title": "女權主義",
+          "description": "用中文瀏覽國外有關女權主義的討論",
+          "keywords": "女權,女權主義"
+        }
+      }
     }
   },
   "versions": [
@@ -1682,6 +1718,15 @@
           "value": "15"
         }
       ]
+    },
+    {
+      "id": "source-reddit-askfeminist",
+      "type": "reddit",
+      "api": {
+        "url": "https://www.reddit.com/r/AskFeminists/top/.json?t=year&raw_json=1",
+        "name": "Ask Feminists Subreddit",
+        "home_page_url": "https://www.reddit.com/r/AskFeminists/"
+      }
     }
   ]
 }
