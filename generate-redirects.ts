@@ -30,6 +30,8 @@ export default async function generateRedirects(
           const newIssue = issueMaps[issueKey];
           redirects +=
             `/${language.prefix}issues/${issueKey}/ ${targetPrefix}/issues/${newIssue}/ 302\n`;
+          redirects +=
+            `/${language.prefix}plain/issues/${issueKey}/ ${targetPrefix}/issues/${newIssue}/ 302\n`;
         }
       }
     }
