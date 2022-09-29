@@ -1041,10 +1041,6 @@ sources:
         home_page_url: https://www.reddit.com/r/Foodforthought/
     id: source-reddit-depth
     type: reddit
-    rules:
-      - type: greaterEqual
-        key: getWeightedScore
-        value: "5"
   - api:
       url: nytimes
       name: New York Times Twitter
