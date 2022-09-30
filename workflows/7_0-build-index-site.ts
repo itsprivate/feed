@@ -55,7 +55,8 @@ export default async function buildSite(options: RunOptions) {
   const languages = config.languages;
 
   for (const language of languages) {
-    const version = config.versions[1];
+    const version = config.versions[0];
+    const liteVersion = config.versions[1];
     const pathname = "/" + language.prefix;
     const currentIndexTranslations = getCurrentTranslations(
       indexSubDomain,
@@ -152,7 +153,7 @@ export default async function buildSite(options: RunOptions) {
         ),
         "home_page_lite_url": siteIdentifierToUrl(
           siteIdentifier,
-          pathname + version.prefix,
+          pathname + liteVersion.prefix,
           config,
         ),
         "remaining_count": remainingCount,
