@@ -1458,14 +1458,7 @@
         }
       ],
       "id": "source-reddit-depth",
-      "type": "reddit",
-      "rules": [
-        {
-          "type": "greaterEqual",
-          "key": "getWeightedScore",
-          "value": "5"
-        }
-      ]
+      "type": "reddit"
     },
     {
       "api": {

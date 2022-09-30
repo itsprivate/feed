@@ -1021,12 +1021,12 @@ export function archiveToTitle(issuePath: string, label: string): string {
     range: weekToRange(issuePath),
   });
 }
-export function startDateOfWeek(date: Date, start_day = 1) {
+export function startDateOfWeek(date: Date, start_day = 1): Date {
   // Returns the start of the week containing a 'date'. Monday 00:00 UTC is
   // considered to be the boundary between adjacent weeks, unless 'start_day' is
   // specified. A Date object is returned.
 
-  date = new Date(date);
+  date = new Date(date.getTime());
   const day_of_month = date.getUTCDate();
   const day_of_week = date.getUTCDay();
   const difference_in_days = (
