@@ -764,6 +764,7 @@ sites:
     port: 8023
     priority: 12
     archive: true
+    max_image_height: 520
     tags:
       - china
       - www
