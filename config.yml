@@ -345,6 +345,7 @@ sites:
       - news
       - www
       - source-google-news
+      - source-google-asia-news
     translations:
       zh-Hans:
         title: 国外新闻头条
@@ -846,14 +847,23 @@ social_links:
 
 sources:
   - api:
-      url: https://news.google.com/rss/topics/CAAqJggKIiBDQkFTRWdvSUwyMHZNRGx1YlY4U0FtVnVHZ0pWVXlnQVAB?hl=en-US&gl=US&ceid=US:en
-      name: Google News World
-      home_page_url: https://news.google.com/topics/
+      - url: https://news.google.com/rss/topics/CAAqJggKIiBDQkFTRWdvSUwyMHZNRGx1YlY4U0FtVnVHZ0pWVXlnQVAB?hl=en-US&gl=US&ceid=US:en
+        name: Google News World
+        home_page_url: https://news.google.com/topics/
     type: googlenews
     id: source-google-news
     rules:
       - type: limit
         value: "5"
+  - api:
+      - url: https://news.google.com/rss/topics/CAAqIAgKIhpDQkFTRFFvSEwyMHZNR293YXhJQ1pXNG9BQVAB?hl=en-US&gl=US&ceid=US%3Aen
+        name: Google Asia News
+        home_page_url: https://news.google.com/topics/CAAqIAgKIhpDQkFTRFFvSEwyMHZNR293YXhJQ1pXNG9BQVAB?hl=en-US&gl=US&ceid=US%3Aen
+    type: googlenews
+    id: source-google-asia-news
+    rules:
+      - type: limit
+        value: "3"
   - api:
       url: https://hn.algolia.com/api/v1/search_by_date?tags=front_page&hitsPerPage=50
       name: Hacker News Front Page
