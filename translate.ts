@@ -235,7 +235,9 @@ export default class Translation {
     if (targetLanguage === "zh-Hant") {
       if (!finalTranslatedResult["zh-Hans"]) {
         log.warn("finalTranslatedResult", finalTranslatedResult);
-        throw new Error("zh-Hans must be translated before zh-Hant");
+        // throw new Error("zh-Hans must be translated before zh-Hant");
+        // use en title as the input
+        finalTranslatedResult["zh-Hans"] = sentence;
       }
       finalTranslatedResult[targetLanguage] = toZhHant(
         finalTranslatedResult["zh-Hans"],
