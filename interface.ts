@@ -208,6 +208,7 @@ export interface FeedItem extends FormatedItem {
   content_text: string;
   content_html: string;
   _links?: Link[];
+  _tag_links?: Link[];
 }
 export interface Type<T> extends Function {
   new (...args: unknown[]): T;

@@ -655,18 +655,28 @@ export default class Item<T> {
           originalTranslationObj.title,
         );
       }
-      content_html +=
-        `<div>${finalTitle} (<a href="${itemUrl}">${itemUrlObj.hostname}</a>)</div>`;
+      if (isLite) {
+        content_html += `<a href="${item.id}">${
+          formatHumanTime(
+            new Date(item._original_published),
+          )
+        }</a>&nbsp;&nbsp;${finalTitle} (<a href="${itemUrl}">${itemUrlObj.hostname}</a>)`;
+      } else {
+        content_html +=
+          `<div>${finalTitle} (<a href="${itemUrl}">${itemUrlObj.hostname}</a>)</div>`;
+      }
 
       summary += `${originalTranslationObj.title}`;
       content_text += `${originalTranslationObj.title}`;
     }
-    content_html +=
-      `<footer><a href="${item.id}"><time class="dt-published published" datetime="${item._original_published}">${
-        formatHumanTime(
-          new Date(item._original_published as string),
-        )
-      }</time></a>&nbsp;&nbsp;`;
+    if (!isLite) {
+      content_html +=
+        `<footer><a href="${item.id}"><time class="dt-published published" datetime="${item._original_published}">${
+          formatHumanTime(
+            new Date(item._original_published as string),
+          )
+        }</time></a>&nbsp;&nbsp;`;
+    }
 
     const currentTranslations = getCurrentTranslations(
       siteIdentifier,
@@ -681,9 +691,11 @@ export default class Item<T> {
         const isGreaterFirst = index >= 1;
         const linkName = currentTranslations[link.name] ??
           link.name;
-        content_html += `${
-          isGreaterFirst ? "&nbsp;&nbsp;" : ""
-        }<a href="${link.url}">${linkName}</a>`;
+        if (!isLite) {
+          content_html += `${
+            isGreaterFirst ? "&nbsp;&nbsp;" : ""
+          }<a href="${link.url}">${linkName}</a>`;
+        }
         index++;
       }
     }
@@ -715,14 +727,25 @@ export default class Item<T> {
       }
     }
     // add tags
+    const tag_links: Link[] = [];
     if (item.tags && Array.isArray(item.tags) && item.tags.length > 0) {
       for (const tag of item.tags) {
         const isGreaterFirst = index >= 1;
-        content_html += `${isGreaterFirst ? "&nbsp;&nbsp;" : ""}<a href="${
-          tagToUrl(tag, siteIdentifier, language, version, config)
-        }">#${tag}</a>`;
+        if (!isLite) {
+          content_html += `${isGreaterFirst ? "&nbsp;&nbsp;" : ""}<a href="${
+            tagToUrl(tag, siteIdentifier, language, version, config)
+          }">#${tag}</a>`;
+        }
+        tag_links.push({
+          name: tag,
+          url: tagToUrl(tag, siteIdentifier, language, version, config),
+        });
+
         index++;
       }
+    }
+    if (tag_links.length > 0) {
+      item._tag_links = tag_links;
     }
     // check is need add original link
     if (!linkMap[this.getRealUrl()]) {
@@ -732,7 +755,9 @@ export default class Item<T> {
       }: ${this.getRealUrl()}`;
     }
 
-    content_html += "</footer>";
+    if (!isLite) {
+      content_html += "</footer>";
+    }
 
     item.summary = summary;
     item.content_text = content_text;

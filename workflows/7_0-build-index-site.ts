@@ -85,6 +85,8 @@ export default async function buildSite(options: RunOptions) {
       _sources: [],
     };
     // @ts-ignore: add meta
+    feedJson._is_lite = feedJson._site_version === liteVersion.code;
+    // @ts-ignore: add meta
     feedJson._advice_url = config.advice_url;
     // @ts-ignore: add meta
     feedJson._title_suffix = " - " + currentIndexTranslations.description;
@@ -97,7 +99,7 @@ export default async function buildSite(options: RunOptions) {
         getDistPath(),
         siteIdentifier,
         language.prefix,
-        version.prefix,
+        liteVersion.prefix,
         "feed.json",
       );
       let siteFeedJson: Feedjson;
@@ -135,7 +137,13 @@ export default async function buildSite(options: RunOptions) {
         config,
       );
       const takedCount = 10;
-      const takedItems = groups[siteIdentifier].slice(0, takedCount);
+      const takedItems = groups[siteIdentifier].slice(0, takedCount).map(
+        (item: FeedItem, index: number) => {
+          // @ts-ignore: add meta
+          item.order = index + 1;
+          return item;
+        },
+      );
       const remainingCount = groups[siteIdentifier].length - takedCount;
       feedJson.items = feedJson.items.concat(takedItems);
       return {
@@ -181,6 +189,18 @@ export default async function buildSite(options: RunOptions) {
         // @ts-ignore: must
         delete item.date_modified;
       }
+      const originalLanguage = item._original_language;
+      let originalTitle = "";
+      if (originalLanguage) {
+        if (originalLanguage !== language.code) {
+          const translations = item?._translations;
+          if (translations && translations[originalLanguage]) {
+            originalTitle = translations[originalLanguage]!.title;
+          }
+        }
+      }
+      // @ts-ignore: must
+      item._original_title = originalTitle;
 
       //= item.content_text.replace(/\n/g, "&lt;br&gt;");
       return item;

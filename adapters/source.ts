@@ -215,6 +215,7 @@ export default class source extends Item<FormatedItem> {
         name: externalLinkName,
       });
     }
+
     return links;
   }
 }

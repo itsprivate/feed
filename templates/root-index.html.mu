@@ -66,7 +66,7 @@
     <link rel="icon" href="{{{favicon}}}" />
     <style>
       body {
-        max-width: 45em;
+        max-width: 52em;
         margin: 0 auto;
         padding: 0;
         background-color: #fffff8;
@@ -165,10 +165,17 @@
       a.contrast:hover {
         color: rgb(0, 102, 204);
       }
-      .no-underline {
+      a.no-underline {
         text-decoration: none;
       }
-      .no-underline:hover {
+      a.no-underline:hover {
+        text-decoration: underline;
+        color: rgb(0, 102, 204);
+      }
+      .no-underline > a{
+        text-decoration: none;
+      }
+      .no-underline > a:hover{
         text-decoration: underline;
         color: rgb(0, 102, 204);
       }
@@ -218,6 +225,12 @@
       .w-50 {
         width: 50%;
       }
+      .w-prefix{
+        width: 50px;
+      }
+      .pl-prefix {
+        padding-left: 50px;
+      }
       .fixed{
         position: fixed;
         bottom: 2em;
@@ -226,7 +239,7 @@
         z-index:1;
       }
       .inline-block{
-        display: block;
+        display: inline-block;
       }
       .nsfw{
         color: #d10023;
@@ -331,10 +344,10 @@
       <h3 class="px">{{{title}}}&nbsp;(<a class="contrast" href="{{{home_page_url}}}">{{hostname}}</a>)</h3>
       {{#items}}
       <div class="article h-entry hentry">
-         <a class="muted" href="{{{id}}}">{{_human_time}}</a>&nbsp;<a class="no-underline p-name contrast entry-title u-url" href="{{{url}}}">{{#order}}<span>{{ . }}. </span>{{/order}}{{{title}}}</a>{{#_sensitive}}<span>&nbsp;(</span><span class="nsfw">NSFW</span><span>)</span>{{/_sensitive}}
-         {{#_links}}
-          &nbsp;<a class="muted small" href="{{{url}}}">{{{name}}}</a>
-         {{/_links}}
+      <div class="mb mt0">
+        <a class="p-name entry-title bold no-underline u-url" href="{{{url}}}">{{#order}}<span>{{ . }}. </span>{{/order}}{{{title}}}</a>{{#_sensitive}}<span>&nbsp;(</span><span class="nsfw">NSFW</span><span>)</span>{{/_sensitive}}{{#_links}}&nbsp;<a class="no-underline muted small" href="{{{url}}}">{{{name}}}</a>{{/_links}}&nbsp;{{#_tag_links}}&nbsp;<a class="no-underline muted small" href="{{{url}}}">#{{{name}}}</a>{{/_tag_links}}
+      </div>
+      <div class="no-underline p-summary entry-summary secondary pre-line small italic">{{{content_html}}}</div>
       </div>
       {{/items}}
       {{#remaining_count}}

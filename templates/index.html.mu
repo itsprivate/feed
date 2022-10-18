@@ -115,7 +115,7 @@
       .article {
         border-radius: 0.5em;
         {{#_is_lite}}
-        padding: 4px 1em;
+        padding: 5px 1em;
         {{/_is_lite}}
         {{^_is_lite}}
         padding: 0.5em 1em;
@@ -171,10 +171,17 @@
       a.contrast:hover {
         color: rgb(0, 102, 204);
       }
-      .no-underline {
+      a.no-underline {
         text-decoration: none;
       }
-      .no-underline:hover {
+      a.no-underline:hover {
+        text-decoration: underline;
+        color: rgb(0, 102, 204);
+      }
+      .no-underline > a{
+        text-decoration: none;
+      }
+      .no-underline > a:hover{
         text-decoration: underline;
         color: rgb(0, 102, 204);
       }
@@ -342,10 +349,17 @@
 
     {{#items}}
     <article class="article h-entry hentry">
-      <h4 class="mb mt0">
+      {{#_is_lite}}
+      <div class="mb mt0">
+        <a class="p-name entry-title bold no-underline u-url" href="{{{url}}}">{{#order}}<span>{{ . }}. </span>{{/order}}{{{title}}}</a>{{#_sensitive}}<span>&nbsp;(</span><span class="nsfw">NSFW</span><span>)</span>{{/_sensitive}}{{#_links}}&nbsp;<a class="no-underline muted small" href="{{{url}}}">{{{name}}}</a>{{/_links}}&nbsp;{{#_tag_links}}&nbsp;<a class="no-underline muted small" href="{{{url}}}">#{{{name}}}</a>{{/_tag_links}}
+      </div>
+      {{/_is_lite}}
+      {{^_is_lite}}
+      <div class="mb mt0">
         <a class="p-name entry-title bold no-underline u-url" href="{{{url}}}">{{#order}}<span>{{ . }}. </span>{{/order}}{{{title}}}</a>{{#_sensitive}}<span>&nbsp;(</span><span class="nsfw">NSFW</span><span>)</span>{{/_sensitive}}
-      </h4>
-      <div class="p-summary entry-summary secondary pre-line small italic">{{{content_html}}}</div>
+      </div>
+      {{/_is_lite}}
+      <div class="no-underline p-summary entry-summary secondary pre-line small italic">{{{content_html}}}</div>
     </article>
     {{/items}}
     <footer class="footer">

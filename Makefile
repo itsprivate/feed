@@ -64,6 +64,9 @@ serve:
 .Phony: serveindex
 serveindex:
 	deno run -A --watch=main.ts,templates/,config.yml main.ts --stage build_index_site,serve_site
+.Phony: prod-serveindex
+prod-serveindex:
+	PROD=1 deno run -A --watch=main.ts,templates/,config.yml main.ts --stage build_index_site,serve_site
 .Phony: serveall
 serveall:
 	deno run -A main.ts --stage build_site,build_index_site,serve_site
