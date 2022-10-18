@@ -1184,3 +1184,18 @@ export function getSourceLinks(siteIdentifier: string, config: Config): Link[] {
 
   return links;
 }
+export function liteUrlToUrl(
+  url: string,
+  versions: Version[],
+  languages: Language[],
+): string {
+  const parsed = parsePageUrl(url, versions, languages);
+
+  const urlObj = new URL(parsed.url);
+  const language = parsed.language;
+  const pathname = urlObj.pathname;
+
+  urlObj.pathname = `/${language.prefix}${pathname.slice(1)}`;
+
+  return urlObj.href;
+}

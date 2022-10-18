@@ -2,12 +2,14 @@ import { assertEquals } from "./deps.ts";
 import {
   formatBeijing,
   formatNumber,
+  getConfig,
   getDuplicatedFiles,
   getFullDay,
   getFullMonth,
   isDev,
   isMock,
   isWeekBiggerThan,
+  liteUrlToUrl,
   loadS3ArchiveFile,
   parseItemIdentifier,
   resortArchiveKeys,
@@ -369,4 +371,31 @@ Deno.test("formatBeijing #36", () => {
   const date = new Date(Date.UTC(2021, 0, 1, 18));
   const str = formatBeijing(date, "yyyy-MM-dd HH:mm");
   assertEquals(str, "2021-01-02 02:00");
+});
+
+Deno.test("lite url to url #37", async () => {
+  const config = await getConfig();
+
+  const url = liteUrlToUrl(
+    "https://i.buzzing.cc/zh-Hant/lite/hn/posts/2022/42/en_hn_2022_10_18__33239146/",
+    config.versions,
+    config.languages,
+  );
+  assertEquals(
+    url,
+    "https://i.buzzing.cc/zh-Hant/hn/posts/2022/42/en_hn_2022_10_18__33239146/",
+  );
+});
+Deno.test("lite url to url", async () => {
+  const config = await getConfig();
+
+  const url = liteUrlToUrl(
+    "https://i.buzzing.cc/lite/hn/posts/2022/42/en_hn_2022_10_18__33239146/",
+    config.versions,
+    config.languages,
+  );
+  assertEquals(
+    url,
+    "https://i.buzzing.cc/hn/posts/2022/42/en_hn_2022_10_18__33239146/",
+  );
 });
