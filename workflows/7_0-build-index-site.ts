@@ -100,7 +100,7 @@ export default async function buildSite(options: RunOptions) {
         getDistPath(),
         siteIdentifier,
         language.prefix,
-        liteVersion.prefix,
+        version.prefix,
         "feed.json",
       );
       let siteFeedJson: Feedjson;
@@ -116,20 +116,7 @@ export default async function buildSite(options: RunOptions) {
       // format summary, content_text newline with <br>
       feedItems = feedItems.concat(
         siteFeedJson.items.map((item) => {
-          // file lite url
-          item.id = liteUrlToUrl(item.id, config.versions, config.languages);
-          if (item._tag_links) {
-            item._tag_links = item._tag_links.map((tagLink) => {
-              return {
-                ...tagLink,
-                url: liteUrlToUrl(
-                  tagLink.url,
-                  config.versions,
-                  config.languages,
-                ),
-              };
-            });
-          }
+          item.content_html = item._lite_content_html || item.content_html;
           // @ts-ignore: add meta
           item._site_identifier = siteIdentifier;
           // @ts-ignore: add meta

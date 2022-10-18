@@ -207,6 +207,7 @@ export interface FeedItem extends FormatedItem {
   summary: string;
   content_text: string;
   content_html: string;
+  _lite_content_html?: string;
   _links?: Link[];
   _tag_links?: Link[];
 }
