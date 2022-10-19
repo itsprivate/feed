@@ -137,6 +137,35 @@ export default async function fetchSources(
       }
     }
   }
+  // remove 7 days ago raw file
+
+  for (const [key, paths] of currentRawKeysMap) {
+    for (const p of paths) {
+      const parsed = parseItemIdentifierWithTime(
+        path.basename(p).replace(/\.json$/, ""),
+      );
+      const parsedDate = new Date(
+        Date.UTC(
+          Number(parsed.year),
+          Number(parsed.month) - 1,
+          Number(parsed.day),
+          Number(parsed.hour),
+          Number(parsed.minute),
+          Number(parsed.second),
+          Number(parsed.millisecond),
+        ),
+      );
+      const now = new Date();
+      const diff = now.getTime() - parsedDate.getTime();
+      if (diff > 7 * 24 * 60 * 60 * 1000) {
+        // remove all
+        log.info(`remove old raw file ${p}`);
+        currentRawKeysMap.delete(key);
+        await Deno.remove(p);
+      }
+    }
+  }
+  return { postTasks: [] };
   // unique filteredSources
   filteredSources = Array.from(new Set(filteredSources.map((item) => item.id)))
     .map((id) => sourcesMap.get(id)!);
