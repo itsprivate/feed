@@ -327,7 +327,7 @@
     },
     "reddit": {
       "port": 8005,
-      "priority": 15,
+      "priority": 19,
       "redirect": true,
       "max_image_height": 520,
       "tags": [
@@ -404,7 +404,7 @@
     "stocks": {
       "port": 8008,
       "redirect": true,
-      "priority": 13,
+      "priority": 18,
       "max_image_height": 520,
       "tags": [
         "reddit",
@@ -486,7 +486,7 @@
       "max_image_height": 360,
       "port": 8009,
       "archive": true,
-      "priority": 18,
+      "priority": 16,
       "redirect": true,
       "tags": [
         "tech",
@@ -895,7 +895,7 @@
       "port": 8020,
       "archive": true,
       "redirect": false,
-      "priority": 14,
+      "priority": 17,
       "tags": [
         "videos",
         "www",
