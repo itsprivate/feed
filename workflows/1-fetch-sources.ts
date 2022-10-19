@@ -13,13 +13,15 @@ import {
   getDataTranslatedPath,
   identifierToCachedKey,
   isDev,
+  parseItemIdentifier,
+  parseItemIdentifierWithTime,
   readJSONFile,
   request,
   writeJSONFile,
 } from "../util.ts";
 import Item from "../item.ts";
 import filterByRules from "../filter-by-rules.ts";
-import { fs, parseFeed, SimpleTwitter } from "../deps.ts";
+import { fs, parseFeed, path, SimpleTwitter } from "../deps.ts";
 import log from "../log.ts";
 import fetchPHData from "../sources/fetch-ph.ts";
 export default async function fetchSources(
@@ -103,11 +105,36 @@ export default async function fetchSources(
     if (entry.isFile && entry.name.endsWith(".json")) {
       const key = entry.name.replace(/\.json$/, "");
       const itemKey = identifierToCachedKey(key);
-      if (currentRawKeysMap.has(itemKey)) {
+      if (!currentRawKeysMap.has(itemKey)) {
         currentRawKeysMap.set(itemKey, []);
       }
 
       currentRawKeysMap.get(itemKey)?.push(entry.path);
+    }
+  }
+
+  // remove the duplicated old raw file
+  for (const [key, paths] of currentRawKeysMap) {
+    if (paths.length > 1) {
+      // sort by time
+      paths.sort((a, b) => {
+        const aKey = path.basename(a).replace(/\.json$/, "");
+        const aParsed = parseItemIdentifierWithTime(aKey);
+        const aNumber = Number(
+          `${aParsed.year}${aParsed.month}${aParsed.day}${aParsed.hour}${aParsed.minute}${aParsed.second}${aParsed.millisecond}`,
+        );
+        const bKey = path.basename(b).replace(/\.json$/, "");
+        const bParsed = parseItemIdentifierWithTime(bKey);
+        const bNumber = Number(
+          `${bParsed.year}${bParsed.month}${bParsed.day}${bParsed.hour}${bParsed.minute}${bParsed.second}${bParsed.millisecond}`,
+        );
+        return bNumber - aNumber;
+      });
+      // remove the rest
+      for (let i = 1; i < paths.length; i++) {
+        log.info(`remove old raw file ${paths[i]}`);
+        await Deno.remove(paths[i]);
+      }
     }
   }
   // unique filteredSources

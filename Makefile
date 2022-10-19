@@ -102,6 +102,9 @@ prod-fetchsite:
 fetchall:
 	deno run -A main.ts --stage fetch
 
+.Phony: prod-fetchall
+prod-fetchall:
+	PROD=1 deno run -A main.ts --stage fetch
 
 .Phony: stage
 stage:
