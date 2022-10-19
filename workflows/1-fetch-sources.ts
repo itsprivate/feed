@@ -165,7 +165,6 @@ export default async function fetchSources(
       }
     }
   }
-  return { postTasks: [] };
   // unique filteredSources
   filteredSources = Array.from(new Set(filteredSources.map((item) => item.id)))
     .map((id) => sourcesMap.get(id)!);
