@@ -365,7 +365,7 @@
     },
     "ask": {
       "port": 8007,
-      "priority": 18,
+      "priority": 16,
       "redirect": true,
       "max_image_height": 520,
       "tags": [
@@ -486,7 +486,7 @@
       "max_image_height": 360,
       "port": 8009,
       "archive": true,
-      "priority": 16,
+      "priority": 18,
       "redirect": true,
       "tags": [
         "tech",

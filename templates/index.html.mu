@@ -354,7 +354,7 @@
     </header>
 
     {{#items}}
-    <article class="article h-entry hentry">
+    <article id="{{order}}" class="article h-entry hentry">
       {{#_is_lite}}
       <div class="mb mt0 break-word">
         <a class="p-name entry-title bold no-underline u-url" href="{{{url}}}">{{#order}}<span>{{ . }}. </span>{{/order}}{{{title}}}</a>{{#_sensitive}}<span>&nbsp;(</span><span class="nsfw">NSFW</span><span>)</span>{{/_sensitive}}{{#_links}}&nbsp;<a class="no-underline muted xsmall" href="{{{url}}}">{{{name}}}</a>{{/_links}}{{#_tag_links}}&nbsp;<a class="no-underline muted xsmall" href="{{{url}}}">#{{{name}}}</a>{{/_tag_links}}</div>
