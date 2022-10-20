@@ -1076,6 +1076,42 @@
           "keywords": "女權,女權主義"
         }
       }
+    },
+    "tech": {
+      "port": 8025,
+      "priority": 15,
+      "archive": true,
+      "tags": [
+        "reddit",
+        "hn",
+        "source-reddit-technology"
+      ],
+      "translations": {
+        "zh-Hans": {
+          "title": "国外科技头条",
+          "short_title": "科技",
+          "description": "用中文浏览国外科技相关新闻",
+          "keywords": "科技,科技头条"
+        },
+        "en": {
+          "title": "Tech",
+          "short_title": "Tech",
+          "description": "See what's buzzing on Tech in your native language",
+          "keywords": "Tech"
+        },
+        "ja": {
+          "title": "テクノロジー",
+          "short_title": "テクノロジー",
+          "description": "人気のテクノロジーの最新 の投稿",
+          "keywords": "テクノロジー"
+        },
+        "zh-Hant": {
+          "title": "國外科技頭條",
+          "short_title": "科技",
+          "description": "用中文瀏覽國外科技相關新聞",
+          "keywords": "科技,科技頭條"
+        }
+      }
     }
   },
   "versions": [
@@ -1762,6 +1798,15 @@
           "value": "200"
         }
       ]
+    },
+    {
+      "id": "source-reddit-technology",
+      "type": "reddit",
+      "api": {
+        "url": "https://www.reddit.com/r/technology/top/.json?t=week&raw_json=1",
+        "name": "Ask Feminists Subreddit",
+        "home_page_url": "https://www.reddit.com/r/technology/"
+      }
     }
   ]
 }

@@ -814,6 +814,30 @@ sites:
         short_title: "女性主義"
         description: '人気の女性主義の最新 の投稿'
         keywords: "女性主義"
+  tech:
+    port: 8025
+    priority: 15
+    archive: true
+    tags:
+      - reddit
+      - hn
+      - source-reddit-technology
+    translations:
+      "zh-Hans":
+        title: '国外科技头条'
+        short_title: "科技"
+        description: '用中文浏览国外科技相关新闻'
+        keywords: "科技,科技头条"
+      'en':
+        title: 'Tech'
+        short_title: "Tech"
+        description: 'See what''s buzzing on Tech in your native language'
+        keywords: "Tech"
+      'ja':
+        title: 'テクノロジー'
+        short_title: "テクノロジー"
+        description: '人気のテクノロジーの最新 の投稿'
+        keywords: "テクノロジー"
 versions:
   - prefix: ""
     code: "default"
@@ -1228,3 +1252,9 @@ sources:
       - type: greaterEqual
         key: getWeightedScore
         value: "200"
+  - id: source-reddit-technology
+    type: reddit
+    api:
+      url: https://www.reddit.com/r/technology/top/.json?raw_json=1
+      name: Ask Feminists Subreddit
+      home_page_url: https://www.reddit.com/r/technology/
