@@ -875,7 +875,7 @@ sites:
     translations:
       "zh-Hans":
         title: '国外财经新闻'
-        short_title: "财财经新闻"
+        short_title: "财经新闻"
         description: '用中文浏览国外财经相关新闻'
         keywords: "财经,财经新闻"
       'en':
