@@ -1112,6 +1112,42 @@
           "keywords": "科技,科技頭條"
         }
       }
+    },
+    "worldnews": {
+      "port": 8026,
+      "priority": 18,
+      "archive": true,
+      "tags": [
+        "reddit",
+        "news",
+        "source-reddit-worldnews"
+      ],
+      "translations": {
+        "zh-Hans": {
+          "title": "Reddit新闻小组",
+          "short_title": "Reddit新闻小组",
+          "description": "用中文浏览Reddit全球新闻小组讨论",
+          "keywords": "新闻,全球新闻,世界新闻"
+        },
+        "en": {
+          "title": "Reddit World News",
+          "short_title": "Reddit World News",
+          "description": "See what's buzzing on Reddit World News in your native language",
+          "keywords": "Reddit World News"
+        },
+        "ja": {
+          "title": "Reddit ワールドニュース",
+          "short_title": "Reddit ワールドニュース",
+          "description": "人気のReddit ワールドニュースの最新 の投稿",
+          "keywords": "Reddit ワールドニュース"
+        },
+        "zh-Hant": {
+          "title": "Reddit新聞小組",
+          "short_title": "Reddit新聞小組",
+          "description": "用中文瀏覽Reddit全球新聞小組討論",
+          "keywords": "新聞,全球新聞,世界新聞"
+        }
+      }
     }
   },
   "versions": [
@@ -1804,9 +1840,25 @@
       "type": "reddit",
       "api": {
         "url": "https://www.reddit.com/r/technology/top/.json?raw_json=1",
-        "name": "Ask Feminists Subreddit",
+        "name": "Technology Subreddit",
         "home_page_url": "https://www.reddit.com/r/technology/"
       }
+    },
+    {
+      "id": "source-reddit-worldnews",
+      "type": "reddit",
+      "api": {
+        "url": "https://www.reddit.com/r/worldnews/top/.json?raw_json=1",
+        "name": "World News Subreddit",
+        "home_page_url": "https://www.reddit.com/r/worldnews/"
+      },
+      "rules": [
+        {
+          "type": "greaterEqual",
+          "key": "getWeightedScore",
+          "value": "500"
+        }
+      ]
     }
   ]
 }
