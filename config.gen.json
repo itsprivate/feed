@@ -1156,7 +1156,8 @@
       "tags": [
         "news",
         "finance",
-        "source-twitter-barraud"
+        "source-twitter-barraud",
+        "source-google-finance"
       ],
       "translations": {
         "zh-Hans": {
@@ -1164,6 +1165,18 @@
           "short_title": "财财经新闻",
           "description": "用中文浏览国外财经相关新闻",
           "keywords": "财经,财经新闻"
+        },
+        "en": {
+          "title": "Finance",
+          "short_title": "Finance",
+          "description": "See what's buzzing on Finance in your native language",
+          "keywords": "Finance"
+        },
+        "ja": {
+          "title": "ファイナンス",
+          "short_title": "ファイナンス",
+          "description": "人気のファイナンスの最新 の投稿",
+          "keywords": "ファイナンス"
         },
         "zh-Hant": {
           "title": "國外財經新聞",
