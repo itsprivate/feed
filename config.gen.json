@@ -1803,7 +1803,7 @@
       "id": "source-reddit-technology",
       "type": "reddit",
       "api": {
-        "url": "https://www.reddit.com/r/technology/top/.json?t=week&raw_json=1",
+        "url": "https://www.reddit.com/r/technology/top/.json?raw_json=1",
         "name": "Ask Feminists Subreddit",
         "home_page_url": "https://www.reddit.com/r/technology/"
       }

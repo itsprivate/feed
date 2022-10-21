@@ -534,6 +534,8 @@ export default class Item<T> {
       content_html: "",
       ...formatedItem,
     };
+    // delete external_url
+    delete item.external_url;
 
     if (
       this.getLinks({ isUseHTML: true }) &&
