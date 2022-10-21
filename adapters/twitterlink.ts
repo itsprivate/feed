@@ -2,7 +2,7 @@ import { Author, Video } from "../interface.ts";
 import { request } from "../util.ts";
 import log from "../log.ts";
 import Twitter from "./twitter.ts";
-export default class twitter_link extends Twitter {
+export default class twitterlink extends Twitter {
   isValid(): boolean {
     const url = this.getUrl();
     return !url.startsWith("https://twitter.com/");
