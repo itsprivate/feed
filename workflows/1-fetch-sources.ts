@@ -240,7 +240,12 @@ export default async function fetchSources(
         });
       } else if (sourceType === "ph") {
         // producthunt graphql api
-        originalJson = await fetchPHData();
+        try {
+          originalJson = await fetchPHData();
+        } catch (e) {
+          log.error(e);
+          continue;
+        }
       } else {
         const originItemResult = await request(sourceUrl);
         originalJson = await originItemResult.json();

@@ -1,4 +1,5 @@
 import { request } from "../util.ts";
+import log from "../log.ts";
 export default async function fetchPHData() {
   const myHeaders = new Headers();
   const phToken = Deno.env.get("PRODUCTHUNT_TOKEN");
@@ -14,7 +15,7 @@ export default async function fetchPHData() {
   const last24 = now - 24 * 60 * 60 * 1000;
   const after = new Date(last24).toISOString();
   const graphql = JSON.stringify({
-    query: `     query($after:DateTime) {
+    query: `query($after:DateTime) {
       posts (order:VOTES,postedAfter:$after){
         edges{
           node {
@@ -71,7 +72,8 @@ export default async function fetchPHData() {
   )
     .then((response) => response.json()).then((json) => {
       if (json.errors && json.errors.length > 0) {
-        throw new Error(json.errors[0].message);
+        log.error(json.errors);
+        throw new Error(json.errors[0].error_description);
       } else {
         return json;
       }
