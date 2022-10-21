@@ -304,8 +304,12 @@ export default async function fetchSources(
           // delete all cached files
           const cachedFiles = currentRawKeysMap.get(item.getCachedKey())!;
           for (const cachedFile of cachedFiles) {
-            await Deno.remove(cachedFile);
-            log.info(`remove duplicated raw file: ${cachedFile}`);
+            try {
+              await Deno.remove(cachedFile);
+              log.info(`remove duplicated raw file: ${cachedFile}`);
+            } catch (e) {
+              log.warn("remove duplicated raw file", cachedFile, e);
+            }
           }
         }
 
