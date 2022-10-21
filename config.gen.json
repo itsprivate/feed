@@ -1148,6 +1148,30 @@
           "keywords": "新聞,全球新聞,世界新聞"
         }
       }
+    },
+    "finance": {
+      "port": 8027,
+      "priority": 18,
+      "archive": true,
+      "tags": [
+        "news",
+        "finance",
+        "source-twitter-barraud"
+      ],
+      "translations": {
+        "zh-Hans": {
+          "title": "国外财经新闻",
+          "short_title": "财财经新闻",
+          "description": "用中文浏览国外财经相关新闻",
+          "keywords": "财经,财经新闻"
+        },
+        "zh-Hant": {
+          "title": "國外財經新聞",
+          "short_title": "財財經新聞",
+          "description": "用中文瀏覽國外財經相關新聞",
+          "keywords": "財經,財經新聞"
+        }
+      }
     }
   },
   "versions": [
@@ -1655,6 +1679,32 @@
           "type": "greaterEqual",
           "key": "getWeightedScore",
           "value": "500"
+        }
+      ]
+    },
+    {
+      "id": "source-twitter-barraud",
+      "api": [
+        {
+          "url": "c_barraud",
+          "name": "Charles Barraud Twitter",
+          "home_page_url": "https://twitter.com/c_barraud"
+        }
+      ],
+      "type": "twitter_link"
+    },
+    {
+      "id": "source-google-finance",
+      "api": {
+        "url": "https://news.google.com/rss/topics/CAAqIQgKIhtDQkFTRGdvSUwyMHZNREpmTjNRU0FtVnVLQUFQAQ?hl=en-US&gl=US&ceid=US%3Aen",
+        "name": "Google Finance News",
+        "home_page_url": "https://news.google.com/topics/CAAqIQgKIhtDQkFTRGdvSUwyMHZNREpmTjNRU0FtVnVLQUFQAQ?hl=en-US&gl=US&ceid=US%3Aen"
+      },
+      "type": "googlenews",
+      "rules": [
+        {
+          "type": "limit",
+          "value": "10"
         }
       ]
     },

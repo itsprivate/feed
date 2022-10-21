@@ -862,6 +862,32 @@ sites:
         short_title: "Reddit ワールドニュース"
         description: '人気のReddit ワールドニュースの最新 の投稿'
         keywords: "Reddit ワールドニュース"
+  finance:
+    port: 8027
+    priority: 18
+    archive: true
+    tags:
+      - news
+      - finance
+      - source-twitter-barraud
+      - source-google-finance
+    translations:
+      "zh-Hans":
+        title: '国外财经新闻'
+        short_title: "财财经新闻"
+        description: '用中文浏览国外财经相关新闻'
+        keywords: "财经,财经新闻"
+      'en':
+        title: 'Finance'
+        short_title: "Finance"
+        description: 'See what''s buzzing on Finance in your native language'
+        keywords: "Finance"
+      'ja':
+        title: 'ファイナンス'
+        short_title: "ファイナンス"
+        description: '人気のファイナンスの最新 の投稿'
+        keywords: "ファイナンス"
+
 versions:
   - prefix: ""
     code: "default"
@@ -1164,6 +1190,22 @@ sources:
       - type: greaterEqual
         key: getWeightedScore
         value: "500"
+  - id: source-twitter-barraud
+    api:
+      - url: c_barraud
+        name: Charles Barraud Twitter
+        home_page_url: https://twitter.com/c_barraud
+    type: twitter_link
+  - id: source-google-finance
+    api:
+      url: https://news.google.com/rss/topics/CAAqIQgKIhtDQkFTRGdvSUwyMHZNREpmTjNRU0FtVnVLQUFQAQ?hl=en-US&gl=US&ceid=US%3Aen
+      name: Google Finance News
+      home_page_url: https://news.google.com/topics/CAAqIQgKIhtDQkFTRGdvSUwyMHZNREpmTjNRU0FtVnVLQUFQAQ?hl=en-US&gl=US&ceid=US%3Aen 
+    type: googlenews
+    rules:
+      - type: limit
+        value: "10"
+
   - api:
       url: s2fmultiple
       name: S2F Multiple Twitter

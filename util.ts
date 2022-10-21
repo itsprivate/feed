@@ -47,11 +47,19 @@ enum Day {
 }
 export async function request(
   url: string,
-  init?: RequestInit,
+  init: RequestInit = {},
 ) {
   const c = new AbortController();
   const id = setTimeout(() => c.abort(), 30000);
-  const r = await fetch(url, { ...init, signal: c.signal });
+  const r = await fetch(url, {
+    ...init,
+    signal: c.signal,
+    headers: {
+      "User-Agent":
+        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36",
+      ...init.headers,
+    },
+  });
   clearTimeout(id);
   return r;
 }

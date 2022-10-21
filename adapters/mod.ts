@@ -10,6 +10,7 @@ import newyorker from "./newyorker.ts";
 import googlenews from "./googlenews.ts";
 import lobste from "./lobste.ts";
 import thechinaproject from "./thechinaproject.ts";
+import twitter_link from "./twitter_link.ts";
 export type ItemType = Item<RedditItem | HnItem>;
 const adapters: Record<string, Type<Item<RedditItem>>> = {
   // @ts-ignore: hard to type
@@ -32,5 +33,7 @@ const adapters: Record<string, Type<Item<RedditItem>>> = {
   lobste,
   // @ts-ignore: hard to type
   thechinaproject,
+  // @ts-ignore: hard to type
+  twitter_link,
 };
 export default adapters;
