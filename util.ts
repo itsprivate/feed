@@ -51,7 +51,7 @@ export async function request(
 ) {
   const c = new AbortController();
   const id = setTimeout(() => c.abort(), 30000);
-  const r = await fetch(url, {
+  const params = {
     ...init,
     signal: c.signal,
     headers: {
@@ -59,7 +59,9 @@ export async function request(
         "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36",
       ...init.headers,
     },
-  });
+  };
+  console.log("params", params);
+  const r = await fetch(url, params);
   clearTimeout(id);
   return r;
 }

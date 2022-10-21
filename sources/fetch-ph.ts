@@ -12,7 +12,7 @@ export default async function fetchPHData() {
   );
   myHeaders.append("Content-Type", "application/json");
   const now = Date.now();
-  const last24 = now - 24 * 60 * 60 * 1000;
+  const last24 = now - 72 * 60 * 60 * 1000;
   const after = new Date(last24).toISOString();
   const graphql = JSON.stringify({
     query: `query($after:DateTime) {
