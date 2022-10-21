@@ -198,7 +198,8 @@ export default async function fetchSources(
         originalJson = await parseFeed(xml);
         itemsPath = "entries";
       } else if (
-        sourceType === "twitter_link" || sourceType === "twitter" ||
+        sourceType === "twittercbarraud" || sourceType === "twitterlink" ||
+        sourceType === "twitter" ||
         sourceType === "thechinaproject"
       ) {
         const bearerToken = Deno.env.get("TWITTER_BEARER_TOKEN");

@@ -307,7 +307,11 @@ export default class Item<T> {
         this.title = metadata.title;
       } else if (doc && doc.title) {
         // console.log("doc.title", doc.title);
-        this.title = doc.title;
+        if (doc.title.includes("Bloomberg - Are you a robot?")) {
+          this.title = null;
+        } else {
+          this.title = doc.title;
+        }
       } else {
         log.debug(`not found title for ${url}`);
         this.title = null;

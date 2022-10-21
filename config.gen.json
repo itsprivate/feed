@@ -1156,8 +1156,7 @@
       "tags": [
         "news",
         "finance",
-        "source-twitter-barraud",
-        "source-google-finance"
+        "source-twitter-barraud"
       ],
       "translations": {
         "zh-Hans": {
@@ -1704,7 +1703,7 @@
           "home_page_url": "https://twitter.com/c_barraud"
         }
       ],
-      "type": "twitter_link"
+      "type": "twittercbarraud"
     },
     {
       "id": "source-google-finance",

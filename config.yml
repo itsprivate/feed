@@ -866,7 +866,7 @@ sites:
     port: 8027
     priority: 18
     archive: true
-    dev: true
+    # dev: true
     tags:
       - news
       - finance
@@ -1196,7 +1196,7 @@ sources:
       - url: c_barraud
         name: Charles Barraud Twitter
         home_page_url: https://twitter.com/c_barraud
-    type: twitter_link
+    type: twittercbarraud
   - id: source-google-finance
     api:
       url: https://news.google.com/rss/topics/CAAqIQgKIhtDQkFTRGdvSUwyMHZNREpmTjNRU0FtVnVLQUFQAQ?hl=en-US&gl=US&ceid=US%3Aen

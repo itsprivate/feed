@@ -146,7 +146,6 @@ export default async function formatItems(
         string,
         unknown
       >;
-
       const item = new (adapters[parsedFilename.type])(
         originalItem,
       );

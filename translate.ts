@@ -57,6 +57,13 @@ export default class Translation {
       this.isMock = options.isMock;
     }
 
+    if (!this.isMock) {
+      // check NO_TR env
+      if (Deno.env.get("NO_TR") === "1") {
+        this.isMock = true;
+      }
+    }
+
     if (options.countPerPage !== undefined) {
       this.countPerPage = options.countPerPage;
     }
