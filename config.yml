@@ -866,6 +866,7 @@ sites:
     port: 8027
     priority: 18
     archive: true
+    dev: true
     tags:
       - news
       - finance
