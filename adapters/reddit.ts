@@ -64,6 +64,11 @@ export default class reddit extends Item<RedditItem> {
     ) {
       image = url;
     }
+
+    if (!image && this.originalItem.data.subreddit === "worldnews") {
+      return undefined;
+    }
+
     return image;
   }
   getVideo(): Video | undefined {
