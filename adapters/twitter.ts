@@ -103,11 +103,24 @@ export default class twitter extends Item<TwitterItem> {
     if (
       hostname === "nyti.ms" || hostname === "econ.st" ||
       hostname === "on.wsj.com" || hostname === "bit.ly" ||
-      hostname === "on.ft" || hostname === "trib.al"
+      hostname === "on.ft"
     ) {
       return true;
     } else {
       return false;
+    }
+  }
+  getTitle(): null | undefined {
+    const url = this.getUrl();
+    const urlObj = new URL(url);
+    const hostname = urlObj.hostname;
+    if (
+      hostname === "www.bloomberg.com" || hostname === "bloom.bg" ||
+      hostname === "trib.al"
+    ) {
+      return null;
+    } else {
+      return undefined;
     }
   }
   getUrl(): string {
