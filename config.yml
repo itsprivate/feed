@@ -899,7 +899,7 @@ sites:
       - source-the-guardian
     translations:
       "zh-Hans":
-        title: '英国卫报'
+        title: '卫报'
         short_title: "卫报"
         description: '用中文浏览英国卫报相关报道'
         keywords: "卫报,财经,财经新闻"

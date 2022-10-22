@@ -5,9 +5,9 @@ import { Author } from "../interface.ts";
 export default class lobste extends RSS {
   getId(): string {
     const urlPattern = new URLPattern({
-      pathname: "/s/:id",
+      pathname: "/s/:id/:slug",
     });
-    const result = urlPattern.exec(super.getId());
+    const result = urlPattern.exec(this.getExternalUrl()!);
 
     if (result?.pathname.groups.id) {
       return result.pathname.groups.id;

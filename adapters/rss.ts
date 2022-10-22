@@ -31,6 +31,19 @@ export default class rss extends Item<RSSItem> {
     return "";
   }
 
+  getImage(): string | null | undefined {
+    if (
+      this.originalItem["media:content"] &&
+      this.originalItem["media:content"].length > 0
+    ) {
+      return this
+        .originalItem["media:content"][
+          this.originalItem["media:content"].length - 1
+        ].url;
+    } else {
+      return undefined;
+    }
+  }
   getUrl(): string {
     if (this.originalItem.links) {
       return this.originalItem.links[0].href;
@@ -94,6 +107,8 @@ export interface Source {
   value: string;
 }
 export interface MediaContent {
+  url: string;
+  width: string;
 }
 
 export interface MediaThumbnail {
