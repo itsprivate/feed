@@ -41,6 +41,10 @@ start:
 startsite:
 	deno run -A main.ts --site ${site}
 
+.Phony: prod-startsite
+prod-startsite:
+	PROD=1 deno run -A main.ts --site ${site}
+
 .Phony: startall
 startall:
 	deno run -A main.ts

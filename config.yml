@@ -1464,6 +1464,9 @@ sources:
       - type: notInclude
         key: getUrl
         value: "https://www.bloomberg.com/account/newsletters"
+      - type: notInclude
+        key: getUrl
+        value: "podcast"
   - id: source-google-china
     type: googlenews
     api:

@@ -2117,6 +2117,11 @@
           "type": "notInclude",
           "key": "getUrl",
           "value": "https://www.bloomberg.com/account/newsletters"
+        },
+        {
+          "type": "notInclude",
+          "key": "getUrl",
+          "value": "podcast"
         }
       ]
     },

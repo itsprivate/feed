@@ -1,6 +1,6 @@
 import { Author, Video } from "../interface.ts";
 import Item from "../item.ts";
-import { request } from "../util.ts";
+import { request, tryToRemoveUnnecessaryParams } from "../util.ts";
 import log from "../log.ts";
 import {
   Media,
@@ -141,15 +141,20 @@ export default class twitter extends Item<TwitterV2Item> {
   }
   getUrl(): string {
     const urlEntity = this.getLastUrlEntity();
-
+    let finalUrl = "";
     if (urlEntity && urlEntity.unwound_url) {
-      return urlEntity.unwound_url;
+      finalUrl = urlEntity.unwound_url;
     } else if (urlEntity && urlEntity.expanded_url) {
-      return urlEntity.expanded_url;
-    }
-    const author = this.getTweetAuthor();
+      finalUrl = urlEntity.expanded_url;
+    } else {
+      const author = this.getTweetAuthor();
 
-    return `https://twitter.com/${author.username}/status/${this.originalItem.id}`;
+      finalUrl =
+        `https://twitter.com/${author.username}/status/${this.originalItem.id}`;
+    }
+    finalUrl = tryToRemoveUnnecessaryParams(finalUrl);
+
+    return finalUrl;
   }
   getExternalUrl(): string | undefined {
     const author = this.getTweetAuthor();
