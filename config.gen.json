@@ -2112,6 +2112,11 @@
           "type": "equal",
           "key": "getHostname",
           "value": "www.bloomberg.com"
+        },
+        {
+          "type": "notInclude",
+          "key": "getUrl",
+          "value": "https://www.bloomberg.com/account/newsletters"
         }
       ]
     },
