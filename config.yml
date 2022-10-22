@@ -915,7 +915,7 @@ sites:
         keywords: "ガーディアン"
   sky:
     port: 8029
-    priority: 20
+    priority: 25
     archive: true
     # dev: true
     tags:
@@ -938,6 +938,31 @@ sites:
         short_title: "スカイニュース"
         description: '人気のスカイニュースの最新 の投稿'
         keywords: "スカイニュース"
+  ft:
+    port: 8030
+    priority: 22
+    archive: true
+    # dev: true
+    tags:
+      - news
+      - finance
+      - source-ft
+    translations:
+      "zh-Hans":
+        title: '金融时报'
+        short_title: "金融时报"
+        description: '用中文浏览英国金融时报相关报道'
+        keywords: "金融时报,财经,财经新闻"
+      'en':
+        title: 'Financial Times'
+        short_title: "Financial Times"
+        description: 'See what''s buzzing on Financial Times in your native language'
+        keywords: "Financial Times"
+      'ja':
+        title: 'ファイナンシャルタイムズ'
+        short_title: "ファイナンシャルタイムズ"
+        description: '人気のファイナンシャルタイムズの最新 の投稿'
+        keywords: "ファイナンシャルタイムズ"
 versions:
   - prefix: ""
     code: "default"
@@ -1396,3 +1421,9 @@ sources:
       url: https://feeds.skynews.com/feeds/rss/home.xml
       name: Sky News
       home_page_url: https://news.sky.com/
+  - id: source-ft
+    type: rss
+    api:
+      url: https://www.ft.com/rss/home/international
+      name: Financial Times
+      home_page_url: https://www.ft.com/

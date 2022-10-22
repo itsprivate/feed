@@ -127,6 +127,13 @@
       .pre-line {
         white-space: pre-line;
       }
+      .text-lg {
+        font-size: 1.1em;
+      }
+      .my {
+        margin-top: 0.675em;
+        margin-bottom: 0.675em;
+      }
       .small{
         font-size: 0.9375em;
       }
@@ -341,7 +348,8 @@
       {{/_page_title}}
     </header>
     {{#_groups}}
-      <h3 class="px">{{{title}}}&nbsp;(<a class="contrast" href="{{{home_page_url}}}">{{hostname}}</a>)</h3>
+      <details open>
+      <summary class="px my bold text-lg">{{{title}}}&nbsp;(<a class="contrast" href="{{{home_page_url}}}">{{hostname}}</a>)</summary>
       {{#items}}
       <div class="article h-entry hentry">
       <div class="mb mt0">
@@ -355,6 +363,7 @@
         <span>&nbsp;</span><a class="small" href="{{{home_page_lite_url}}}#11">{{{Lite}}}</a><span>&nbsp;·&nbsp;</span><a class="small" href="{{{atom_url}}}">{{{subscription_label}}}</a> <span></span>
       </div>
       {{/remaining_count}}
+    </details>
     {{/_groups}}
     <footer class="footer">
 

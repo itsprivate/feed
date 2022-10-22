@@ -12,6 +12,7 @@ import {
   LinkOptions,
   Video,
 } from "./interface.ts";
+import getFtImage from "./metadata/get-ft-metadata.ts";
 import {
   formatHumanTime,
   getCurrentTranslations,
@@ -29,6 +30,7 @@ import {
   tagToPascalCase,
   tagToUrl,
   tryToRemoveUnnecessaryParams,
+  writeTextFile,
 } from "./util.ts";
 import { DOMParser, getMetadata, tweetPatch } from "./deps.ts";
 import log from "./log.ts";
@@ -206,12 +208,25 @@ export default class Item<T> {
       this.image = null;
       return null;
     }
+    const urlObj = new URL(url);
+    const domain = urlObj.hostname;
     try {
+      if (domain === "www.ft.com") {
+        const image = getFtImage(resource.text);
+        if (image) {
+          this.image = image;
+          return image;
+        } else {
+          this.image = null;
+          return null;
+        }
+      }
       const doc = new DOMParser().parseFromString(
         resource.text,
         "text/html",
       );
       const metadata = getMetadata(doc, url);
+
       if (metadata.image) {
         // check image is valid
         const imageResult = await request(metadata.image, {
@@ -226,6 +241,7 @@ export default class Item<T> {
         }
       } else {
         log.debug(`not found image for ${url}`);
+        log.debug("metadata", metadata);
         this.image = null;
       }
       return null;
