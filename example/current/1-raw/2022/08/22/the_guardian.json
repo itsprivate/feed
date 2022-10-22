@@ -1,0 +1,58 @@
+{
+  "media:content": [
+    {
+      "width": 140,
+      "url": "https://i.guim.co.uk/img/media/bec279a59496b0a7c989e0775bd4f480acc20f2d/94_0_1800_1080/master/1800.png?width=140&quality=85&auto=format&fit=max&s=ae5aabc9f84f567eea6441df233c4693"
+    },
+    {
+      "width": 460,
+      "url": "https://i.guim.co.uk/img/media/bec279a59496b0a7c989e0775bd4f480acc20f2d/94_0_1800_1080/master/1800.png?width=460&quality=85&auto=format&fit=max&s=bc69b633a461581c6061b41728025b67"
+    }
+  ],
+  "dc:creator": [
+    "Damien Gayle, Maeve Shearlaw, Kyri Evangelou, Adam Sich and Jem Talbot"
+  ],
+  "dc:dateRaw": "2022-10-06T11:37:59Z",
+  "dc:date": "2022-10-06T11:37:59.000Z",
+  "id": "https://www.theguardian.com/global/video/2022/oct/06/heating-and-eating-can-cost-of-living-and-climate-protesters-join-forces-video",
+  "title": {
+    "value": "Heating and eating: can cost of living and climate protesters join forces? - video"
+  },
+  "description": {
+    "value": "&lt;p&gt;There are strong synergies between the solutions needed to the climate crisis and the cost of living crisis, but are the campaigns talking to each other? We spent time with people most affected by austerity, strikers on the picket lines and disruptive climate campaigners to find out if their messages are aligning or if there is still work to do&amp;nbsp;&amp;nbsp;&lt;br&gt;&lt;/p&gt; &lt;a href=\"https://www.theguardian.com/global/video/2022/oct/06/heating-and-eating-can-cost-of-living-and-climate-protesters-join-forces-video\"&gt;Continue reading...&lt;/a&gt;"
+  },
+  "published": "2022-10-06T11:37:59.000Z",
+  "publishedRaw": "Thu, 06 Oct 2022 11:37:59 GMT",
+  "updated": "2022-10-06T11:37:59.000Z",
+  "updatedRaw": "Thu, 06 Oct 2022 11:37:59 GMT",
+  "author": {
+    "name": "Damien Gayle, Maeve Shearlaw, Kyri Evangelou, Adam Sich and Jem Talbot"
+  },
+  "links": [
+    {
+      "href": "https://www.theguardian.com/global/video/2022/oct/06/heating-and-eating-can-cost-of-living-and-climate-protesters-join-forces-video"
+    }
+  ],
+  "categories": [
+    {
+      "term": "Climate crisis",
+      "label": "Climate crisis"
+    },
+    {
+      "term": "Environment",
+      "label": "Environment"
+    },
+    {
+      "term": "UK cost of living crisis",
+      "label": "UK cost of living crisis"
+    },
+    {
+      "term": "Rail strikes",
+      "label": "Rail strikes"
+    },
+    {
+      "term": "Protest",
+      "label": "Protest"
+    }
+  ]
+}
