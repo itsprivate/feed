@@ -1156,12 +1156,13 @@
       "tags": [
         "news",
         "finance",
-        "source-twitter-barraud"
+        "source-twitter-barraud",
+        "source-google-finance"
       ],
       "translations": {
         "zh-Hans": {
           "title": "国外财经新闻",
-          "short_title": "财财经新闻",
+          "short_title": "财经新闻",
           "description": "用中文浏览国外财经相关新闻",
           "keywords": "财经,财经新闻"
         },
@@ -1179,9 +1180,45 @@
         },
         "zh-Hant": {
           "title": "國外財經新聞",
-          "short_title": "財財經新聞",
+          "short_title": "財經新聞",
           "description": "用中文瀏覽國外財經相關新聞",
           "keywords": "財經,財經新聞"
+        }
+      }
+    },
+    "theguardian": {
+      "port": 8028,
+      "priority": 20,
+      "archive": true,
+      "tags": [
+        "news",
+        "finance",
+        "source-the-guardian"
+      ],
+      "translations": {
+        "zh-Hans": {
+          "title": "英国卫报",
+          "short_title": "卫报",
+          "description": "用中文浏览英国卫报相关报道",
+          "keywords": "卫报,财经,财经新闻"
+        },
+        "en": {
+          "title": "The Guardian",
+          "short_title": "The Guardian",
+          "description": "See what's buzzing on The Guardian in your native language",
+          "keywords": "The Guardian"
+        },
+        "ja": {
+          "title": "ガーディアン",
+          "short_title": "ガーディアン",
+          "description": "人気のガーディアンの最新 の投稿",
+          "keywords": "ガーディアン"
+        },
+        "zh-Hant": {
+          "title": "英國衛報",
+          "short_title": "衛報",
+          "description": "用中文瀏覽英國衛報相關報道",
+          "keywords": "衛報,財經,財經新聞"
         }
       }
     }
@@ -1921,6 +1958,15 @@
           "value": "500"
         }
       ]
+    },
+    {
+      "id": "source-the-guardian",
+      "type": "rss",
+      "api": {
+        "url": "https://www.theguardian.com/international/rss",
+        "name": "The Guardian International Edition",
+        "home_page_url": "https://www.theguardian.com/international"
+      }
     }
   ]
 }

@@ -888,7 +888,31 @@ sites:
         short_title: "ファイナンス"
         description: '人気のファイナンスの最新 の投稿'
         keywords: "ファイナンス"
-
+  theguardian:
+    port: 8028
+    priority: 20
+    archive: true
+    # dev: true
+    tags:
+      - news
+      - finance
+      - source-the-guardian
+    translations:
+      "zh-Hans":
+        title: '英国卫报'
+        short_title: "卫报"
+        description: '用中文浏览英国卫报相关报道'
+        keywords: "卫报,财经,财经新闻"
+      'en':
+        title: 'The Guardian'
+        short_title: "The Guardian"
+        description: 'See what''s buzzing on The Guardian in your native language'
+        keywords: "The Guardian"
+      'ja':
+        title: 'ガーディアン'
+        short_title: "ガーディアン"
+        description: '人気のガーディアンの最新 の投稿'
+        keywords: "ガーディアン"
 versions:
   - prefix: ""
     code: "default"
@@ -1335,3 +1359,9 @@ sources:
       - type: greaterEqual
         key: getWeightedScore
         value: "500"
+  - id: source-the-guardian
+    type: rss
+    api:
+      url: https://www.theguardian.com/international/rss
+      name: The Guardian International Edition
+      home_page_url: https://www.theguardian.com/international

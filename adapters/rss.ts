@@ -5,7 +5,22 @@ export default class rss extends Item<RSSItem> {
     return new Date(this.originalItem.published as string);
   }
   getId(): string {
-    return this.originalItem.id as string;
+    // encode url id
+    let isUrl = false;
+    let id = this.originalItem.id as string;
+    try {
+      const url = new URL(id);
+      isUrl = true;
+    } catch (_e) {
+      // not url
+    }
+    if (isUrl) {
+      const url = new URL(id);
+      id = url.hostname.replace(/\./g, "-") + "-" +
+        url.pathname.replace(/\//g, "-");
+    }
+
+    return id;
   }
   getTitle(): string {
     const title = this.originalItem.title.value as string;
