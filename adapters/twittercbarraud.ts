@@ -21,7 +21,7 @@ export default class twittercbarraud extends TwitterLink {
 
     return firstLine.trim();
   }
-  getTitle(): string | undefined {
+  getTitle(): string | undefined | null {
     // is bloggerm
     const url = this.getUrl();
     const urlObj = new URL(url);

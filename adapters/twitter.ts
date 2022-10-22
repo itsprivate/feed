@@ -110,7 +110,7 @@ export default class twitter extends Item<TwitterItem> {
       return false;
     }
   }
-  getTitle(): null | undefined {
+  getTitle(): string | null | undefined {
     const url = this.getUrl();
     const urlObj = new URL(url);
     const hostname = urlObj.hostname;
