@@ -1,5 +1,5 @@
 import RSS from "./rss.ts";
-import { getRedirectedUrl, request, sha1 } from "../util.ts";
+import { getRedirectedUrlDirectly, request, sha1 } from "../util.ts";
 import log from "../log.ts";
 export default class googlenews extends RSS {
   private id: string = super.getId();
@@ -69,7 +69,7 @@ export default class googlenews extends RSS {
       id = await sha1(title);
       this.id = id;
     }
-    this.url = await getRedirectedUrl(super.getUrl());
+    this.url = await getRedirectedUrlDirectly(super.getUrl());
     this.id = await sha1(this.url);
   }
 }

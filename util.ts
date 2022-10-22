@@ -978,6 +978,27 @@ export function identifierToCachedKey(identifier: string): string {
   const parsed = parseItemIdentifier(identifier);
   return `${parsed.language}_${parsed.type}__${parsed.id}`;
 }
+export async function getRedirectedUrlDirectly(url: string): Promise<string> {
+  const c = new AbortController();
+  const id = setTimeout(() => c.abort(), 30000);
+  const headers = new Headers();
+  headers.set(
+    "User-Agent",
+    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36",
+  );
+  const params: RequestInit = {
+    signal: c.signal,
+    headers,
+    method: "HEAD",
+    redirect: "manual",
+  };
+  const r = await fetch(url, params);
+  clearTimeout(id);
+  if (r.headers.get("location")) {
+    return r.headers.get("location")!;
+  }
+  return url;
+}
 export async function getRedirectedUrl(url: string): Promise<string> {
   const fetchResult = await request(url, {
     method: "HEAD",

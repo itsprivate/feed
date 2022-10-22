@@ -7,6 +7,7 @@ import {
   getFullDay,
   getFullMonth,
   getRedirectedUrl,
+  getRedirectedUrlDirectly,
   isDev,
   isMock,
   isWeekBiggerThan,
@@ -398,5 +399,15 @@ Deno.test("lite url to url", async () => {
   assertEquals(
     url,
     "https://i.buzzing.cc/hn/posts/2022/42/en_hn_2022_10_18__33239146/",
+  );
+});
+
+Deno.test("getRedirectedUrl #38", async () => {
+  const redirected = await getRedirectedUrlDirectly(
+    "https://news.google.com/__i/rss/rd/articles/CBMicGh0dHBzOi8vd3d3LmJsb29tYmVyZy5jb20vbmV3cy9hcnRpY2xlcy8yMDIyLTEwLTIyL3J1c3NpYW4taGl0cy1jYXVzZS1tYWpvci1kYW1hZ2UtdG8tdWtyYWluZS1zLXBvd2VyLWZhY2lsaXRpZXPSAQA?oc=5",
+  );
+  assertEquals(
+    redirected,
+    "https://www.bloomberg.com/news/articles/2022-10-22/russian-hits-cause-major-damage-to-ukraine-s-power-facilities",
   );
 });
