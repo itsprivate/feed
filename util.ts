@@ -1002,6 +1002,12 @@ export function tryToRemoveUnnecessaryParams(
   urlObj.searchParams.delete("utm_campaign");
   // utm_term
   urlObj.searchParams.delete("utm_term");
+  // utm_content
+  urlObj.searchParams.delete("utm_content");
+  // utm_cid
+  urlObj.searchParams.delete("utm_cid");
+  // cmpid
+  urlObj.searchParams.delete("cmpid");
   return urlObj.href;
 }
 export const exists = async (filename: string): Promise<boolean> => {

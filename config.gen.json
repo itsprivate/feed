@@ -1293,6 +1293,42 @@
           "keywords": "金融時報,財經,財經新聞"
         }
       }
+    },
+    "bloomberg": {
+      "port": 8031,
+      "priority": 22,
+      "archive": true,
+      "tags": [
+        "news",
+        "finance",
+        "source-twitter-bloomberg"
+      ],
+      "translations": {
+        "zh-Hans": {
+          "title": "彭博社",
+          "short_title": "彭博社",
+          "description": "用中文浏览彭博社相关报道",
+          "keywords": "彭博社,财经,财经新闻"
+        },
+        "en": {
+          "title": "Bloomberg",
+          "short_title": "Bloomberg",
+          "description": "See what's buzzing on Bloomberg in your native language",
+          "keywords": "Bloomberg"
+        },
+        "ja": {
+          "title": "ブルームバーグ",
+          "short_title": "ブルームバーグ",
+          "description": "人気のブルームバーグの最新 の投稿",
+          "keywords": "ブルームバーグ"
+        },
+        "zh-Hant": {
+          "title": "彭博社",
+          "short_title": "彭博社",
+          "description": "用中文瀏覽彭博社相關報道",
+          "keywords": "彭博社,財經,財經新聞"
+        }
+      }
     }
   },
   "versions": [
@@ -2056,6 +2092,15 @@
         "url": "https://www.ft.com/rss/home/international",
         "name": "Financial Times",
         "home_page_url": "https://www.ft.com/"
+      }
+    },
+    {
+      "id": "source-twitter-bloomberg",
+      "type": "twitterlink",
+      "api": {
+        "url": "business",
+        "name": "Bloomberg Twitter",
+        "home_page_url": "https://twitter.com/business"
       }
     }
   ]

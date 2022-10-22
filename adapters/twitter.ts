@@ -102,7 +102,8 @@ export default class twitter extends Item<TwitterItem> {
 
     if (
       hostname === "nyti.ms" || hostname === "econ.st" ||
-      hostname === "on.wsj.com" || hostname === "bit.ly" || hostname === "on.ft"
+      hostname === "on.wsj.com" || hostname === "bit.ly" ||
+      hostname === "on.ft" || hostname === "trib.al"
     ) {
       return true;
     } else {
