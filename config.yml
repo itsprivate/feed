@@ -212,7 +212,7 @@ sites:
 
   showhn:
     port: 8004
-    priority: 20
+    priority: 29
     tags:
       - hn
       - source-hackernews-show
@@ -271,7 +271,7 @@ sites:
 
   ask:
     port: 8007
-    priority: 16
+    priority: 26
     redirect: true
     max_image_height: 520
     tags:
@@ -303,7 +303,7 @@ sites:
   stocks:
     port: 8008
     redirect: true
-    priority: 18
+    priority: 28
     max_image_height: 520
     tags:
       - reddit
@@ -608,7 +608,7 @@ sites:
     port: 8017
     archive: true
     redirect: true
-    priority: 20
+    priority: 30
     max_image_height: 360
     tags:
       - sideproject
@@ -692,7 +692,7 @@ sites:
     port: 8020
     archive: true
     redirect: false
-    priority: 17
+    priority: 23
     tags:
       - videos
       - www
@@ -790,7 +790,7 @@ sites:
         keywords: "中国"
   feminism:
     port: 8024
-    priority: 22
+    priority: 27
     archive: true
     max_image_height: 520
     tags:
@@ -1392,7 +1392,7 @@ sources:
     rules:
       - type: greaterEqual
         key: getWeightedScore
-        value: "2"
+        value: "8"
   - id: source-reddit-china
     type: reddit
     api:
