@@ -7,6 +7,7 @@
   "translations": {
     "zh-Hans": {
       "about_label": "关于",
+      "table_of_contents_label": "本页目录",
       "subscription_label": "订阅地址",
       "powered_by_label": "背后的人❤️",
       "languages_label": "该页面支持的语言",
@@ -33,6 +34,7 @@
       "about_label": "About",
       "subscription_label": "Subscription",
       "powered_by_label": "Made by ❤️",
+      "table_of_contents_label": "Table of Contents",
       "languages_label": "Languages supported",
       "version_label": "Versions supported",
       "more_sites_label": "More feeds",
@@ -53,6 +55,7 @@
     "ja": {
       "about_label": "このページについて",
       "subscription_label": "購読",
+      "table_of_contents_label": "目次",
       "powered_by_label": "製作者 ❤️",
       "languages_label": "他の言語",
       "version_label": "バージョン",
@@ -73,6 +76,7 @@
     },
     "zh-Hant": {
       "about_label": "關於",
+      "table_of_contents_label": "本頁目錄",
       "subscription_label": "訂閱地址",
       "powered_by_label": "背後的人❤️",
       "languages_label": "該頁面支持的語言",

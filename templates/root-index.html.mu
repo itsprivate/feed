@@ -70,7 +70,7 @@
         margin: 0 auto;
         padding: 0;
         background-color: #fffff8;
-        line-height: 1.5em;
+        line-height: 1.6em;
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
           Helvetica, sans-serif;
       }
@@ -347,6 +347,20 @@
       <h3>{{.}}</h3>
       {{/_page_title}}
     </header>
+    <details class="my">
+      <summary class="px contrast small">{{table_of_contents_label}}</summary>
+      <div class="px">
+      <ul>
+        <li>
+          <a href="#about" class="contrast">{{about_label}}</a>
+        </li>
+        {{#_groups}}
+        <li>
+          <a href="#{{site_identifier}}" class="contrast">{{title}}</a>
+        </li>
+        {{/_groups}}
+       </ul>
+    </details>
     {{#_groups}}
       <details open id="{{site_identifier}}">
       <summary class="px my bold text-lg">{{{title}}}&nbsp;(<a class="contrast" href="{{{home_page_url}}}">{{hostname}}</a>)</summary>
