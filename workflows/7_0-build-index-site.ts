@@ -151,6 +151,7 @@ export default async function buildSite(options: RunOptions) {
       return {
         "title": currentTranslations.title,
         "hostname": siteIdentifierToDomain(siteIdentifier),
+        "site_identifier": siteIdentifier,
         "home_page_url": siteIdentifierToUrl(
           siteIdentifier,
           pathname,

@@ -771,6 +771,7 @@ sites:
       - www
       - source-thechinaproj
       - source-reddit-china
+      - source-google-china
     translations:
       "zh-Hans":
         title: "外国人怎么看中国？"
@@ -1028,7 +1029,7 @@ sources:
     id: source-google-news
     rules:
       - type: limit
-        value: "5"
+        value: "8"
   - api:
       - url: https://news.google.com/rss/topics/CAAqIAgKIhpDQkFTRFFvSEwyMHZNR293YXhJQ1pXNG9BQVAB?hl=en-US&gl=US&ceid=US%3Aen
         name: Google Asia News
@@ -1458,3 +1459,12 @@ sources:
       url: business
       name: Bloomberg Twitter
       home_page_url: https://twitter.com/business
+  - id: source-google-china
+    type: googlenews
+    api:
+      url: https://news.google.com/rss/topics/CAAqIggKIhxDQkFTRHdvSkwyMHZNR1F3TlhjekVnSmxiaWdBUAE?hl=en-US&gl=US&ceid=US%3Aen 
+      name: Google News China
+      home_page_url: https://news.google.com/topics/CAAqIggKIhxDQkFTRHdvSkwyMHZNR1F3TlhjekVnSmxiaWdBUAE?hl=en-US&gl=US&ceid=US%3Aen 
+    rules:
+      - type: limit
+        value: "10"

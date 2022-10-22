@@ -348,7 +348,7 @@
       {{/_page_title}}
     </header>
     {{#_groups}}
-      <details open>
+      <details open id="{{site_identifier}}">
       <summary class="px my bold text-lg">{{{title}}}&nbsp;(<a class="contrast" href="{{{home_page_url}}}">{{hostname}}</a>)</summary>
       {{#items}}
       <div class="article h-entry hentry">
