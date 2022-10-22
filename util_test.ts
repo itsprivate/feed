@@ -400,11 +400,3 @@ Deno.test("lite url to url", async () => {
     "https://i.buzzing.cc/hn/posts/2022/42/en_hn_2022_10_18__33239146/",
   );
 });
-
-Deno.test("getRedirectedUrl #38", async () => {
-  const url = await getRedirectedUrl("https://trib.al/SM84fNl");
-  assertEquals(
-    url,
-    "https://www.bloomberg.com/news/articles/2022-10-18/first-look-rolls-royce-spectre-coupe-first-ever-electric-car",
-  );
-});
