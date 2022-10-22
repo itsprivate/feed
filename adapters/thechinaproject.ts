@@ -1,4 +1,4 @@
-import twitter from "./twitter.ts";
+import twitter from "./twitterlink.ts";
 import { request, sha1 } from "../util.ts";
 import log from "../log.ts";
 

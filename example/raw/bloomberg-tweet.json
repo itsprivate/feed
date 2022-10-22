@@ -1,0 +1,169 @@
+{
+  "public_metrics": {
+    "retweet_count": 17,
+    "reply_count": 2,
+    "like_count": 37,
+    "quote_count": 1
+  },
+  "author_id": "34713362",
+  "id": "1583844410940624896",
+  "created_at": "2022-10-22T15:35:08.000Z",
+  "edit_history_tweet_ids": [
+    "1583844410940624896"
+  ],
+  "lang": "en",
+  "conversation_id": "1583844410940624896",
+  "entities": {
+    "annotations": [
+      {
+        "start": 52,
+        "end": 58,
+        "probability": 0.9681,
+        "type": "Place",
+        "normalized_text": "Ukraine"
+      }
+    ],
+    "urls": [
+      {
+        "start": 196,
+        "end": 219,
+        "url": "https://t.co/LSNZ44ufbu",
+        "expanded_url": "https://trib.al/lyBe87a",
+        "display_url": "trib.al/lyBe87a",
+        "images": [
+          {
+            "url": "https://pbs.twimg.com/news_img/1582836261387399169/ulsewzL6?format=jpg&name=orig",
+            "width": 1200,
+            "height": 675
+          },
+          {
+            "url": "https://pbs.twimg.com/news_img/1582836261387399169/ulsewzL6?format=jpg&name=150x150",
+            "width": 150,
+            "height": 150
+          }
+        ],
+        "status": 200,
+        "title": "MapLab: Monitoring the Invasion of Ukraine from Outer Space",
+        "description": "Russia’s full-scale invasion of Ukraine is being monitored by the watchful eyes of commercial satellites like no other conflict before.",
+        "unwound_url": "https://www.bloomberg.com/news/newsletters/2022-10-19/maplab-monitoring-the-invasion-of-ukraine-from-outer-space?utm_campaign=socialflow-organic&utm_source=twitter&utm_medium=social&cmpid=socialflow-twitter-business&utm_content=business"
+      }
+    ]
+  },
+  "possibly_sensitive": false,
+  "reply_settings": "everyone",
+  "source": "SocialFlow",
+  "edit_controls": {
+    "edits_remaining": 5,
+    "is_edit_eligible": true,
+    "editable_until": "2022-10-22T16:05:08.000Z"
+  },
+  "text": "In the words of one intelligence expert, the war in Ukraine is \"the first global conflict in which a country has been using commercial satellite imagery to tell a story.\"\n\nHere's why that matters https://t.co/LSNZ44ufbu",
+  "includes": {
+    "users": [
+      {
+        "username": "business",
+        "profile_image_url": "https://pbs.twimg.com/profile_images/991818020233404416/alrBF_dr_normal.jpg",
+        "name": "Bloomberg",
+        "id": "34713362"
+      }
+    ],
+    "media": [
+      {
+        "height": 1080,
+        "preview_image_url": "https://pbs.twimg.com/amplify_video_thumb/1582086549537161219/img/RtlBq_jM69bmWqVC.jpg",
+        "width": 1920,
+        "media_key": "13_1582086549537161219",
+        "type": "video",
+        "variants": [
+          {
+            "content_type": "application/x-mpegURL",
+            "url": "https://video.twimg.com/amplify_video/1582086549537161219/pl/eN40YzyT9n_RWuoG.m3u8?tag=14&container=fmp4"
+          },
+          {
+            "bit_rate": 832000,
+            "content_type": "video/mp4",
+            "url": "https://video.twimg.com/amplify_video/1582086549537161219/vid/640x360/gtseh8F7ohq7Y6e7.mp4?tag=14"
+          },
+          {
+            "bit_rate": 2176000,
+            "content_type": "video/mp4",
+            "url": "https://video.twimg.com/amplify_video/1582086549537161219/vid/1280x720/TZBNrLuitwfYTdsF.mp4?tag=14"
+          },
+          {
+            "bit_rate": 288000,
+            "content_type": "video/mp4",
+            "url": "https://video.twimg.com/amplify_video/1582086549537161219/vid/480x270/t8S43SPHLpaTJ60X.mp4?tag=14"
+          }
+        ],
+        "duration_ms": 110076,
+        "public_metrics": {
+          "view_count": 49581
+        }
+      },
+      {
+        "height": 1080,
+        "preview_image_url": "https://pbs.twimg.com/amplify_video_thumb/1578103330672443395/img/gcRCaCFfA0E9u3VL.jpg",
+        "width": 1080,
+        "media_key": "13_1578103330672443395",
+        "type": "video",
+        "variants": [
+          {
+            "bit_rate": 1280000,
+            "content_type": "video/mp4",
+            "url": "https://video.twimg.com/amplify_video/1578103330672443395/vid/720x720/JQX-kOYTLTlsPu3e.mp4?tag=14"
+          },
+          {
+            "bit_rate": 432000,
+            "content_type": "video/mp4",
+            "url": "https://video.twimg.com/amplify_video/1578103330672443395/vid/320x320/7yOHD2skd9Jcnvc1.mp4?tag=14"
+          },
+          {
+            "bit_rate": 832000,
+            "content_type": "video/mp4",
+            "url": "https://video.twimg.com/amplify_video/1578103330672443395/vid/540x540/08NU5XY1hOcyPyQB.mp4?tag=14"
+          },
+          {
+            "content_type": "application/x-mpegURL",
+            "url": "https://video.twimg.com/amplify_video/1578103330672443395/pl/ukEx_Ce9PEmxbkAF.m3u8?tag=14&container=fmp4"
+          }
+        ],
+        "duration_ms": 66900,
+        "public_metrics": {
+          "view_count": 58161
+        }
+      },
+      {
+        "height": 720,
+        "preview_image_url": "https://pbs.twimg.com/amplify_video_thumb/1583083026413719556/img/av58d6YW6lc-6HKt.jpg",
+        "width": 1280,
+        "media_key": "13_1583083026413719556",
+        "type": "video",
+        "variants": [
+          {
+            "content_type": "application/x-mpegURL",
+            "url": "https://video.twimg.com/amplify_video/1583083026413719556/pl/qiHXBl61rZeaZpes.m3u8?tag=14&container=fmp4"
+          },
+          {
+            "bit_rate": 288000,
+            "content_type": "video/mp4",
+            "url": "https://video.twimg.com/amplify_video/1583083026413719556/vid/480x270/4t5xTUWQSszV1aO8.mp4?tag=14"
+          },
+          {
+            "bit_rate": 832000,
+            "content_type": "video/mp4",
+            "url": "https://video.twimg.com/amplify_video/1583083026413719556/vid/640x360/WEPs4VWT3Hrlp4u8.mp4?tag=14"
+          },
+          {
+            "bit_rate": 2176000,
+            "content_type": "video/mp4",
+            "url": "https://video.twimg.com/amplify_video/1583083026413719556/vid/1280x720/Y63Ai_Rb5oaSIfrD.mp4?tag=14"
+          }
+        ],
+        "duration_ms": 115959,
+        "public_metrics": {
+          "view_count": 20405
+        }
+      }
+    ]
+  }
+}

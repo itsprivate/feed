@@ -351,3 +351,7 @@ prod-zipuploadarchive:
 .Phony: generateassets
 generateassets:
 	deno run -A ./scripts/generate-assets.ts
+
+.Phony: testtweet
+testtweet:
+	deno test -A ./sources/fetch-twitter_test.ts

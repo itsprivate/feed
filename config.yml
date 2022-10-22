@@ -870,7 +870,6 @@ sites:
     port: 8027
     priority: 18
     archive: true
-    # dev: true
     tags:
       - news
       - finance
@@ -896,7 +895,6 @@ sites:
     port: 8028
     priority: 20
     archive: true
-    # dev: true
     tags:
       - news
       - finance
@@ -921,7 +919,6 @@ sites:
     port: 8029
     priority: 25
     archive: true
-    # dev: true
     tags:
       - news
       - finance
@@ -946,7 +943,6 @@ sites:
     port: 8030
     priority: 22
     archive: true
-    # dev: true
     tags:
       - news
       - finance
@@ -971,7 +967,6 @@ sites:
     port: 8031
     priority: 22
     archive: true
-    # dev: true
     tags:
       - news
       - finance
@@ -1237,11 +1232,11 @@ sources:
     params:
       include_rts: false
     id: source-twitter-nytimes
-    type: twitter
+    type: twitterlink
     rules:
       - type: greaterEqual
         key: getWeightedScore
-        value: "500"
+        value: "400"
   - api:
       url: wsj
       name: Wall Street Journal Twitter
@@ -1249,7 +1244,7 @@ sources:
     params:
       include_rts: false
     id: source-twitter-wsj
-    type: twitter
+    type: twitterlink
     rules:
       - type: greaterEqual
         key: getWeightedScore
@@ -1264,11 +1259,11 @@ sources:
     params:
       include_rts: false
     id: source-twitter-economist
-    type: twitter
+    type: twitterlink
     rules:
       - type: greaterEqual
         key: getWeightedScore
-        value: "100"
+        value: "50"
   - api:
       - url: charliebilello
         name: Charlie Bilello Twitter
@@ -1337,7 +1332,7 @@ sources:
     params:
       include_rts: false
     id: source-quora
-    type: twitter
+    type: twitterlink
     rules:
       - type: include
         key: getFallbackTitle
@@ -1395,7 +1390,7 @@ sources:
     rules:
       - type: greaterEqual
         key: getWeightedScore
-        value: "8"
+        value: "10"
   - id: source-reddit-china
     type: reddit
     api:
@@ -1405,7 +1400,7 @@ sources:
     rules:
       - type: greaterEqual
         key: getWeightedScore
-        value: "15"
+        value: "20"
   - id: source-reddit-askfeminist
     type: reddit
     api:
@@ -1462,6 +1457,10 @@ sources:
       url: business
       name: Bloomberg Twitter
       home_page_url: https://twitter.com/business
+    rules:
+      - type: equal
+        key: getHostname
+        value: www.bloomberg.com
   - id: source-google-china
     type: googlenews
     api:

@@ -1749,12 +1749,12 @@
         "include_rts": false
       },
       "id": "source-twitter-nytimes",
-      "type": "twitter",
+      "type": "twitterlink",
       "rules": [
         {
           "type": "greaterEqual",
           "key": "getWeightedScore",
-          "value": "500"
+          "value": "400"
         }
       ]
     },
@@ -1768,7 +1768,7 @@
         "include_rts": false
       },
       "id": "source-twitter-wsj",
-      "type": "twitter",
+      "type": "twitterlink",
       "rules": [
         {
           "type": "greaterEqual",
@@ -1792,12 +1792,12 @@
         "include_rts": false
       },
       "id": "source-twitter-economist",
-      "type": "twitter",
+      "type": "twitterlink",
       "rules": [
         {
           "type": "greaterEqual",
           "key": "getWeightedScore",
-          "value": "100"
+          "value": "50"
         }
       ]
     },
@@ -1912,7 +1912,7 @@
         "include_rts": false
       },
       "id": "source-quora",
-      "type": "twitter",
+      "type": "twitterlink",
       "rules": [
         {
           "type": "include",
@@ -2002,7 +2002,7 @@
         {
           "type": "greaterEqual",
           "key": "getWeightedScore",
-          "value": "8"
+          "value": "10"
         }
       ]
     },
@@ -2018,7 +2018,7 @@
         {
           "type": "greaterEqual",
           "key": "getWeightedScore",
-          "value": "15"
+          "value": "20"
         }
       ]
     },
@@ -2106,7 +2106,14 @@
         "url": "business",
         "name": "Bloomberg Twitter",
         "home_page_url": "https://twitter.com/business"
-      }
+      },
+      "rules": [
+        {
+          "type": "equal",
+          "key": "getHostname",
+          "value": "www.bloomberg.com"
+        }
+      ]
     },
     {
       "id": "source-google-china",

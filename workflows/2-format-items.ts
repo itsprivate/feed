@@ -146,13 +146,14 @@ export default async function formatItems(
         string,
         unknown
       >;
-      const item = new (adapters[parsedFilename.type])(
-        originalItem,
-      );
       // no need to init, cause only get raw data need to init.
       // await item.init();
+      let item;
       let itemJson;
       try {
+        item = new (adapters[parsedFilename.type])(
+          originalItem,
+        );
         itemJson = await callWithTimeout(
           item.getFormatedItem.bind(item, { imageCachedMap }),
           30000,

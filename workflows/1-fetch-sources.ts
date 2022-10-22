@@ -24,6 +24,7 @@ import filterByRules from "../filter-by-rules.ts";
 import { fs, parseFeed, path, SimpleTwitter } from "../deps.ts";
 import log from "../log.ts";
 import fetchPHData from "../sources/fetch-ph.ts";
+import { getTweets as fetchTwitterV2Data } from "../sources/fetch-twitter.ts";
 export default async function fetchSources(
   options: RunOptions,
 ): Promise<{ postTasks: Task[] }> {
@@ -235,10 +236,16 @@ export default async function fetchSources(
             reject(error);
           });
         });
+
+        // then call tweet v2 api to fetch details
         // @ts-ignore: ignore quoted type
         originalJson = result.filter((item) => {
           return item.is_quote_status === false;
         });
+
+        const ids = originalJson.map((item: any) => item.id_str);
+        const tweetV2Result = await fetchTwitterV2Data(ids);
+        originalJson = tweetV2Result;
       } else if (sourceType === "ph") {
         // producthunt graphql api
         try {

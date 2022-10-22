@@ -8,21 +8,21 @@ import { assertEquals } from "./deps.ts";
 import reddit from "./adapters/reddit.ts";
 Deno.test("filterByRules #1", async (t) => {
   const tweetItem = await readJSONFile(
-    "example/current/1-raw/2022/08/22/en_twitter_1562101617742282752.json",
+    "example/raw/bloomberg-tweet.json",
   );
 
   const redditItem = await readJSONFile(
     "example/current/1-raw/2022/08/22/en_reddit_test.json",
   );
   const quoraTweetItem = await readJSONFile(
-    "example/current/1-raw/2022/08/22/en_twitter_test.json",
+    "example/raw/quora-tweet.json",
   );
   await t.step("not filter #1", () => {
     const items = filterByRules([new TwitterItem(tweetItem)], [
       {
         type: "greaterEqual",
         key: "getWeightedScore",
-        value: "356",
+        value: "36",
       },
     ]);
     assertEquals(items.length, 1);

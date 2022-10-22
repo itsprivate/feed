@@ -141,6 +141,9 @@ export default class Item<T> {
   getRealUrl(): string {
     return this.realUrl || this.getUrl();
   }
+  getHostname(): string {
+    return new URL(this.getUrl()).hostname;
+  }
   getSiteIdentifier(): string {
     return new URL(this.getRealUrl()).hostname;
   }
@@ -474,10 +477,12 @@ export default class Item<T> {
         // try to get redirected url
         const originalUrl = this.getUrl();
         const redirectedUrl = await getRedirectedUrl(originalUrl);
-        this.realUrl = tryToRemoveUnnecessaryParams(redirectedUrl);
+        this.realUrl = redirectedUrl;
         formatedItem.url = this.realUrl;
       }
     }
+    // transform url
+    formatedItem.url = tryToRemoveUnnecessaryParams(formatedItem.url);
 
     if (this.getImage() === undefined) {
       let imageCachedMap: Record<string, string> = {};

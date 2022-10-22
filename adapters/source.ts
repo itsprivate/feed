@@ -148,13 +148,6 @@ export default class source extends Item<FormatedItem> {
     const parsedId = parseItemIdentifier(id);
     return parsedId.type;
   }
-  isText(): boolean {
-    const type = this.getType();
-    if (type === "twitter") {
-      return true;
-    }
-    return false;
-  }
   getFullTranslations(): Record<string, Record<string, string>> | undefined {
     if (this.originalItem._translations) {
       return this.originalItem._translations;
@@ -189,15 +182,19 @@ export default class source extends Item<FormatedItem> {
       } else {
         externalLinkName = `Reddit Link`;
       }
-    } else if (type === "twitter" || type === "thechinaproject") {
+    } else if (
+      type === "twitter" || type === "twitterlink" ||
+      type === "twittercbarraud" ||
+      type === "thechinaproject"
+    ) {
       if (
         this.getScore() && this.getExternalUrl()
       ) {
         externalLinkName = `${linkSymbol} ${
           formatNumber(this.getScore())
-        } Twitter Like`;
+        } Twitter Points`;
       } else {
-        externalLinkName = `Twitter Link`;
+        externalLinkName = `Twitter Points`;
       }
     } else if (type === "ph") {
       if (this.getScore() && this.getExternalUrl()) {

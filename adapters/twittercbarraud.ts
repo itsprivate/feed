@@ -21,19 +21,6 @@ export default class twittercbarraud extends TwitterLink {
 
     return firstLine.trim();
   }
-  getTitle(): string | undefined | null {
-    // is bloggerm
-    const url = this.getUrl();
-    const urlObj = new URL(url);
-    const hostname = urlObj.hostname;
-    if (hostname === "bloom.bg") {
-      const fallbackTitle = this.getFallbackTitle();
-      // get ther first line
-      return fallbackTitle;
-    } else {
-      return undefined;
-    }
-  }
 
   isValid(): boolean {
     const url = this.getUrl();

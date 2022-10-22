@@ -979,7 +979,9 @@ export function identifierToCachedKey(identifier: string): string {
   return `${parsed.language}_${parsed.type}__${parsed.id}`;
 }
 export async function getRedirectedUrl(url: string): Promise<string> {
-  const fetchResult = await request(url);
+  const fetchResult = await request(url, {
+    method: "HEAD",
+  });
   log.debug(
     `redirected url fetch result: `,
     url,
@@ -1008,6 +1010,8 @@ export function tryToRemoveUnnecessaryParams(
   urlObj.searchParams.delete("utm_cid");
   // cmpid
   urlObj.searchParams.delete("cmpid");
+  // srnd
+  urlObj.searchParams.delete("srnd");
   return urlObj.href;
 }
 export const exists = async (filename: string): Promise<boolean> => {

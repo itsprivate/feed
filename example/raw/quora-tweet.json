@@ -1,0 +1,168 @@
+{
+  "conversation_id": "1579109889778991104",
+  "created_at": "2022-10-09T14:01:50.000Z",
+  "possibly_sensitive": false,
+  "id": "1579109889778991104",
+  "attachments": {
+    "media_keys": [
+      "3_1579109888122306561"
+    ]
+  },
+  "lang": "en",
+  "reply_settings": "everyone",
+  "edit_controls": {
+    "edits_remaining": 5,
+    "is_edit_eligible": true,
+    "editable_until": "2022-10-09T14:31:50.000Z"
+  },
+  "entities": {
+    "mentions": [
+      {
+        "start": 57,
+        "end": 71,
+        "username": "briangalvinvt",
+        "id": "1241048811637624832"
+      },
+      {
+        "start": 99,
+        "end": 113,
+        "username": "varsitytutors",
+        "id": "40897443"
+      }
+    ],
+    "urls": [
+      {
+        "start": 256,
+        "end": 279,
+        "url": "https://t.co/ZTsO2HWlR8",
+        "expanded_url": "https://educationqa.quora.com/Is-online-education-as-effective-as-traditional-in-person-education-1",
+        "display_url": "educationqa.quora.com/Is-online-educ…",
+        "images": [
+          {
+            "url": "https://pbs.twimg.com/news_img/1579109894627524609/mN642Eyp?format=jpg&name=orig",
+            "width": 600,
+            "height": 315
+          },
+          {
+            "url": "https://pbs.twimg.com/news_img/1579109894627524609/mN642Eyp?format=jpg&name=150x150",
+            "width": 150,
+            "height": 150
+          }
+        ],
+        "status": 200,
+        "title": "Is online education as effective as traditional in person education?",
+        "description": "Answer by Brian Galvin, M.A. Education, University of Michigan (2006)",
+        "unwound_url": "https://educationqa.quora.com/Is-online-education-as-effective-as-traditional-in-person-education-1"
+      },
+      {
+        "start": 280,
+        "end": 303,
+        "url": "https://t.co/lC4CGfXe9k",
+        "expanded_url": "https://twitter.com/Quora/status/1579109889778991104/photo/1",
+        "display_url": "pic.twitter.com/lC4CGfXe9k",
+        "media_key": "3_1579109888122306561"
+      }
+    ]
+  },
+  "edit_history_tweet_ids": [
+    "1579109889778991104"
+  ],
+  "source": "Hootsuite Inc.",
+  "public_metrics": {
+    "retweet_count": 2,
+    "reply_count": 0,
+    "like_count": 4,
+    "quote_count": 0
+  },
+  "author_id": "33696409",
+  "text": "Is online education as effective as in person education? @briangalvinvt, Chief Academic Officer at @varsitytutors,  says \"I like to think of the two educational forums not as competing tools but as two tools in the same toolkit.\" Read his full piece here: https://t.co/ZTsO2HWlR8 https://t.co/lC4CGfXe9k",
+  "includes": {
+    "media": [
+      {
+        "type": "photo",
+        "height": 563,
+        "width": 1001,
+        "media_key": "3_1583821058246950916",
+        "url": "https://pbs.twimg.com/media/Ffrc3GyXwAQhTe9.jpg"
+      },
+      {
+        "type": "photo",
+        "height": 564,
+        "width": 1004,
+        "media_key": "3_1583820983110090756",
+        "url": "https://pbs.twimg.com/media/Ffrcyu4WQAQZn1U.jpg"
+      },
+      {
+        "type": "photo",
+        "height": 3834,
+        "width": 5743,
+        "media_key": "3_1583549043837370374",
+        "url": "https://pbs.twimg.com/media/FfnldyJWAAY3ePz.jpg"
+      },
+      {
+        "type": "photo",
+        "height": 563,
+        "width": 1004,
+        "media_key": "3_1583163577690718215",
+        "url": "https://pbs.twimg.com/media/FfiG4s2XgAcUvwH.jpg"
+      },
+      {
+        "type": "photo",
+        "height": 563,
+        "width": 1003,
+        "media_key": "3_1581767076066349057",
+        "url": "https://pbs.twimg.com/media/FfOQxm5X0AET-Qx.jpg"
+      },
+      {
+        "type": "photo",
+        "height": 563,
+        "width": 1001,
+        "media_key": "3_1581646457807011840",
+        "url": "https://pbs.twimg.com/media/FfMjEs3XgAAIQOs.jpg"
+      },
+      {
+        "type": "photo",
+        "height": 621,
+        "width": 1189,
+        "media_key": "3_1581404727438360577",
+        "url": "https://pbs.twimg.com/media/FfJHOJEWQAESw3O.jpg"
+      },
+      {
+        "type": "photo",
+        "height": 564,
+        "width": 1002,
+        "media_key": "3_1581284348543787011",
+        "url": "https://pbs.twimg.com/media/FfHZvKvWYAMlT3F.jpg"
+      },
+      {
+        "type": "photo",
+        "height": 621,
+        "width": 1191,
+        "media_key": "3_1581284285637660672",
+        "url": "https://pbs.twimg.com/media/FfHZrgZXEAApQRf.jpg"
+      },
+      {
+        "type": "photo",
+        "height": 565,
+        "width": 1003,
+        "media_key": "3_1579230412219596802",
+        "url": "https://pbs.twimg.com/media/FeqNsVrXwAIQG0p.jpg"
+      },
+      {
+        "type": "photo",
+        "height": 565,
+        "width": 1004,
+        "media_key": "3_1579109888122306561",
+        "url": "https://pbs.twimg.com/media/FeogE6bWQAEGruC.jpg"
+      }
+    ],
+    "users": [
+      {
+        "id": "33696409",
+        "name": "Quora",
+        "profile_image_url": "https://pbs.twimg.com/profile_images/1544459952160329729/02xJm2v9_normal.jpg",
+        "username": "Quora"
+      }
+    ]
+  }
+}

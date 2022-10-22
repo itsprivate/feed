@@ -141,7 +141,14 @@ export default class reddit extends Item<RedditItem> {
     return video;
   }
   getUrl(): string {
-    return this.originalItem.data.url as string || this.getExternalUrl();
+    const url = this.originalItem.data.url as string || this.getExternalUrl();
+    if (url.startsWith("http")) {
+      return url;
+    } else if (url.startsWith("/")) {
+      return `https://old.reddit.com${url}`;
+    } else {
+      return url;
+    }
   }
   getSubreddit(): string {
     return this.originalItem.data.subreddit as string;
