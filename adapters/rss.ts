@@ -32,6 +32,13 @@ export default class rss extends Item<RSSItem> {
   }
 
   getImage(): string | null | undefined {
+    const url = this.getUrl();
+    const urlObj = new URL(url);
+    const hostname = urlObj.hostname;
+    // sky news image is too small
+    if (hostname === "news.sky.com") {
+      return undefined;
+    }
     if (
       this.originalItem["media:content"] &&
       this.originalItem["media:content"].length > 0

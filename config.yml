@@ -913,6 +913,31 @@ sites:
         short_title: "ガーディアン"
         description: '人気のガーディアンの最新 の投稿'
         keywords: "ガーディアン"
+  sky:
+    port: 8029
+    priority: 20
+    archive: true
+    # dev: true
+    tags:
+      - news
+      - finance
+      - source-skynews
+    translations:
+      "zh-Hans":
+        title: '天空新闻'
+        short_title: "天空新闻"
+        description: '用中文浏览英国天空新闻相关报道'
+        keywords: "天空新闻,财经,财经新闻"
+      'en':
+        title: 'Sky News'
+        short_title: "Sky News"
+        description: 'See what''s buzzing on Sky News in your native language'
+        keywords: "Sky News"
+      'ja':
+        title: 'スカイニュース'
+        short_title: "スカイニュース"
+        description: '人気のスカイニュースの最新 の投稿'
+        keywords: "スカイニュース"
 versions:
   - prefix: ""
     code: "default"
@@ -1365,3 +1390,9 @@ sources:
       url: https://www.theguardian.com/international/rss
       name: The Guardian International Edition
       home_page_url: https://www.theguardian.com/international
+  - id: source-skynews
+    type: rss
+    api:
+      url: https://feeds.skynews.com/feeds/rss/home.xml
+      name: Sky News
+      home_page_url: https://news.sky.com/
