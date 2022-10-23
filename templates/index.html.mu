@@ -66,7 +66,7 @@
     <link rel="icon" href="{{{favicon}}}" />
     <style>
       body {
-        max-width: 45em;
+        max-width: 52em;
         margin: 0 auto;
         padding: 0;
         background-color: #fffff8;
