@@ -884,28 +884,6 @@ export async function getFilesByTargetSiteIdentifiers(
   };
 }
 
-export function getDuplicatedFiles(
-  newFiles: string[],
-  oldFiles: string[],
-): string[] {
-  if (oldFiles.length === 0) {
-    return [];
-  }
-  const rawFilesMap = new Map<string, string>();
-  for (const file of newFiles) {
-    const identifier = path.basename(file, ".json");
-    const cachedKey = identifierToCachedKey(identifier);
-    rawFilesMap.set(cachedKey, file);
-  }
-
-  const needToremovedFormatedFiles = oldFiles.filter((file) => {
-    const identifier = path.basename(file, ".json");
-    const cachedKey = identifierToCachedKey(identifier);
-    return rawFilesMap.has(cachedKey);
-  });
-  return needToremovedFormatedFiles;
-}
-
 export function parseItemIdentifier(
   fileBasename: string,
 ): ParsedFilename {
@@ -1033,6 +1011,8 @@ export function tryToRemoveUnnecessaryParams(
   urlObj.searchParams.delete("cmpid");
   // srnd
   urlObj.searchParams.delete("srnd");
+  // sref
+  urlObj.searchParams.delete("sref");
   return urlObj.href;
 }
 export const exists = async (filename: string): Promise<boolean> => {
@@ -1239,4 +1219,18 @@ export function liteUrlToUrl(
   urlObj.pathname = `/${language.prefix}${pathname.slice(1)}`;
 
   return urlObj.href;
+}
+
+export function hasSameKeys<T>(
+  currentKeysMap: Map<string, T>,
+  newKeys: string[],
+): T[] {
+  const currentKeys = Array.from(currentKeysMap.keys());
+  const sameKeys = currentKeys.filter((key) => newKeys.includes(key));
+  return sameKeys.map((key) => currentKeysMap.get(key)!);
+}
+
+export function getSiteIdentifierByRelativePath(relativePath: string): string {
+  const siteIdentifier = relativePath.split(path.sep)[0];
+  return siteIdentifier;
 }

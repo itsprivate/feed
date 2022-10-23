@@ -7,7 +7,8 @@ import {
   getDataTranslatedPath,
   getFilesByTargetSiteIdentifiers,
   getTargetSiteIdentifiersByFilePath,
-  identifierToCachedKey,
+  hasSameKeys,
+  parseItemIdentifier,
   readJSONFile,
   writeJSONFile,
 } from "../util.ts";
@@ -42,10 +43,16 @@ export default async function translateItems(
         const translationJson = await readJSONFile(entry.path) as FormatedItem;
 
         if (translationJson._translations && translationJson.id) {
-          currentTranslationsMap.set(
-            identifierToCachedKey(translationJson.id),
-            translationJson._translations,
-          );
+          const parsed = parseItemIdentifier(translationJson.id);
+          const itemInstance = new SourceItemAdapter(translationJson);
+          const cachedKeys = itemInstance.getCachedKeys();
+
+          for (const cachedKey of cachedKeys) {
+            currentTranslationsMap.set(
+              cachedKey,
+              translationJson._translations,
+            );
+          }
         }
       }
     }
@@ -63,12 +70,19 @@ export default async function translateItems(
       } catch (e) {
         log.debug(`read current items file failed, ${e.message}`);
       }
-      for (const key of Object.keys(currentItemsJson.items)) {
-        if (currentItemsJson.items[key]._translations) {
-          currentTranslationsMap.set(
-            identifierToCachedKey(key),
-            currentItemsJson.items[key]._translations!,
-          );
+      const itemsKeys = Object.keys(currentItemsJson.items);
+      for (const key of itemsKeys) {
+        const currentItem = currentItemsJson.items[key];
+        if (currentItem._translations) {
+          const itemInstance = new SourceItemAdapter(currentItem);
+          const cachedKeys = itemInstance.getCachedKeys();
+
+          for (const cachedKey of cachedKeys) {
+            currentTranslationsMap.set(
+              cachedKey,
+              currentItem._translations,
+            );
+          }
         }
       }
     }
@@ -131,11 +145,12 @@ export default async function translateItems(
         ...item._translations,
       };
 
-      if (currentTranslationsMap.has(itemInstance.getCachedKey())) {
-        const cachedTranslations = currentTranslationsMap.get(
-          itemInstance.getCachedKey(),
-        );
-
+      const sameKeys = hasSameKeys(
+        currentTranslationsMap,
+        itemInstance.getCachedKeys(),
+      );
+      if (sameKeys.length > 0) {
+        const cachedTranslations = sameKeys[0];
         if (cachedTranslations) {
           const cachedKeys = Object.keys(cachedTranslations);
           for (const key of cachedKeys) {

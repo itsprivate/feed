@@ -7,7 +7,4 @@ export default class twitterlink extends Twitter {
     const url = this.getUrl();
     return !url.startsWith("https://twitter.com/");
   }
-  getCachedKey(): string {
-    return `${this.getOriginalLanguage()}_${this.getType()}__${this.getUrl()}`;
-  }
 }

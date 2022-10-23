@@ -59,8 +59,11 @@ export default class Item<T> {
     const millisecond = publishedDate.getMilliseconds();
     return `${this.getOriginalLanguage()}_${this.getType()}_${this.getPublishedYear()}_${this.getPublishedMonth()}_${this.getPublishedDay()}_${hour}_${minute}_${second}_${millisecond}_${order}__${this.getId()}`;
   }
-  getCachedKey(): string {
-    return `${this.getOriginalLanguage()}_${this.getType()}__${this.getId()}`;
+  getCachedKeys(): string[] {
+    return [
+      `${this.getOriginalLanguage()}_${this.getType()}__${this.getId()}`,
+      `${this.getUrl()}`,
+    ];
   }
   getOriginalLanguage(): string {
     return "en";

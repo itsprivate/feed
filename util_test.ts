@@ -3,11 +3,11 @@ import {
   formatBeijing,
   formatNumber,
   getConfig,
-  getDuplicatedFiles,
   getFullDay,
   getFullMonth,
   getRedirectedUrl,
   getRedirectedUrlDirectly,
+  getSiteIdentifierByRelativePath,
   isDev,
   isMock,
   isWeekBiggerThan,
@@ -274,25 +274,6 @@ Deno.test("get full date #24", () => {
   assertEquals(fullDay, "15");
 });
 
-Deno.test("getDuplicatedFiles #25", () => {
-  const removedFiles = getDuplicatedFiles(
-    [
-      "en_reddit_2022_08_26__test1.json",
-      "en_reddit_2022_08_24__test1.json",
-      "en_reddit_2022_08_26__test2.json",
-    ],
-    [
-      "en_reddit_2022_08_22__test2.json",
-      "en_reddit_2022_08_23__test1.json",
-      "en_reddit_2022_08_22__test3.json",
-    ],
-  );
-  assertEquals(removedFiles, [
-    "en_reddit_2022_08_22__test2.json",
-    "en_reddit_2022_08_23__test1.json",
-  ]);
-});
-
 Deno.test("url format #26", () => {
   const a = "https://thecoliving.guide?ref=producthunt";
   const b = new URL(a);
@@ -410,4 +391,11 @@ Deno.test("getRedirectedUrl #38", async () => {
     redirected,
     "https://www.bloomberg.com/news/articles/2022-10-22/russian-hits-cause-major-damage-to-ukraine-s-power-facilities",
   );
+});
+
+Deno.test("getSiteIdentifierByRelativePath #39", () => {
+  const identifier = getSiteIdentifierByRelativePath(
+    "hn/posts/2022/42/en_hn_2022_10_18__33239146/",
+  );
+  assertEquals(identifier, "hn");
 });

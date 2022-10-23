@@ -1,4 +1,4 @@
-root_domain: buzzing.cc
+root_domain: buzzing.c
 page_size: 200
 translated_items_per_page: 100
 max_files_per_site: -1
@@ -348,7 +348,6 @@ sites:
       - news
       - www
       - source-google-news
-      - source-google-asia-news
     translations:
       zh-Hans:
         title: 国外新闻头条
@@ -1019,19 +1018,19 @@ social_links:
     url: https://t.me/joinchat/GVK5UiDwPUAwMjkx
 
 sources:
-  - api:
+  - id: source-google-news
+    api:
       - url: https://news.google.com/rss/topics/CAAqJggKIiBDQkFTRWdvSUwyMHZNRGx1YlY4U0FtVnVHZ0pWVXlnQVAB?hl=en-US&gl=US&ceid=US:en
         name: Google News World
-        home_page_url: https://news.google.com/topics/
+        home_page_url: https://news.google.com/topics/CAAqJggKIiBDQkFTRWdvSUwyMHZNRGx1YlY4U0FtVnVHZ0pWVXlnQVAB?hl=en-US&gl=US&ceid=US:en
     type: googlenews
-    id: source-google-news
     rules:
       - type: limit
         value: "8"
   - api:
       - url: https://news.google.com/rss/topics/CAAqIAgKIhpDQkFTRFFvSEwyMHZNR293YXhJQ1pXNG9BQVAB?hl=en-US&gl=US&ceid=US%3Aen
         name: Google Asia News
-        home_page_url: https://news.google.com/topics/CAAqIAgKIhpDQkFTRFFvSEwyMHZNR293YXhJQ1pXNG9BQVAB?hl=en-US&gl=US&ceid=US%3Aen
+        home_page_url: https://news.google.com/topics/CAAqIAgKIhpDQkFTRFFvSEwyMHZNR293YXhJ# Q1pXNG9BQVAB?hl=en-US&gl=US&ceid=US%3Aen
     type: googlenews
     id: source-google-asia-news
     rules:

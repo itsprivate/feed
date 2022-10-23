@@ -6,11 +6,14 @@ import {
   Task,
 } from "../interface.ts";
 import adapters from "../adapters/mod.ts";
+import SourceItemAdapter from "../adapters/source.ts";
 import {
   get,
   getCurrentItemsFilePath,
   getDataRawPath,
   getDataTranslatedPath,
+  getSiteIdentifierByRelativePath,
+  hasSameKeys,
   identifierToCachedKey,
   isDev,
   parseItemIdentifier,
@@ -39,8 +42,8 @@ export default async function fetchSources(
     sourcesMap.set(source.id, source);
   }
 
-  const currentKeysMap = new Map<string, boolean>();
-  const currentRawKeysMap = new Map<string, string[]>();
+  const currentKeysMap = new Map<string, Map<string, boolean>>();
+  const currentRawKeysMap = new Map<string, Map<string, string[]>>();
   const targetSiteIdentifiersMap = new Map<string, string[]>();
   for (const siteIdentifier of siteIdentifiers) {
     const siteConfig = sitesMap[siteIdentifier];
@@ -78,8 +81,19 @@ export default async function fetchSources(
         } catch (e) {
           log.debug(`read current items file failed, ${e.message}`);
         }
-        for (const key of Object.keys(currentItemsJson.items)) {
-          currentKeysMap.set(identifierToCachedKey(key), true);
+        const currentItemsKeys = Object.keys(currentItemsJson.items);
+        if (currentKeysMap.get(siteIdentifier) === undefined) {
+          currentKeysMap.set(siteIdentifier, new Map());
+        }
+        for (const key of currentItemsKeys) {
+          const parsed = parseItemIdentifier(key);
+          const itemInstance = new SourceItemAdapter(
+            currentItemsJson.items[key],
+          );
+          const cachedKeys = itemInstance.getCachedKeys();
+          for (const cachedKey of cachedKeys) {
+            currentKeysMap.get(siteIdentifier)!.set(cachedKey, true);
+          }
         }
       }
     } else {
@@ -94,8 +108,20 @@ export default async function fetchSources(
     const entry of fs.walk(getDataTranslatedPath())
   ) {
     if (entry.isFile && entry.name.endsWith(".json")) {
-      const key = entry.name.replace(/\.json$/, "");
-      currentKeysMap.set(identifierToCachedKey(key), true);
+      const siteRelativePath = path.relative(
+        getDataTranslatedPath(),
+        entry.path,
+      );
+      const siteIdentifier = getSiteIdentifierByRelativePath(siteRelativePath);
+      const fileContent = await readJSONFile(entry.path);
+      const fileInstance = new SourceItemAdapter(fileContent);
+      const cachedKeys = fileInstance.getCachedKeys();
+      if (!currentKeysMap.has(siteIdentifier)) {
+        currentKeysMap.set(siteIdentifier, new Map());
+      }
+      for (const cachedKey of cachedKeys) {
+        currentKeysMap.get(siteIdentifier)!.set(cachedKey, true);
+      }
     }
   }
   // also get current raw keys
@@ -104,65 +130,96 @@ export default async function fetchSources(
     const entry of fs.walk(getDataRawPath())
   ) {
     if (entry.isFile && entry.name.endsWith(".json")) {
-      const key = entry.name.replace(/\.json$/, "");
-      const itemKey = identifierToCachedKey(key);
-      if (!currentRawKeysMap.has(itemKey)) {
-        currentRawKeysMap.set(itemKey, []);
-      }
+      const filenmae = path.basename(entry.path);
+      const parsedFilename = parseItemIdentifierWithTime(filenmae);
+      const fileContent = await readJSONFile(entry.path);
+      const fileInstance = new adapters[parsedFilename.type](fileContent);
+      const cachedKeys = fileInstance.getCachedKeys();
+      const entryRelativePath = path.relative(getDataRawPath(), entry.path);
+      const targetSiteIdentifiersString = entryRelativePath.split("/")[3];
+      const targetSiteIdentifiers = targetSiteIdentifiersString.split("_");
+      for (const targetSiteIdentifier of targetSiteIdentifiers) {
+        if (!currentRawKeysMap.has(targetSiteIdentifier)) {
+          currentRawKeysMap.set(targetSiteIdentifier, new Map());
+        }
+        for (const itemKey of cachedKeys) {
+          if (!currentRawKeysMap.get(targetSiteIdentifier)!.has(itemKey)) {
+            currentRawKeysMap.get(targetSiteIdentifier)!.set(itemKey, []);
+          }
 
-      currentRawKeysMap.get(itemKey)?.push(entry.path);
+          currentRawKeysMap.get(targetSiteIdentifier)!.get(itemKey)?.push(
+            entry.path,
+          );
+        }
+      }
     }
   }
 
-  // remove the duplicated old raw file
-  for (const [key, paths] of currentRawKeysMap) {
-    if (paths.length > 1) {
-      // sort by time
-      paths.sort((a, b) => {
-        const aKey = path.basename(a).replace(/\.json$/, "");
-        const aParsed = parseItemIdentifierWithTime(aKey);
-        const aNumber = Number(
-          `${aParsed.year}${aParsed.month}${aParsed.day}${aParsed.hour}${aParsed.minute}${aParsed.second}${aParsed.millisecond}`,
-        );
-        const bKey = path.basename(b).replace(/\.json$/, "");
-        const bParsed = parseItemIdentifierWithTime(bKey);
-        const bNumber = Number(
-          `${bParsed.year}${bParsed.month}${bParsed.day}${bParsed.hour}${bParsed.minute}${bParsed.second}${bParsed.millisecond}`,
-        );
-        return bNumber - aNumber;
-      });
-      // remove the rest
-      for (let i = 1; i < paths.length; i++) {
-        log.info(`remove old raw file ${paths[i]}`);
-        await Deno.remove(paths[i]);
+  const currentRawKeysSiteIdentifiers = currentRawKeysMap.keys();
+  for (const siteIdentifier of currentRawKeysSiteIdentifiers) {
+    // remove the duplicated old raw file
+    const currentMap = currentRawKeysMap.get(siteIdentifier)!;
+    for (const [key, paths] of currentMap) {
+      if (paths.length > 1) {
+        // sort by time
+        paths.sort((a, b) => {
+          const aKey = path.basename(a).replace(/\.json$/, "");
+          const aParsed = parseItemIdentifierWithTime(aKey);
+          const aNumber = Number(
+            `${aParsed.year}${aParsed.month}${aParsed.day}${aParsed.hour}${aParsed.minute}${aParsed.second}${aParsed.millisecond}`,
+          );
+          const bKey = path.basename(b).replace(/\.json$/, "");
+          const bParsed = parseItemIdentifierWithTime(bKey);
+          const bNumber = Number(
+            `${bParsed.year}${bParsed.month}${bParsed.day}${bParsed.hour}${bParsed.minute}${bParsed.second}${bParsed.millisecond}`,
+          );
+          return bNumber - aNumber;
+        });
+        // remove the rest
+        for (let i = 1; i < paths.length; i++) {
+          log.info(`remove old raw file ${paths[i]}`);
+          try {
+            await Deno.remove(paths[i]);
+          } catch (_e) {
+            // ignore
+          }
+        }
       }
     }
   }
   // remove 7 days ago raw file
 
-  for (const [key, paths] of currentRawKeysMap) {
-    for (const p of paths) {
-      const parsed = parseItemIdentifierWithTime(
-        path.basename(p).replace(/\.json$/, ""),
-      );
-      const parsedDate = new Date(
-        Date.UTC(
-          Number(parsed.year),
-          Number(parsed.month) - 1,
-          Number(parsed.day),
-          Number(parsed.hour),
-          Number(parsed.minute),
-          Number(parsed.second),
-          Number(parsed.millisecond),
-        ),
-      );
-      const now = new Date();
-      const diff = now.getTime() - parsedDate.getTime();
-      if (diff > 7 * 24 * 60 * 60 * 1000) {
-        // remove all
-        log.info(`remove old raw file ${p}`);
-        currentRawKeysMap.delete(key);
-        await Deno.remove(p);
+  for (const siteIdentifier of currentRawKeysSiteIdentifiers) {
+    // remove the duplicated old raw file
+    const currentMap = currentRawKeysMap.get(siteIdentifier)!;
+    for (const [key, paths] of currentMap) {
+      for (const p of paths) {
+        const parsed = parseItemIdentifierWithTime(
+          path.basename(p).replace(/\.json$/, ""),
+        );
+        const parsedDate = new Date(
+          Date.UTC(
+            Number(parsed.year),
+            Number(parsed.month) - 1,
+            Number(parsed.day),
+            Number(parsed.hour),
+            Number(parsed.minute),
+            Number(parsed.second),
+            Number(parsed.millisecond),
+          ),
+        );
+        const now = new Date();
+        const diff = now.getTime() - parsedDate.getTime();
+        if (diff > 7 * 24 * 60 * 60 * 1000) {
+          // remove all
+          log.info(`remove old raw file ${p}`);
+          currentRawKeysMap.delete(key);
+          try {
+            await Deno.remove(p);
+          } catch (_e) {
+            // ignore
+          }
+        }
       }
     }
   }
@@ -183,7 +240,6 @@ export default async function fetchSources(
     let itemsPath = source.itemsPath || "";
     const rules = source.rules || [];
 
-    log.debug(sourceId + ` current keys length: ${currentKeysMap.size}`);
     // fetch source, and parse it to item;
     for (const sourceApiConfig of sourceUrls) {
       const sourceUrl = sourceApiConfig.url;
@@ -313,20 +369,40 @@ export default async function fetchSources(
         await item.init();
         // check if current raw already has one, delete others
 
-        if (currentRawKeysMap.has(item.getCachedKey())) {
-          // delete all cached files
-          const cachedFiles = currentRawKeysMap.get(item.getCachedKey())!;
-          for (const cachedFile of cachedFiles) {
-            try {
-              await Deno.remove(cachedFile);
-              log.info(`remove duplicated raw file: ${cachedFile}`);
-            } catch (e) {
-              log.warn("remove duplicated raw file", cachedFile, e);
+        const rawSiteIdentifiers = currentRawKeysMap.keys();
+        for (const rawSiteIdentifier of rawSiteIdentifiers) {
+          const duplicatedFiles = hasSameKeys(
+            currentRawKeysMap.get(rawSiteIdentifier)!,
+            item.getCachedKeys(),
+          );
+          if (duplicatedFiles.length > 0) {
+            // delete all cached files
+            const cachedFiles = duplicatedFiles.reduce((acc, cur) => {
+              return acc.concat(cur);
+            }, []);
+            for (const cachedFile of cachedFiles) {
+              try {
+                await Deno.remove(cachedFile);
+                log.info(`remove duplicated raw file: ${cachedFile}`);
+              } catch (_e) {
+                // ignore
+              }
             }
           }
         }
-
-        if (!currentKeysMap.get(item.getCachedKey())) {
+        const currentKeys = currentKeysMap.keys();
+        let duplicatedKeys: boolean[] = [];
+        for (const currentKey of currentKeys) {
+          duplicatedKeys = hasSameKeys(
+            currentKeysMap.get(currentKey)!,
+            item.getCachedKeys(),
+          );
+          if (duplicatedKeys.length > 0) {
+            // log.info(`duplicatedKeys: ${duplicatedKeys}`);
+            break;
+          }
+        }
+        if (duplicatedKeys.length === 0) {
           // filter again, cause some attributes is geted by init()
           const filterdItems = filterByRules([item], rules);
           if (filterdItems.length > 0) {
@@ -353,7 +429,7 @@ export default async function fetchSources(
             log.info(`remove item ${item.getUrl()} by rules`);
           }
         } else {
-          log.debug(`${item.getCachedKey()} exists, skip`);
+          log.debug(`${JSON.stringify(item.getCachedKeys())} exists, skip`);
         }
       }
       log.info(

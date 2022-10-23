@@ -42,6 +42,11 @@ export default class source extends Item<FormatedItem> {
   }
 
   getUrl(): string {
+    // fix non http url
+    const urlStr = this.originalItem.url;
+    if (urlStr.startsWith(`/`) && this.getType() === "reddit") {
+      return `https://old.reddit.com${urlStr}`;
+    }
     const urlObj = new URL(this.originalItem.url);
     const hostname = urlObj.hostname;
     if (
@@ -50,6 +55,7 @@ export default class source extends Item<FormatedItem> {
     ) {
       return this.getExternalUrl()!;
     }
+
     return this.originalItem.url as string;
   }
   getExternalUrl() {

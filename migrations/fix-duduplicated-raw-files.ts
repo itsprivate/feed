@@ -63,15 +63,6 @@ async function main() {
       }
     }
   }
-
-  // if (currentRawKeysMap.has(item.getCachedKey())) {
-  //   // delete all cached files
-  //   const cachedFiles = currentRawKeysMap.get(item.getCachedKey())!;
-  //   for (const cachedFile of cachedFiles) {
-  //     await Deno.remove(cachedFile);
-  //     log.info(`remove duplicated raw file: ${cachedFile}`);
-  //   }
-  // }
 }
 
 if (import.meta.main) {
