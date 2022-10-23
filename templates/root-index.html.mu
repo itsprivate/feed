@@ -348,7 +348,7 @@
       {{/_page_title}}
     </header>
     <details class="my">
-      <summary class="px contrast small">{{table_of_contents_label}}</summary>
+      <summary class="px bold text-lg contrast">{{table_of_contents_label}}</summary>
       <div class="px">
       <ul>
         <li>

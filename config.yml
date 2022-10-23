@@ -1438,6 +1438,10 @@ sources:
       url: https://www.theguardian.com/international/rss
       name: The Guardian International Edition
       home_page_url: https://www.theguardian.com/international
+    rules:
+      - type: notInclude
+        key: getUrl
+        value: "https://www.theguardian.com/news/audio"
   - id: source-skynews
     type: rss
     api:
