@@ -1013,6 +1013,12 @@ export function tryToRemoveUnnecessaryParams(
   urlObj.searchParams.delete("srnd");
   // sref
   urlObj.searchParams.delete("sref");
+
+  // if www.bloomberg.com, remove all search params
+  if (urlObj.hostname === "www.bloomberg.com") {
+    urlObj.search = "";
+  }
+
   return urlObj.href;
 }
 export const exists = async (filename: string): Promise<boolean> => {
