@@ -1,12 +1,12 @@
 import issueMap from "./migrations/issue-map.json" assert { type: "json" };
 import { Config } from "./interface.ts";
-import { archiveSubDomain } from "./constant.ts";
+import { archiveSubDomain, ROOT_DOMAIN } from "./constant.ts";
 import { getDistFilePath, writeTextFile } from "./util.ts";
 export default async function generateRedirects(
   siteIdentifier: string,
   config: Config,
 ) {
-  const rootDomain = config.root_domain;
+  const rootDomain = ROOT_DOMAIN;
   const archiveDomain = archiveSubDomain;
   let redirects = ``;
   // if (siteConfig.redirect !== true) {

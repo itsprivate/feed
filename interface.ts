@@ -80,7 +80,6 @@ export interface Config {
   icon: string;
   favicon: string;
   advice_url: string;
-  root_domain: string;
   translated_items_per_page: number;
   max_files_per_site: number;
   versions: Version[];
