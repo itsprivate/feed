@@ -2121,6 +2121,11 @@
           "type": "notInclude",
           "key": "getUrl",
           "value": "podcast"
+        },
+        {
+          "type": "include",
+          "key": "getUrl",
+          "value": "https://www.bloomberg.com/news/"
         }
       ]
     },
