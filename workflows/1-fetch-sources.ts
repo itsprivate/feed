@@ -278,7 +278,6 @@ export default async function fetchSources(
           include_rts: true,
           tweet_mode: "extended",
           // since_id,
-          // count: 25,
           ...source.params,
         };
         const result = await new Promise((resolve, reject) => {
@@ -299,7 +298,7 @@ export default async function fetchSources(
           return item.is_quote_status === false;
         });
 
-        const ids = originalJson.map((item: any) => item.id_str);
+        const ids = originalJson.map((item: { id_str: string }) => item.id_str);
         const tweetV2Result = await fetchTwitterV2Data(ids);
         originalJson = tweetV2Result;
       } else if (sourceType === "ph") {
@@ -430,6 +429,23 @@ export default async function fetchSources(
           }
         } else {
           log.debug(`${JSON.stringify(item.getCachedKeys())} exists, skip`);
+        }
+
+        // add keys to currentKeysMap, so we can check if current item is duplicated
+        const targetSiteIdentifiers = targetSiteIdentifiersMap.get(sourceId)!;
+        for (const targetSiteIdentifier of targetSiteIdentifiers) {
+          const currentKeys = currentKeysMap.get(targetSiteIdentifier);
+          if (!currentKeys) {
+            currentKeysMap.set(targetSiteIdentifier, new Map());
+          }
+          const itemCachedKeys = item.getCachedKeys();
+
+          for (const itemCachedKey of itemCachedKeys) {
+            currentKeysMap.get(targetSiteIdentifier)!.set(
+              itemCachedKey,
+              true,
+            );
+          }
         }
       }
       log.info(
