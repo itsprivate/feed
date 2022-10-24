@@ -1,5 +1,9 @@
 # Change Log
 
+## 2022.10.24
+
+Index can remember details open or close.
+
 ## 2022.10.20
 
 Index read more link with anchor link.
