@@ -86,13 +86,14 @@
         height: auto;
       }
       video {
-        max-width: 90%;
-        max-height: 32em;
+        max-width: 40em;
+        width: 95%;
         height: auto;
       }
       .embed-video {
         aspect-ratio: 16 / 9;
-        width: 85%;
+        width: 95%;
+        max-width: 40em;
       }
       a:link {
         color: rgb(0, 102, 204);
