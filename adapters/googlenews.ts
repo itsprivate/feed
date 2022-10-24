@@ -48,6 +48,13 @@ export default class googlenews extends RSS {
     return super.getTitle();
   }
 
+  getCachedKeys(): string[] {
+    return [
+      `${this.getOriginalLanguage()}_${this.getType()}__${this.getId()}`,
+      `${this.getUrl()}`,
+      `${this.getTitle()}`,
+    ];
+  }
   getRawItem() {
     const originItem = super.getRawItem();
     originItem._id = this.getId();
