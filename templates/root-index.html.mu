@@ -362,7 +362,7 @@
        </ul>
     </details>
     {{#_groups}}
-      <details open id="{{site_identifier}}">
+      <details open id="{{site_identifier}}" class="subsites">
       <summary class="px my bold text-lg">{{{title}}}&nbsp;(<a class="contrast" href="{{{home_page_url}}}">{{hostname}}</a>)</summary>
       {{#items}}
       <div class="article h-entry hentry">
@@ -393,5 +393,54 @@
         <a class="no-underline contrast" title="Go to Bottom" href="#bottom">&darr;</a>
     </div>
    </div>
+   <script>
+      // close details element
+      var elements = document.querySelectorAll(".subsites")
+      var localstorageKey = 'buzzing_closed_ids';
+      var currentClosedIds = localStorage.getItem(localstorageKey) || "";
+      var currentClosedIdsArray = currentClosedIds.split(",").filter(element => element);
+      for (var i=0;i<currentClosedIdsArray.length;i++){
+        var id = currentClosedIdsArray[i];
+        if (id){
+          var element = document.getElementById(id);
+          if (element){
+            element.removeAttribute("open");
+          }
+        }
+      }
+      elements.forEach((element) => {
+        element.addEventListener("toggle", function (event) {
+          var targetId = event.target.id
+          var targetStatus = event.target.open
+          // save to localStorage
+          // only save the close status
+          var originalClosedIds = localStorage.getItem(localstorageKey) || "";
+          var closedIdsArray = originalClosedIds.split(",").filter(element => element);
+          var isChanged = false;
+          if (targetStatus){
+            // remove from localStorage
+            var index = closedIdsArray.indexOf(targetId);
+            if (index > -1) {
+              closedIdsArray.splice(index, 1);
+              isChanged = true;
+            }
+
+          }else{
+            // add to localStorage
+            // check unique 
+            if (closedIdsArray.indexOf(targetId) == -1){
+              closedIdsArray.push(targetId);
+              isChanged = true;
+            }
+
+          }
+          if (isChanged){
+            var newClosedIds = closedIdsArray.join(",");
+            localStorage.setItem(localstorageKey, newClosedIds);
+          }
+          
+        })
+      })
+   </script>
 </body>
 </html>
