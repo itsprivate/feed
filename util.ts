@@ -1015,7 +1015,10 @@ export function tryToRemoveUnnecessaryParams(
   urlObj.searchParams.delete("sref");
 
   // if www.bloomberg.com, remove all search params
-  if (urlObj.hostname === "www.bloomberg.com") {
+  if (
+    urlObj.hostname === "www.bloomberg.com" ||
+    urlObj.hostname === "www.businessinsider.com"
+  ) {
     urlObj.search = "";
   }
 
