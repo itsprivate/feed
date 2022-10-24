@@ -60,9 +60,10 @@ export default class Item<T> {
     return `${this.getOriginalLanguage()}_${this.getType()}_${this.getPublishedYear()}_${this.getPublishedMonth()}_${this.getPublishedDay()}_${hour}_${minute}_${second}_${millisecond}_${order}__${this.getId()}`;
   }
   getCachedKeys(): string[] {
+    const finalUrl = tryToRemoveUnnecessaryParams(this.getUrl());
     return [
       `${this.getOriginalLanguage()}_${this.getType()}__${this.getId()}`,
-      `${this.getUrl()}`,
+      `${finalUrl}`,
     ];
   }
   getOriginalLanguage(): string {
