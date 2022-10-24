@@ -2034,7 +2034,7 @@
         {
           "type": "greaterEqual",
           "key": "getWeightedScore",
-          "value": "200"
+          "value": "100"
         }
       ]
     },

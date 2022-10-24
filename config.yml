@@ -1411,7 +1411,7 @@ sources:
     rules:
       - type: greaterEqual
         key: getWeightedScore
-        value: "200"
+        value: "100"
   - id: source-reddit-technology
     type: reddit
     api:
