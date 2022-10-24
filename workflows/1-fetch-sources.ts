@@ -350,6 +350,22 @@ export default async function fetchSources(
         `got ${originalItems.length} valid items by rules`,
       );
 
+      // if google news limit time
+      if (sourceType === "googlenews") {
+        originalItems = originalItems.filter(
+          (item: Item<unknown>, index: number) => {
+            if (index < 15) {
+              return true;
+            } else {
+              const published = item.getOriginalPublishedDate();
+              const now = new Date();
+              const diff = now.getTime() - published.getTime();
+              return diff < 24 * 60 * 60 * 1000;
+            }
+          },
+        );
+      }
+
       // resort items from old to new , cause we need to keep the order of items
       // @ts-ignore: hard to type
       originalItems = (originalItems).sort((a, b) => {
