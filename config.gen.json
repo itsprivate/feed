@@ -1407,7 +1407,19 @@
           "home_page_url": "https://news.google.com/topics/CAAqJggKIiBDQkFTRWdvSUwyMHZNRGx1YlY4U0FtVnVHZ0pWVXlnQVAB?hl=en-US&gl=US&ceid=US:en"
         }
       ],
-      "type": "googlenews"
+      "type": "googlenews",
+      "rules": [
+        {
+          "type": "notEqual",
+          "key": "getHostname",
+          "value": "www.yourtango.com"
+        },
+        {
+          "type": "notEqual",
+          "key": "getHostname",
+          "value": "www.youtube.com"
+        }
+      ]
     },
     {
       "api": [
