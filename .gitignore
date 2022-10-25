@@ -15,6 +15,7 @@ private.txt
 /prod-archive/
 /archive/
 temp.json
+temp-*
 /public/
 /prod-public/
 /temp/

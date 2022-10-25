@@ -133,7 +133,13 @@ export default async function fetchSources(
       const filenmae = path.basename(entry.path);
       const parsedFilename = parseItemIdentifierWithTime(filenmae);
       const fileContent = await readJSONFile(entry.path);
-      const fileInstance = new adapters[parsedFilename.type](fileContent);
+      let fileInstance;
+      try {
+        fileInstance = new adapters[parsedFilename.type](fileContent);
+      } catch (e) {
+        log.error(`adapter ${parsedFilename.type} failed, ${entry.path}`);
+        throw e;
+      }
       const cachedKeys = fileInstance.getCachedKeys();
       const entryRelativePath = path.relative(getDataRawPath(), entry.path);
       const targetSiteIdentifiersString = entryRelativePath.split("/")[3];
@@ -277,6 +283,7 @@ export default async function fetchSources(
           exclude_replies: true,
           include_rts: true,
           tweet_mode: "extended",
+          // count: 200,
           // since_id,
           ...source.params,
         };
@@ -295,7 +302,12 @@ export default async function fetchSources(
         // then call tweet v2 api to fetch details
         // @ts-ignore: ignore quoted type
         originalJson = result.filter((item) => {
-          return item.is_quote_status === false;
+          const isQuoted = item.is_quote_status === false;
+          const in_reply_to_status_id = item.in_reply_to_status_id;
+          if (isQuoted || in_reply_to_status_id) {
+            return true;
+          }
+          return false;
         });
 
         const ids = originalJson.map((item: { id_str: string }) => item.id_str);
