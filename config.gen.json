@@ -1729,12 +1729,12 @@
     {
       "api": [
         {
-          "url": "https://www.reddit.com/r/TrueReddit/top/.json?raw_json=1",
+          "url": "https://www.reddit.com/r/TrueReddit/new/.json?raw_json=1",
           "name": "True Reddit Subreddit",
           "home_page_url": "https://www.reddit.com/r/TrueReddit/"
         },
         {
-          "url": "https://www.reddit.com/r/Foodforthought/top/.json?raw_json=1",
+          "url": "https://www.reddit.com/r/Foodforthought/new/.json?raw_json=1",
           "name": "Food for Thought Subreddit",
           "home_page_url": "https://www.reddit.com/r/Foodforthought/"
         }
