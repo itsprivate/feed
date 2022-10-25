@@ -1023,6 +1023,13 @@ sources:
         name: Google News World
         home_page_url: https://news.google.com/topics/CAAqJggKIiBDQkFTRWdvSUwyMHZNRGx1YlY4U0FtVnVHZ0pWVXlnQVAB?hl=en-US&gl=US&ceid=US:en
     type: googlenews
+    rules:
+      - type: notEqual
+        key: getHostname
+        value: www.yourtango.com
+      - type: notEqual
+        key: getHostname
+        value: www.youtube.com
   - api:
       - url: https://news.google.com/rss/topics/CAAqIAgKIhpDQkFTRFFvSEwyMHZNR293YXhJQ1pXNG9BQVAB?hl=en-US&gl=US&ceid=US%3Aen
         name: Google Asia News
