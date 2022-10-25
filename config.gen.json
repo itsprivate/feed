@@ -1862,16 +1862,8 @@
       "id": "source-google-finance",
       "api": {
         "url": "https://news.google.com/rss/topics/CAAqIQgKIhtDQkFTRGdvSUwyMHZNREpmTjNRU0FtVnVLQUFQAQ?hl=en-US&gl=US&ceid=US%3Aen",
-        "name": "Google Finance News",
-        "home_page_url": "https://news.google.com/topics/CAAqIQgKIhtDQkFTRGdvSUwyMHZNREpmTjNRU0FtVnVLQUFQAQ?hl=en-US&gl=US&ceid=US%3Aen"
-      },
-      "type": "googlenews",
-      "rules": [
-        {
-          "type": "limit",
-          "value": "10"
-        }
-      ]
+        "name": "Google Finance News"
+      }
     },
     {
       "api": {
@@ -2147,13 +2139,7 @@
         "url": "https://news.google.com/rss/topics/CAAqIggKIhxDQkFTRHdvSkwyMHZNR1F3TlhjekVnSmxiaWdBUAE?hl=en-US&gl=US&ceid=US%3Aen",
         "name": "Google News China",
         "home_page_url": "https://news.google.com/topics/CAAqIggKIhxDQkFTRHdvSkwyMHZNR1F3TlhjekVnSmxiaWdBUAE?hl=en-US&gl=US&ceid=US%3Aen"
-      },
-      "rules": [
-        {
-          "type": "limit",
-          "value": "10"
-        }
-      ]
+      }
     }
   ]
 }
