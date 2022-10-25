@@ -130,7 +130,7 @@ sites:
 
   hnfront:
     port: 8001
-    priority: 19
+    priority: 29
     tags:
       - hn
       - source-hackernews-index
@@ -374,7 +374,7 @@ sites:
     max_image_height: 360
     port: 8009
     archive: true
-    priority: 18
+    priority: 25
     redirect: true
     tags:
       - tech
@@ -520,6 +520,7 @@ sites:
     port: 8014
     archive: true
     redirect: true
+    priority: 28
     tags:
       - depth
       - news
@@ -549,7 +550,7 @@ sites:
     port: 8015
     archive: true
     redirect: true
-    priority: 90
+    priority: 31
     tags:
       - depth
       - news
@@ -579,7 +580,7 @@ sites:
     port: 8016
     archive: true
     redirect: true
-    priority: 90
+    priority: 28
     tags:
       - depth
       - news
@@ -609,7 +610,7 @@ sites:
     port: 8017
     archive: true
     redirect: true
-    priority: 30
+    priority: 40
     max_image_height: 360
     tags:
       - sideproject
@@ -718,7 +719,7 @@ sites:
         keywords: "buzzing,ビデオ"
   lobste:
     port: 8021
-    priority: 25
+    priority: 30 
     archive: true
     tags:
       - hn
@@ -741,7 +742,7 @@ sites:
         keywords: "Lobste 头条, Lobste 中文, Lobste Story"
   linux:
     port: 8022
-    priority: 25
+    priority: 41
     archive: true
     tags:
       - linux
@@ -866,7 +867,7 @@ sites:
         keywords: "Reddit ワールドニュース"
   finance:
     port: 8027
-    priority: 18
+    priority: 28
     archive: true
     tags:
       - news
@@ -915,7 +916,7 @@ sites:
         keywords: "ガーディアン"
   sky:
     port: 8029
-    priority: 25
+    priority: 35
     archive: true
     tags:
       - news
@@ -963,7 +964,7 @@ sites:
         keywords: "ファイナンシャルタイムズ"
   bloomberg:
     port: 8031
-    priority: 22
+    priority: 18
     archive: true
     tags:
       - news
