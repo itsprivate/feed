@@ -1299,9 +1299,11 @@ sources:
         home_page_url: https://twitter.com/c_barraud
     type: twittercbarraud
   - id: source-google-finance
+    type: googlenews
     api:
       url: https://news.google.com/rss/topics/CAAqIQgKIhtDQkFTRGdvSUwyMHZNREpmTjNRU0FtVnVLQUFQAQ?hl=en-US&gl=US&ceid=US%3Aen
       name: Google Finance News
+      home_page_url: https://news.google.com/topics/CAAqIQgKIhtDQkFTRGdvSUwyMHZNREpmTjNRU0FtVnVLQUFQAQ?hl=en-US&gl=US&ceid=US%3Aen
   - api:
       url: s2fmultiple
       name: S2F Multiple Twitter
