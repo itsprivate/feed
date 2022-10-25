@@ -757,7 +757,9 @@ export default class Item<T> {
       for (const tag of item.tags) {
         const isGreaterFirst = index >= 1;
         if (!isLite) {
-          tagToUrl(tag, siteIdentifier, language, version, config);
+          content_html += `${isGreaterFirst ? "&nbsp;&nbsp;" : ""}<a href="${
+            tagToUrl(tag, siteIdentifier, language, version, config)
+          }">#${tag}</a>`;
         }
         ">#${tag}</a>`";
         tag_links.push({
