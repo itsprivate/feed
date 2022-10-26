@@ -1098,7 +1098,7 @@ sources:
     rules:
       - type: greaterEqual
         key: getWeightedScore
-        value: "55000"
+        value: "40000"
   - id: source-reddit-ask
     type: reddit
     api:
