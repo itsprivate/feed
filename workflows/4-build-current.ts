@@ -98,7 +98,12 @@ export default async function buildCurrent(
           if (!isArchiveFileExists) {
             // try to get current archived file, merge them
             // load remote tag files
-            await loadS3ArchiveFile(archiveFilePath);
+            try {
+              await loadS3ArchiveFile(archiveFilePath);
+            } catch (e) {
+              log.error(`load remote archive file error: ${archiveFilePath}`);
+              throw e;
+            }
           }
 
           try {
@@ -147,7 +152,12 @@ export default async function buildCurrent(
           if (!isTagFileExists) {
             // try to get current tagd file, merge them
             // load remote tag files
-            await loadS3ArchiveFile(tagFilePath);
+            try {
+              await loadS3ArchiveFile(tagFilePath);
+            } catch (e) {
+              log.error(`load s3 archive file error: ${tagFilePath}`);
+              throw e;
+            }
           }
 
           try {
