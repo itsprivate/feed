@@ -323,8 +323,17 @@ export default async function fetchSources(
         });
 
         const ids = originalJson.map((item: { id_str: string }) => item.id_str);
-        const tweetV2Result = await fetchTwitterV2Data(ids);
-        originalJson = tweetV2Result;
+        if (ids.length > 0) {
+          try {
+            const tweetV2Result = await fetchTwitterV2Data(ids);
+            originalJson = tweetV2Result;
+          } catch (e) {
+            log.error(`fetchTwitterV2Data error`, ids);
+            throw e;
+          }
+        } else {
+          originalJson = [];
+        }
       } else if (sourceType === "ph") {
         // producthunt graphql api
         try {
