@@ -89,6 +89,7 @@
         max-width: 40em;
         width: 95%;
         height: auto;
+        max-height: 30em;
       }
       .embed-video {
         aspect-ratio: 16 / 9;

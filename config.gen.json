@@ -2152,7 +2152,13 @@
         "url": "https://news.google.com/rss/topics/CAAqIggKIhxDQkFTRHdvSkwyMHZNR1F3TlhjekVnSmxiaWdBUAE?hl=en-US&gl=US&ceid=US%3Aen",
         "name": "Google News China",
         "home_page_url": "https://news.google.com/topics/CAAqIggKIhxDQkFTRHdvSkwyMHZNR1F3TlhjekVnSmxiaWdBUAE?hl=en-US&gl=US&ceid=US%3Aen"
-      }
+      },
+      "rules": [
+        {
+          "type": "limit",
+          "value": "30"
+        }
+      ]
     }
   ]
 }
