@@ -1,4 +1,4 @@
-import { getCachePath } from "../util.ts";
+import { getCachePath, getDataPath } from "../util.ts";
 import log from "../log.ts";
 import { compress } from "../bad-deps.ts";
 import { path } from "../deps.ts";
@@ -6,7 +6,7 @@ export default async function compressCurrentCacheData() {
   const zipName = getCachePath() + ".zip";
   // remove all empty dir getCachePath() recursively
   await removeEmptyDirectories(getCachePath());
-  await compress(getCachePath(), zipName, {
+  await compress([getCachePath(), getDataPath()], zipName, {
     overwrite: true,
   });
   const stat = await Deno.stat(zipName);

@@ -10,6 +10,7 @@ import SourceItemAdapter from "../adapters/source.ts";
 import {
   get,
   getCurrentItemsFilePath,
+  getCurrentKeysFilePath,
   getDataRawPath,
   getDataTranslatedPath,
   getSiteIdentifierByRelativePath,
@@ -73,6 +74,7 @@ export default async function fetchSources(
         filteredSources = filteredSources.concat(siteSources);
         // get current Itemsjson
         const currentItemsPath = getCurrentItemsFilePath(siteIdentifier);
+        const currentKeysPath = getCurrentKeysFilePath(siteIdentifier);
         let currentItemsJson: ItemsJson = {
           items: {},
         };
@@ -81,12 +83,18 @@ export default async function fetchSources(
         } catch (e) {
           log.debug(`read current items file failed, ${e.message}`);
         }
+        let currentKeyssJson: string[] = [];
+        try {
+          currentKeyssJson = await readJSONFile(currentKeysPath) as string[];
+        } catch (e) {
+          // ignore
+          log.debug(`read keys json file error: ${e}`);
+        }
         const currentItemsKeys = Object.keys(currentItemsJson.items);
         if (currentKeysMap.get(siteIdentifier) === undefined) {
           currentKeysMap.set(siteIdentifier, new Map());
         }
         for (const key of currentItemsKeys) {
-          const parsed = parseItemIdentifier(key);
           const itemInstance = new SourceItemAdapter(
             currentItemsJson.items[key],
           );
@@ -94,6 +102,10 @@ export default async function fetchSources(
           for (const cachedKey of cachedKeys) {
             currentKeysMap.get(siteIdentifier)!.set(cachedKey, true);
           }
+        }
+        // all add current keys
+        for (const key of currentKeyssJson) {
+          currentKeysMap.get(siteIdentifier)!.set(key, true);
         }
       }
     } else {

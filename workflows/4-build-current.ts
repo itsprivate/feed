@@ -7,9 +7,11 @@ import {
   getArchivedFilePath,
   getChangedSitePaths,
   getCurrentItemsFilePath,
+  getCurrentKeysFilePath,
   getCurrentToBeArchivedItemsFilePath,
   getDataTranslatedPath,
   getFilesByTargetSiteIdentifiers,
+  hasSameKeys,
   loadS3ArchiveFile,
   readJSONFile,
   resortArchiveKeys,
@@ -17,6 +19,7 @@ import {
   weekOfYear,
   writeJSONFile,
 } from "../util.ts";
+import SourceItem from "../adapters/source.ts";
 import log from "../log.ts";
 import { MAX_ITEMS_PER_PAGE } from "../constant.ts";
 
@@ -47,6 +50,7 @@ export default async function buildCurrent(
       // get all json
       // get current items
       const currentItemsPath = getCurrentItemsFilePath(siteIdentifier);
+      const currentKeysPath = getCurrentKeysFilePath(siteIdentifier);
       let currentItemsJson: ItemsJson = {
         items: {},
       };
@@ -57,6 +61,13 @@ export default async function buildCurrent(
         log.debug(`read json file error: ${e}`);
       }
 
+      let currentKeyssJson: string[] = [];
+      try {
+        currentKeyssJson = await readJSONFile(currentKeysPath) as string[];
+      } catch (e) {
+        // ignore
+        log.debug(`read keys json file error: ${e}`);
+      }
       let currentArchive: string[] = currentItemsJson.archive || [];
       const currentTags: string[] = currentItemsJson.tags || [];
 
@@ -151,10 +162,15 @@ export default async function buildCurrent(
           tagFiles[tagFilePath] = tagFileJson;
         }
       };
-      const urlsMap: Map<string, boolean> = new Map();
+
+      const currentKeysMap = new Map<string, boolean>();
       const itemsKeys = Object.keys(currentItemsJson.items);
       itemsKeys.forEach((key) => {
-        urlsMap.set(currentItemsJson.items[key].url, true);
+        const itemInstance = new SourceItem(currentItemsJson.items[key]);
+        const cachedKeys = itemInstance.getCachedKeys();
+        cachedKeys.forEach((key) => {
+          currentKeysMap.set(key, true);
+        });
       });
       for (const file of files) {
         const item = await readJSONFile(file) as FormatedItem;
@@ -169,11 +185,23 @@ export default async function buildCurrent(
 
         // check current items cahced keys, delete duplicated items by urls
         // cause some site, they have different id, but the same urls, we thought that is duplicated.
-        if (urlsMap.has(item.url)) {
+        const itemInstance = new SourceItem(item);
+        const duplicatedKeys = hasSameKeys(
+          currentKeysMap,
+          itemInstance.getCachedKeys(),
+        );
+        if (duplicatedKeys.length > 0) {
           log.info(`${item.url} is duplicated, will drop it.`);
           filesNeedToBeDeleted.add(file);
           continue;
         }
+        // write to keys
+        //
+        itemInstance.getCachedKeys().forEach((key) => {
+          if (!currentKeyssJson.includes(key)) {
+            currentKeyssJson.unshift(key);
+          }
+        });
         // only add first 500 items to archive list
         if (total <= MAX_ITEMS_PER_PAGE) {
           currentItemsJson.items[id] = item;
@@ -259,6 +287,11 @@ export default async function buildCurrent(
           items: arrayToObj(getLatestItems(currentItemsJson.items)),
         },
       );
+
+      // write curernt keys json
+      //
+      //
+      await writeJSONFile(currentKeysPath, currentKeyssJson.slice(0, 5000));
 
       // for garbage collection
       // @ts-ignore: type is not assignable

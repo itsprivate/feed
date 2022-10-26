@@ -1,7 +1,11 @@
 import { Embed, FormatedItem, Link, LinkOptions, Video } from "../interface.ts";
 import Item from "../item.ts";
 import log from "../log.ts";
-import { formatNumber, parseItemIdentifier } from "../util.ts";
+import {
+  formatNumber,
+  parseItemIdentifier,
+  tryToRemoveUnnecessaryParams,
+} from "../util.ts";
 export default class source extends Item<FormatedItem> {
   getSensitive(): boolean {
     return this.originalItem._sensitive || false;
@@ -41,6 +45,23 @@ export default class source extends Item<FormatedItem> {
     return this.originalItem._title_suffix || "";
   }
 
+  getCachedKeys(): string[] {
+    const finalUrl = tryToRemoveUnnecessaryParams(this.getUrl());
+    const keys = [
+      `${this.getOriginalLanguage()}_${this.getType()}__${this.getId()}`,
+      `${finalUrl}`,
+    ];
+    const type = this.getType();
+    console.log("type", type);
+    if (
+      type === "googlenews" || type === "twitter" || type === "twitterlink" ||
+      type === "lobste" || type === "hn" || type === "newyorker" ||
+      type === "rss" || type === "thechinaproject"
+    ) {
+      keys.push(`${this.getTitle()}`);
+    }
+    return keys;
+  }
   getUrl(): string {
     // fix non http url
     const urlStr = this.originalItem.url;

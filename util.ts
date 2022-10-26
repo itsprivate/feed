@@ -182,6 +182,11 @@ export const getCurrentItemsFilePath = (siteIdentifier: string) => {
   }/items.json`;
 };
 
+export const getCurrentKeysFilePath = (siteIdentifier: string) => {
+  return `${getDataCurrentItemsPath()}/${
+    siteIdentifierToPath(siteIdentifier)
+  }/keys.json`;
+};
 export const getCurrentToBeArchivedItemsFilePath = (siteIdentifier: string) => {
   return `${getDataCurrentItemsPath()}/${
     siteIdentifierToPath(siteIdentifier)

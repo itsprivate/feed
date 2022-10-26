@@ -12,6 +12,9 @@ source-all:
 .Phony: prod-source
 prod-source:
 	PROD=1 deno run -A main.ts --source
+.Phony: prod-sourcesite
+prod-sourcesite:
+	PROD=1 deno run -A main.ts --source --site ${site}
 #	PROD=1 deno run -A main.ts --stage translate
 # only build site
 .Phony: build
@@ -184,7 +187,7 @@ loadcurrent:
 	aws s3 cp s3://feed/cache.zip ./cache.zip --endpoint-url $(AWS_ENDPOINT) && make decompresscache && aws s3 cp s3://feed/current ./current --endpoint-url $(AWS_ENDPOINT) --recursive --exclude ".*"
 .Phony: prod-loadcurrent
 prod-loadcurrent:
-	aws s3 cp s3://feed/prod-cache.zip ./prod-cache.zip --endpoint-url $(AWS_ENDPOINT) && make prod-decompresscache && aws s3 cp s3://feed/prod-current ./prod-current --endpoint-url $(AWS_ENDPOINT) --recursive --exclude ".*"
+	aws s3 cp s3://feed/prod-cache.zip ./prod-cache.zip --endpoint-url $(AWS_ENDPOINT) && make prod-decompresscache 
 
 .Phony: loadarchivehttp
 loadarchivehttp:
@@ -204,8 +207,7 @@ prod-awsuploadarchive:
 
 .Phony: uploadcurrent
 uploadcurrent:
-	make compresscache && curl --digest --max-time 100 -u $(DUFS_SECRETS) -T ./cache.zip $(DUFS_URL)/cache.zip && aws s3 cp ./cache.zip  s3://feed/cache.zip --endpoint-url $(AWS_ENDPOINT) && aws s3 cp ./current  s3://feed/current --endpoint-url $(AWS_ENDPOINT) --recursive --exclude ".*"
-
+	make compresscache && curl --digest --max-time 100 -u $(DUFS_SECRETS) -T ./cache.zip $(DUFS_URL)/cache.zip && aws s3 cp ./cache.zip  s3://feed/cache.zip --endpoint-url $(AWS_ENDPOINT) 
 
 .Phony: prod-uploadcurrent
 prod-uploadcurrent:
