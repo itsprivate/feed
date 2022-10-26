@@ -52,7 +52,6 @@ export default class source extends Item<FormatedItem> {
       `${finalUrl}`,
     ];
     const type = this.getType();
-    console.log("type", type);
     if (
       type === "googlenews" || type === "twitter" || type === "twitterlink" ||
       type === "lobste" || type === "hn" || type === "newyorker" ||
