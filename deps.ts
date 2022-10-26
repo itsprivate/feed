@@ -5,7 +5,7 @@ export * as path from "https://deno.land/std@0.151.0/path/mod.ts";
 export * as fs from "https://deno.land/std@0.151.0/fs/mod.ts";
 export * as dotenv from "https://deno.land/std@0.151.0/dotenv/mod.ts";
 export * as datetime from "https://deno.land/std@0.151.0/datetime/mod.ts";
-export * as async from "https://deno.land/std@0.151.0/async/mod.ts";
+export * as asyncMod from "https://deno.land/std@0.151.0/async/mod.ts";
 export * as flags from "https://deno.land/std@0.151.0/flags/mod.ts";
 export * as colors from "https://deno.land/std@0.151.0/fmt/colors.ts";
 export { delay } from "https://deno.land/std@0.151.0/async/delay.ts";
@@ -40,6 +40,7 @@ export {
   DOMParser,
   Element,
 } from "https://deno.land/x/deno_dom@v0.1.33-alpha/deno-dom-wasm.ts";
+export { retry } from "https://deno.land/x/retry@v2.0.0/mod.ts";
 export type {
   DOMParserMimeType,
 } from "https://deno.land/x/deno_dom@v0.1.33-alpha/deno-dom-wasm.ts";

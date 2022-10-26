@@ -1,4 +1,4 @@
-import { async, fs, path } from "../deps.ts";
+import { fs, path, retry } from "../deps.ts";
 import { FormatedItem, ItemsJson, RunOptions } from "../interface.ts";
 import getLatestItems from "../latest-items.ts";
 import {
@@ -8,7 +8,6 @@ import {
   getChangedSitePaths,
   getCurrentItemsFilePath,
   getCurrentKeysFilePath,
-  getCurrentToBeArchivedItemsFilePath,
   getDataTranslatedPath,
   getFilesByTargetSiteIdentifiers,
   hasSameKeys,
@@ -99,7 +98,10 @@ export default async function buildCurrent(
             // try to get current archived file, merge them
             // load remote tag files
             try {
-              await loadS3ArchiveFile(archiveFilePath);
+              await retry(async () => loadS3ArchiveFile(archiveFilePath), {
+                maxTry: 3,
+                delay: 1000,
+              });
             } catch (e) {
               log.error(`load remote archive file error: ${archiveFilePath}`);
               throw e;
@@ -153,7 +155,13 @@ export default async function buildCurrent(
             // try to get current tagd file, merge them
             // load remote tag files
             try {
-              await loadS3ArchiveFile(tagFilePath);
+              await retry(
+                async () => loadS3ArchiveFile(tagFilePath),
+                {
+                  maxTry: 3,
+                  delay: 1000,
+                },
+              );
             } catch (e) {
               log.error(`load s3 archive file error: ${tagFilePath}`);
               throw e;
