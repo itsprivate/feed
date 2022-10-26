@@ -1031,6 +1031,12 @@ sources:
       - type: notEqual
         key: getHostname
         value: www.youtube.com
+      - type: notEqual
+        key: getHostname
+        value: www.outkick.com
+      - type: notEqual
+        key: getHostname
+        value: www.thedailybeast.com
   - api:
       - url: https://news.google.com/rss/topics/CAAqIAgKIhpDQkFTRFFvSEwyMHZNR293YXhJQ1pXNG9BQVAB?hl=en-US&gl=US&ceid=US%3Aen
         name: Google Asia News
