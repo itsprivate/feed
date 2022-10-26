@@ -77,8 +77,6 @@ export interface Version {
   name: string;
 }
 export interface Config {
-  icon: string;
-  favicon: string;
   advice_url: string;
   translated_items_per_page: number;
   max_files_per_site: number;
@@ -184,6 +182,7 @@ export interface Feedjson {
   language: string;
   home_page_url: string;
   feed_url: string;
+  _latest_build_time: string;
   items: FeedItem[];
   _site_version: string;
   _tags?: string[];

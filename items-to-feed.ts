@@ -186,6 +186,7 @@ export default function itemsToFeed(
     "title": siteTitle,
     "description": siteDescription,
     "icon": siteIdentifierToUrl(siteIdentifier, "/icon.png", config),
+    "_latest_build_time": new Date().toISOString(),
     "favicon": siteIdentifierToUrl(siteIdentifier, "/favicon.ico", config),
     "language": language.code,
     "_site_version": version.code,
