@@ -70,6 +70,7 @@ export default async function buildSite(options: RunOptions) {
       "description": currentIndexTranslations.description,
       "icon": siteIdentifierToUrl(indexSubDomain, "/icon.png", config),
       "favicon": siteIdentifierToUrl(indexSubDomain, "/favicon.ico", config),
+      "_latest_build_time": new Date().toISOString(),
       "language": language.code,
       "_site_version": "default",
       "home_page_url": siteIdentifierToUrl(
