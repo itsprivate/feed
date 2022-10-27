@@ -385,9 +385,13 @@ export default async function fetchSources(
 
       // if google news limit time
       if (sourceType === "googlenews") {
+        let itemsCount = 10;
+        if (sourceId === "source-google-news") {
+          itemsCount = 15;
+        }
         originalItems = originalItems.filter(
           (item: Item<unknown>, index: number) => {
-            if (index < 10) {
+            if (index < itemsCount) {
               return true;
             } else {
               const published = item.getOriginalPublishedDate();
