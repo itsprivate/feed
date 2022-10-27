@@ -211,8 +211,7 @@ uploadcurrent:
 
 .Phony: prod-uploadcurrent
 prod-uploadcurrent:
-	make prod-uploadcache && aws s3 cp ./prod-current  s3://feed/prod-current --endpoint-url $(AWS_ENDPOINT) --recursive --exclude ".*"
-
+	make prod-uploadcache 
 .Phony: prod-uploadcache
 prod-uploadcache:
 	make prod-compresscache && curl --digest --max-time 100 -u $(DUFS_SECRETS) -T ./prod-cache.zip $(DUFS_URL)/prod-cache.zip && aws s3 cp ./prod-cache.zip  s3://feed/prod-cache.zip --endpoint-url $(AWS_ENDPOINT)
