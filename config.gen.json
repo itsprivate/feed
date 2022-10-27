@@ -1429,6 +1429,11 @@
           "type": "notEqual",
           "key": "getHostname",
           "value": "www.thedailybeast.com"
+        },
+        {
+          "type": "notEqual",
+          "key": "getHostname",
+          "value": "www.nejm.org"
         }
       ]
     },
