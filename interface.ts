@@ -16,6 +16,25 @@ export interface Source {
   id: string;
   params?: Record<string, string | boolean | number>;
 }
+export interface SourceStat {
+  id: string;
+  url: string;
+  checked_at: string;
+  raw_count: number;
+  filtered_count: number;
+  unique_count: number;
+  final_count: number;
+}
+
+export interface SiteStat {
+  id: string;
+  checked_at: string;
+  count: number;
+}
+export interface Stat {
+  sources: Record<string, SourceStat>;
+  sites: Record<string, SiteStat>;
+}
 export interface GetFormatedItemOptions {
   imageCachedMap?: Record<string, string>;
   titleCachedMap?: Record<string, string>;

@@ -1,8 +1,11 @@
 import {
   ItemsJson,
   RunOptions,
+  SiteStat,
   Source,
   SourceAPIConfig,
+  SourceStat,
+  Stat,
   Task,
 } from "../interface.ts";
 import adapters from "../adapters/mod.ts";
@@ -11,8 +14,12 @@ import {
   get,
   getCurrentItemsFilePath,
   getCurrentKeysFilePath,
+  getDataPath,
   getDataRawPath,
+  getDataStatsPath,
   getDataTranslatedPath,
+  getRecentlySiteStatPath,
+  getRecentlySourcesStatPath,
   getSiteIdentifierByRelativePath,
   hasSameKeys,
   identifierToCachedKey,
@@ -46,6 +53,9 @@ export default async function fetchSources(
   const currentKeysMap = new Map<string, Map<string, boolean>>();
   const currentRawKeysMap = new Map<string, Map<string, string[]>>();
   const targetSiteIdentifiersMap = new Map<string, string[]>();
+  const siteStats: Record<string, SiteStat> = {};
+
+  const statChcedAt = new Date().toISOString();
   for (const siteIdentifier of siteIdentifiers) {
     const siteConfig = sitesMap[siteIdentifier];
     const siteIsOnlyDev = siteConfig.dev && !isDev();
@@ -64,6 +74,13 @@ export default async function fetchSources(
             !targetSiteIdentifiersMap.get(siteTag)!.includes(siteIdentifier)
           ) {
             targetSiteIdentifiersMap.get(siteTag)!.push(siteIdentifier);
+          }
+          if (!siteStats[siteIdentifier]) {
+            siteStats[siteIdentifier] = {
+              id: siteIdentifier,
+              checked_at: statChcedAt,
+              count: 0,
+            };
           }
         }
       }
@@ -241,6 +258,41 @@ export default async function fetchSources(
       }
     }
   }
+
+  let stat: Record<string, Stat> = {};
+  const statPath = getDataStatsPath();
+  try {
+    const statContent = await readJSONFile(statPath);
+    stat = statContent as Record<string, Stat>;
+  } catch (_e) {
+    // ignore
+  }
+  const checkedYear = new Date(statChcedAt).getUTCFullYear();
+  if (!stat[checkedYear]) {
+    stat[checkedYear] = {
+      sources: {},
+      sites: {},
+    };
+  }
+  let recentlySites: SiteStat[] = [];
+  const recentlySitesPath = getRecentlySiteStatPath();
+  try {
+    const recentlySitesContent = await readJSONFile(recentlySitesPath);
+    recentlySites = recentlySitesContent as SiteStat[];
+  } catch (_e) {
+    // ignore
+  }
+  let recentlySources: SourceStat[] = [];
+  let currentSourcesStats: SourceStat[] = [];
+
+  const recentlySourcesPath = getRecentlySourcesStatPath();
+  try {
+    const recentlySourcesContent = await readJSONFile(recentlySourcesPath);
+    recentlySources = recentlySourcesContent as SourceStat[];
+  } catch (_e) {
+    // ignore
+  }
+
   // unique filteredSources
   filteredSources = Array.from(new Set(filteredSources.map((item) => item.id)))
     .map((id) => sourcesMap.get(id)!);
@@ -257,11 +309,21 @@ export default async function fetchSources(
     const sourceType = source.type;
     let itemsPath = source.itemsPath || "";
     const rules = source.rules || [];
-
     // fetch source, and parse it to item;
     for (const sourceApiConfig of sourceUrls) {
       const sourceUrl = sourceApiConfig.url;
+      const sourceStat: SourceStat = {
+        id: sourceId,
+        url: sourceUrl,
+        raw_count: 0,
+        filtered_count: 0,
+        unique_count: 0,
+        final_count: 0,
+        checked_at: statChcedAt,
+      };
+
       let total = 0;
+      let totalUniqued = 0;
       let originalJson;
       if (
         sourceType === "rss" || sourceType === "googlenews" ||
@@ -311,16 +373,28 @@ export default async function fetchSources(
           });
         });
 
+        // @ts-ignore: ignore
         // then call tweet v2 api to fetch details
         // @ts-ignore: ignore quoted type
         originalJson = result.filter((item) => {
-          const isQuoted = item.is_quote_status === false;
-          const in_reply_to_status_id = item.in_reply_to_status_id;
-          if (isQuoted || in_reply_to_status_id) {
-            return true;
+          const isQuoted = item.is_quote_status === true;
+          const in_reply_to_status_id = item.in_reply_to_status_id_str;
+          const retweet = item.retweeted_status;
+          let isRetweetQuoted = false;
+          if (
+            retweet &&
+            (retweet.is_quote_status === true ||
+              retweet.in_reply_to_status_id_str)
+          ) {
+            isRetweetQuoted = true;
           }
-          return false;
+
+          if (isQuoted || in_reply_to_status_id || isRetweetQuoted) {
+            return false;
+          }
+          return true;
         });
+        console.log("originalJson.length", originalJson.length);
 
         const ids = originalJson.map((item: { id_str: string }) => item.id_str);
         if (ids.length > 0) {
@@ -370,6 +444,7 @@ export default async function fetchSources(
       log.info(
         `${sourceOrder}/${filteredSources.length} ${sourceId} fetched ${originalItems.length} raw items from ${sourceUrl} `,
       );
+      sourceStat.raw_count = originalItems.length;
       originalItems = filterByRules(
         // @ts-ignore: hard to type
         originalItems.map((originalItem) =>
@@ -379,9 +454,6 @@ export default async function fetchSources(
         ),
         rules,
       ) as Item<unknown>[];
-      log.info(
-        `got ${originalItems.length} valid items by rules`,
-      );
 
       // if google news limit time
       if (sourceType === "googlenews") {
@@ -403,6 +475,10 @@ export default async function fetchSources(
         );
       }
 
+      sourceStat.filtered_count = originalItems.length;
+      log.info(
+        `got ${originalItems.length} valid items by rules`,
+      );
       // resort items from old to new , cause we need to keep the order of items
       // @ts-ignore: hard to type
       originalItems = (originalItems).sort((a, b) => {
@@ -456,6 +532,7 @@ export default async function fetchSources(
         }
         if (duplicatedKeys.length === 0) {
           // filter again, cause some attributes is geted by init()
+          totalUniqued++;
           const filterdItems = filterByRules([item], rules);
           if (filterdItems.length > 0) {
             // not exists
@@ -477,34 +554,84 @@ export default async function fetchSources(
             );
             itemOrder++;
             total++;
+            // add keys to currentKeysMap, so we can check if current item is duplicated
+            const targetSiteIdentifiers = targetSiteIdentifiersMap.get(
+              sourceId,
+            )!;
+            for (const targetSiteIdentifier of targetSiteIdentifiers) {
+              siteStats[targetSiteIdentifier].count++;
+              const currentKeys = currentKeysMap.get(targetSiteIdentifier);
+              if (!currentKeys) {
+                currentKeysMap.set(targetSiteIdentifier, new Map());
+              }
+              const itemCachedKeys = item.getCachedKeys();
+
+              for (const itemCachedKey of itemCachedKeys) {
+                currentKeysMap.get(targetSiteIdentifier)!.set(
+                  itemCachedKey,
+                  true,
+                );
+              }
+            }
           } else {
             log.info(`remove item ${item.getUrl()} by rules`);
           }
         } else {
           log.debug(`${JSON.stringify(item.getCachedKeys())} exists, skip`);
         }
-
-        // add keys to currentKeysMap, so we can check if current item is duplicated
-        const targetSiteIdentifiers = targetSiteIdentifiersMap.get(sourceId)!;
-        for (const targetSiteIdentifier of targetSiteIdentifiers) {
-          const currentKeys = currentKeysMap.get(targetSiteIdentifier);
-          if (!currentKeys) {
-            currentKeysMap.set(targetSiteIdentifier, new Map());
-          }
-          const itemCachedKeys = item.getCachedKeys();
-
-          for (const itemCachedKey of itemCachedKeys) {
-            currentKeysMap.get(targetSiteIdentifier)!.set(
-              itemCachedKey,
-              true,
-            );
-          }
-        }
       }
+      sourceStat.final_count = total;
+      sourceStat.unique_count = totalUniqued;
       log.info(
         `saved ${total} items by unique keys and second filter`,
       );
+      currentSourcesStats.unshift(sourceStat);
     }
   }
+
+  // site stats
+  const siteKeys = Object.keys(siteStats);
+  for (const siteKey of siteKeys) {
+    const siteStat = siteStats[siteKey];
+    recentlySites.unshift(siteStat);
+    // add
+    const currentStat = stat[checkedYear];
+    const currentSitesStats = currentStat.sites;
+    if (!currentSitesStats[siteKey]) {
+      currentSitesStats[siteKey] = {
+        id: siteKey,
+        count: 0,
+        checked_at: statChcedAt,
+      };
+    }
+    currentSitesStats[siteKey].count += siteStat.count;
+  }
+
+  // sources stats
+  for (const source of currentSourcesStats) {
+    const currentStat = stat[checkedYear];
+    const currentSourcesStats = currentStat.sources;
+    if (!currentSourcesStats[source.url]) {
+      currentSourcesStats[source.url] = {
+        id: source.id,
+        url: source.url,
+        raw_count: 0,
+        filtered_count: 0,
+        unique_count: 0,
+        final_count: 0,
+        checked_at: statChcedAt,
+      };
+    }
+    currentSourcesStats[source.url].raw_count += source.raw_count;
+    currentSourcesStats[source.url].filtered_count += source.filtered_count;
+    currentSourcesStats[source.url].unique_count += source.unique_count;
+    currentSourcesStats[source.url].final_count += source.final_count;
+    recentlySources.unshift(source);
+  }
+
+  // write stats to file
+  await writeJSONFile(recentlySourcesPath, recentlySources.slice(0, 20000));
+  await writeJSONFile(recentlySitesPath, recentlySites.slice(0, 20000));
+  await writeJSONFile(statPath, stat);
   return { postTasks };
 }

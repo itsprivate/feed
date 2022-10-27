@@ -31,6 +31,7 @@ export default class twitter extends Item<TwitterV2Item> {
     super(tweet);
   }
   static getTweetType(originalItem: TwitterV2Item): string {
+    // console.log("originalItem", originalItem);
     if (
       originalItem.referenced_tweets &&
       originalItem.referenced_tweets.length > 0

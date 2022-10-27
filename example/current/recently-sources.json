@@ -1,0 +1,10 @@
+[
+  {
+    "source": "source-googlenews",
+    "checked_at": "2019-01-01T00:00:00Z",
+    "raw_count": 100,
+    "filtered_count": 50,
+    "unique_count": 50,
+    "final_count": 50
+  }
+]

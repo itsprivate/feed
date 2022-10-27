@@ -99,6 +99,20 @@ export const getDataPath = () => {
   const dataPath = isDev() ? "current" : "prod-current";
   return dataPath;
 };
+export const getRecentlySiteStatPath = () => {
+  const recentlySitesPath = path.join(
+    getDataPath(),
+    "recently-sites.json",
+  );
+  return recentlySitesPath;
+};
+export const getRecentlySourcesStatPath = () => {
+  const recentlySitesPath = path.join(
+    getDataPath(),
+    "recently-sources.json",
+  );
+  return recentlySitesPath;
+};
 export const getFeedSiteIdentifiers = (config: Config) => {
   const sitesMap = config.sites;
   const keys = Object.keys(sitesMap);
@@ -164,6 +178,9 @@ export const getDataTranslatedPath = () => {
 
 export const getDataCurrentItemsPath = () => {
   return `${getDataPath()}/items`;
+};
+export const getDataStatsPath = () => {
+  return `${getDataPath()}/stats.json`;
 };
 export const getDevDataCurrentItemsPath = () => {
   return `current/items`;

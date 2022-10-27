@@ -1,0 +1,21 @@
+{
+  "2022": {
+    "sources": {
+      "source-googlenews": {
+        "updated_at": "2019-01-01T00:00:00Z",
+        "raw_count": 100,
+        "filtered_count": 50,
+        "unique_count": 50,
+        "final_count": 50
+      }
+    }
+  },
+  "2022": {
+    "sites": {
+      "site-nytimes": {
+        "updated_at": "2019-01-01T00:00:00Z",
+        "count": 50
+      }
+    }
+  }
+}
