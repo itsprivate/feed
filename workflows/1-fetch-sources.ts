@@ -394,7 +394,7 @@ export default async function fetchSources(
           }
           return true;
         });
-        console.log("originalJson.length", originalJson.length);
+        // console.log("originalJson.length", originalJson.length);
 
         const ids = originalJson.map((item: { id_str: string }) => item.id_str);
         if (ids.length > 0) {
@@ -493,42 +493,60 @@ export default async function fetchSources(
         return 0;
       });
 
+      const targetSiteIdentifiers = targetSiteIdentifiersMap.get(
+        sourceId,
+      )!;
+      const currentMergedRawKeysMap: Map<string, string[]> = new Map();
+      const currentmergedKeysMap: Map<string, boolean> = new Map();
+
+      for (const targetSiteIdentifier of targetSiteIdentifiers) {
+        const currentRawMap = currentRawKeysMap.get(targetSiteIdentifier);
+        if (currentRawMap) {
+          const currentRawMapKeys = currentRawMap.keys();
+          for (const key of currentRawMapKeys) {
+            currentMergedRawKeysMap.set(key, currentRawMap.get(key)!);
+          }
+        }
+
+        const currentMap = currentKeysMap.get(targetSiteIdentifier);
+        if (currentMap) {
+          const currentMapKeys = currentMap.keys();
+          for (const key of currentMapKeys) {
+            currentmergedKeysMap.set(key, true);
+          }
+        }
+      }
+
       for (const item of (originalItems as Item<unknown>[])) {
         await item.init();
         // check if current raw already has one, delete others
 
-        const rawSiteIdentifiers = currentRawKeysMap.keys();
-        for (const rawSiteIdentifier of rawSiteIdentifiers) {
-          const duplicatedFiles = hasSameKeys(
-            currentRawKeysMap.get(rawSiteIdentifier)!,
-            item.getCachedKeys(),
-          );
-          if (duplicatedFiles.length > 0) {
-            // delete all cached files
-            const cachedFiles = duplicatedFiles.reduce((acc, cur) => {
-              return acc.concat(cur);
-            }, []);
-            for (const cachedFile of cachedFiles) {
-              try {
-                await Deno.remove(cachedFile);
-                log.info(`remove duplicated raw file: ${cachedFile}`);
-              } catch (_e) {
-                // ignore
-              }
+        const duplicatedFiles = hasSameKeys(
+          currentMergedRawKeysMap,
+          item.getCachedKeys(),
+        );
+        if (duplicatedFiles.length > 0) {
+          // delete all cached files
+          const cachedFiles = duplicatedFiles.reduce((acc, cur) => {
+            return acc.concat(cur);
+          }, []);
+          for (const cachedFile of cachedFiles) {
+            try {
+              await Deno.remove(cachedFile);
+              log.info(`remove duplicated raw file: ${cachedFile}`);
+            } catch (_e) {
+              // ignore
             }
           }
         }
-        const currentKeys = currentKeysMap.keys();
         let duplicatedKeys: boolean[] = [];
-        for (const currentKey of currentKeys) {
-          duplicatedKeys = hasSameKeys(
-            currentKeysMap.get(currentKey)!,
-            item.getCachedKeys(),
-          );
-          if (duplicatedKeys.length > 0) {
-            // log.info(`duplicatedKeys: ${duplicatedKeys}`);
-            break;
-          }
+        duplicatedKeys = hasSameKeys(
+          currentmergedKeysMap,
+          item.getCachedKeys(),
+        );
+        if (duplicatedKeys.length > 0) {
+          // log.info(`duplicatedKeys: ${duplicatedKeys}`);
+          break;
         }
         if (duplicatedKeys.length === 0) {
           // filter again, cause some attributes is geted by init()
@@ -555,9 +573,6 @@ export default async function fetchSources(
             itemOrder++;
             total++;
             // add keys to currentKeysMap, so we can check if current item is duplicated
-            const targetSiteIdentifiers = targetSiteIdentifiersMap.get(
-              sourceId,
-            )!;
             for (const targetSiteIdentifier of targetSiteIdentifiers) {
               siteStats[targetSiteIdentifier].count++;
               const currentKeys = currentKeysMap.get(targetSiteIdentifier);
