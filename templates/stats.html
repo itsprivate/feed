@@ -77,10 +77,11 @@
             <code>{{url}}</code>
           </li>
           <br /><br />
-          {{#rules.0}}
           <ul>
+            <li>24小时内帖子数： {{daily_count}}</li>
+            {{#rules.0}}
             <li>
-              <span class="bold">Rules:</span><br />
+              <span>Rules:</span><br />
               <table>
                 <tr>
                   <th>Key</th>
@@ -96,8 +97,10 @@
                 {{/rules}} {{#rules.0}}
               </table>
             </li>
+            {{/rules.0}}
           </ul>
-          {{/rules.0}} {{/apis}}
+
+          {{/apis}}
         </ul>
       </details>
       <div class="stat" id="{{{site_identifier}}}-stat"></div>

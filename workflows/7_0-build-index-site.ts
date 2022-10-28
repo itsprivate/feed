@@ -35,7 +35,7 @@ interface API extends SourceAPIConfig {
   rules: Rule[];
 }
 interface APIInfo extends API {
-  count: number;
+  daily_count: number;
 }
 
 interface SiteStatInfo {
@@ -381,7 +381,7 @@ export default async function buildSite(options: RunOptions) {
       const api: API = apiMap.get(apiName)!;
       const apiInfo: APIInfo = {
         ...api,
-        count: 0,
+        daily_count: 0,
       };
       siteStat.apis.push(apiInfo);
 
@@ -397,6 +397,7 @@ export default async function buildSite(options: RunOptions) {
         // if in 24hours
         if (now.getTime() - time < 24 * 60 * 60 * 1000) {
           siteStat.daily_count += count;
+          apiInfo.daily_count += count;
         }
         statData[index].push(count);
       }
