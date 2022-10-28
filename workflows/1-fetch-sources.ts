@@ -546,7 +546,7 @@ export default async function fetchSources(
         );
         if (duplicatedKeys.length > 0) {
           // log.info(`duplicatedKeys: ${duplicatedKeys}`);
-          break;
+          continue;
         }
         if (duplicatedKeys.length === 0) {
           // filter again, cause some attributes is geted by init()
