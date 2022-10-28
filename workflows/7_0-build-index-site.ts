@@ -1,14 +1,18 @@
 import { groupBy, jsonfeedToAtom, mustache, path } from "../deps.ts";
-import { FeedItem, Feedjson, RunOptions } from "../interface.ts";
+import {
+  FeedItem,
+  Feedjson,
+  RunOptions,
+  Source,
+  SourceStatGroup,
+} from "../interface.ts";
 import {
   formatHumanTime,
   getCurrentTranslations,
-  getDataCurrentItemsPath,
   getDistFilePath,
   getDistPath,
-  getSourceLinks,
+  getRecentlySourcesStatPath,
   isDev,
-  liteUrlToUrl,
   pathToSiteIdentifier,
   readJSONFile,
   resortSites,
@@ -21,15 +25,25 @@ import log from "../log.ts";
 import feedToHTML from "../feed-to-html.ts";
 import { indexSubDomain } from "../constant.ts";
 import copyStaticAssets from "../copy-static-assets.ts";
+
+interface SiteStatInfo {
+  site_identifier: string;
+  site_title: string;
+  daily_count: number;
+  data: string;
+}
 export default async function buildSite(options: RunOptions) {
   const config = options.config;
   const indexConfig = config.sites[indexSubDomain];
-  const currentDataPath = getDataCurrentItemsPath();
   let siteIdentifiers: string[] = [];
+  const now = new Date();
   const indexTemplateString = await Deno.readTextFile(
     "./templates/root-index.html.mu",
   );
 
+  const statsTemplateString = await Deno.readTextFile(
+    "./templates/stats.html",
+  );
   for await (const dirEntry of Deno.readDir(getDistPath())) {
     if (dirEntry.isDirectory && !dirEntry.name.startsWith(".")) {
       // only build changed folder
@@ -70,7 +84,7 @@ export default async function buildSite(options: RunOptions) {
       "description": currentIndexTranslations.description,
       "icon": siteIdentifierToUrl(indexSubDomain, "/icon.png", config),
       "favicon": siteIdentifierToUrl(indexSubDomain, "/favicon.ico", config),
-      "_latest_build_time": new Date().toISOString(),
+      "_latest_build_time": now.toISOString(),
       "language": language.code,
       "_site_version": "default",
       "home_page_url": siteIdentifierToUrl(
@@ -227,7 +241,7 @@ export default async function buildSite(options: RunOptions) {
       indexSubDomain,
       `${language.prefix}index.html`,
     );
-    const indexHTML = await feedToHTML(
+    const indexHTML = feedToHTML(
       feedJson,
       config,
       indexTemplateString,
@@ -241,4 +255,138 @@ export default async function buildSite(options: RunOptions) {
   }
   // copy static assets
   await copyStaticAssets(indexSubDomain);
+
+  // build stats
+  const sitesMap = config.sites;
+  const sourcesMap = new Map<string, Source>();
+  for (const source of config.sources) {
+    sourcesMap.set(source.id, source);
+  }
+  const targetSiteIdentifiersMap = new Map<string, string[]>();
+  const siteApiMap = new Map<string, string[]>();
+  for (const siteIdentifier of siteIdentifiers) {
+    const siteConfig = sitesMap[siteIdentifier];
+    const siteIsOnlyDev = siteConfig.dev && !isDev();
+    const siteTags = siteConfig.tags || [];
+    const siteSources: Source[] = [];
+    siteApiMap.set(siteIdentifier, []);
+    if (!siteIsOnlyDev) {
+      // only take prod
+      for (const siteTag of siteTags) {
+        const source = sourcesMap.get(siteTag);
+        if (source) {
+          siteSources.push(source);
+          if (!targetSiteIdentifiersMap.has(siteTag)) {
+            targetSiteIdentifiersMap.set(siteTag, []);
+          }
+          if (
+            !targetSiteIdentifiersMap.get(siteTag)!.includes(siteIdentifier)
+          ) {
+            targetSiteIdentifiersMap.get(siteTag)!.push(siteIdentifier);
+          }
+          const apis = Array.isArray(source.api) ? source.api : [source.api];
+          for (const api of apis) {
+            if (!siteApiMap.get(siteIdentifier)!.includes(api.name)) {
+              siteApiMap.get(siteIdentifier)!.push(api.name);
+            }
+          }
+        }
+      }
+    }
+  }
+
+  const recentlySourcesPath = getRecentlySourcesStatPath();
+  let recentlyGroups: SourceStatGroup[] = [];
+  try {
+    const recentlySourcesContent = await readJSONFile(recentlySourcesPath);
+    recentlyGroups = recentlySourcesContent as SourceStatGroup[];
+  } catch (_e) {
+    // ignore
+  }
+
+  const recentlyStats: SiteStatInfo[] = [];
+  const allSiteStats: Record<string, Record<string, Record<string, number>>> =
+    {};
+
+  const timeline: string[] = [];
+  for (const group of recentlyGroups) {
+    const time = group.t;
+    timeline.push(time);
+    const sources = group.s;
+
+    const sourceKeys = Object.keys(sources);
+    for (const sourceKey of sourceKeys) {
+      const siteIdentifiers = targetSiteIdentifiersMap.get(sourceKey);
+      if (siteIdentifiers) {
+        for (const siteIdentifier of siteIdentifiers) {
+          if (!allSiteStats[siteIdentifier]) {
+            allSiteStats[siteIdentifier] = {};
+          }
+
+          const apiKeys = Object.keys(sources[sourceKey]);
+          for (const apiKey of apiKeys) {
+            const statItem = sources[sourceKey][apiKey];
+            if (!allSiteStats[siteIdentifier][apiKey]) {
+              allSiteStats[siteIdentifier][apiKey] = {};
+            }
+            allSiteStats[siteIdentifier][apiKey][time] = statItem.count;
+          }
+        }
+      }
+    }
+  }
+  // sort timeline
+  timeline.sort((a, b) => {
+    return new Date(a).getTime() - new Date(b).getTime();
+  });
+  for (const siteIdentifier of siteIdentifiers) {
+    const siteConfig = sitesMap[siteIdentifier];
+    const siteStat: SiteStatInfo = {
+      site_identifier: siteIdentifier,
+      site_title: siteConfig.translations!["zh-Hans"].title,
+      daily_count: 0,
+      data: "[]",
+    };
+    const statData: (string | number)[][] = [[
+      "x",
+      ...timeline,
+    ]];
+    const siteApis = siteApiMap.get(siteIdentifier) || [];
+    let index = 1;
+    for (const apiName of siteApis) {
+      statData[index] = [apiName];
+      for (const point of timeline) {
+        if (!allSiteStats[siteIdentifier]) {
+          allSiteStats[siteIdentifier] = {};
+        }
+        if (!allSiteStats[siteIdentifier][apiName]) {
+          allSiteStats[siteIdentifier][apiName] = {};
+        }
+        const count = allSiteStats[siteIdentifier][apiName][point] || 0;
+        const time = new Date(point).getTime();
+        // if in 24hours
+        if (now.getTime() - time < 24 * 60 * 60 * 1000) {
+          siteStat.daily_count += count;
+        }
+        statData[index].push(count);
+      }
+      index++;
+    }
+    siteStat.data = JSON.stringify(statData, null, 2);
+    recentlyStats.push(siteStat);
+  }
+
+  // @ts-ignore: add meta
+  // buils stats
+  const statsData = {
+    sites: recentlyStats,
+    build_time: now.toISOString(),
+  };
+  // @ts-ignore: add meta
+  const statsHtml = mustache.render(statsTemplateString, statsData);
+  const indexPath = getDistFilePath(
+    indexSubDomain,
+    `stats/index.html`,
+  );
+  await writeTextFile(indexPath, statsHtml);
 }

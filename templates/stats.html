@@ -1,0 +1,91 @@
+<html lang="zh-Hans">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Buzzing Stats</title>
+    <meta name="description" content="Buzzing.cc Stats." />
+    <link rel="stylesheet" href="/assets/billboard-insight-3.6.2.css" />
+    <style>
+      body {
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-size: 14px;
+        line-height: 1.42857143;
+        color: #333;
+        background-color: #fff;
+        max-width: 1024px;
+        margin: 0 auto;
+      }
+      .contrast a:link,
+      .contrast a:visited {
+        color: initial;
+      }
+      .contrast a:hover {
+        color: rgb(0, 102, 204);
+      }
+      a.contrast:link,
+      a.contrast:visited {
+        color: initial;
+      }
+      a.contrast:hover {
+        color: rgb(0, 102, 204);
+      }
+      .stat {
+      }
+    </style>
+  </head>
+  <body>
+    <h1><a class="contrast" href="/">Buzzing</a> Stats</h1>
+    <div>
+      <p>Latest Build At: <span id="build-time">{{{build_time}}}</span></p>
+      <h2>近7日数据</h2>
+
+      {{#sites}}
+      <h3>
+        {{{site_title}}} &nbsp;(<a
+          class="contrast"
+          href="https://{{{site_identifier}}}.buzzing.cc/"
+          >{{{site_identifier}}}.buzzing.cc</a
+        >)
+      </h3>
+      <ul>
+        <li>24小时内帖子数： {{daily_count}}</li>
+      </ul>
+      <div class="stat" id="{{{site_identifier}}}-stat"></div>
+      {{/sites}}
+    </div>
+    <script src="/assets/d3.v6.min.js"></script>
+    <script src="/assets/billboard-3.6.2.js"></script>
+    <script type="text/javascript">
+        {{#sites}}
+      var {{{site_identifier}}}Chart = bb.generate({
+      bindto: "#{{{site_identifier}}}-stat",
+          data: {
+            x: "x",
+            type: "line",
+            columns:{{{data}}},
+          },
+          axis: {
+            x: {
+              tick: {
+                fit: false,
+                count: 50,
+              },
+              type: "timeseries",
+            },
+          },
+          zoom: {
+            enabled: true,
+            type: "drag",
+          },
+          tooltip: {
+            format: {
+              title: function (x) {
+                return d3.timeFormat("%Y-%m-%d %H:%M")(x);
+              },
+            },
+          },
+        });
+      {{/sites}}
+    </script>
+  </body>
+</html>

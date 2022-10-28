@@ -189,6 +189,9 @@ loadcurrent:
 prod-loadcurrent:
 	aws s3 cp s3://feed/prod-cache.zip ./prod-cache.zip --endpoint-url $(AWS_ENDPOINT) && make prod-decompresscache 
 
+.Phony: prod-loadcache 
+prod-loadcache:
+	aws s3 cp s3://feed/prod-cache.zip ./prod-cache.zip --endpoint-url $(AWS_ENDPOINT)
 .Phony: loadarchivehttp
 loadarchivehttp:
 	deno run -A scripts/load-archive.ts

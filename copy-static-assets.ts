@@ -24,6 +24,8 @@ export default async function copyStaticAssets(siteIdentifier: string) {
         ),
       );
       index++;
+      const parentPath = path.dirname(distPath);
+      await fs.ensureDir(parentPath);
       await fs.copy(entry.path, distPath, { overwrite: true });
     }
   }

@@ -1,2 +1,3 @@
 _redirects
 templates/index.html
+index-static/chartist-1.2.1.min.js
