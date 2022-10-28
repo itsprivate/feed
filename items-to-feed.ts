@@ -12,6 +12,7 @@ import {
 import {
   archiveToTitle,
   formatHumanTime,
+  formatIsoDate,
   getCurrentTranslations,
   getItemTranslations,
   getPageMeta,
@@ -186,7 +187,7 @@ export default function itemsToFeed(
     "title": siteTitle,
     "description": siteDescription,
     "icon": siteIdentifierToUrl(siteIdentifier, "/icon.png", config),
-    "_latest_build_time": new Date().toISOString(),
+    "_latest_build_time": formatIsoDate(new Date()),
     "favicon": siteIdentifierToUrl(siteIdentifier, "/favicon.ico", config),
     "language": language.code,
     "_site_version": version.code,

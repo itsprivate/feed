@@ -10,7 +10,9 @@ import {
   Stat,
 } from "../interface.ts";
 import {
+  formatBeijing,
   formatHumanTime,
+  formatIsoDate,
   getCurrentTranslations,
   getDataStatsDirPath,
   getDistFilePath,
@@ -97,7 +99,7 @@ export default async function buildSite(options: RunOptions) {
       "description": currentIndexTranslations.description,
       "icon": siteIdentifierToUrl(indexSubDomain, "/icon.png", config),
       "favicon": siteIdentifierToUrl(indexSubDomain, "/favicon.ico", config),
-      "_latest_build_time": now.toISOString(),
+      "_latest_build_time": formatIsoDate(now),
       "language": language.code,
       "_site_version": "default",
       "home_page_url": siteIdentifierToUrl(
@@ -371,7 +373,7 @@ export default async function buildSite(options: RunOptions) {
     };
     const statData: (string | number)[][] = [[
       "x",
-      ...timeline,
+      ...timeline.map((item) => new Date(item).getTime() + 8 * 60 * 60 * 1000),
     ]];
     const siteApis = siteApiMap.get(siteIdentifier) || [];
     let index = 1;
@@ -411,7 +413,7 @@ export default async function buildSite(options: RunOptions) {
   // buils stats
   const statsData = {
     sites: recentlyStats,
-    build_time: now.toISOString(),
+    build_time: formatIsoDate(now),
   };
   // @ts-ignore: add meta
   const statsHtml = mustache.render(statsTemplateString, statsData);

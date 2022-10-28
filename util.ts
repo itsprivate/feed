@@ -255,6 +255,11 @@ export const getGenConfig = async function (): Promise<Config> {
   const config = await readJSONFile("./config.gen.json") as Config;
   return config;
 };
+export const formatIsoDate = (date: Date): string => {
+  const beijingDate = new Date(date.getTime() + 8 * 60 * 60 * 1000);
+
+  return beijingDate.toISOString().replace("Z", "+08:00");
+};
 export const formatBeijing = (date: Date, formatString: string) => {
   date = new Date(date.getTime() + 8 * 60 * 60 * 1000);
   const formatter = new DateTimeFormatter(formatString);
