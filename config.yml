@@ -1120,7 +1120,7 @@ sources:
     rules:
       - type: greaterEqual
         key: getWeightedScore
-        value: "45000"
+        value: "4500"
     api:
       - url: https://www.reddit.com/r/TooAfraidToAsk/top/.json?raw_json=1
         name: Too Afraid To Ask Subreddit
@@ -1133,7 +1133,7 @@ sources:
     rules:
       - type: greaterEqual
         key: getWeightedScore
-        value: "300"
+        value: "100"
     api:
       - url: https://www.reddit.com/r/Ask_Politics/top/.json?raw_json=1
         name: Ask Politics Subreddit
@@ -1251,7 +1251,7 @@ sources:
     rules:
       - type: greaterEqual
         key: getWeightedScore
-        value: "400"
+        value: "100"
   - api:
       url: wsj
       name: Wall Street Journal Twitter
@@ -1263,7 +1263,7 @@ sources:
     rules:
       - type: greaterEqual
         key: getWeightedScore
-        value: "150"
+        value: "50"
       - type: notEqual
         key: getUrl
         value: "https://www.wsj.com/"
@@ -1427,7 +1427,7 @@ sources:
     rules:
       - type: greaterEqual
         key: getWeightedScore
-        value: "100"
+        value: "50"
   - id: source-reddit-technology
     type: reddit
     api:
@@ -1443,7 +1443,7 @@ sources:
     rules:
       - type: greaterEqual
         key: getWeightedScore
-        value: "500"
+        value: "300"
   - id: source-the-guardian
     type: rss
     api:

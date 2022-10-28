@@ -1559,7 +1559,7 @@
         {
           "type": "greaterEqual",
           "key": "getWeightedScore",
-          "value": "45000"
+          "value": "4500"
         }
       ],
       "api": [
@@ -1582,7 +1582,7 @@
         {
           "type": "greaterEqual",
           "key": "getWeightedScore",
-          "value": "300"
+          "value": "100"
         }
       ],
       "api": [
@@ -1777,7 +1777,7 @@
         {
           "type": "greaterEqual",
           "key": "getWeightedScore",
-          "value": "400"
+          "value": "100"
         }
       ]
     },
@@ -1796,7 +1796,7 @@
         {
           "type": "greaterEqual",
           "key": "getWeightedScore",
-          "value": "150"
+          "value": "50"
         },
         {
           "type": "notEqual",
@@ -2060,7 +2060,7 @@
         {
           "type": "greaterEqual",
           "key": "getWeightedScore",
-          "value": "100"
+          "value": "50"
         }
       ]
     },
@@ -2085,7 +2085,7 @@
         {
           "type": "greaterEqual",
           "key": "getWeightedScore",
-          "value": "500"
+          "value": "300"
         }
       ]
     },
