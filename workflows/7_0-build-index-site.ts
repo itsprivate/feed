@@ -2,13 +2,17 @@ import { groupBy, jsonfeedToAtom, mustache, path } from "../deps.ts";
 import {
   FeedItem,
   Feedjson,
+  Rule,
   RunOptions,
   Source,
+  SourceAPIConfig,
   SourceStatGroup,
+  Stat,
 } from "../interface.ts";
 import {
   formatHumanTime,
   getCurrentTranslations,
+  getDataStatsDirPath,
   getDistFilePath,
   getDistPath,
   getRecentlySourcesStatPath,
@@ -26,11 +30,20 @@ import feedToHTML from "../feed-to-html.ts";
 import { indexSubDomain } from "../constant.ts";
 import copyStaticAssets from "../copy-static-assets.ts";
 
+interface API extends SourceAPIConfig {
+  name: string;
+  rules: Rule[];
+}
+interface APIInfo extends API {
+  count: number;
+}
+
 interface SiteStatInfo {
   site_identifier: string;
   site_title: string;
   daily_count: number;
   data: string;
+  apis: APIInfo[];
 }
 export default async function buildSite(options: RunOptions) {
   const config = options.config;
@@ -259,8 +272,16 @@ export default async function buildSite(options: RunOptions) {
   // build stats
   const sitesMap = config.sites;
   const sourcesMap = new Map<string, Source>();
+  const apiMap = new Map<string, API>();
   for (const source of config.sources) {
     sourcesMap.set(source.id, source);
+    const api = Array.isArray(source.api) ? source.api : [source.api];
+    for (const apiItem of api) {
+      apiMap.set(apiItem.name, {
+        ...apiItem,
+        rules: source.rules || [],
+      });
+    }
   }
   const targetSiteIdentifiersMap = new Map<string, string[]>();
   const siteApiMap = new Map<string, string[]>();
@@ -346,6 +367,7 @@ export default async function buildSite(options: RunOptions) {
       site_title: siteConfig.translations!["zh-Hans"].title,
       daily_count: 0,
       data: "[]",
+      apis: [],
     };
     const statData: (string | number)[][] = [[
       "x",
@@ -355,6 +377,14 @@ export default async function buildSite(options: RunOptions) {
     let index = 1;
     for (const apiName of siteApis) {
       statData[index] = [apiName];
+
+      const api: API = apiMap.get(apiName)!;
+      const apiInfo: APIInfo = {
+        ...api,
+        count: 0,
+      };
+      siteStat.apis.push(apiInfo);
+
       for (const point of timeline) {
         if (!allSiteStats[siteIdentifier]) {
           allSiteStats[siteIdentifier] = {};
@@ -389,4 +419,18 @@ export default async function buildSite(options: RunOptions) {
     `stats/index.html`,
   );
   await writeTextFile(indexPath, statsHtml);
+
+  // build yearly stats
+  // read dir
+  const statsPath = getDataStatsDirPath();
+  const yearlyStats: string[] = [];
+  for await (const yearlyEntry of Deno.readDir(statsPath)) {
+    if (yearlyEntry.isFile && yearlyEntry.name.endsWith(".json")) {
+      const statYear = yearlyEntry.name.replace(".json", "");
+      if (/^\d{4}$/.test(statYear)) {
+        const statYearPath = path.join(statsPath, yearlyEntry.name);
+        const statYearContent = await readJSONFile(statYearPath) as Stat;
+      }
+    }
+  }
 }

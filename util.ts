@@ -179,8 +179,11 @@ export const getDataTranslatedPath = () => {
 export const getDataCurrentItemsPath = () => {
   return `${getDataPath()}/items`;
 };
+export const getDataStatsDirPath = () => {
+  return path.join(getDataPath(), "stats");
+};
 export const getDataStatsPath = (year: number) => {
-  return `${getDataPath()}/stats/${year}.json`;
+  return path.join(getDataStatsDirPath(), `${year}.json`);
 };
 export const getDevDataCurrentItemsPath = () => {
   return `current/items`;
