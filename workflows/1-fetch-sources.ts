@@ -396,12 +396,17 @@ export default async function fetchSources(
         try {
           originalJson = await fetchPHData();
         } catch (e) {
-          log.error(e);
+          log.error(`fetch ph failed`, e);
           continue;
         }
       } else {
-        const originItemResult = await request(sourceUrl);
-        originalJson = await originItemResult.json();
+        try {
+          const originItemResult = await request(sourceUrl);
+          originalJson = await originItemResult.json();
+        } catch (e) {
+          log.error(`fetch ${sourceUrl} error`, e);
+          continue;
+        }
       }
       // get items
       let originalItems = originalJson;
