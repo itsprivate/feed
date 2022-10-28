@@ -1490,4 +1490,4 @@ sources:
       name: Google News China
     rules:
       - type: limit
-        value: "30"
+        value: "50"

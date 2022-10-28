@@ -2160,7 +2160,7 @@
       "rules": [
         {
           "type": "limit",
-          "value": "30"
+          "value": "50"
         }
       ]
     }
