@@ -267,6 +267,13 @@ export const formatBeijing = (date: Date, formatString: string) => {
     timeZone: "UTC",
   });
 };
+export const getBeijingDay = (date: Date): string => {
+  date = new Date(date.getTime() + 8 * 60 * 60 * 1000);
+  const formatter = new DateTimeFormatter("MM-dd");
+  return formatter.format(date, {
+    timeZone: "UTC",
+  });
+};
 export const formatHumanTime = (date: Date) => {
   const now = new Date();
   const nowDate = formatBeijing(now, "yyyy-MM-dd");

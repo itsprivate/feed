@@ -13,6 +13,7 @@ import {
   formatBeijing,
   formatHumanTime,
   formatIsoDate,
+  getBeijingDay,
   getCurrentTranslations,
   getDataStatsDirPath,
   getDistFilePath,
@@ -37,6 +38,13 @@ interface API extends SourceAPIConfig {
   source_id: string;
   rules: Rule[];
 }
+interface FreshStat {
+  in_12: number;
+  in_24: number;
+  in_48: number;
+  in_72: number;
+  in_other: number;
+}
 interface APIInfo extends API {
   daily_count: number;
 }
@@ -47,6 +55,15 @@ interface SiteStatInfo {
   daily_count: number;
   data: string;
   apis: APIInfo[];
+}
+interface FreshGroup {
+  data: string;
+  title: string;
+}
+interface SiteFreshInfo {
+  site_identifier: string;
+  site_title: string;
+  groups: FreshGroup[];
 }
 export default async function buildSite(options: RunOptions) {
   const config = options.config;
@@ -59,6 +76,9 @@ export default async function buildSite(options: RunOptions) {
 
   const statsTemplateString = await Deno.readTextFile(
     "./templates/stats.html",
+  );
+  const freshStatsTemplateString = await Deno.readTextFile(
+    "./templates/fresh-stats.html",
   );
   const yearlyStatsTemplateString = await Deno.readTextFile(
     "./templates/yearly-stats.html",
@@ -335,10 +355,12 @@ export default async function buildSite(options: RunOptions) {
   const recentlyStats: SiteStatInfo[] = [];
   const allSiteStats: Record<string, Record<string, Record<string, number>>> =
     {};
+  const allSiteFreshStats: Record<string, Record<string, FreshStat>> = {};
 
   const timeline: string[] = [];
   for (const group of recentlyGroups) {
     const time = group.t;
+    const beijingDay = getBeijingDay(new Date(time));
     timeline.push(time);
     const sources = group.s;
 
@@ -350,12 +372,34 @@ export default async function buildSite(options: RunOptions) {
           if (!allSiteStats[siteIdentifier]) {
             allSiteStats[siteIdentifier] = {};
           }
+          if (!allSiteFreshStats[siteIdentifier]) {
+            allSiteFreshStats[siteIdentifier] = {};
+          }
           const apiKeys = Object.keys(sources[sourceKey]);
           for (const apiKey of apiKeys) {
             const statItem = sources[sourceKey][apiKey];
             if (!allSiteStats[siteIdentifier][apiKey]) {
               allSiteStats[siteIdentifier][apiKey] = {};
             }
+            if (!allSiteFreshStats[siteIdentifier][beijingDay]) {
+              allSiteFreshStats[siteIdentifier][beijingDay] = {
+                in_12: 0,
+                in_24: 0,
+                in_48: 0,
+                in_72: 0,
+                in_other: 0,
+              };
+            }
+            allSiteFreshStats[siteIdentifier][beijingDay].in_12 +=
+              statItem.in_12 || 0;
+            allSiteFreshStats[siteIdentifier][beijingDay].in_24 +=
+              statItem.in_24 || 0;
+            allSiteFreshStats[siteIdentifier][beijingDay].in_48 +=
+              statItem.in_48 || 0;
+            allSiteFreshStats[siteIdentifier][beijingDay].in_72 +=
+              statItem.in_72 || 0;
+            allSiteFreshStats[siteIdentifier][beijingDay].in_other +=
+              statItem.in_other || 0;
             allSiteStats[siteIdentifier][apiKey][time] = statItem.count;
           }
         }
@@ -502,6 +546,7 @@ export default async function buildSite(options: RunOptions) {
     await writeTextFile(indexPath, statsHtml);
   }
   yearDirs.sort((a, b) => Number(b) - Number(a));
+
   // buils stats
   // console.log("recentlyGroups", recentlyGroups);
   const statsData = {
@@ -516,4 +561,49 @@ export default async function buildSite(options: RunOptions) {
     `stats/index.html`,
   );
   await writeTextFile(indexPath, statsHtml);
+  // build fresh stats
+  const freshStats: SiteFreshInfo[] = [];
+  for (const siteIdentifier of siteIdentifiers) {
+    const siteFreshInfo: SiteFreshInfo = {
+      site_identifier: siteIdentifier,
+      site_title: sitesMap[siteIdentifier].translations!["zh-Hans"].title,
+      groups: [],
+    };
+    const siteFreshData = allSiteFreshStats[siteIdentifier];
+    const keys = Object.keys(siteFreshData);
+    // sort by MM-dd
+    keys.sort((a, b) =>
+      Number(b.slice(0, 2) + b.slice(3)) - Number(a.slice(0, 2) + a.slice(3))
+    );
+    for (const key of keys) {
+      const data = siteFreshData[key];
+      const formatedData = [
+        ["12小时内", data.in_12],
+        ["24小时内", data.in_24],
+        ["48小时内", data.in_48],
+        ["72小时内", data.in_72],
+        ["其他", data.in_other],
+      ];
+      const group: FreshGroup = {
+        title: key,
+        data: JSON.stringify(formatedData, null, 2),
+      };
+      siteFreshInfo.groups.push(group);
+    }
+    freshStats.push(siteFreshInfo);
+  }
+  const freshStatsData = {
+    sites: freshStats,
+    build_time: formatIsoDate(now),
+  };
+  // @ts-ignore: add meta
+  const freshStatsHtml = mustache.render(
+    freshStatsTemplateString,
+    freshStatsData,
+  );
+  const freshIndexPath = getDistFilePath(
+    indexSubDomain,
+    `stats/fresh/index.html`,
+  );
+  await writeTextFile(freshIndexPath, freshStatsHtml);
 }
