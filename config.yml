@@ -1457,6 +1457,9 @@ sources:
       - type: notInclude
         key: getUrl
         value: "https://www.theguardian.com/news/audio"
+      - type: notInclude
+        key: getUrl
+        value: "https://www.theguardian.com/sport/"
   - id: source-skynews
     type: rss
     api:
