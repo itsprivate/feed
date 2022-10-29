@@ -211,7 +211,7 @@ export default class source extends Item<FormatedItem> {
     } else if (
       type === "twitter" || type === "twitterlink" ||
       type === "twittercbarraud" ||
-      type === "thechinaproject"
+      type === "thechinaproject" || type === "spectator"
     ) {
       if (
         this.getScore() && this.getExternalUrl()
