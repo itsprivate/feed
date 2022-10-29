@@ -991,7 +991,7 @@ sites:
         keywords: "ブルームバーグ"
   breaking:
     port: 8032
-    priority: 30
+    priority: 19
     archive: true
     tags:
       - news

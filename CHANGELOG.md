@@ -1,5 +1,9 @@
 # Change Log
 
+## 2022.10.30
+
+Add breaking.buzzing.cc
+
 ## 2022.10.24
 
 Index can remember details open or close.
