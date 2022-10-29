@@ -989,6 +989,30 @@ sites:
         short_title: "ブルームバーグ"
         description: '人気のブルームバーグの最新 の投稿'
         keywords: "ブルームバーグ"
+  breaking:
+    port: 8032
+    priority: 30
+    archive: true
+    tags:
+      - news
+      - source-specindex
+    translations:
+      'zh-Hans':
+        title: "全球突发新闻"
+        short_title: "突发新闻"
+        description: "用中文浏览全球突发新闻"
+        keywords: "突发新闻"
+      'en':
+        title: "Breaking News"
+        short_title: "Breaking News"
+        description: "See what''s buzzing on Breaking News in your native language"
+        keywords: "Breaking News"
+      'ja':
+        title: "ブレイキングニュース"
+        short_title: "ブレイキングニュース"
+        description: "人気のブレイキングニュースの最新 の投稿"
+        keywords: "ブレイキングニュース"
+
 versions:
   - prefix: ""
     code: "default"
@@ -1500,3 +1524,15 @@ sources:
     rules:
       - type: limit
         value: "50"
+  - api:
+      url: spectatorindex
+      name: The Spectator Index Twitter
+      home_page_url: https://twitter.com/spectatorindex
+    params:
+      include_rts: false
+    id: source-specindex
+    type: spectator
+    rules:
+      - type: include
+        key: getFallbackTitle
+        value: "BREAKING:"

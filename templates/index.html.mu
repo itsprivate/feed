@@ -299,6 +299,12 @@
       <div class="about-content contrast small">
         <p class="p-summary site-description">{{ description }}</p>
         <div>
+          {{#_sources.0}}
+          {{ sources_label }}: 
+           <ul>
+          {{#_sources}}<li><a href="{{url}}">{{name}}</a></li>{{/_sources}}
+          </ul>          
+          {{/_sources.0}}
         {{ version_label }}: 
           <ul>
           {{#_versions}}
@@ -338,13 +344,7 @@
           <ul>
           {{#_social_links}}<li><a href="{{url}}">{{name}}</a></li>{{/_social_links}}
           </ul>
-          {{#_sources.0}}
-          {{ sources_label }}: 
-           <ul>
-          {{#_sources}}<li><a href="{{url}}">{{name}}</a></li>{{/_sources}}
-          </ul>          
-          {{/_sources.0}}
-          {{latest_build_at_lable}}: {{_latest_build_time}}
+          {{latest_build_at_lable}}: {{_latest_build_time}} &nbsp; <a href="https://www.buzzing.cc/stats/#{{{_site_identifier}}}">{{stat_label}}</a>
           <br />
           {{ powered_by_label }}:
           <a href="https://www.owenyoung.com">Owen</a> (<a href="https://twitter.com/OwenYoungZh">Twitter</a>)

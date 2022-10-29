@@ -325,7 +325,8 @@ export default async function fetchSources(
       } else if (
         sourceType === "twittercbarraud" || sourceType === "twitterlink" ||
         sourceType === "twitter" ||
-        sourceType === "thechinaproject"
+        sourceType === "thechinaproject" ||
+        sourceType === "spectator"
       ) {
         const bearerToken = Deno.env.get("TWITTER_BEARER_TOKEN");
         if (!bearerToken) {

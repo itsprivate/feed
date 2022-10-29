@@ -312,6 +312,8 @@ export default function feedToHTML(
   // @ts-ignore: add meta data
   feedJson._social_links = config.social_links;
 
+  // @ts-ignore: new meta
+  feedJson._site_identifier = siteIdentifier;
   // build index.html
   // @ts-ignore: js package does not have type for mustache
   const output = mustache.render(indexTemplateString, feedJson);

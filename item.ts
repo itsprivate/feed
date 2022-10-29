@@ -472,6 +472,9 @@ export default class Item<T> {
   getTitleTrimedSuffix(): string {
     return "";
   }
+  getTitleTrimedPrefix(): string {
+    return "";
+  }
   async getFormatedItem(
     options?: GetFormatedItemOptions,
   ): Promise<FormatedItem> {
@@ -525,6 +528,20 @@ export default class Item<T> {
         if (currentTitle.endsWith(this.getTitleTrimedSuffix())) {
           formatedItem._translations[this.getOriginalLanguage()].title =
             currentTitle.slice(0, -this.getTitleTrimedSuffix().length);
+        }
+      }
+    }
+    // prefix also
+    if (this.getTitleTrimedPrefix()) {
+      if (
+        formatedItem._translations &&
+        formatedItem._translations[this.getOriginalLanguage()]
+      ) {
+        let currentTitle =
+          formatedItem._translations[this.getOriginalLanguage()].title;
+        if (currentTitle.startsWith(this.getTitleTrimedPrefix())) {
+          formatedItem._translations[this.getOriginalLanguage()].title =
+            currentTitle.slice(this.getTitleTrimedPrefix().length);
         }
       }
     }
