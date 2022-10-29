@@ -2,7 +2,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Buzzing Stats</title>
+    <title>Buzzing {{year}} Stats</title>
     <meta name="description" content="Buzzing.cc Stats." />
     <link rel="stylesheet" href="/assets/billboard-insight-3.6.2.css" />
     <style>
@@ -54,16 +54,17 @@
     </style>
   </head>
   <body>
-    <h1><a class="contrast" href="/">Buzzing</a> Stats</h1>
+    <h1>
+      <a class="contrast" href="/">Buzzing</a>&nbsp;{{year}}
+      <a class="contrast" href="/stats">Stats</a>
+    </h1>
     <div>
-      <p>
-        Latest Build At: <span id="build-time">{{{build_time}}}</span>
+      <p>Latest Build At: <span id="build-time">{{{build_time}}}</span></p>
 
-        <br />
-        {{#years}} Also see stats in
-        <a class="contrast" href="/stats/{{.}}/">{{.}}</a>&nbsp; {{/years}}
-      </p>
-      <h2>近7日数据</h2>
+      {{#is2022}}
+      <p><strong>Notes</strong>: 2022年数据从10月28日开始统计。</p>
+      {{/is2022}}
+      <h2>各站点自然月数据统计</h2>
 
       {{#sites}}
       <h3>
@@ -73,7 +74,7 @@
           >{{{site_identifier}}}.buzzing.cc</a
         >)
       </h3>
-      <p>24小时内帖子数： {{daily_count}}</p>
+      <p>{{year}}年帖子数： {{daily_count}}</p>
       <details>
         <summary>源配置</summary>
         <ul>
@@ -84,7 +85,7 @@
           </li>
           <br /><br />
           <ul>
-            <li>24小时内帖子数： {{daily_count}}</li>
+            <li>{{year}}年帖子数： {{daily_count}}</li>
             {{#rules.0}}
             <li>
               <span>Rules:</span><br />
@@ -125,18 +126,7 @@
           },
           axis: {
             x: {
-              type: "timeseries",
-            },
-          },
-          zoom: {
-            enabled: true,
-            type: "drag",
-          },
-          tooltip: {
-            format: {
-              title: function (x) {
-                return d3.timeFormat("%Y-%m-%d %H:%M")(x);
-              },
+              type: "category",
             },
           },
         });

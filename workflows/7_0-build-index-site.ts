@@ -34,6 +34,7 @@ import copyStaticAssets from "../copy-static-assets.ts";
 
 interface API extends SourceAPIConfig {
   name: string;
+  source_id: string;
   rules: Rule[];
 }
 interface APIInfo extends API {
@@ -58,6 +59,9 @@ export default async function buildSite(options: RunOptions) {
 
   const statsTemplateString = await Deno.readTextFile(
     "./templates/stats.html",
+  );
+  const yearlyStatsTemplateString = await Deno.readTextFile(
+    "./templates/yearly-stats.html",
   );
   for await (const dirEntry of Deno.readDir(getDistPath())) {
     if (dirEntry.isDirectory && !dirEntry.name.startsWith(".")) {
@@ -281,6 +285,7 @@ export default async function buildSite(options: RunOptions) {
     for (const apiItem of api) {
       apiMap.set(apiItem.name, {
         ...apiItem,
+        source_id: source.id,
         rules: source.rules || [],
       });
     }
@@ -339,13 +344,12 @@ export default async function buildSite(options: RunOptions) {
 
     const sourceKeys = Object.keys(sources);
     for (const sourceKey of sourceKeys) {
-      const siteIdentifiers = targetSiteIdentifiersMap.get(sourceKey);
-      if (siteIdentifiers) {
-        for (const siteIdentifier of siteIdentifiers) {
+      const targetSiteIdentifiers = targetSiteIdentifiersMap.get(sourceKey);
+      if (targetSiteIdentifiers) {
+        for (const siteIdentifier of targetSiteIdentifiers) {
           if (!allSiteStats[siteIdentifier]) {
             allSiteStats[siteIdentifier] = {};
           }
-
           const apiKeys = Object.keys(sources[sourceKey]);
           for (const apiKey of apiKeys) {
             const statItem = sources[sourceKey][apiKey];
@@ -362,6 +366,8 @@ export default async function buildSite(options: RunOptions) {
   timeline.sort((a, b) => {
     return new Date(a).getTime() - new Date(b).getTime();
   });
+  console.log("siteIdentifiers", siteIdentifiers);
+
   for (const siteIdentifier of siteIdentifiers) {
     const siteConfig = sitesMap[siteIdentifier];
     const siteStat: SiteStatInfo = {
@@ -373,7 +379,9 @@ export default async function buildSite(options: RunOptions) {
     };
     const statData: (string | number)[][] = [[
       "x",
-      ...timeline.map((item) => new Date(item).getTime() + 8 * 60 * 60 * 1000),
+      ...timeline.map((item) =>
+        new Date(new Date(item).getTime() + 8 * 60 * 60 * 1000).toISOString()
+      ),
     ]];
     const siteApis = siteApiMap.get(siteIdentifier) || [];
     let index = 1;
@@ -409,11 +417,99 @@ export default async function buildSite(options: RunOptions) {
     recentlyStats.push(siteStat);
   }
 
-  // @ts-ignore: add meta
+  // build yearly stats
+  // read dir
+  const statsPath = getDataStatsDirPath();
+  const years: string[][] = [];
+  const yearDirs: string[] = [];
+  // sort
+  for await (const yearlyEntry of Deno.readDir(statsPath)) {
+    if (yearlyEntry.isFile && yearlyEntry.name.endsWith(".json")) {
+      const statYear = yearlyEntry.name.replace(".json", "");
+      if (/^\d{4}$/.test(statYear)) {
+        yearDirs.push(statYear);
+      }
+    }
+  }
+  for await (const statYear of yearDirs) {
+    const yearlyStats: SiteStatInfo[] = [];
+    const statYearPath = path.join(statsPath, statYear + ".json");
+
+    const statYearContent = await readJSONFile(statYearPath) as Stat;
+    // console.log("statYearContent", statYearContent);
+    const months = Object.keys(statYearContent);
+    // sort months
+    months.sort((a, b) => Number(a) - Number(b));
+    for (const siteIdentifier of siteIdentifiers) {
+      const siteConfig = sitesMap[siteIdentifier];
+      const siteStat: SiteStatInfo = {
+        site_identifier: siteIdentifier,
+        site_title: siteConfig.translations!["zh-Hans"].title,
+        daily_count: 0,
+        data: "[]",
+        apis: [],
+      };
+      const statData: (string | number)[][] = [[
+        "x",
+        ...months,
+      ]];
+      const siteApis = siteApiMap.get(siteIdentifier) || [];
+      let index = 1;
+      for (const apiName of siteApis) {
+        statData[index] = [apiName];
+        const api: API = apiMap.get(apiName)!;
+        const apiInfo: APIInfo = {
+          ...api,
+          daily_count: 0,
+        };
+        siteStat.apis.push(apiInfo);
+        for (const point of months) {
+          if (!statYearContent[point]) {
+            statYearContent[point] = {};
+          }
+          if (!statYearContent[point][apiInfo.source_id]) {
+            statYearContent[point][apiInfo.source_id] = {};
+          }
+          const item = statYearContent[point][apiInfo.source_id][apiName] ||
+            {
+              count: 0,
+              checked_at: new Date(0).toISOString(),
+            };
+          // console.log("item", item);
+          siteStat.daily_count += item.count;
+          apiInfo.daily_count += item.count;
+          statData[index].push(item.count);
+        }
+        index++;
+      }
+      siteStat.data = JSON.stringify(statData, null, 2);
+      yearlyStats.push(siteStat);
+    }
+    const statsData = {
+      sites: yearlyStats,
+      year: statYear,
+      build_time: formatIsoDate(now),
+      is2022: statYear === "2022",
+    };
+    // @ts-ignore: add meta
+    const statsHtml = mustache.render(
+      yearlyStatsTemplateString,
+      statsData,
+    );
+    const indexPath = getDistFilePath(
+      indexSubDomain,
+      `stats/${statYear}/index.html`,
+    );
+    await writeTextFile(indexPath, statsHtml);
+  }
+  yearDirs.sort((a, b) => Number(b) - Number(a));
   // buils stats
+  // console.log("recentlyGroups", recentlyGroups);
+  console.log("recentlyStats", recentlyStats.length);
   const statsData = {
     sites: recentlyStats,
     build_time: formatIsoDate(now),
+    years: yearDirs,
   };
   // @ts-ignore: add meta
   const statsHtml = mustache.render(statsTemplateString, statsData);
@@ -422,18 +518,4 @@ export default async function buildSite(options: RunOptions) {
     `stats/index.html`,
   );
   await writeTextFile(indexPath, statsHtml);
-
-  // build yearly stats
-  // read dir
-  const statsPath = getDataStatsDirPath();
-  const yearlyStats: string[] = [];
-  for await (const yearlyEntry of Deno.readDir(statsPath)) {
-    if (yearlyEntry.isFile && yearlyEntry.name.endsWith(".json")) {
-      const statYear = yearlyEntry.name.replace(".json", "");
-      if (/^\d{4}$/.test(statYear)) {
-        const statYearPath = path.join(statsPath, yearlyEntry.name);
-        const statYearContent = await readJSONFile(statYearPath) as Stat;
-      }
-    }
-  }
 }
