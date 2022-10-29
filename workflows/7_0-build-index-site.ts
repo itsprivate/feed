@@ -366,7 +366,6 @@ export default async function buildSite(options: RunOptions) {
   timeline.sort((a, b) => {
     return new Date(a).getTime() - new Date(b).getTime();
   });
-  console.log("siteIdentifiers", siteIdentifiers);
 
   for (const siteIdentifier of siteIdentifiers) {
     const siteConfig = sitesMap[siteIdentifier];
@@ -505,7 +504,6 @@ export default async function buildSite(options: RunOptions) {
   yearDirs.sort((a, b) => Number(b) - Number(a));
   // buils stats
   // console.log("recentlyGroups", recentlyGroups);
-  console.log("recentlyStats", recentlyStats.length);
   const statsData = {
     sites: recentlyStats,
     build_time: formatIsoDate(now),

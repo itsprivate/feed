@@ -27,6 +27,11 @@ export interface SourceStat {
   filtered_count: number;
   unique_count: number;
   count: number;
+  in_12: number;
+  in_24: number;
+  in_48: number;
+  in_72: number;
+  in_other: number;
 }
 
 export interface BaseSourceStat {

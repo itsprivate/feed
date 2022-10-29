@@ -303,6 +303,11 @@ export default async function fetchSources(
         filtered_count: 0,
         unique_count: 0,
         count: 0,
+        in_12: 0,
+        in_24: 0,
+        in_48: 0,
+        in_72: 0,
+        in_other: 0,
       };
 
       let total = 0;
@@ -561,6 +566,21 @@ export default async function fetchSources(
             );
             itemOrder++;
             total++;
+            // add stat
+            const originalPublished = item.getOriginalPublishedDate();
+            const diff = now.getTime() - originalPublished.getTime();
+            if (diff < 12 * 60 * 60 * 1000) {
+              sourceStat.in_12++;
+            } else if (diff < 24 * 60 * 60 * 1000) {
+              sourceStat.in_24++;
+            } else if (diff < 48 * 60 * 60 * 1000) {
+              sourceStat.in_48++;
+            } else if (diff < 72 * 60 * 60 * 1000) {
+              sourceStat.in_72++;
+            } else {
+              sourceStat.in_other++;
+            }
+
             // add keys to currentKeysMap, so we can check if current item is duplicated
             for (const targetSiteIdentifier of targetSiteIdentifiers) {
               const currentKeys = currentKeysMap.get(targetSiteIdentifier);
