@@ -585,8 +585,8 @@ export default async function buildSite(options: RunOptions) {
       const formatedData = [
         ["12H", data.in_12],
         ["24H", data.in_24],
-        ["1天前", data.in_48],
-        ["2天前", data.in_72],
+        ["2日内", data.in_48],
+        ["3日内", data.in_72],
         ["其他", data.in_other],
       ];
       const group: FreshGroup = {
