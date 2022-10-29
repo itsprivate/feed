@@ -44,6 +44,7 @@ interface FreshStat {
   in_48: number;
   in_72: number;
   in_other: number;
+  count: number;
 }
 interface APIInfo extends API {
   daily_count: number;
@@ -59,6 +60,7 @@ interface SiteStatInfo {
 interface FreshGroup {
   data: string;
   title: string;
+  count: number;
 }
 interface SiteFreshInfo {
   site_identifier: string;
@@ -388,6 +390,7 @@ export default async function buildSite(options: RunOptions) {
                 in_48: 0,
                 in_72: 0,
                 in_other: 0,
+                count: 0,
               };
             }
             allSiteFreshStats[siteIdentifier][beijingDay].in_12 +=
@@ -400,6 +403,8 @@ export default async function buildSite(options: RunOptions) {
               statItem.in_72 || 0;
             allSiteFreshStats[siteIdentifier][beijingDay].in_other +=
               statItem.in_other || 0;
+            allSiteFreshStats[siteIdentifier][beijingDay].count +=
+              statItem.count || 0;
             allSiteStats[siteIdentifier][apiKey][time] = statItem.count;
           }
         }
@@ -586,6 +591,7 @@ export default async function buildSite(options: RunOptions) {
       ];
       const group: FreshGroup = {
         title: key,
+        count: data.count,
         data: JSON.stringify(formatedData, null, 2),
       };
       siteFreshInfo.groups.push(group);
