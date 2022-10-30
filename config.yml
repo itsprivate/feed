@@ -122,6 +122,7 @@ sites:
     redirect: true
     port: 8000
     dev: true
+    category: Dev
     tags:
       - source-thechinaproj
     archive: false
@@ -133,6 +134,7 @@ sites:
 
   hnfront:
     port: 8001
+    category: Tech
     priority: 29
     tags:
       - hn
@@ -160,6 +162,7 @@ sites:
         keywords: "HackerNews 头条, Hacker News 中文, Hacker News Story"
   hn:
     priority: 10
+    category: Featured
     port: 8002
     redirect: true
     tags:
@@ -193,6 +196,7 @@ sites:
     tags:
       - hn
       - source-hackernews-ask
+    category: Ask
     translations:
       "zh-Hans":
         title: "Hacker News 问答"
@@ -218,6 +222,7 @@ sites:
   showhn:
     port: 8004
     priority: 29
+    category: Product
     tags:
       - hn
       - source-hackernews-show
@@ -247,6 +252,7 @@ sites:
     port: 8005
     priority: 19
     redirect: true
+    category: Entertainment
     max_image_height: 520
     tags:
       - reddit
@@ -278,10 +284,12 @@ sites:
     port: 8007
     priority: 26
     redirect: true
+    category: Ask
     max_image_height: 520
     tags:
       - reddit
       - source-reddit-ask
+      - www
       - source-reddit-askstupid
     translations:
       zh-Hans:
@@ -308,12 +316,12 @@ sites:
   stocks:
     port: 8008
     redirect: true
+    category: Finance
     priority: 28
     max_image_height: 520
     tags:
       - reddit
       - finance
-      - www
       - source-reddit-stocks
       - source-twitter-stocks
       - source-reddit-wallstreetbets
@@ -345,6 +353,7 @@ sites:
     port: 8006
     priority: 11
     archive: true
+    category: Featured
     redirect: true
     tags:
       - news
@@ -376,6 +385,7 @@ sites:
   ph:
     max_image_height: 360
     port: 8009
+    category: Product
     archive: true
     priority: 25
     redirect: true
@@ -407,6 +417,7 @@ sites:
     port: 8010
     archive: true
     redirect: true
+    category: Finance
     priority: 100
     tags:
       - tech
@@ -437,6 +448,7 @@ sites:
     port: 8011
     archive: true
     redirect: true
+    category: Dev
     tags:
       - tech
       - source-devto
@@ -466,6 +478,7 @@ sites:
     archive: true
     priority: 102
     redirect: true
+    category: Ask
     tags:
       - ask
       - source-quora
@@ -493,11 +506,13 @@ sites:
   depth:
     port: 8013
     archive: true
+    category: Featured
     redirect: true
     priority: 17
     tags:
       - depth
       - source-reddit-depth
+      - www
     translations:
       zh-Hans:
         title: 精神食粮
@@ -522,6 +537,7 @@ sites:
   nytimes:
     port: 8014
     archive: true
+    category: News
     redirect: true
     priority: 28
     tags:
@@ -552,6 +568,7 @@ sites:
   wsj:
     port: 8015
     archive: true
+    category: News
     redirect: true
     priority: 31
     tags:
@@ -582,11 +599,13 @@ sites:
   economist:
     port: 8016
     archive: true
+    category: News
     redirect: true
     priority: 28
     tags:
       - depth
       - news
+      - www
       - source-twitter-economist
     translations:
       zh-Hans:
@@ -613,6 +632,7 @@ sites:
     port: 8017
     archive: true
     redirect: true
+    category: Product
     priority: 40
     max_image_height: 360
     tags:
@@ -644,6 +664,7 @@ sites:
     redirect: true
     priority: 16
     archive: true
+    category: Tech
     tags:
       - hn
       - source-hackernews-new
@@ -671,6 +692,7 @@ sites:
   newyorker:
     port: 8019
     archive: true
+    category: News
     redirect: false
     tags:
       - depth
@@ -698,6 +720,7 @@ sites:
     archive: true
     redirect: false
     priority: 23
+    category: Entertainment
     tags:
       - videos
       - www
@@ -723,6 +746,7 @@ sites:
   lobste:
     port: 8021
     priority: 30 
+    category: Tech
     archive: true
     tags:
       - hn
@@ -747,6 +771,7 @@ sites:
     port: 8022
     priority: 41
     archive: true
+    category: Dev
     tags:
       - linux
       - source-reddit-linux
@@ -769,6 +794,7 @@ sites:
   china:
     port: 8023
     priority: 12
+    category: Featured
     archive: true
     # max_image_height: 520
     tags:
@@ -796,6 +822,7 @@ sites:
   feminism:
     port: 8024
     priority: 27
+    category: Ask
     archive: true
     max_image_height: 520
     tags:
@@ -824,6 +851,7 @@ sites:
     port: 8025
     priority: 15
     archive: true
+    category: Tech
     tags:
       - reddit
       - hn
@@ -848,6 +876,7 @@ sites:
     port: 8026
     priority: 18
     archive: true
+    category: News
     tags:
       - reddit
       - news
@@ -872,6 +901,7 @@ sites:
     port: 8027
     priority: 28
     archive: true
+    category: Finance
     tags:
       - news
       - finance
@@ -897,6 +927,7 @@ sites:
     port: 8028
     priority: 20
     archive: true
+    category: News
     tags:
       - news
       - finance
@@ -919,6 +950,7 @@ sites:
         keywords: "ガーディアン"
   sky:
     port: 8029
+    category: News
     priority: 35
     archive: true
     tags:
@@ -943,6 +975,7 @@ sites:
         keywords: "スカイニュース"
   ft:
     port: 8030
+    category: News
     priority: 22
     archive: true
     tags:
@@ -969,9 +1002,11 @@ sites:
     port: 8031
     priority: 18
     archive: true
+    category: Finance
     tags:
       - news
       - finance
+      - www
       - source-twitter-bloomberg
     translations:
       "zh-Hans":
@@ -993,8 +1028,10 @@ sites:
     port: 8032
     priority: 19
     archive: true
+    category: News
     tags:
       - news
+      - www
       - source-specindex
     translations:
       'zh-Hans':

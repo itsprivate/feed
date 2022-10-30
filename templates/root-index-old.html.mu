@@ -66,13 +66,13 @@
     <link rel="icon" href="{{{favicon}}}" />
     <style>
       body {
+        max-width: 52em;
         margin: 0 auto;
         padding: 0;
-        max-width: 100%;
-        line-height: 1.5em;
+        background-color: #fffff8;
+        line-height: 1.6em;
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
           Helvetica, sans-serif;
-        background-color:rgb(255, 252, 249);
       }
       img {
         max-width: 95%;
@@ -94,26 +94,6 @@
         aspect-ratio: 16 / 9;
         width: 85%;
       }
-      .container{
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(23em, max-content));
-        justify-items: center;
-        grid-gap: 1.5em;
-      }
-      .card{
-        height: 36em;
-        background-color: #fff;
-        box-shadow: 0 -0.5px 0.5px rgba(135, 116, 87,0.1),0 -0.5px 0.5px rgba(135, 116, 87,0.1),0 2px 1px rgba(135, 116, 87,0.1),0 10px 15px -5px rgba(135, 116, 87,0.1),0 2px 3px rgba(135, 116, 87,0.1);
-        border: 0;
-        overflow-y: scroll;
-        padding: 0em;
-        border-radius: 0.5em;
-        scrollbar-width: none; /* Firefox */
-        -ms-overflow-style: none;  /* Internet Explorer 10+ */
-      }
-      .card::-webkit-scrollbar { 
-        display: none;  /* Safari and Chrome */
-      }
       a:link {
         color: rgb(0, 102, 204);
       }
@@ -123,17 +103,14 @@
       }
       .header{
         padding-top: 0.5em;
-        text-align: center;
+        padding-left: 1em;
+        padding-right: 1em;
       }
-      .text-left{
-        text-align: left;
-        }
       .footer{
         margin-bottom: 2em;
         padding-left: 1em;
         padding-right: 1em;
         padding-top: 2em;
-        text-align: center;
       }
       .article {
         padding: 4px 1em;
@@ -243,37 +220,15 @@
         margin-bottom: 0.5em;
         {{/_is_lite}}
       }
-      .mb-sm {
-        {{#_is_lite}}
-        margin-bottom: 2px;
-        {{/_is_lite}}
-        {{^_is_lite}}
-        margin-bottom: 0.1em;
-        {{/_is_lite}}
-      }
       .px {
         padding-left: 1em;
         padding-right: 1em;
       }
-      .px-l{
-        padding-left: 1.5em;
-        padding-right: 1.5em;
-        }
-      .px-lg{
-        padding-left: 2em;
-        padding-right: 2em;
-        }
       .border-bottom {
         height: 1px;
         border-bottom: 1px dashed #d4d4d4;
 
       }
-      .flex{
-        display: flex;
-      }
-      .justify-between{
-        justify-content: space-between;
-        }
       .w-50 {
         width: 50%;
       }
@@ -290,9 +245,6 @@
         font-weight: bold;
         z-index:1;
       }
-      .text-center{
-        text-align: center;
-      }
       .inline-block{
         display: inline-block;
       }
@@ -302,14 +254,6 @@
       }
       .mt0{
         margin-top: 0;
-      }
-      @media (max-width: 480px) {
-        .container{
-          display: block;
-        }
-        .card {
-          margin-bottom: 1.5em;
-        }
       }
       @media print{
         .fixed{
@@ -326,8 +270,7 @@
   </head>
   <body>
     <div id="top"></div>
-    <header class="header px-l">
-    <div>
+    <header class="header">
       <a class="contrast no-underline small" href="{{{_site_url}}}">{{
         _site_title
       }}</a>
@@ -351,7 +294,7 @@
         {{#_other_sites.0}}
       </div>
       {{/_other_sites.0}}
-      <div class="text-left about-content contrast small">
+      <div class="about-content contrast small">
         <p class="p-summary site-description">{{ description }}</p>
         <div>
         {{#_versions.1}}
@@ -403,31 +346,37 @@
       {{#_page_title}}
       <h3>{{.}}</h3>
       {{/_page_title}}
-      </div>
     </header>
+    <details class="my">
+      <summary class="px bold text-lg contrast">{{table_of_contents_label}}</summary>
+      <div class="px">
+      <ul>
+        <li>
+          <a href="#about" class="contrast">{{about_label}}</a>
+        </li>
+        {{#_groups}}
+        <li>
+          <a href="#{{site_identifier}}" class="contrast">{{title}}</a>
+        </li>
+        {{/_groups}}
+       </ul>
+    </details>
     {{#_groups}}
-      <details open id="{{title}}" class="categories">
-      <summary class="px-lg my bold">{{title}}</summary>
-    <div class="container px-l">
-      {{#items}}
-      <div class="card w-card">
-      <p class="px my bold"><a class="contrast no-underline" href="{{{home_page_url}}}">{{{title}}}</a> <span class="muted">-</span> <a href="{{home_page_url}}" class="muted small">{{hostname}}</a> </p>
+      <details open id="{{site_identifier}}" class="subsites">
+      <summary class="px my bold text-lg">{{{title}}}&nbsp;(<a class="contrast" href="{{{home_page_url}}}">{{hostname}}</a>)</summary>
       {{#items}}
       <div class="article h-entry hentry">
-      <div class="mb-sm mt0">
-        <a class="p-name entry-title bold small no-underline u-url" href="{{{url}}}">{{#order}}<span>{{ . }}. </span>{{/order}}{{{title}}}</a>{{#_sensitive}}<span>&nbsp;(</span><span class="nsfw small">NSFW</span><span>)</span>{{/_sensitive}}{{#_links}}&nbsp;<a class="no-underline muted small" href="{{{url}}}">{{{name}}}</a>{{/_links}}</div>
+      <div class="mb mt0">
+        <a class="p-name entry-title bold no-underline u-url" href="{{{url}}}">{{#order}}<span>{{ . }}. </span>{{/order}}{{{title}}}</a>{{#_sensitive}}<span>&nbsp;(</span><span class="nsfw">NSFW</span><span>)</span>{{/_sensitive}}{{#_links}}&nbsp;<a class="no-underline muted small" href="{{{url}}}">{{{name}}}</a>{{/_links}}</div>
       <div class="no-underline p-summary entry-summary secondary pre-line small italic">{{{content_html}}}</div>
       </div>
       {{/items}}
       {{#remaining_count}}
-      <div class="mb article muted secondary small">
-        <a href="{{{home_page_next_url}}}">{{{remaining_label}}}</a>
-        <span>&nbsp;</span><a class="small" href="{{{home_page_next_lite_url}}}">{{{Lite}}}</a><span>&nbsp;·&nbsp;</span><a class="small" href="{{{atom_url}}}">{{{subscription_label}}}</a> <span></span>
+      <div class="article muted secondary small">
+        <a href="{{{home_page_url}}}#11">{{{remaining_label}}}</a>
+        <span>&nbsp;</span><a class="small" href="{{{home_page_lite_url}}}#11">{{{Lite}}}</a><span>&nbsp;·&nbsp;</span><a class="small" href="{{{atom_url}}}">{{{subscription_label}}}</a> <span></span>
       </div>
       {{/remaining_count}}
-    </div>
-    {{/items}}
-    </div>
     </details>
     {{/_groups}}
     <footer class="footer">
@@ -446,7 +395,7 @@
    </div>
    <script>
       // close details element
-      var elements = document.querySelectorAll(".categories")
+      var elements = document.querySelectorAll(".subsites")
       var localstorageKey = 'buzzing_closed_ids';
       var currentClosedIds = localStorage.getItem(localstorageKey) || "";
       var currentClosedIdsArray = currentClosedIds.split(",").filter(element => element);

@@ -179,59 +179,111 @@ export default async function buildSite(options: RunOptions) {
           item._human_time = formatHumanTime(
             new Date(item._original_published),
           );
+          // @ts-ignore: add meta
+          item._category = config.sites[siteIdentifier].category;
           return item;
         }),
       );
     }
     // format format _groups
     // @ts-ignore: add meta
-    const groups = groupBy(feedItems, "_site_identifier");
+    const groups = groupBy(feedItems, "_category");
+    const categoryGroupKeys = Object.keys(groups);
+    // category sort
+    const sortedCategory = [
+      "Featured",
+      "Tech",
+      "Finance",
+      "News",
+      "Product",
+      "Ask",
+      "Entertainment",
+      "Dev",
+    ];
+    // sort categoryGroupKeys
+    categoryGroupKeys.sort((a, b) => {
+      const aIndex = sortedCategory.indexOf(a);
+      const bIndex = sortedCategory.indexOf(b);
+      if (aIndex === -1 && bIndex === -1) {
+        return a.localeCompare(b);
+      }
+      if (aIndex === -1) {
+        return 1;
+      }
+      if (bIndex === -1) {
+        return -1;
+      }
+      return aIndex - bIndex;
+    });
 
     // @ts-ignore: add meta
-    feedJson._groups = Object.keys(groups).map((siteIdentifier) => {
-      const currentTranslations = getCurrentTranslations(
-        siteIdentifier,
-        language.code,
-        config,
-      );
-      const takedCount = 10;
-      const takedItems = groups[siteIdentifier].slice(0, takedCount).map(
-        (item: FeedItem, index: number) => {
+    feedJson._groups = categoryGroupKeys.map((category) => {
+      const categoryItems = groups[category];
+      // @ts-ignore: add meta
+      const siteItemsGroups = groupBy(categoryItems, "_site_identifier");
+      const siteKeys = Object.keys(siteItemsGroups);
+
+      const categories = siteKeys.map((siteIdentifier) => {
+        const currentTranslations = getCurrentTranslations(
+          siteIdentifier,
+          language.code,
+          config,
+        );
+        const takedCount = 50;
+        const takedItems = siteItemsGroups[siteIdentifier].slice(0, takedCount)
+          .map(
+            (item: FeedItem, index: number) => {
+              // @ts-ignore: add meta
+              item.order = index + 1;
+              return item;
+            },
+          );
+        const remainingCount = siteItemsGroups[siteIdentifier].length -
+          takedCount;
+        feedJson.items = feedJson.items.concat(takedItems);
+        return {
+          "title": currentTranslations.title,
+          "hostname": siteIdentifierToDomain(siteIdentifier),
+          "site_identifier": siteIdentifier,
+          "home_page_url": siteIdentifierToUrl(
+            siteIdentifier,
+            pathname,
+            config,
+          ),
+          "home_page_next_url": siteIdentifierToUrl(
+            siteIdentifier,
+            `${pathname}#${takedItems.length}`,
+            config,
+          ),
+          "atom_url": siteIdentifierToUrl(
+            siteIdentifier,
+            `${pathname}feed.xml`,
+            config,
+          ),
+          "home_page_lite_url": siteIdentifierToUrl(
+            siteIdentifier,
+            pathname + liteVersion.prefix,
+            config,
+          ),
+          "home_page_next_lite_url": siteIdentifierToUrl(
+            siteIdentifier,
+            `${pathname}${liteVersion.prefix}#${takedItems.length}`,
+            config,
+          ),
+          "remaining_count": remainingCount,
           // @ts-ignore: add meta
-          item.order = index + 1;
-          return item;
-        },
-      );
-      const remainingCount = groups[siteIdentifier].length - takedCount;
-      feedJson.items = feedJson.items.concat(takedItems);
+          "remaining_label": mustache.render(
+            currentTranslations.more_posts_label,
+            {
+              "count": remainingCount,
+            },
+          ),
+          items: takedItems,
+        };
+      });
       return {
-        "title": currentTranslations.title,
-        "hostname": siteIdentifierToDomain(siteIdentifier),
-        "site_identifier": siteIdentifier,
-        "home_page_url": siteIdentifierToUrl(
-          siteIdentifier,
-          pathname,
-          config,
-        ),
-        "atom_url": siteIdentifierToUrl(
-          siteIdentifier,
-          `${pathname}feed.xml`,
-          config,
-        ),
-        "home_page_lite_url": siteIdentifierToUrl(
-          siteIdentifier,
-          pathname + liteVersion.prefix,
-          config,
-        ),
-        "remaining_count": remainingCount,
-        // @ts-ignore: add meta
-        "remaining_label": mustache.render(
-          currentTranslations.more_posts_label,
-          {
-            "count": remainingCount,
-          },
-        ),
-        items: takedItems,
+        "title": category,
+        items: categories,
       };
     });
     // write to dist file
@@ -264,6 +316,8 @@ export default async function buildSite(options: RunOptions) {
       //= item.content_text.replace(/\n/g, "&lt;br&gt;");
       return item;
     });
+    // @ts-ignore: must
+    feedJson._categories = categoryGroupKeys;
 
     // build feed.xml
     // @ts-ignore: npm module

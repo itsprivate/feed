@@ -79,6 +79,7 @@ export interface SiteConfig extends GeneralSiteConfig {
   translations?: Record<string, Record<string, string>>;
   standalone?: boolean;
   priority?: number;
+  category?: string;
 }
 export interface WeekOfYear {
   year: number;
