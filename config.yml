@@ -1070,6 +1070,12 @@ sources:
       - type: notEqual
         key: getHostname
         value: www.bleachernation.com
+      - type: notEqual
+        key: getHostname
+        value: www.wgal.com
+      - type: notEqual
+        key: getHostname
+        value: www.allkpop.com
   - api:
       - url: https://news.google.com/rss/topics/CAAqIAgKIhpDQkFTRFFvSEwyMHZNR293YXhJQ1pXNG9BQVAB?hl=en-US&gl=US&ceid=US%3Aen
         name: Google Asia News
