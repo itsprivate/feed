@@ -1478,6 +1478,21 @@
           "type": "notEqual",
           "key": "getHostname",
           "value": "www.bleachernation.com"
+        },
+        {
+          "type": "notEqual",
+          "key": "getHostname",
+          "value": "www.wgal.com"
+        },
+        {
+          "type": "notEqual",
+          "key": "getHostname",
+          "value": "www.allkpop.com"
+        },
+        {
+          "type": "notEqual",
+          "key": "getHostname",
+          "value": "www.soompi.com"
         }
       ]
     },
