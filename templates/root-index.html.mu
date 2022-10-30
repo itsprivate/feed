@@ -96,7 +96,7 @@
       }
       .container{
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(23em, max-content));
+        grid-template-columns: repeat(auto-fill, minmax(22em, max-content));
         justify-items: center;
         grid-gap: 1.5em;
       }
