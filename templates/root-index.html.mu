@@ -102,6 +102,8 @@
       }
       .card{
         height: 36em;
+        min-width: 20em;
+        max-width: 28em;
         background-color: #fff;
         box-shadow: 0 -0.5px 0.5px rgba(135, 116, 87,0.1),0 -0.5px 0.5px rgba(135, 116, 87,0.1),0 2px 1px rgba(135, 116, 87,0.1),0 10px 15px -5px rgba(135, 116, 87,0.1),0 2px 3px rgba(135, 116, 87,0.1);
         border: 0;
