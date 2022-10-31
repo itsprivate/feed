@@ -1530,6 +1530,11 @@
           "type": "notEqual",
           "key": "getHostname",
           "value": "www.soompi.com"
+        },
+        {
+          "type": "notInclude",
+          "key": "getUrl",
+          "value": "www.indiatoday.in/horoscopes"
         }
       ]
     },
