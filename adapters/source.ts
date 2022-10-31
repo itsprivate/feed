@@ -57,7 +57,7 @@ export default class source extends Item<FormatedItem> {
       type === "lobste" || type === "hn" || type === "newyorker" ||
       type === "rss" || type === "thechinaproject"
     ) {
-      keys.push(`${this.getTitle()}`);
+      keys.push(`${this.getTitle().toLowerCase()}`);
     }
     return keys;
   }

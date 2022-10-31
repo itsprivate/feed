@@ -19,7 +19,7 @@ export default class hn extends Item<HnItem> {
     return [
       `${this.getOriginalLanguage()}_${this.getType()}__${this.getId()}`,
       `${this.getUrl()}`,
-      `${this.getTitle()}`,
+      `${this.getTitle().toLowerCase()}`,
     ];
   }
   getTitle(): string {

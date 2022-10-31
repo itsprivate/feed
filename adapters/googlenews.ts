@@ -52,7 +52,7 @@ export default class googlenews extends RSS {
     return [
       `${this.getOriginalLanguage()}_${this.getType()}__${this.getId()}`,
       `${this.getUrl()}`,
-      `${this.getTitle()}`,
+      `${this.getTitle().toLowerCase()}`,
     ];
   }
   getRawItem() {
