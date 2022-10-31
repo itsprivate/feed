@@ -805,20 +805,20 @@ sites:
       - source-google-china
     translations:
       "zh-Hans":
-        title: "外国人怎么看中国？"
+        title: "中国话题"
         short_title: "中国"
         description: "用中文浏览国外有关中国话题的热门讨论"
         keywords: "中国,关于中国"
       "en":
-        title: "What do foreigners think of China?"
+        title: "Buzzing on China"
         short_title: "China"
-        description: "See what's buzzing on China topic in your native language"
-        keywords: "China"
+        description: "See what's buzzing on China in your native language"
+        keywords: "buzzing,China"
       "ja":
-        title: "外国人は中国をどう見ているのか？"
+        title: "中国人気の記事"
         short_title: "中国"
-        description: "人気の中国の最新 の投稿"
-        keywords: "中国"
+        description: "人気の中国記事を日本語で閲覧"
+        keywords: "buzzing,中国"
   feminism:
     port: 8024
     priority: 27
