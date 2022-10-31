@@ -1392,6 +1392,10 @@ sources:
       url: https://news.google.com/rss/topics/CAAqJggKIiBDQkFTRWdvSUwyMHZNRGx6TVdZU0FtVnVHZ0pWVXlnQVAB?hl=en-US&gl=US&ceid=US%3Aen
       name: Google Business News
       home_page_url: https://news.google.com/topics/CAAqJggKIiBDQkFTRWdvSUwyMHZNRGx6TVdZU0FtVnVHZ0pWVXlnQVAB?hl=en-US&gl=US&ceid=US%3Aen
+    rules:
+      - type: notEqual
+        key: getHostname
+        value: www.youtube.com
   - api:
       url: s2fmultiple
       name: S2F Multiple Twitter
