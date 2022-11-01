@@ -800,8 +800,6 @@ sites:
     tags:
       - china
       - www
-      - source-thechinaproj
-      - source-reddit-china
       - source-google-china
     translations:
       "zh-Hans":
