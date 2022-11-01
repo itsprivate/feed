@@ -1407,6 +1407,44 @@
           "keywords": "突發新聞"
         }
       }
+    },
+    "yahoo": {
+      "port": 8033,
+      "priority": 28,
+      "archive": true,
+      "category": "Finance",
+      "tags": [
+        "news",
+        "finance",
+        "www",
+        "source-rss-yahoofinance"
+      ],
+      "translations": {
+        "zh-Hans": {
+          "title": "雅虎财经",
+          "short_title": "雅虎财经",
+          "description": "用中文浏览雅虎财经相关报道",
+          "keywords": "雅虎财经"
+        },
+        "en": {
+          "title": "Yahoo Finance",
+          "short_title": "Yahoo Finance",
+          "description": "See what''s buzzing on Yahoo Finance in your native language",
+          "keywords": "Yahoo Finance"
+        },
+        "ja": {
+          "title": "ヤフーファイナンス",
+          "short_title": "ヤフーファイナンス",
+          "description": "人気のヤフーファイナンスの最新 の投稿",
+          "keywords": "ヤフーファイナンス"
+        },
+        "zh-Hant": {
+          "title": "雅虎財經",
+          "short_title": "雅虎財經",
+          "description": "用中文瀏覽雅虎財經相關報道",
+          "keywords": "雅虎財經"
+        }
+      }
     }
   },
   "versions": [
@@ -2291,6 +2329,15 @@
           "value": "BREAKING:"
         }
       ]
+    },
+    {
+      "id": "source-rss-yahoofinance",
+      "api": {
+        "url": "https://finance.yahoo.com/rss/",
+        "name": "Yahoo Finance",
+        "home_page_url": "https://finance.yahoo.com/"
+      },
+      "type": "rss"
     }
   ]
 }
