@@ -196,7 +196,7 @@ sites:
     tags:
       - hn
       - source-hackernews-ask
-    category: Ask
+    category: Discuss
     translations:
       "zh-Hans":
         title: "Hacker News 问答"
@@ -284,7 +284,7 @@ sites:
     port: 8007
     priority: 26
     redirect: true
-    category: Ask
+    category: Discuss
     max_image_height: 520
     tags:
       - reddit
@@ -478,7 +478,7 @@ sites:
     archive: true
     priority: 102
     redirect: true
-    category: Ask
+    category: Discuss
     tags:
       - ask
       - source-quora
@@ -820,7 +820,7 @@ sites:
   feminism:
     port: 8024
     priority: 27
-    category: Ask
+    category: Discuss
     archive: true
     max_image_height: 520
     tags:
@@ -1074,6 +1074,33 @@ sites:
         short_title: "ヤフーファイナンス"
         description: "人気のヤフーファイナンスの最新 の投稿"
         keywords: "ヤフーファイナンス"
+  redditchina:
+    port: 8034
+    priority: 27 
+    category: Discuss
+    archive: true
+    # max_image_height: 520
+    tags:
+      - china
+      - www
+      - source-reddit-china
+    translations:
+      "zh-Hans":
+        title: "Reddit中国小组"
+        short_title: "中国小组"
+        description: "用中文浏览国外Reddit中国小组里的热门讨论"
+        keywords: "中国,关于中国"
+      'en':
+        title: "Reddit China"
+        short_title: "Reddit China"
+        description: "See what''s buzzing on Reddit China in your native language"
+        keywords: "Reddit China"
+      'ja':
+        title: "Reddit中国"
+        short_title: "Reddit中国"
+        description: "人気のReddit中国の最新 の投稿"
+        keywords: "Reddit中国"
+
 versions:
   - prefix: ""
     code: "default"
@@ -1518,7 +1545,7 @@ sources:
     rules:
       - type: greaterEqual
         key: getWeightedScore
-        value: "20"
+        value: "10"
   - id: source-reddit-askfeminist
     type: reddit
     api:
