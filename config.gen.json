@@ -1413,6 +1413,7 @@
       "priority": 28,
       "archive": true,
       "category": "Finance",
+      "dev": true,
       "tags": [
         "news",
         "finance",
