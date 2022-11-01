@@ -1053,7 +1053,7 @@ sites:
     priority: 28
     archive: true
     category: Finance
-    dev: true
+    # dev: true
     tags:
       - news
       - finance
