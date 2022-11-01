@@ -1421,7 +1421,7 @@ sources:
         key: getHostname
         value: www.youtube.com
       - type: limit
-        value: 30
+        value: 34
   - api:
       url: s2fmultiple
       name: S2F Multiple Twitter
