@@ -1059,6 +1059,7 @@ sites:
       - finance
       - www
       - source-rss-yahoofinance
+      - source-googleyahoofinance
     translations:
       'zh-Hans':
         title: "雅虎财经"
@@ -1622,3 +1623,14 @@ sources:
       name: Yahoo Finance
       home_page_url: https://finance.yahoo.com/
     type: rss
+
+  - id: source-googleyahoofinance
+    api: 
+      url: https://news.google.com/rss/search?q=yahoo+finance&hl=en-US&gl=US&ceid=US%3Aen
+      name: Google News Yahoo Finance
+      home_page_url: https://news.google.com/search?q=yahoo+finance&hl=en-US&gl=US&ceid=US%3Aen
+    type: googlenews
+    rules:
+      - type: equal
+        key: getHostname
+        value: "finance.yahoo.com"
