@@ -317,11 +317,18 @@ export default async function fetchSources(
         sourceType === "rss" || sourceType === "googlenews" ||
         sourceType === "newyorker" || sourceType === "lobste"
       ) {
-        const originItemResult = await request(sourceUrl);
+        try {
+          const originItemResult = await request(sourceUrl);
 
-        const xml = await originItemResult.text();
-        originalJson = await parseFeed(xml);
-        itemsPath = "entries";
+          const xml = await originItemResult.text();
+          originalJson = await parseFeed(xml);
+          itemsPath = "entries";
+        } catch (e) {
+          log.error(`fetch ${sourceUrl} failed`);
+          log.error(e);
+          // TODO report
+          continue;
+        }
       } else if (
         sourceType === "twittercbarraud" || sourceType === "twitterlink" ||
         sourceType === "twitter" ||
