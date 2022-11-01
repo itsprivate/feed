@@ -1449,7 +1449,16 @@ sources:
         key: getHostname
         value: www.youtube.com
       - type: limit
-        value: 34
+        value: 25
+      - type: notEqual
+        key: getHostname
+        value: www.hollywoodreporter.com
+      - type: notEqual
+        key: getHostname
+        value: www.prnewswire.com
+      - type: notEqual
+        key: getHostname
+        value: electrek.co
   - api:
       url: s2fmultiple
       name: S2F Multiple Twitter

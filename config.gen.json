@@ -2064,7 +2064,22 @@
         },
         {
           "type": "limit",
-          "value": 34
+          "value": 25
+        },
+        {
+          "type": "notEqual",
+          "key": "getHostname",
+          "value": "www.hollywoodreporter.com"
+        },
+        {
+          "type": "notEqual",
+          "key": "getHostname",
+          "value": "www.prnewswire.com"
+        },
+        {
+          "type": "notEqual",
+          "key": "getHostname",
+          "value": "electrek.co"
         }
       ]
     },
