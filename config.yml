@@ -1601,9 +1601,9 @@ sources:
     api:
       url: https://news.google.com/rss/topics/CAAqIggKIhxDQkFTRHdvSkwyMHZNR1F3TlhjekVnSmxiaWdBUAE?hl=en-US&gl=US&ceid=US%3Aen 
       name: Google News China
-    # rules:
-    #   - type: limit
-    #     value: "50"
+    rules:
+      - type: limit
+        value: "44"
   - api:
       url: spectatorindex
       name: The Spectator Index Twitter
