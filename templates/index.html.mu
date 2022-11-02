@@ -80,20 +80,20 @@
         max-height: {{_max_image_height}}px;
         {{/_max_image_height}}
         {{^_max_image_height}}
-        max-height: 14em;
+        max-height: 10em;
         {{/_max_image_height}}
         border-radius: 0.5em;
         height: auto;
       }
       video {
         max-width: 40em;
-        width: 95%;
+        max-height: 32em;
         height: auto;
         max-height: 30em;
       }
       .embed-video {
         aspect-ratio: 16 / 9;
-        width: 95%;
+        width: 100%;
         max-width: 40em;
       }
       a:link {
@@ -120,6 +120,10 @@
       }
       .card-inner{
         padding: 0.5em;
+      }
+      .card img{
+        margin: auto;
+        display: block;      
       }
       .card{
         flex: 1 1 15.625em;

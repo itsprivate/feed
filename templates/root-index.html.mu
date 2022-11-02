@@ -81,24 +81,24 @@
         max-height: {{_max_image_height}}px;
         {{/_max_image_height}}
         {{^_max_image_height}}
-        max-height: 14em;
+        max-height: 10em;
         {{/_max_image_height}}
         border-radius: 0.5em;
         height: auto;
       }
       video {
-        max-width: 90%;
+        max-width: 100%;
         max-height: 32em;
         height: auto;
       }
       .embed-video {
         aspect-ratio: 16 / 9;
-        width: 85%;
+        width: 100%;
       }
       .feed {
       }
       .feed-content {
-          height: 300px;
+          height: 400px;
           overflow: hidden;
           mask-image: linear-gradient(#eee 85%,transparent);
           -webkit-mask-image: linear-gradient(#eee 85%,transparent);
@@ -124,6 +124,10 @@
         background-color: #fff;
         box-shadow: 0 -0.5px 0.5px rgba(135, 116, 87,0.1),0 -0.5px 0.5px rgba(135, 116, 87,0.1),0 2px 1px rgba(135, 116, 87,0.1),0 10px 15px -5px rgba(135, 116, 87,0.1),0 2px 3px rgba(135, 116, 87,0.1);
         border: 0;
+      }
+      .card img{
+        margin: auto;
+        display: block;      
       }
       label.site-checkbox-label:after {
         content: "+ SHOW MORE";
