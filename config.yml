@@ -1567,7 +1567,7 @@ sources:
         key: getHostname
         value: www.youtube.com
       - type: limit
-        value: 25
+        value: 20
       - type: notEqual
         key: getHostname
         value: www.hollywoodreporter.com
