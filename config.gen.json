@@ -2468,7 +2468,7 @@
         {
           "type": "greaterEqual",
           "key": "getWeightedScore",
-          "value": "300"
+          "value": "200"
         }
       ]
     },
@@ -2527,6 +2527,11 @@
         "home_page_url": "https://twitter.com/Reuters"
       },
       "rules": [
+        {
+          "type": "greaterEqual",
+          "key": "getWeightedScore",
+          "value": "30"
+        },
         {
           "type": "notInclude",
           "key": "getHostname",

@@ -1740,6 +1740,9 @@ sources:
       name: Reuters Twitter
       home_page_url: https://twitter.com/Reuters
     rules:
+      - type: greaterEqual
+        key: getWeightedScore
+        value: "30"
       - type: notInclude
         key: getHostname
         value: "www.youtube.com"
