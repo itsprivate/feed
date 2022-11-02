@@ -1518,6 +1518,42 @@
           "keywords": "路透社,財經,財經新聞"
         }
       }
+    },
+    "bbc": {
+      "port": 8036,
+      "priority": 33,
+      "archive": true,
+      "category": "News",
+      "tags": [
+        "news",
+        "source-rss-bbcworld"
+      ],
+      "translations": {
+        "zh-Hans": {
+          "title": "BBC",
+          "short_title": "BBC",
+          "description": "用中文浏览BBC相关报道",
+          "keywords": "BBC,财经,财经新闻"
+        },
+        "en": {
+          "title": "BBC",
+          "short_title": "BBC",
+          "description": "See what's buzzing on BBC in your native language",
+          "keywords": "BBC"
+        },
+        "ja": {
+          "title": "BBC",
+          "short_title": "BBC",
+          "description": "人気のBBCの最新 の投稿",
+          "keywords": "BBC"
+        },
+        "zh-Hant": {
+          "title": "BBC",
+          "short_title": "BBC",
+          "description": "用中文瀏覽BBC相關報道",
+          "keywords": "BBC,財經,財經新聞"
+        }
+      }
     }
   },
   "versions": [
@@ -2470,6 +2506,15 @@
           "value": "finance.yahoo.com"
         }
       ]
+    },
+    {
+      "id": "source-rss-bbcworld",
+      "api": {
+        "url": "https://feeds.bbci.co.uk/news/world/rss.xml",
+        "name": "BBC World News",
+        "home_page_url": "https://www.bbc.com/news/world"
+      },
+      "type": "rss"
     }
   ]
 }
