@@ -20,6 +20,7 @@ export default async function buildSite(options: RunOptions) {
   const config = options.config;
   const currentDataPath = getDataCurrentItemsPath();
   let siteIdentifiers: string[] = [];
+  const startTime = Date.now();
   const indexTemplateString = await Deno.readTextFile(
     "./templates/index.html.mu",
   );
@@ -177,4 +178,10 @@ export default async function buildSite(options: RunOptions) {
     // latest item date_modified is greater Monday
     // we will run archive task, try to archive all items of their week
   }
+  const endTime = Date.now();
+  log.info(
+    `build all sites success, cost ${
+      Math.floor((endTime - startTime) / 1000)
+    }s`,
+  );
 }
