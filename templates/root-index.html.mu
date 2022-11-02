@@ -99,11 +99,13 @@
       .feed-content {
           height: 300px;
           overflow: hidden;
-          mask-image: linear-gradient(#eee 85%,transparent)
+          mask-image: linear-gradient(#eee 85%,transparent);
+          -webkit-mask-image: linear-gradient(#eee 85%,transparent);
       }
       input.site-checkbox:checked ~ div.feed-content {
         height: 100%;
         mask-image: none;
+        -webkit-mask-image: none;
       }
       .container{
         display: flex;
