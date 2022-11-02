@@ -231,7 +231,7 @@ export default async function buildSite(options: RunOptions) {
         language.code,
         config,
       );
-      const takedCount = 25;
+      const takedCount = 24;
       const takedItems = siteItemsGroups.slice(0, takedCount)
         .map(
           (item: FeedItem, index: number) => {

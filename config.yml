@@ -135,7 +135,7 @@ sites:
   hnfront:
     port: 8001
     category: Tech
-    priority: 29
+    priority: 10
     tags:
       - hn
       - source-hackernews-index
@@ -161,7 +161,7 @@ sites:
         description: "用中文浏览Hacker News 首頁最新文章"
         keywords: "HackerNews 头条, Hacker News 中文, Hacker News Story"
   hn:
-    priority: 10
+    priority: 29
     category: Featured
     port: 8002
     redirect: true

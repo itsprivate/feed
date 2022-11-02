@@ -198,7 +198,7 @@
     "hnfront": {
       "port": 8001,
       "category": "Tech",
-      "priority": 29,
+      "priority": 10,
       "tags": [
         "hn",
         "source-hackernews-index"
@@ -231,7 +231,7 @@
       }
     },
     "hn": {
-      "priority": 10,
+      "priority": 29,
       "category": "Featured",
       "port": 8002,
       "redirect": true,

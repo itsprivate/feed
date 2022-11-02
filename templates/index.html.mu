@@ -293,6 +293,25 @@
         {{/_other_sites.0}} {{#_other_sites}}
         <a class="muted" href="{{{url}}}">{{ name }}</a
         >{{^is_last}}<span> · </span>{{/is_last}} {{/_other_sites}}
+        {{#_versions.1}}
+        &nbsp;
+        <select onchange="location = this.value;">
+          {{#_versions}}
+            <option value="{{{url}}}" {{selected}}>
+            {{name}}
+            </option>
+          {{/_versions}}
+        </select>
+        {{/_versions.1}}
+
+        &nbsp;
+        <select onchange="location = this.value;">
+          {{#_languages}}
+            <option value="{{{url}}}" {{selected}}>
+            {{name}}
+            </option>
+          {{/_languages}}
+        </select>
         {{#_other_sites.0}}
       </div>
       {{/_other_sites.0}}

@@ -89,6 +89,8 @@ export default function feedToHTML(
     const newItem = { ...item };
     // @ts-ignore: add meta data
     newItem.active = item.code === language.code;
+    // @ts-ignore: add meta data
+    newItem.selected = item.code === language.code ? "selected" : "";
 
     // @ts-ignore: add meta data
     newItem.url = urlToLanguageUrl(
@@ -212,6 +214,8 @@ export default function feedToHTML(
 
     // @ts-ignore: add meta data
     newItem.active = item.code === version.code;
+    // @ts-ignore: add meta data
+    newItem.selected = item.code === version.code ? "selected" : "";
     // @ts-ignore: add meta data
     newItem.url = urlToVersionUrl(
       homepage,

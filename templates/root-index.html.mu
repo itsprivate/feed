@@ -152,7 +152,6 @@
       }
       .header{
         padding-top: 0.5em;
-        text-align: center;
       }
       .text-left{
         text-align: left;
@@ -375,6 +374,25 @@
         {{/_other_sites.0}} {{#_other_sites}}
         <a class="muted" href="{{{url}}}">{{ name }}</a
         >{{^is_last}}<span> · </span>{{/is_last}} {{/_other_sites}}
+        {{#_versions.1}}
+        &nbsp;
+        <select onchange="location = this.value;">
+          {{#_versions}}
+            <option value="{{{url}}}" {{selected}}>
+            {{name}}
+            </option>
+          {{/_versions}}
+        </select>
+        {{/_versions.1}}
+
+        &nbsp;
+        <select onchange="location = this.value;">
+          {{#_languages}}
+            <option value="{{{url}}}" {{selected}}>
+            {{name}}
+            </option>
+          {{/_languages}}
+        </select>
         {{#_other_sites.0}}
       </div>
       {{/_other_sites.0}}
@@ -432,6 +450,20 @@
       {{/_page_title}}
       </div>
     </header>
+    <details class="my">
+      <summary class="px bold text-lg contrast">{{table_of_contents_label}}</summary>
+      <div class="px">
+      <ul>
+        <li>
+          <a href="#about" class="contrast">{{about_label}}</a>
+        </li>
+        {{#_groups}}
+        <li>
+          <a href="#{{site_identifier}}" class="contrast">{{title}}</a> (<a class="muted" href="{{home_page_url}}">{{hostname}}</a>)
+        </li>
+        {{/_groups}}
+       </ul>
+    </details>
     {{#_groups}}
           <details open id="{{site_identifier}}" class="sites">
             <summary class="my px bold text-lg">{{{title}}}<span class="muted">&nbsp;-</span> <a href="{{home_page_url}}" class="muted small">{{hostname}}</a></summary>
