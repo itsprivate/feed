@@ -2546,6 +2546,11 @@
           "type": "notInclude",
           "key": "getUrl",
           "value": "www.reuters.com/legal"
+        },
+        {
+          "type": "include",
+          "key": "getHostname",
+          "value": "reuters.com"
         }
       ]
     },

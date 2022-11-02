@@ -1752,6 +1752,9 @@ sources:
       - type: notInclude
         key: getUrl
         value: www.reuters.com/legal
+      - type: include
+        key: getHostname
+        value: "reuters.com"
 
   - id: source-twitter-bloomberg
     type: twitterlink
