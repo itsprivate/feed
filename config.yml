@@ -1748,7 +1748,7 @@ sources:
         value: "www.reuters.com/video"
       - type: notInclude
         key: getUrl
-        value: www.reuters.com/lifestyle
+        value: www.reuoers.com/lifestyle
       - type: notInclude
         key: getUrl
         value: www.reuters.com/legal
@@ -1759,9 +1759,27 @@ sources:
   - id: source-twitter-bloomberg
     type: twitterlink
     api:
-      url: business
-      name: Bloomberg Twitter
-      home_page_url: https://twitter.com/business
+      # - url: business
+      #   name: Bloomberg Twitter
+      #   home_page_url: https://twitter.com/business
+      - url: markets
+        name: Bloomberg Markets Twitter
+        home_page_url: https://twitter.com/markets
+      - url: economics
+        name: Bloomberg Economics Twitter
+        home_page_url: https://twitter.com/economics
+      - url: technology
+        name: Bloomberg Technology Twitter
+        home_page_url: https://twitter.com/technology
+      - url: bpolitics
+        name: Bloomberg Politics Twitter
+        home_page_url: https://twitter.com/bpolitics
+      - url: BBGVisualData
+        name: Bloomberg Visual Data Twitter
+        home_page_url: https://twitter.com/BBGVisualData
+      - url: opinion
+        name: Bloomberg Opinion Twitter
+        home_page_url: https://twitter.com/opinion
     rules:
       - type: equal
         key: getHostname

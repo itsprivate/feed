@@ -69,6 +69,7 @@
         margin: 0 auto;
         padding: 0;
         max-width: 100%;
+        position: relative;
         line-height: 1.5em;
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
           Helvetica, sans-serif;
@@ -313,6 +314,14 @@
       .w-prefix{
         width: 50px;
       }
+      .stick{
+        padding-top: 0.5em;
+        padding-bottom: 0.5em;
+        position: sticky;
+        top: 0;
+        z-index: 1;
+        background-color: rgb(255, 252, 249);
+      }
       .pl-prefix {
         padding-left: 50px;
       }
@@ -470,7 +479,7 @@
     </details>
     {{#_groups}}
           <details open id="{{site_identifier}}" class="sites">
-            <summary class="my px bold text-lg">{{{title}}}<span class="muted">&nbsp;-</span> <a href="{{home_page_url}}" class="muted small">{{hostname}}</a></summary>
+            <summary class="stick px bold text-lg">{{{title}}}<span class="muted">&nbsp;-</span> <a href="{{home_page_url}}" class="muted small">{{hostname}}</a></summary>
                 <input class="site-checkbox" id="{{site_identifier}}-checkbox" type="checkbox">
                 <div class="feed-content">
                   <div class="container mb px-xs">
