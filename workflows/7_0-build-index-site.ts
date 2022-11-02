@@ -187,103 +187,100 @@ export default async function buildSite(options: RunOptions) {
     }
     // format format _groups
     // @ts-ignore: add meta
-    const groups = groupBy(feedItems, "_category");
+    const groups = groupBy(feedItems, "_site_identifier");
     const categoryGroupKeys = Object.keys(groups);
-    // category sort
-    const sortedCategory = [
-      "Featured",
-      "Tech",
-      "Finance",
-      "News",
-      "Product",
-      "Ask",
-      "Entertainment",
-      "Dev",
-    ];
-    // sort categoryGroupKeys
+    // sort by priority
     categoryGroupKeys.sort((a, b) => {
-      const aIndex = sortedCategory.indexOf(a);
-      const bIndex = sortedCategory.indexOf(b);
-      if (aIndex === -1 && bIndex === -1) {
-        return a.localeCompare(b);
-      }
-      if (aIndex === -1) {
-        return 1;
-      }
-      if (bIndex === -1) {
-        return -1;
-      }
-      return aIndex - bIndex;
+      return (
+        (config.sites[a].priority || 100) - (config.sites[b].priority || 100)
+      );
     });
+    // category sort
+    // const sortedCategory = [
+    //   "Featured",
+    //   "Tech",
+    //   "Finance",
+    //   "News",
+    //   "Product",
+    //   "Ask",
+    //   "Entertainment",
+    //   "Dev",
+    // ];
+    // sort categoryGroupKeys
+    // categoryGroupKeys.sort((a, b) => {
+    //   const aIndex = sortedCategory.indexOf(a);
+    //   const bIndex = sortedCategory.indexOf(b);
+    //   if (aIndex === -1 && bIndex === -1) {
+    //     return a.localeCompare(b);
+    //   }
+    //   if (aIndex === -1) {
+    //     return 1;
+    //   }
+    //   if (bIndex === -1) {
+    //     return -1;
+    //   }
+    //   return aIndex - bIndex;
+    // });
 
     // @ts-ignore: add meta
-    feedJson._groups = categoryGroupKeys.map((category) => {
-      const categoryItems = groups[category];
+    feedJson._groups = categoryGroupKeys.map((siteIdentifier) => {
+      const siteItemsGroups = groups[siteIdentifier];
       // @ts-ignore: add meta
-      const siteItemsGroups = groupBy(categoryItems, "_site_identifier");
-      const siteKeys = Object.keys(siteItemsGroups);
-
-      const categories = siteKeys.map((siteIdentifier) => {
-        const currentTranslations = getCurrentTranslations(
-          siteIdentifier,
-          language.code,
-          config,
+      const currentTranslations = getCurrentTranslations(
+        siteIdentifier,
+        language.code,
+        config,
+      );
+      const takedCount = 25;
+      const takedItems = siteItemsGroups.slice(0, takedCount)
+        .map(
+          (item: FeedItem, index: number) => {
+            // @ts-ignore: add meta
+            item.order = index + 1;
+            return item;
+          },
         );
-        const takedCount = 50;
-        const takedItems = siteItemsGroups[siteIdentifier].slice(0, takedCount)
-          .map(
-            (item: FeedItem, index: number) => {
-              // @ts-ignore: add meta
-              item.order = index + 1;
-              return item;
-            },
-          );
-        const remainingCount = siteItemsGroups[siteIdentifier].length -
-          takedCount;
-        feedJson.items = feedJson.items.concat(takedItems);
-        return {
-          "title": currentTranslations.title,
-          "hostname": siteIdentifierToDomain(siteIdentifier),
-          "site_identifier": siteIdentifier,
-          "home_page_url": siteIdentifierToUrl(
-            siteIdentifier,
-            pathname,
-            config,
-          ),
-          "home_page_next_url": siteIdentifierToUrl(
-            siteIdentifier,
-            `${pathname}#${takedItems.length}`,
-            config,
-          ),
-          "atom_url": siteIdentifierToUrl(
-            siteIdentifier,
-            `${pathname}feed.xml`,
-            config,
-          ),
-          "home_page_lite_url": siteIdentifierToUrl(
-            siteIdentifier,
-            pathname + liteVersion.prefix,
-            config,
-          ),
-          "home_page_next_lite_url": siteIdentifierToUrl(
-            siteIdentifier,
-            `${pathname}${liteVersion.prefix}#${takedItems.length}`,
-            config,
-          ),
-          "remaining_count": remainingCount,
-          // @ts-ignore: add meta
-          "remaining_label": mustache.render(
-            currentTranslations.more_posts_label,
-            {
-              "count": remainingCount,
-            },
-          ),
-          items: takedItems,
-        };
-      });
+      const remainingCount = siteItemsGroups.length -
+        takedCount;
+      feedJson.items = feedJson.items.concat(takedItems);
       return {
-        "title": category,
-        items: categories,
+        "title": currentTranslations.title,
+        "hostname": siteIdentifierToDomain(siteIdentifier),
+        "site_identifier": siteIdentifier,
+        "home_page_url": siteIdentifierToUrl(
+          siteIdentifier,
+          pathname,
+          config,
+        ),
+        "home_page_next_url": siteIdentifierToUrl(
+          siteIdentifier,
+          `${pathname}#${takedItems.length}`,
+          config,
+        ),
+        "atom_url": siteIdentifierToUrl(
+          siteIdentifier,
+          `${pathname}feed.xml`,
+          config,
+        ),
+        "home_page_lite_url": siteIdentifierToUrl(
+          siteIdentifier,
+          pathname + liteVersion.prefix,
+          config,
+        ),
+        "home_page_next_lite_url": siteIdentifierToUrl(
+          siteIdentifier,
+          `${pathname}${liteVersion.prefix}#${takedItems.length}`,
+          config,
+        ),
+        "remaining_count": remainingCount,
+        // @ts-ignore: add meta
+        "remaining_label": mustache.render(
+          currentTranslations.more_posts_label,
+          {
+            "count": remainingCount,
+          },
+        ),
+        items: takedItems,
       };
     });
     // write to dist file

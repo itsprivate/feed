@@ -94,54 +94,27 @@
         aspect-ratio: 16 / 9;
         width: 85%;
       }
-      .feed {
-      }
-      .feed-content {
-          height: 300px;
-          overflow: hidden;
-          mask-image: linear-gradient(#eee 85%,transparent)
-      }
-      input.site-checkbox:checked ~ div.feed-content {
-        height: 100%;
-        mask-image: none;
-      }
       .container{
-        display: flex;
-        text-align: left;
-        flex-wrap: wrap;
-      }
-      .card-inner{
-        padding: 0.5em;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(22em, max-content));
+        justify-items: center;
+        grid-gap: 1.5em;
       }
       .card{
-        flex: 0 1 16em;
-        margin: 0.5em;
-        border-radius: 0.5em;
+        height: 36em;
+        min-width: 20em;
+        max-width: 28em;
         background-color: #fff;
         box-shadow: 0 -0.5px 0.5px rgba(135, 116, 87,0.1),0 -0.5px 0.5px rgba(135, 116, 87,0.1),0 2px 1px rgba(135, 116, 87,0.1),0 10px 15px -5px rgba(135, 116, 87,0.1),0 2px 3px rgba(135, 116, 87,0.1);
         border: 0;
-      }
-      label.site-checkbox-label:after {
-        content: "+ SHOW MORE";
-      }
-      input.site-checkbox:checked ~ label.site-checkbox-label:after {
-          content: "- SHOW LESS";
-      }
-      input.site-checkbox{
-          display: none;
-      }
-      label.site-checkbox-label {
-        display: block;
-        padding: 0.3em 0;
-        color: rgba(135, 116, 87,0.5);
-        font-weight: bold;
+        overflow-y: scroll;
+        padding: 0em;
         border-radius: 0.5em;
-        text-align: center;
-        margin-top: 0.5em;
+        scrollbar-width: none; /* Firefox */
+        -ms-overflow-style: none;  /* Internet Explorer 10+ */
       }
-      label.site-checkbox-label:hover {
-        cursor: pointer;
-        background-color: rgba(135, 116, 87,0.1);
+      .card::-webkit-scrollbar { 
+        display: none;  /* Safari and Chrome */
       }
       a:link {
         color: rgb(0, 102, 204);
@@ -163,6 +136,9 @@
         padding-right: 1em;
         padding-top: 2em;
         text-align: center;
+      }
+      .article {
+        padding: 4px 1em;
       }
       .article footer{
         {{#_is_lite}}
@@ -281,14 +257,10 @@
         padding-left: 1em;
         padding-right: 1em;
       }
-      .mx {
-        margin-left: 1em;
-        margin-right: 1em;
-      }
-      .px-xs{
-        padding-left: 0.5em;
-        padding-right: 0.5em;
-      }
+      .px-l{
+        padding-left: 1.5em;
+        padding-right: 1.5em;
+        }
       .px-lg{
         padding-left: 2em;
         padding-right: 2em;
@@ -337,6 +309,9 @@
         .container{
           display: block;
         }
+        .card {
+          margin-bottom: 1.5em;
+        }
       }
       @media print{
         .fixed{
@@ -353,7 +328,7 @@
   </head>
   <body>
     <div id="top"></div>
-    <header class="header px">
+    <header class="header px-l">
     <div>
       <a class="contrast no-underline small" href="{{{_site_url}}}">{{
         _site_title
@@ -433,49 +408,48 @@
       </div>
     </header>
     {{#_groups}}
-          <details open id="{{site_identifier}}" class="sites">
-            <summary class="my px bold text-lg">{{{title}}}<span class="muted">&nbsp;-</span> <a href="{{home_page_url}}" class="muted small">{{hostname}}</a></summary>
-                <input class="site-checkbox" id="{{site_identifier}}-checkbox" type="checkbox">
-                <div class="feed-content">
-                  <div class="container mb px-xs">
-                    {{#items}}
-                      <div class="article h-entry hentry card w-card">
-                        <div class="card-inner"> 
-                        <div class="mb-sm mt0">
-                          <a class="p-name entry-title bold small no-underline u-url" href="{{{url}}}">{{#order}}<span>{{ . }}. </span>{{/order}}{{{title}}}</a>{{#_sensitive}}<span>&nbsp;(</span><span class="nsfw small">NSFW</span><span>)</span>{{/_sensitive}}{{#_links}}&nbsp;<a class="no-underline muted small" href="{{{url}}}">{{{name}}}</a>{{/_links}}</div>
-                        <div class="no-underline p-summary entry-summary secondary pre-line small italic">{{{content_html}}}</div>
-                        </div>
-                      </div>
-                    {{/items}}
-                  </div>
-                  {{#remaining_count}}
-                    <div class="mb article muted secondary small text-center">
-                      <a href="{{{home_page_next_url}}}">{{{remaining_label}}}</a>
-                      <span>&nbsp;</span><a class="small" href="{{{home_page_next_lite_url}}}">{{{Lite}}}</a><span>&nbsp;·&nbsp;</span><a class="small" href="{{{atom_url}}}">{{{subscription_label}}}</a> <span></span>
-                    </div>
-                  {{/remaining_count}}
-                </div>
-                <label class="site-checkbox-label mx" for="{{site_identifier}}-checkbox"></label>
-          </details>
-      {{/_groups}}
-      <footer class="footer">
-
-        <a class="muted" href="{{{_advice_url}}}">{{{advice_label}}}</a>
-
-      </footer>
-      <div id="bottom"></div>
-      <div class="fixed">
-        <div class="mb">
-          <a class="no-underline contrast" title="Go to Top" href="#top">&uarr;</a>
-        </div>
-        <div>
-          <a class="no-underline contrast" title="Go to Bottom" href="#bottom">&darr;</a>
+      <details open id="{{title}}" class="categories">
+      <summary class="px-lg my bold">{{title}}</summary>
+    <div class="container px-l">
+      {{#items}}
+      <div class="card w-card">
+      <p class="px my bold"><a class="contrast no-underline" href="{{{home_page_url}}}">{{{title}}}</a> <span class="muted">-</span> <a href="{{home_page_url}}" class="muted small">{{hostname}}</a> </p>
+      {{#items}}
+      <div class="article h-entry hentry">
+      <div class="mb-sm mt0">
+        <a class="p-name entry-title bold small no-underline u-url" href="{{{url}}}">{{#order}}<span>{{ . }}. </span>{{/order}}{{{title}}}</a>{{#_sensitive}}<span>&nbsp;(</span><span class="nsfw small">NSFW</span><span>)</span>{{/_sensitive}}{{#_links}}&nbsp;<a class="no-underline muted small" href="{{{url}}}">{{{name}}}</a>{{/_links}}</div>
+      <div class="no-underline p-summary entry-summary secondary pre-line small italic">{{{content_html}}}</div>
       </div>
-     </div>
-     <script>
-        // close details element
-        var elements = document.querySelectorAll(".sites")
-        var localstorageKey = 'buzzing_closed_ids';
+      {{/items}}
+      {{#remaining_count}}
+      <div class="mb article muted secondary small">
+        <a href="{{{home_page_next_url}}}">{{{remaining_label}}}</a>
+        <span>&nbsp;</span><a class="small" href="{{{home_page_next_lite_url}}}">{{{Lite}}}</a><span>&nbsp;·&nbsp;</span><a class="small" href="{{{atom_url}}}">{{{subscription_label}}}</a> <span></span>
+      </div>
+      {{/remaining_count}}
+    </div>
+    {{/items}}
+    </div>
+    </details>
+    {{/_groups}}
+    <footer class="footer">
+
+      <a class="muted" href="{{{_advice_url}}}">{{{advice_label}}}</a>
+
+    </footer>
+    <div id="bottom"></div>
+    <div class="fixed">
+      <div class="mb">
+        <a class="no-underline contrast" title="Go to Top" href="#top">&uarr;</a>
+      </div>
+      <div>
+        <a class="no-underline contrast" title="Go to Bottom" href="#bottom">&darr;</a>
+    </div>
+   </div>
+   <script>
+      // close details element
+      var elements = document.querySelectorAll(".categories")
+      var localstorageKey = 'buzzing_closed_ids';
       var currentClosedIds = localStorage.getItem(localstorageKey) || "";
       var currentClosedIdsArray = currentClosedIds.split(",").filter(element => element);
       for (var i=0;i<currentClosedIdsArray.length;i++){
@@ -523,4 +497,3 @@
    </script>
 </body>
 </html>
-
