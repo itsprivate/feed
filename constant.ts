@@ -12,7 +12,7 @@ if (Deno.env.get("TRANSLATED_ITEMS_PER_PAGE")) {
   translatedItemsPerPage = Number(Deno.env.get("TRANSLATED_ITEMS_PER_PAGE"));
 }
 export const TRANSLATED_ITEMS_PER_PAGE = translatedItemsPerPage;
-export const MAX_ITEMS_PER_PAGE = 200;
+export const MAX_ITEMS_PER_PAGE = 300;
 
 export const ROOT_DOMAIN = "buzzing.cc";
 export const archiveSubDomain = "i";

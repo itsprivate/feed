@@ -1,4 +1,4 @@
-page_size: 200
+page_size: 300
 translated_items_per_page: 100
 max_files_per_site: -1
 advice_url: "https://t.me/joinchat/GVK5UiDwPUAwMjkx"
@@ -1107,7 +1107,6 @@ sites:
     category: News
     tags:
       - news
-      - www
       - source-twitter-reuters
     translations:
       "zh-Hans":

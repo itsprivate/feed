@@ -76,7 +76,7 @@
         background-color:rgb(255, 252, 249);
       }
       img {
-        max-width: 95%;
+        max-width: 100%;
         {{#_max_image_height}}
         max-height: {{_max_image_height}}px;
         {{/_max_image_height}}
@@ -484,7 +484,7 @@
                 <div class="feed-content">
                   <div class="container mb px-xs">
                     {{#items}}
-                      <div class="article h-entry hentry card w-card">
+                      <div class="article h-entry hentry card">
                         <div class="card-inner"> 
                         <div class="mb-sm mt0">
                           <a class="p-name entry-title bold small no-underline u-url" href="{{{url}}}">{{#order}}<span>{{ . }}. </span>{{/order}}{{{title}}}</a>{{#_sensitive}}<span>&nbsp;(</span><span class="nsfw small">NSFW</span><span>)</span>{{/_sensitive}}{{#_links}}&nbsp;<a class="no-underline muted small" href="{{{url}}}">{{{name}}}</a>{{/_links}}</div>

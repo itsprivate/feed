@@ -66,16 +66,16 @@
     <link rel="icon" href="{{{favicon}}}" />
     <style>
       body {
-        max-width: 100%;
+        max-width: 52em;
         margin: 0 auto;
         padding: 0;
-        background-color:rgb(255, 252, 249);
+        background-color: #fffff8;
         line-height: 1.5em;
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
           Helvetica, sans-serif;
       }
       img {
-        max-width: 100%;
+        max-width: 95%;
         {{#_max_image_height}}
         max-height: {{_max_image_height}}px;
         {{/_max_image_height}}
@@ -105,29 +105,14 @@
       }
       .header{
         padding-top: 0.5em;
+        padding-left: 1em;
+        padding-right: 1em;
       }
       .footer{
         margin-bottom: 2em;
         padding-left: 1em;
         padding-right: 1em;
         padding-top: 2em;
-      }
-      .container{
-        display: flex;
-        text-align: left;
-        flex-wrap: wrap;
-        justify-content: space-between;
-      }
-      .card-inner{
-        padding: 0.5em;
-      }
-      .card{
-        flex: 1 1 15.625em;
-        margin: 0.2em;
-        border-radius: 0.5em;
-        background-color: #fff;
-        box-shadow: 0 -0.5px 0.5px rgba(135, 116, 87,0.1),0 -0.5px 0.5px rgba(135, 116, 87,0.1),0 2px 1px rgba(135, 116, 87,0.1),0 10px 15px -5px rgba(135, 116, 87,0.1),0 2px 3px rgba(135, 116, 87,0.1);
-        border: 0;
       }
       .article {
         border-radius: 0.5em;
@@ -261,9 +246,6 @@
         font-weight: bold;
         z-index:1;
       }
-      .text-center{
-        text-align: center;
-      }
       .inline-block{
         display: block;
       }
@@ -273,10 +255,6 @@
       }
       .mt0{
         margin-top: 0;
-      }
-      .px-xs{
-        padding-left: 0.5em;
-        padding-right: 0.5em;
       }
       @media print{    
         .fixed{
@@ -294,7 +272,7 @@
   </head>
   <body>
     <div id="top"></div>
-    <header class="header px">
+    <header class="header">
       <a class="contrast no-underline small" href="{{{_site_url}}}">{{
         _site_title
       }}</a>
@@ -396,25 +374,21 @@
       {{/_page_title}}
     </header>
 
-    <div class="container px-xs">
     {{#items}}
-    <article id="{{order}}" class="card article h-entry hentry">
-      <div class="card-inner">
-        {{#_is_lite}}
-        <div class="mb mt0 break-word">
-          <a class="p-name entry-title bold no-underline u-url" href="{{{url}}}">{{#order}}<span>{{ . }}. </span>{{/order}}{{{title}}}</a>{{#_sensitive}}<span>&nbsp;(</span><span class="nsfw">NSFW</span><span>)</span>{{/_sensitive}}{{#_links}}&nbsp;<a class="no-underline muted xsmall" href="{{{url}}}">{{{name}}}</a>{{/_links}}{{#_tag_links}}&nbsp;<a class="no-underline muted xsmall" href="{{{url}}}">#{{{name}}}</a>{{/_tag_links}}</div>
-        {{/_is_lite}}
-        {{^_is_lite}}
-        <div class="mb mt0">
-          <a class="p-name entry-title bold no-underline u-url" href="{{{url}}}">{{#order}}<span>{{ . }}. </span>{{/order}}{{{title}}}</a>{{#_sensitive}}<span>&nbsp;(</span><span class="nsfw">NSFW</span><span>)</span>{{/_sensitive}}
-        </div>
-        {{/_is_lite}}
-        <div class="no-underline p-summary entry-summary secondary pre-line small italic">{{{content_html}}}</div>
+    <article id="{{order}}" class="article h-entry hentry">
+      {{#_is_lite}}
+      <div class="mb mt0 break-word">
+        <a class="p-name entry-title bold no-underline u-url" href="{{{url}}}">{{#order}}<span>{{ . }}. </span>{{/order}}{{{title}}}</a>{{#_sensitive}}<span>&nbsp;(</span><span class="nsfw">NSFW</span><span>)</span>{{/_sensitive}}{{#_links}}&nbsp;<a class="no-underline muted xsmall" href="{{{url}}}">{{{name}}}</a>{{/_links}}{{#_tag_links}}&nbsp;<a class="no-underline muted xsmall" href="{{{url}}}">#{{{name}}}</a>{{/_tag_links}}</div>
+      {{/_is_lite}}
+      {{^_is_lite}}
+      <div class="mb mt0">
+        <a class="p-name entry-title bold no-underline u-url" href="{{{url}}}">{{#order}}<span>{{ . }}. </span>{{/order}}{{{title}}}</a>{{#_sensitive}}<span>&nbsp;(</span><span class="nsfw">NSFW</span><span>)</span>{{/_sensitive}}
       </div>
+      {{/_is_lite}}
+      <div class="no-underline p-summary entry-summary secondary pre-line small italic">{{{content_html}}}</div>
     </article>
     {{/items}}
-    </div>
-    <footer class="footer text-center px">
+    <footer class="footer">
       {{#_issue_list.0}}
       <details>
         <summary>{{ issues_label }}</summary>

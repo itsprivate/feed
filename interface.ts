@@ -75,6 +75,7 @@ export interface SiteConfig extends GeneralSiteConfig {
   port?: number;
   redirect?: boolean;
   domain?: string;
+  layout?: string;
   archive?: boolean;
   translations?: Record<string, Record<string, string>>;
   standalone?: boolean;

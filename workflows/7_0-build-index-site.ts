@@ -110,240 +110,243 @@ export default async function buildSite(options: RunOptions) {
   // multiple languages support
   const languages = config.languages;
 
+  const liteVersion = config.versions[1];
   for (const language of languages) {
-    const version = config.versions[0];
-    const liteVersion = config.versions[1];
-    const pathname = "/" + language.prefix;
-    const currentIndexTranslations = getCurrentTranslations(
-      indexSubDomain,
-      language.code,
-      config,
-    );
-    const feedJson: Feedjson = {
-      "version": "https://jsonfeed.org/version/1",
-      "title": currentIndexTranslations.title,
-      "description": currentIndexTranslations.description,
-      "icon": siteIdentifierToUrl(indexSubDomain, "/icon.png", config),
-      "favicon": siteIdentifierToUrl(indexSubDomain, "/favicon.ico", config),
-      "_latest_build_time": formatIsoDate(now),
-      "language": language.code,
-      "_site_version": "default",
-      "home_page_url": siteIdentifierToUrl(
+    for (const version of config.versions) {
+      const pathname = "/" + language.prefix;
+      const pathnameWithVersion = "/" + language.prefix + version.prefix;
+      const currentIndexTranslations = getCurrentTranslations(
         indexSubDomain,
-        pathname,
-        config,
-      ),
-      "feed_url": siteIdentifierToUrl(
-        indexSubDomain,
-        `${pathname}feed.json`,
-        config,
-      ),
-      items: [],
-      _sources: [],
-    };
-    // @ts-ignore: add meta
-    feedJson._is_lite = feedJson._site_version === liteVersion.code;
-    // @ts-ignore: add meta
-    feedJson._advice_url = config.advice_url;
-    // @ts-ignore: add meta
-    feedJson._title_suffix = " - " + currentIndexTranslations.description;
-    if (indexConfig.tags) {
-      feedJson._site_tags = indexConfig.tags;
-    }
-    let feedItems: FeedItem[] = [];
-    for (const siteIdentifier of siteIdentifiers) {
-      const currentFeedJsonPath = path.join(
-        getDistPath(),
-        siteIdentifier,
-        language.prefix,
-        version.prefix,
-        "feed.json",
-      );
-      let siteFeedJson: Feedjson;
-      try {
-        siteFeedJson = await readJSONFile(
-          currentFeedJsonPath,
-        ) as Feedjson;
-      } catch (e) {
-        log.info(`can not read feed.json file: ${currentFeedJsonPath}`);
-        throw e;
-      }
-
-      // format summary, content_text newline with <br>
-      feedItems = feedItems.concat(
-        siteFeedJson.items.map((item) => {
-          item.content_html = item._lite_content_html || item.content_html;
-          // @ts-ignore: add meta
-          item._site_identifier = siteIdentifier;
-          // @ts-ignore: add meta
-          item._human_time = formatHumanTime(
-            new Date(item._original_published),
-          );
-          // @ts-ignore: add meta
-          item._category = config.sites[siteIdentifier].category;
-          return item;
-        }),
-      );
-    }
-    // format format _groups
-    // @ts-ignore: add meta
-    const groups = groupBy(feedItems, "_site_identifier");
-    const categoryGroupKeys = Object.keys(groups);
-    // sort by priority
-    categoryGroupKeys.sort((a, b) => {
-      return (
-        (config.sites[a].priority || 100) - (config.sites[b].priority || 100)
-      );
-    });
-    // category sort
-    // const sortedCategory = [
-    //   "Featured",
-    //   "Tech",
-    //   "Finance",
-    //   "News",
-    //   "Product",
-    //   "Ask",
-    //   "Entertainment",
-    //   "Dev",
-    // ];
-    // sort categoryGroupKeys
-    // categoryGroupKeys.sort((a, b) => {
-    //   const aIndex = sortedCategory.indexOf(a);
-    //   const bIndex = sortedCategory.indexOf(b);
-    //   if (aIndex === -1 && bIndex === -1) {
-    //     return a.localeCompare(b);
-    //   }
-    //   if (aIndex === -1) {
-    //     return 1;
-    //   }
-    //   if (bIndex === -1) {
-    //     return -1;
-    //   }
-    //   return aIndex - bIndex;
-    // });
-
-    // @ts-ignore: add meta
-    feedJson._groups = categoryGroupKeys.map((siteIdentifier) => {
-      const siteItemsGroups = groups[siteIdentifier];
-      // @ts-ignore: add meta
-      const currentTranslations = getCurrentTranslations(
-        siteIdentifier,
         language.code,
         config,
       );
-      const takedCount = 24;
-      const takedItems = siteItemsGroups.slice(0, takedCount)
-        .map(
-          (item: FeedItem, index: number) => {
-            // @ts-ignore: add meta
-            item.order = index + 1;
-            return item;
-          },
-        );
-      const remainingCount = siteItemsGroups.length -
-        takedCount;
-      feedJson.items = feedJson.items.concat(takedItems);
-      return {
-        "title": currentTranslations.title,
-        "hostname": siteIdentifierToDomain(siteIdentifier),
-        "site_identifier": siteIdentifier,
+      const feedJson: Feedjson = {
+        "version": "https://jsonfeed.org/version/1",
+        "title": currentIndexTranslations.title,
+        "description": currentIndexTranslations.description,
+        "icon": siteIdentifierToUrl(indexSubDomain, "/icon.png", config),
+        "favicon": siteIdentifierToUrl(indexSubDomain, "/favicon.ico", config),
+        "_latest_build_time": formatIsoDate(now),
+        "language": language.code,
+        "_site_version": version.code,
         "home_page_url": siteIdentifierToUrl(
-          siteIdentifier,
-          pathname,
+          indexSubDomain,
+          pathnameWithVersion,
           config,
         ),
-        "home_page_next_url": siteIdentifierToUrl(
-          siteIdentifier,
-          `${pathname}#${takedItems.length}`,
+        "feed_url": siteIdentifierToUrl(
+          indexSubDomain,
+          `${pathnameWithVersion}feed.json`,
           config,
         ),
-        "atom_url": siteIdentifierToUrl(
-          siteIdentifier,
-          `${pathname}feed.xml`,
-          config,
-        ),
-        "home_page_lite_url": siteIdentifierToUrl(
-          siteIdentifier,
-          pathname + liteVersion.prefix,
-          config,
-        ),
-        "home_page_next_lite_url": siteIdentifierToUrl(
-          siteIdentifier,
-          `${pathname}${liteVersion.prefix}#${takedItems.length}`,
-          config,
-        ),
-        "remaining_count": remainingCount,
-        // @ts-ignore: add meta
-        "remaining_label": mustache.render(
-          currentTranslations.more_posts_label,
-          {
-            "count": remainingCount,
-          },
-        ),
-        items: takedItems,
+        items: [],
+        _sources: [],
       };
-    });
-    // write to dist file
-    const feedPath = getDistFilePath(
-      indexSubDomain,
-      `${language.prefix}feed.json`,
-    );
-    await writeJSONFile(feedPath, feedJson);
-    feedJson.items = feedJson.items.map((item) => {
-      item.summary = item.summary.replace(/\n/g, "&lt;br&gt;");
-      // @ts-ignore: must
-      delete item.content_text;
-      if (item.date_modified === item.date_published) {
-        // @ts-ignore: must
-        delete item.date_modified;
+      // @ts-ignore: add meta
+      feedJson._is_lite = feedJson._site_version === "lite";
+      // @ts-ignore: add meta
+      feedJson._advice_url = config.advice_url;
+      // @ts-ignore: add meta
+      feedJson._title_suffix = " - " + currentIndexTranslations.description;
+      if (indexConfig.tags) {
+        feedJson._site_tags = indexConfig.tags;
       }
-      const originalLanguage = item._original_language;
-      let originalTitle = "";
-      if (originalLanguage) {
-        if (originalLanguage !== language.code) {
-          const translations = item?._translations;
-          if (translations && translations[originalLanguage]) {
-            originalTitle = translations[originalLanguage]!.title;
+      let feedItems: FeedItem[] = [];
+      for (const siteIdentifier of siteIdentifiers) {
+        const currentFeedJsonPath = path.join(
+          getDistPath(),
+          siteIdentifier,
+          language.prefix,
+          version.prefix,
+          "feed.json",
+        );
+        let siteFeedJson: Feedjson;
+        try {
+          siteFeedJson = await readJSONFile(
+            currentFeedJsonPath,
+          ) as Feedjson;
+        } catch (e) {
+          log.info(`can not read feed.json file: ${currentFeedJsonPath}`);
+          throw e;
+        }
+
+        // format summary, content_text newline with <br>
+        feedItems = feedItems.concat(
+          siteFeedJson.items.map((item) => {
+            item.content_html = item.content_html;
+            // item.content_html = item._lite_content_html || item.content_html;
+            // @ts-ignore: add meta
+            item._site_identifier = siteIdentifier;
+            // @ts-ignore: add meta
+            item._human_time = formatHumanTime(
+              new Date(item._original_published),
+            );
+            // @ts-ignore: add meta
+            item._category = config.sites[siteIdentifier].category;
+            return item;
+          }),
+        );
+      }
+      // format format _groups
+      // @ts-ignore: add meta
+      const groups = groupBy(feedItems, "_site_identifier");
+      const categoryGroupKeys = Object.keys(groups);
+      // sort by priority
+      categoryGroupKeys.sort((a, b) => {
+        return (
+          (config.sites[a].priority || 100) - (config.sites[b].priority || 100)
+        );
+      });
+      // category sort
+      // const sortedCategory = [
+      //   "Featured",
+      //   "Tech",
+      //   "Finance",
+      //   "News",
+      //   "Product",
+      //   "Ask",
+      //   "Entertainment",
+      //   "Dev",
+      // ];
+      // sort categoryGroupKeys
+      // categoryGroupKeys.sort((a, b) => {
+      //   const aIndex = sortedCategory.indexOf(a);
+      //   const bIndex = sortedCategory.indexOf(b);
+      //   if (aIndex === -1 && bIndex === -1) {
+      //     return a.localeCompare(b);
+      //   }
+      //   if (aIndex === -1) {
+      //     return 1;
+      //   }
+      //   if (bIndex === -1) {
+      //     return -1;
+      //   }
+      //   return aIndex - bIndex;
+      // });
+
+      // @ts-ignore: add meta
+      feedJson._groups = categoryGroupKeys.map((siteIdentifier) => {
+        const siteItemsGroups = groups[siteIdentifier];
+        // @ts-ignore: add meta
+        const currentTranslations = getCurrentTranslations(
+          siteIdentifier,
+          language.code,
+          config,
+        );
+        const takedCount = 24;
+        const takedItems = siteItemsGroups.slice(0, takedCount)
+          .map(
+            (item: FeedItem, index: number) => {
+              // @ts-ignore: add meta
+              item.order = index + 1;
+              return item;
+            },
+          );
+        const remainingCount = siteItemsGroups.length -
+          takedCount;
+        feedJson.items = feedJson.items.concat(takedItems);
+        return {
+          "title": currentTranslations.title,
+          "hostname": siteIdentifierToDomain(siteIdentifier),
+          "site_identifier": siteIdentifier,
+          "home_page_url": siteIdentifierToUrl(
+            siteIdentifier,
+            pathnameWithVersion,
+            config,
+          ),
+          "home_page_next_url": siteIdentifierToUrl(
+            siteIdentifier,
+            `${pathname}#${takedItems.length}`,
+            config,
+          ),
+          "atom_url": siteIdentifierToUrl(
+            siteIdentifier,
+            `${pathnameWithVersion}feed.xml`,
+            config,
+          ),
+          "home_page_lite_url": siteIdentifierToUrl(
+            siteIdentifier,
+            pathname + liteVersion.prefix,
+            config,
+          ),
+          "home_page_next_lite_url": siteIdentifierToUrl(
+            siteIdentifier,
+            `${pathname}${liteVersion.prefix}#${takedItems.length}`,
+            config,
+          ),
+          "remaining_count": remainingCount,
+          // @ts-ignore: add meta
+          "remaining_label": mustache.render(
+            currentTranslations.more_posts_label,
+            {
+              "count": remainingCount,
+            },
+          ),
+          items: takedItems,
+        };
+      });
+      // write to dist file
+      const feedPath = getDistFilePath(
+        indexSubDomain,
+        `${language.prefix}${version.prefix}feed.json`,
+      );
+      await writeJSONFile(feedPath, feedJson);
+      feedJson.items = feedJson.items.map((item) => {
+        item.summary = item.summary.replace(/\n/g, "&lt;br&gt;");
+        // @ts-ignore: must
+        delete item.content_text;
+        if (item.date_modified === item.date_published) {
+          // @ts-ignore: must
+          delete item.date_modified;
+        }
+        const originalLanguage = item._original_language;
+        let originalTitle = "";
+        if (originalLanguage) {
+          if (originalLanguage !== language.code) {
+            const translations = item?._translations;
+            if (translations && translations[originalLanguage]) {
+              originalTitle = translations[originalLanguage]!.title;
+            }
           }
         }
-      }
+        // @ts-ignore: must
+        item._original_title = originalTitle;
+
+        //= item.content_text.replace(/\n/g, "&lt;br&gt;");
+        return item;
+      });
       // @ts-ignore: must
-      item._original_title = originalTitle;
+      feedJson._categories = categoryGroupKeys;
 
-      //= item.content_text.replace(/\n/g, "&lt;br&gt;");
-      return item;
-    });
-    // @ts-ignore: must
-    feedJson._categories = categoryGroupKeys;
+      // build feed.xml
+      // @ts-ignore: npm module
+      const feedOutput = jsonfeedToAtom(feedJson, {
+        language: feedJson.language,
+      });
+      // const rssOutput = "";
+      // write to dist file
+      const rssPath = getDistFilePath(
+        indexSubDomain,
+        `${language.prefix}${version.prefix}feed.xml`,
+      );
+      await writeTextFile(rssPath, feedOutput);
 
-    // build feed.xml
-    // @ts-ignore: npm module
-    const feedOutput = jsonfeedToAtom(feedJson, {
-      language: feedJson.language,
-    });
-    // const rssOutput = "";
-    // write to dist file
-    const rssPath = getDistFilePath(
-      indexSubDomain,
-      `${language.prefix}feed.xml`,
-    );
-    await writeTextFile(rssPath, feedOutput);
+      const indexPath = getDistFilePath(
+        indexSubDomain,
+        `${language.prefix}${version.prefix}index.html`,
+      );
+      const indexHTML = feedToHTML(
+        feedJson,
+        config,
+        indexTemplateString,
+        config.languages,
+        config.versions,
+      );
+      await writeTextFile(indexPath, indexHTML);
 
-    const indexPath = getDistFilePath(
-      indexSubDomain,
-      `${language.prefix}index.html`,
-    );
-    const indexHTML = feedToHTML(
-      feedJson,
-      config,
-      indexTemplateString,
-      config.languages,
-      config.versions.slice(0, 1),
-    );
-    await writeTextFile(indexPath, indexHTML);
-
-    // latest item date_modified is greater Monday
-    // we will run archive task, try to archive all items of their week
+      // latest item date_modified is greater Monday
+      // we will run archive task, try to archive all items of their week
+    }
   }
   // copy static assets
   await copyStaticAssets(indexSubDomain);
