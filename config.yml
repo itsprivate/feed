@@ -1658,9 +1658,12 @@ sources:
   - id: source-ft
     type: rss
     api:
-      url: https://www.ft.com/news-feed?format=rss
-      name: Financial Times
-      home_page_url: https://www.ft.com/
+      - url: https://www.ft.com/rss/home/international
+        name: Financial Times International
+        home_page_url: https://www.ft.com/
+      - url: https://www.ft.com/rss/world
+        name: Financial Times World
+        home_page_url: https://www.ft.com/world
   - id: source-twitter-reuters
     type: twitterlink
     api:
