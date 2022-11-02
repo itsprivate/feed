@@ -461,7 +461,7 @@ export default async function fetchSources(
         let itemsCount = 10;
         originalItems = originalItems.filter(
           (item: Item<unknown>, index: number) => {
-            if (sourceId === "source-google-news") {
+            if (sourceId === "source-google-newsall") {
               return true;
             }
 

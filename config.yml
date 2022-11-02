@@ -1149,7 +1149,31 @@ sites:
         short_title: "BBC"
         description: '人気のBBCの最新 の投稿'
         keywords: "BBC"
-
+  googlenews:
+    port: 8037
+    priority: 37
+    archive: true
+    category: News
+    redirect: true
+    tags:
+      - news
+      - source-google-newsall
+    translations:
+      zh-Hans:
+        title: 谷歌全球新闻
+        description: 第一时间用中文浏览谷歌全球新闻
+        keyworkds: "buzzing,西方媒体,国外新闻,世界新闻,突发新闻"
+        short_title: 谷歌新闻
+      en:
+        title: Google News
+        description: See what''s buzzing on Google News in your native language
+        keyworkds: "buzzing,western media,world news,breaking news"
+        short_title: Google News
+      ja:
+        title: グーグルニュース
+        description: 人気のグーグルニュースの最新 の投稿
+        keyworkds: "buzzing,western media,world news,breaking news"
+        short_title: グーグルニュース
 versions:
   - prefix: ""
     code: "default"
@@ -1189,6 +1213,8 @@ sources:
         home_page_url: https://news.google.com/topics/CAAqJggKIiBDQkFTRWdvSUwyMHZNRGx1YlY4U0FtVnVHZ0pWVXlnQVAB?hl=en-US&gl=US&ceid=US:en
     type: googlenews
     rules:
+      - type: limit
+        value: "20"
       - type: notEqual
         key: getHostname
         value: www.yourtango.com
@@ -1223,6 +1249,46 @@ sources:
         key: getHostname
         value: whatculture.com
 
+  - id: source-google-newsall
+    api:
+      - url: https://news.google.com/rss/topics/CAAqJggKIiBDQkFTRWdvSUwyMHZNRGx1YlY4U0FtVnVHZ0pWVXlnQVAB?hl=en-US&gl=US&ceid=US:en
+        name: Google News World
+        home_page_url: https://news.google.com/topics/CAAqJggKIiBDQkFTRWdvSUwyMHZNRGx1YlY4U0FtVnVHZ0pWVXlnQVAB?hl=en-US&gl=US&ceid=US:en
+    type: googlenews
+    rules:
+      - type: notEqual
+        key: getHostname
+        value: www.yourtango.com
+      - type: notEqual
+        key: getHostname
+        value: www.youtube.com
+      - type: notEqual
+        key: getHostname
+        value: www.outkick.com
+      - type: notEqual
+        key: getHostname
+        value: www.thedailybeast.com
+      - type: notEqual
+        key: getHostname
+        value: www.nejm.org
+      - type: notEqual
+        key: getHostname
+        value: www.bleachernation.com
+      - type: notEqual
+        key: getHostname
+        value: www.wgal.com
+      - type: notEqual
+        key: getHostname
+        value: www.allkpop.com
+      - type: notEqual
+        key: getHostname
+        value: www.soompi.com
+      - type: notInclude
+        key: getUrl
+        value: www.indiatoday.in/horoscopes
+      - type: notEqual
+        key: getHostname
+        value: whatculture.com
   - api:
       - url: https://news.google.com/rss/topics/CAAqIAgKIhpDQkFTRFFvSEwyMHZNR293YXhJQ1pXNG9BQVAB?hl=en-US&gl=US&ceid=US%3Aen
         name: Google Asia News
@@ -1717,7 +1783,7 @@ sources:
       name: Google News China
     rules:
       - type: limit
-        value: "44"
+        value: "20"
   - api:
       url: spectatorindex
       name: The Spectator Index Twitter
