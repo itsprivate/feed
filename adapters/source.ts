@@ -45,22 +45,6 @@ export default class source extends Item<FormatedItem> {
     return this.originalItem._title_suffix || "";
   }
 
-  getCachedKeys(): string[] {
-    const finalUrl = tryToRemoveUnnecessaryParams(this.getUrl());
-    const keys = [
-      `${this.getOriginalLanguage()}_${this.getType()}__${this.getId()}`,
-      `${finalUrl}`,
-    ];
-    const type = this.getType();
-    if (
-      type === "googlenews" || type === "twitter" || type === "twitterlink" ||
-      type === "lobste" || type === "hn" || type === "newyorker" ||
-      type === "rss" || type === "thechinaproject"
-    ) {
-      keys.push(`${this.getTitle().toLowerCase()}`);
-    }
-    return keys;
-  }
   getUrl(): string {
     // fix non http url
     const urlStr = this.originalItem.url;

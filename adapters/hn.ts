@@ -15,13 +15,6 @@ export default class hn extends Item<HnItem> {
     }
     return true;
   }
-  getCachedKeys(): string[] {
-    return [
-      `${this.getOriginalLanguage()}_${this.getType()}__${this.getId()}`,
-      `${this.getUrl()}`,
-      `${this.getTitle().toLowerCase()}`,
-    ];
-  }
   getTitle(): string {
     const title = this.originalItem.title as string;
     for (const prefix of prefixies) {

@@ -61,10 +61,21 @@ export default class Item<T> {
   }
   getCachedKeys(): string[] {
     const finalUrl = tryToRemoveUnnecessaryParams(this.getUrl());
-    return [
+    const keys = [
       `${this.getOriginalLanguage()}_${this.getType()}__${this.getId()}`,
       `${finalUrl}`,
     ];
+    const type = this.getType();
+    if (
+      this.getTitle() &&
+      (type === "googlenews" ||
+        type === "twitter" || type === "twitterlink" ||
+        type === "lobste" || type === "hn" || type === "newyorker" ||
+        type === "rss" || type === "thechinaproject")
+    ) {
+      keys.push(`${this.getTitle()!.toLowerCase()}`);
+    }
+    return keys;
   }
   getOriginalLanguage(): string {
     return "en";
