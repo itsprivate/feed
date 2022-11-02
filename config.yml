@@ -1100,6 +1100,31 @@ sites:
         short_title: "Reddit中国"
         description: "人気のReddit中国の最新 の投稿"
         keywords: "Reddit中国"
+  reuters:
+    port: 8035
+    priority: 32
+    archive: true
+    category: News
+    tags:
+      - news
+      - www
+      - source-twitter-reuters
+    translations:
+      "zh-Hans":
+        title: '路透社'
+        short_title: "路透社"
+        description: '用中文浏览路透社相关报道'
+        keywords: "路透社,财经,财经新闻"
+      'en':
+        title: 'Reuters'
+        short_title: "Reuters"
+        description: 'See what''s buzzing on Reuters in your native language'
+        keywords: "Reuters"
+      'ja':
+        title: 'レイチャーズ'
+        short_title: "レイチャーズ"
+        description: '人気のレイチャーズの最新 の投稿'
+        keywords: "レイチャーズ"
 
 versions:
   - prefix: ""
@@ -1612,6 +1637,17 @@ sources:
       url: https://www.ft.com/rss/home/international
       name: Financial Times
       home_page_url: https://www.ft.com/
+  - id: source-twitter-reuters
+    type: twitterlink
+    api:
+      url: Reuters
+      name: Reuters Twitter
+      home_page_url: https://twitter.com/Reuters
+    rules:
+      - type: notInclude
+        key: getHostname
+        value: "www.youtube.com"
+
   - id: source-twitter-bloomberg
     type: twitterlink
     api:

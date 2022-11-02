@@ -1050,11 +1050,14 @@ export function tryToRemoveUnnecessaryParams(
   urlObj.searchParams.delete("srnd");
   // sref
   urlObj.searchParams.delete("sref");
+  // taid
+  urlObj.searchParams.delete("taid");
 
   // if www.bloomberg.com, remove all search params
   if (
     urlObj.hostname === "www.bloomberg.com" ||
-    urlObj.hostname === "www.businessinsider.com"
+    urlObj.hostname === "www.businessinsider.com" ||
+    urlObj.hostname === "www.reuters.com"
   ) {
     urlObj.search = "";
   }
