@@ -109,13 +109,14 @@
         display: flex;
         text-align: left;
         flex-wrap: wrap;
+        justify-content: space-between;
       }
       .card-inner{
         padding: 0.5em;
       }
       .card{
-        flex: 0 1 16em;
-        margin: 0.5em;
+        flex: 1 1 15.625em;
+        margin: 0.2em;
         border-radius: 0.5em;
         background-color: #fff;
         box-shadow: 0 -0.5px 0.5px rgba(135, 116, 87,0.1),0 -0.5px 0.5px rgba(135, 116, 87,0.1),0 2px 1px rgba(135, 116, 87,0.1),0 10px 15px -5px rgba(135, 116, 87,0.1),0 2px 3px rgba(135, 116, 87,0.1);
@@ -152,6 +153,7 @@
       }
       .header{
         padding-top: 0.5em;
+        text-align: center;
       }
       .text-left{
         text-align: left;
@@ -353,102 +355,102 @@
   <body>
     <div id="top"></div>
     <header class="header px">
-    <div>
-      <a class="contrast no-underline small" href="{{{_site_url}}}">{{
-        _site_title
-      }}</a>
-      <span> · </span>
-      <a id="about" href="#about" class="about muted small">{{
-        about_label
-      }}</a>
-      <a href="#" class="less-about muted small">{{ less_label }}</a>
-      <span> · </span>
-      {{#_related_sites}}
-      <a class="muted small" href="{{{url}}}">{{ name }}</a
-      >{{^is_last}}<span> · </span>{{/is_last}}
-      {{/_related_sites}}
-      {{#_other_sites.0}}
-      <a id="more" href="#more" class="more muted small">+ {{ more_label }}</a>
-      <a id="less" href="#" class="less muted small">- {{ less_label }}</a>
-      <div class="details small">
-        {{/_other_sites.0}} {{#_other_sites}}
-        <a class="muted" href="{{{url}}}">{{ name }}</a
-        >{{^is_last}}<span> · </span>{{/is_last}} {{/_other_sites}}
-        {{#_versions.1}}
-        &nbsp;
-        <select onchange="location = this.value;">
-          {{#_versions}}
-            <option value="{{{url}}}" {{selected}}>
-            {{name}}
-            </option>
-          {{/_versions}}
-        </select>
-        {{/_versions.1}}
-
-        &nbsp;
-        <select onchange="location = this.value;">
-          {{#_languages}}
-            <option value="{{{url}}}" {{selected}}>
-            {{name}}
-            </option>
-          {{/_languages}}
-        </select>
+      <div>
+        <a class="contrast no-underline small" href="{{{_site_url}}}">{{
+          _site_title
+        }}</a>
+        <span> · </span>
+        <a id="about" href="#about" class="about muted small">{{
+          about_label
+        }}</a>
+        <a href="#" class="less-about muted small">{{ less_label }}</a>
+        <span> · </span>
+        {{#_related_sites}}
+        <a class="muted small" href="{{{url}}}">{{ name }}</a
+        >{{^is_last}}<span> · </span>{{/is_last}}
+        {{/_related_sites}}
         {{#_other_sites.0}}
-      </div>
-      {{/_other_sites.0}}
-      <div class="text-left about-content contrast small">
-        <p class="p-summary site-description">{{ description }}</p>
-        <div>
-        {{#_versions.1}}
-        {{ version_label }}: {{#_versions}} {{#active}}
-          <span>{{ name }}</span>
-          {{/active}} {{^active}}
-          <a href="{{{url}}}">{{ name }} </a>
-          {{/active}} {{/_versions}}
-          <br />
-        {{/_versions.1}}
-                 {{ languages_label }}:
-          <ul>
-          {{#_languages}}
-            <li>
-              {{#active}}
-                <span>{{ name }}</span>
-              {{/active}}
-              {{^active}}
-                <a href="{{{url}}}">{{ name }}</a>
-              {{/active}}
-            </li>
-          {{/_languages}}
-          </ul>
-          {{ subscription_label }}:
-          <ul>
-          {{#_atom_url}}
-            <li><a href="{{{_atom_url}}}">Atom/RSS Feed</a></li>
-          {{/_atom_url}}
-          {{#feed_url}}
-            <li><a href="{{{feed_url}}}">JSON Feed</a></li>
-          {{/feed_url}}
-          </ul>
-          {{social_label}}:
-          <ul>
-          {{#_social_links}}<li><a href="{{url}}">{{name}}</a></li>{{/_social_links}}
-          </ul>
-          {{#_sources.0}}
-          {{ sources_label }}:
-           <ul>
-          {{#_sources}}<li><a href="{{url}}">{{name}}</a></li>{{/_sources}}
-          </ul>
-          {{/_sources.0}}
-          {{latest_build_at_lable}}: {{_latest_build_time}} &nbsp; <a href="/stats/">{{stat_label}}</a>
-          <br />
-          {{ powered_by_label }}:
-          <a href="https://www.owenyoung.com">Owen</a> (<a href="https://twitter.com/OwenYoungZh">Twitter</a>)
+        <a id="more" href="#more" class="more muted small">+ {{ more_label }}</a>
+        <a id="less" href="#" class="less muted small">- {{ less_label }}</a>
+        <div class="details small">
+          {{/_other_sites.0}} {{#_other_sites}}
+          <a class="muted" href="{{{url}}}">{{ name }}</a
+          >{{^is_last}}<span> · </span>{{/is_last}} {{/_other_sites}}
+          {{#_versions.1}}
+          &nbsp;
+          <select onchange="location = this.value;">
+            {{#_versions}}
+              <option value="{{{url}}}" {{selected}}>
+              {{name}}
+              </option>
+            {{/_versions}}
+          </select>
+          {{/_versions.1}}
+
+          &nbsp;
+          <select onchange="location = this.value;">
+            {{#_languages}}
+              <option value="{{{url}}}" {{selected}}>
+              {{name}}
+              </option>
+            {{/_languages}}
+          </select>
+          {{#_other_sites.0}}
         </div>
-      </div>
-      {{#_page_title}}
-      <h3>{{.}}</h3>
-      {{/_page_title}}
-      </div>
+        {{/_other_sites.0}}
+        <div class="text-left about-content contrast small">
+          <p class="p-summary site-description">{{ description }}</p>
+          <div>
+          {{#_versions.1}}
+          {{ version_label }}: {{#_versions}} {{#active}}
+            <span>{{ name }}</span>
+            {{/active}} {{^active}}
+            <a href="{{{url}}}">{{ name }} </a>
+            {{/active}} {{/_versions}}
+            <br />
+          {{/_versions.1}}
+                   {{ languages_label }}:
+            <ul>
+            {{#_languages}}
+              <li>
+                {{#active}}
+                  <span>{{ name }}</span>
+                {{/active}}
+                {{^active}}
+                  <a href="{{{url}}}">{{ name }}</a>
+                {{/active}}
+              </li>
+            {{/_languages}}
+            </ul>
+            {{ subscription_label }}:
+            <ul>
+            {{#_atom_url}}
+              <li><a href="{{{_atom_url}}}">Atom/RSS Feed</a></li>
+            {{/_atom_url}}
+            {{#feed_url}}
+              <li><a href="{{{feed_url}}}">JSON Feed</a></li>
+            {{/feed_url}}
+            </ul>
+            {{social_label}}:
+            <ul>
+            {{#_social_links}}<li><a href="{{url}}">{{name}}</a></li>{{/_social_links}}
+            </ul>
+            {{#_sources.0}}
+            {{ sources_label }}:
+             <ul>
+            {{#_sources}}<li><a href="{{url}}">{{name}}</a></li>{{/_sources}}
+            </ul>
+            {{/_sources.0}}
+            {{latest_build_at_lable}}: {{_latest_build_time}} &nbsp; <a href="/stats/">{{stat_label}}</a>
+            <br />
+            {{ powered_by_label }}:
+            <a href="https://www.owenyoung.com">Owen</a> (<a href="https://twitter.com/OwenYoungZh">Twitter</a>)
+          </div>
+        </div>
+        {{#_page_title}}
+        <h3>{{.}}</h3>
+        {{/_page_title}}
+        </div>
     </header>
     <details class="my">
       <summary class="px bold text-lg contrast">{{table_of_contents_label}}</summary>

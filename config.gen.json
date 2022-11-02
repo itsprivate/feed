@@ -2251,7 +2251,7 @@
         },
         {
           "type": "limit",
-          "value": 25
+          "value": 20
         },
         {
           "type": "notEqual",
