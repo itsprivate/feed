@@ -1634,7 +1634,7 @@ sources:
   - id: source-ft
     type: rss
     api:
-      url: https://www.ft.com/rss/home/international
+      url: https://www.ft.com/news-feed?format=rss
       name: Financial Times
       home_page_url: https://www.ft.com/
   - id: source-twitter-reuters
