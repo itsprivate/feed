@@ -198,7 +198,7 @@
     "hnfront": {
       "port": 8001,
       "category": "Tech",
-      "priority": 10,
+      "priority": 28,
       "tags": [
         "hn",
         "source-hackernews-index"
@@ -231,7 +231,7 @@
       }
     },
     "hn": {
-      "priority": 29,
+      "priority": 10,
       "category": "Featured",
       "port": 8002,
       "redirect": true,
@@ -339,7 +339,7 @@
     },
     "reddit": {
       "port": 8005,
-      "priority": 19,
+      "priority": 28,
       "redirect": true,
       "category": "Entertainment",
       "max_image_height": 520,
@@ -849,7 +849,7 @@
     "hnnew": {
       "port": 8018,
       "redirect": true,
-      "priority": 16,
+      "priority": 24,
       "archive": true,
       "category": "Tech",
       "tags": [
@@ -1071,7 +1071,7 @@
     },
     "feminism": {
       "port": 8024,
-      "priority": 27,
+      "priority": 30,
       "category": "Discuss",
       "archive": true,
       "max_image_height": 520,
@@ -1111,7 +1111,7 @@
     },
     "tech": {
       "port": 8025,
-      "priority": 15,
+      "priority": 25,
       "archive": true,
       "category": "Tech",
       "tags": [
@@ -1681,6 +1681,11 @@
           "type": "notInclude",
           "key": "getUrl",
           "value": "www.indiatoday.in/horoscopes"
+        },
+        {
+          "type": "notEqual",
+          "key": "getHostname",
+          "value": "whatculture.com"
         }
       ]
     },
