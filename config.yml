@@ -1704,7 +1704,7 @@ sources:
     rules:
       - type: greaterEqual
         key: getWeightedScore
-        value: "300"
+        value: "200"
   - id: source-the-guardian
     type: rss
     api:
