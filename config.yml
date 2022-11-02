@@ -1674,6 +1674,15 @@ sources:
       - type: notInclude
         key: getHostname
         value: "www.youtube.com"
+      - type: notInclude
+        key: getUrl
+        value: "www.reuters.com/video"
+      - type: notInclude
+        key: getUrl
+        value: www.reuters.com/lifestyle
+      - type: notInclude
+        key: getUrl
+        value: www.reuters.com/legal
 
   - id: source-twitter-bloomberg
     type: twitterlink
