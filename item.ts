@@ -791,7 +791,31 @@ export default class Item<T> {
     }
     // add tags
     const tag_links: Link[] = [];
-    if (item.tags && Array.isArray(item.tags) && item.tags.length > 0) {
+    const diabled_taglinks = [
+      "worldnews",
+      "theguardian",
+      "tech",
+      "ph",
+      "redditchina",
+      "economist",
+      "nytimes",
+      "showhn",
+      "lobste",
+      "wsj",
+      "businessinsider",
+      "reuters",
+      "sideproject",
+      "linux",
+      "dev",
+      "newyorker",
+      "askhn",
+      "quora",
+      "bloomberg",
+    ];
+    if (
+      !diabled_taglinks.includes(siteIdentifier) && item.tags &&
+      Array.isArray(item.tags) && item.tags.length > 0
+    ) {
       for (const tag of item.tags) {
         const isGreaterFirst = index >= 1;
         if (!isLite) {
