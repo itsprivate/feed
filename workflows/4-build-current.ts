@@ -263,6 +263,13 @@ export default async function buildCurrent(
         // note: old file may use by other site, so we can not delete it now
         // just put it to set of files to be deleted
         filesNeedToBeDeleted.add(file);
+
+        // write to current keys
+        itemInstance.getCachedKeys().forEach((key) => {
+          if (!currentKeysMap.has(key)) {
+            currentKeysMap.set(key, true);
+          }
+        });
       }
       if (isTagsChanged) {
         currentItemsJson.tags = currentTags;

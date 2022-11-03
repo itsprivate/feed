@@ -589,13 +589,13 @@ export default async function fetchSources(
               sourceStat.in_other++;
             }
 
+            const itemCachedKeys = item.getCachedKeys();
             // add keys to currentKeysMap, so we can check if current item is duplicated
             for (const targetSiteIdentifier of targetSiteIdentifiers) {
               const currentKeys = currentKeysMap.get(targetSiteIdentifier);
               if (!currentKeys) {
                 currentKeysMap.set(targetSiteIdentifier, new Map());
               }
-              const itemCachedKeys = item.getCachedKeys();
 
               for (const itemCachedKey of itemCachedKeys) {
                 currentKeysMap.get(targetSiteIdentifier)!.set(
@@ -603,6 +603,9 @@ export default async function fetchSources(
                   true,
                 );
               }
+            }
+            for (const itemCachedKey of itemCachedKeys) {
+              currentmergedKeysMap.set(itemCachedKey, true);
             }
           } else {
             log.info(`remove item ${item.getUrl()} by rules`);

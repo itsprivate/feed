@@ -2189,7 +2189,7 @@
         {
           "type": "greaterEqual",
           "key": "getWeightedScore",
-          "value": "50"
+          "value": "80"
         },
         {
           "type": "notEqual",

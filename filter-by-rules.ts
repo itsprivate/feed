@@ -1,5 +1,5 @@
 import { Rule } from "./interface.ts";
-import { get } from "./util.ts";
+import { get, hasSameKeys } from "./util.ts";
 import Item from "./item.ts";
 export default function filterByRules<T>(
   originalItems: Item<T>[],
@@ -16,10 +16,17 @@ export default function filterByRules<T>(
   if (limitRule) {
     originalItems = originalItems.slice(0, Number(limitRule.value));
   }
+  // remove duplicated items
+  const keysMap = new Map<string, boolean>();
+
   const newItems = [];
   for (const item of originalItems) {
     // check is valid
     if (!item.isValid()) {
+      continue;
+    }
+    const itemCachedKeys = item.getCachedKeys();
+    if (hasSameKeys(keysMap, itemCachedKeys).length > 0) {
       continue;
     }
     // check rules
@@ -107,6 +114,11 @@ export default function filterByRules<T>(
       continue;
     } else {
       newItems.push(item);
+    }
+    if (itemCachedKeys) {
+      for (const key of itemCachedKeys) {
+        keysMap.set(key, true);
+      }
     }
   }
   return newItems;

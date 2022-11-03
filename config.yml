@@ -1534,7 +1534,7 @@ sources:
     rules:
       - type: greaterEqual
         key: getWeightedScore
-        value: "50"
+        value: "80"
       - type: notEqual
         key: getUrl
         value: "https://www.wsj.com/"
