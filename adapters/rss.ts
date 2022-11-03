@@ -19,11 +19,13 @@ export default class rss extends Item<RSSItem> {
       id = url.hostname.replace(/\./g, "-") + "-" +
         url.pathname.replace(/\//g, "-");
     }
-    id = id.replace(/[^a-zA-Z0-9-]/g, "-");
+    if (id) {
+      id = id.replace(/[^a-zA-Z0-9-]/g, "-");
 
-    // if id is too long, use md5
-    if (id.length > 200) {
-      return id.slice(0, 200);
+      // if id is too long, use md5
+      if (id.length > 200) {
+        return id.slice(0, 200);
+      }
     }
 
     return id;
