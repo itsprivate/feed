@@ -1590,6 +1590,42 @@
           "short_title": "谷歌新聞"
         }
       }
+    },
+    "politico": {
+      "port": 8038,
+      "priority": 29,
+      "archive": true,
+      "category": "News",
+      "tags": [
+        "news",
+        "source-rss-politico"
+      ],
+      "translations": {
+        "zh-Hans": {
+          "title": "政客(Politico)",
+          "short_title": "Politico",
+          "description": "用中文浏览政客(Politico)相关报道",
+          "keywords": "政客,政治,政治新闻"
+        },
+        "en": {
+          "title": "Politico",
+          "short_title": "Politico",
+          "description": "See what''s buzzing on Politico in your native language",
+          "keywords": "Politico"
+        },
+        "ja": {
+          "title": "ポリティコ",
+          "short_title": "ポリティコ",
+          "description": "人気のポリティコの最新 の投稿",
+          "keywords": "ポリティコ"
+        },
+        "zh-Hant": {
+          "title": "政客(Politico)",
+          "short_title": "Politico",
+          "description": "用中文瀏覽政客(Politico)相關報道",
+          "keywords": "政客,政治,政治新聞"
+        }
+      }
     }
   },
   "versions": [
@@ -2667,6 +2703,27 @@
         "home_page_url": "https://www.bbc.com/news/world"
       },
       "type": "rss"
+    },
+    {
+      "id": "source-rss-politico",
+      "type": "rss",
+      "api": [
+        {
+          "url": "https://rss.politico.com/economy.xml",
+          "name": "Politico Economy",
+          "home_page_url": "https://www.politico.com/"
+        },
+        {
+          "url": "https://rss.politico.com/technology.xml",
+          "name": "Politico Technology",
+          "home_page_url": "https://www.politico.com/technology"
+        },
+        {
+          "name": "Politico Politics",
+          "home_page_url": "https://www.politico.com/politics",
+          "url": "https://rss.politico.com/politics-news.xml"
+        }
+      ]
     }
   ]
 }
