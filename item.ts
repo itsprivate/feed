@@ -65,6 +65,9 @@ export default class Item<T> {
       `${this.getOriginalLanguage()}_${this.getType()}__${this.getId()}`,
       `${finalUrl}`,
     ];
+    if (this.getRawUrl()) {
+      keys.push(tryToRemoveUnnecessaryParams(this.getRawUrl()!));
+    }
     const type = this.getType();
     if (
       this.getTitle() &&
@@ -158,6 +161,9 @@ export default class Item<T> {
   }
   getRealUrl(): string {
     return this.realUrl || this.getUrl();
+  }
+  getRawUrl(): string | undefined {
+    return undefined;
   }
   getHostname(): string {
     return new URL(this.getUrl()).hostname;
@@ -500,6 +506,7 @@ export default class Item<T> {
         const redirectedUrl = await getRedirectedUrl(originalUrl);
         this.realUrl = redirectedUrl;
         formatedItem.url = this.realUrl;
+        formatedItem._raw_url = originalUrl;
       }
     }
     // transform url

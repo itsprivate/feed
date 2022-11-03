@@ -44,6 +44,9 @@ export default class source extends Item<FormatedItem> {
   getTitleSuffix(): string {
     return this.originalItem._title_suffix || "";
   }
+  getRawUrl(): string | undefined {
+    return this.originalItem._raw_url;
+  }
 
   getUrl(): string {
     // fix non http url

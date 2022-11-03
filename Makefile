@@ -60,6 +60,10 @@ run:
 runsite:
 	deno run -A --watch=main.ts,templates/,config.yml main.ts --stage format,translate,build_current,archive,build_site,serve_site --site ${site}
 
+.Phony: prod-runsite
+prod-runsite:
+	PROD=1 deno run -A --watch=main.ts,templates/,config.yml main.ts --stage format,translate,build_current,archive,build_site,serve_site --site ${site}
+
 .Phony: runall
 runall:
 	deno run -A --watch=main.ts,templates/,config.yml main.ts --stage format,translate,build_current,archive,build_site,serve_site
@@ -126,6 +130,9 @@ format:
 formatsite:
 	deno run -A main.ts --stage format --site ${site}
 
+.Phony: prod-formatsite
+prod-formatsite:
+	PROD=1 deno run -A main.ts --stage format --site ${site}
 .Phony: formatall
 formatall:
 	deno run -A main.ts --stage format

@@ -168,6 +168,7 @@ export interface FormatedItem {
   id: string;
   image?: string;
   url: string;
+  _raw_url?: string;
   date_published: string;
   date_modified: string;
   tags?: string[];
