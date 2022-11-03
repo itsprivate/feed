@@ -2771,14 +2771,14 @@
       "id": "source-twitter-businessinsider",
       "type": "twitterlink",
       "api": {
-        "url": "businessinsider",
+        "url": "BusinessInsider",
         "name": "Business Insider Twitter",
-        "home_page_url": "https://twitter.com/businessinsider"
+        "home_page_url": "https://twitter.com/BusinessInsider"
       },
       "rules": [
         {
           "type": "topRatio",
-          "value": "0.7"
+          "value": "0.8"
         }
       ]
     }
