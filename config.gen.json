@@ -2171,6 +2171,11 @@
           "type": "greaterEqual",
           "key": "getWeightedScore",
           "value": "150"
+        },
+        {
+          "type": "equal",
+          "key": "getHostname",
+          "value": "www.nytimes.com"
         }
       ]
     },

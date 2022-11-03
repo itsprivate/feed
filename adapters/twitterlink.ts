@@ -7,4 +7,13 @@ export default class twitterlink extends Twitter {
     const url = this.getUrl();
     return !url.startsWith("https://twitter.com/");
   }
+  getCategory(): string {
+    let category = "";
+    let url = this.getUrl();
+    const urlObj = new URL(url);
+    if (urlObj.hostname === "www.nytimes.com") {
+    }
+
+    return category;
+  }
 }

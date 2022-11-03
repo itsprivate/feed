@@ -16,6 +16,15 @@ export default function filterByRules<T>(
   if (limitRule) {
     originalItems = originalItems.slice(0, Number(limitRule.value));
   }
+
+  let topRule: Rule | undefined;
+  for (const rule of rules) {
+    if (rule.type === "top") {
+      topRule = rule;
+      break;
+    }
+  }
+
   // remove duplicated items
   const keysMap = new Map<string, boolean>();
 

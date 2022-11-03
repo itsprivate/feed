@@ -146,6 +146,9 @@ export default class Item<T> {
     // this will not be translated
     return "";
   }
+  getCategory(): string {
+    return "";
+  }
 
   getUrl(): string {
     if (this.realUrl) {
