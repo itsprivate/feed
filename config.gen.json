@@ -2543,6 +2543,11 @@
           "type": "notInclude",
           "key": "getUrl",
           "value": "https://www.theguardian.com/sport/"
+        },
+        {
+          "type": "notInclude",
+          "key": "getTags",
+          "value": "Sport"
         }
       ]
     },
