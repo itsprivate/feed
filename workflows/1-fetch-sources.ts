@@ -353,7 +353,7 @@ export default async function fetchSources(
           exclude_replies: true,
           include_rts: true,
           tweet_mode: "extended",
-          count: 100,
+          count: 50,
           // since_id,
           ...source.params,
         };
