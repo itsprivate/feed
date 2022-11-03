@@ -1373,9 +1373,8 @@ sources:
       name: Reddit Popular
       home_page_url: https://www.reddit.com/r/all/top/
     rules:
-      - type: greaterEqual
-        key: getWeightedScore
-        value: "40000"
+      - type: topRatio
+        value: "0.4"
   - id: source-reddit-ask
     type: reddit
     api:
@@ -1383,15 +1382,13 @@ sources:
       name: Ask Reddit Subreddit
       home_page_url: https://www.reddit.com/r/AskReddit/
     rules:
-      - type: greaterEqual
-        key: getWeightedScore
-        value: "70000"
+      - type: topRatio
+        value: "0.4"
   - id: source-reddit-askstupid
     type: reddit
     rules:
-      - type: greaterEqual
-        key: getWeightedScore
-        value: "4500"
+      - type: topRatio
+        value: "0.1"
     api:
       - url: https://www.reddit.com/r/TooAfraidToAsk/top/.json?raw_json=1
         name: Too Afraid To Ask Subreddit
@@ -1402,9 +1399,8 @@ sources:
   - id: source-reddit-ask
     type: reddit
     rules:
-      - type: greaterEqual
-        key: getWeightedScore
-        value: "100"
+      - type: topRatio
+        value: "0.2"
     api:
       - url: https://www.reddit.com/r/Ask_Politics/top/.json?raw_json=1
         name: Ask Politics Subreddit
@@ -1427,9 +1423,8 @@ sources:
   - id: source-reddit-wallstreetbets
     type: reddit
     rules:
-      - type: greaterEqual
-        key: getWeightedScore
-        value: "4000"
+      - type: topRatio
+        value: "0.1"
     api:
       url: https://www.reddit.com/r/wallstreetbets/top/.json?raw_json=1
       name: Wall Street Bets Subreddit
@@ -1438,9 +1433,8 @@ sources:
   - id: source-reddit-bogleheads
     type: reddit
     rules:
-      - type: greaterEqual
-        key: getWeightedScore
-        value: "15"
+      - type: topRatio
+        value: "0.2"
     api:
       url: https://www.reddit.com/r/Bogleheads/top/.json?raw_json=1
       name: Bogleheads Subreddit
@@ -1455,9 +1449,8 @@ sources:
         name: Investing Subreddit
         home_page_url: https://www.reddit.com/r/investing/
     rules:
-      - type: greaterEqual
-        key: getWeightedScore
-        value: "40"
+      - type: topRatio
+        value: "0.2"
   - id: source-producthunt-top
     api:
       url: https://api.producthunt.com/v2/api/graphql
@@ -1465,9 +1458,8 @@ sources:
       home_page_url: https://www.producthunt.com/
     type: ph
     rules:
-      - type: greaterEqual
-        key: getWeightedScore
-        value: "20"
+      - type: topRatio
+        value: "0.8"
   - id: source-crypto-reddit
     api:
       - url: https://www.reddit.com/r/CryptoCurrency/top/.json?raw_json=1
@@ -1478,16 +1470,14 @@ sources:
         home_page_url: https://www.reddit.com/r/Bitcoin/
     type: reddit
     rules:
-      - type: greaterEqual
-        key: getWeightedScore
-        value: "400"
+      - type: topRatio 
+        value: "0.3"
 
   - id: source-devto
     type: devto
     rules:
-      - type: greaterEqual
-        key: getWeightedScore
-        value: "40"
+      - type: topRatio
+        value: "0.5"
     api:
       url: https://dev.to/api/articles?top=3
       name: Dev.to
@@ -1499,9 +1489,8 @@ sources:
         home_page_url: https://www.reddit.com/r/SideProject/
     type: reddit
     rules:
-      - type: greaterEqual
-        key: getWeightedScore
-        value: "4"
+      - type: topRatio
+        value: "0.8"
   - api:
       - url: https://www.reddit.com/r/TrueReddit/new/.json?raw_json=1
         name: True Reddit Subreddit
@@ -1520,9 +1509,8 @@ sources:
     id: source-twitter-nytimes
     type: twitterlink
     rules:
-      - type: greaterEqual
-        key: getWeightedScore
-        value: "150"
+      - type: topRatio
+        value: "0.5"
       - type: equal
         key: getHostname
         value: www.nytimes.com
@@ -1535,9 +1523,8 @@ sources:
     id: source-twitter-wsj
     type: twitterlink
     rules:
-      - type: greaterEqual
-        key: getWeightedScore
-        value: "80"
+      - type: topRatio
+        value: "0.5"
       - type: notEqual
         key: getUrl
         value: "https://www.wsj.com/"
@@ -1550,9 +1537,8 @@ sources:
     id: source-twitter-economist
     type: twitterlink
     rules:
-      - type: greaterEqual
-        key: getWeightedScore
-        value: "50"
+      - type: topRatio
+        value: "0.6"
   - api:
       - url: charliebilello
         name: Charlie Bilello Twitter
@@ -1575,9 +1561,8 @@ sources:
     type: twitter
     id: source-twitter-stocks
     rules:
-      - type: greaterEqual
-        key: getWeightedScore
-        value: "500"
+      - type: topRatio
+        value: "0.4"
   - id: source-twitter-barraud
     api:
       - url: c_barraud
@@ -1612,9 +1597,8 @@ sources:
     type: twitter
     id: source-crypto-twitter
     rules:
-      - type: greaterEqual
-        key: getWeightedScore
-        value: "200"
+      - type: topRatio
+        value: "0.4"
   - api:
       url: 100trillionUSD
       name: 100 Trillion USD Twitter
@@ -1622,9 +1606,8 @@ sources:
     type: twitter
     id: source-crypto-twitter
     rules:
-      - type: greaterEqual
-        key: getWeightedScore
-        value: "3000"
+      - type: topRatio
+        value: "0.4"
   - api:
       url: Quora
       name: Quora Twitter
@@ -1650,9 +1633,8 @@ sources:
       name: Mealtime Videos Subreddit
       home_page_url: https://www.reddit.com/r/mealtimevideos/
     rules:
-      - type: greaterEqual
-        key: getWeightedScore
-        value: "5"
+      - type: topRatio
+        value: "0.8"
   - id: source-reddit-videos
     type: reddit
     api:
@@ -1660,9 +1642,8 @@ sources:
       name: Videos Subreddit
       home_page_url: https://www.reddit.com/r/videos/
     rules:
-      - type: greaterEqual
-        key: getWeightedScore
-        value: "50"
+      - type: topRatio
+        value: "0.8"
   - id: source-lobste
     type: lobste
     api:
@@ -1676,9 +1657,8 @@ sources:
       name: Linux Subreddit
       home_page_url: https://www.reddit.com/r/linux/
     rules:
-      - type: greaterEqual
-        key: getWeightedScore
-        value: "10"
+      - type: topRatio
+        value: "0.8"
   - api:
       url: thechinaproj
       name: thechinaproj Twitter
@@ -1688,9 +1668,8 @@ sources:
     id: source-thechinaproj
     type: thechinaproject
     rules:
-      - type: greaterEqual
-        key: getWeightedScore
-        value: "10"
+      - type: topRatio
+        value: "0.5"
   - id: source-reddit-china
     type: reddit
     api:
@@ -1698,9 +1677,8 @@ sources:
       name: China Subreddit
       home_page_url: https://www.reddit.com/r/China/
     rules:
-      - type: greaterEqual
-        key: getWeightedScore
-        value: "10"
+      - type: topRatio
+        value: "0.7"
   - id: source-reddit-askfeminist
     type: reddit
     api:
@@ -1714,9 +1692,8 @@ sources:
       name: Feminism Subreddit
       home_page_url: https://www.reddit.com/r/Feminism/
     rules:
-      - type: greaterEqual
-        key: getWeightedScore
-        value: "50"
+      - type: topRatio
+        value: "0.7"
   - id: source-reddit-technology
     type: reddit
     api:
@@ -1730,9 +1707,8 @@ sources:
       name: World News Subreddit
       home_page_url: https://www.reddit.com/r/worldnews/
     rules:
-      - type: greaterEqual
-        key: getWeightedScore
-        value: "200"
+      - type: topRatio
+        value: "0.5"
   - id: source-the-guardian
     type: rss
     api:
@@ -1768,9 +1744,8 @@ sources:
       name: Reuters Twitter
       home_page_url: https://twitter.com/Reuters
     rules:
-      - type: greaterEqual
-        key: getWeightedScore
-        value: "50"
+      - type: topRatio
+        value: "0.5"
       - type: notInclude
         key: getHostname
         value: "www.youtube.com"
@@ -1812,9 +1787,8 @@ sources:
       #   name: Bloomberg Opinion Twitter
       #   home_page_url: https://twitter.com/opinion
     rules:
-      - type: greaterEqual
-        key: getWeightedScore
-        value: "50"
+      - type: topRatio
+        value: "0.5"
       - type: equal
         key: getHostname
         value: www.bloomberg.com
@@ -1893,7 +1867,6 @@ sources:
       name: Politico Twitter
       home_page_url: https://twitter.com/politico
     rules:
-      - type: greaterEqual
-        key: getWeightedScore
-        value: "50"
+      - type: topRatio
+        value: "0.5"
 

@@ -446,16 +446,6 @@ export default async function fetchSources(
         `${sourceOrder}/${filteredSources.length} ${sourceId} fetched ${originalItems.length} raw items from ${sourceUrl} `,
       );
       sourceStat.raw_count = originalItems.length;
-      originalItems = filterByRules(
-        // @ts-ignore: hard to type
-        originalItems.map((originalItem) =>
-          new (adapters[sourceType])(
-            originalItem,
-          )
-        ),
-        rules,
-      ) as Item<unknown>[];
-
       // if google news limit time
       if (sourceType === "googlenews") {
         let itemsCount = 10;
@@ -476,6 +466,15 @@ export default async function fetchSources(
           },
         );
       }
+      originalItems = filterByRules(
+        // @ts-ignore: hard to type
+        originalItems.map((originalItem) =>
+          new (adapters[sourceType])(
+            originalItem,
+          )
+        ),
+        rules,
+      ) as Item<unknown>[];
 
       sourceStat.filtered_count = originalItems.length;
       log.info(
@@ -553,7 +552,10 @@ export default async function fetchSources(
         if (duplicatedKeys.length === 0) {
           // filter again, cause some attributes is geted by init()
           totalUniqued++;
-          const filterdItems = filterByRules([item], rules);
+          const filterdItems = filterByRules(
+            [item],
+            rules.filter((rule) => rule.type !== "topRatio"),
+          );
           if (filterdItems.length > 0) {
             // not exists
             // save original item to file

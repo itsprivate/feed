@@ -19,10 +19,22 @@ export default function filterByRules<T>(
 
   let topRule: Rule | undefined;
   for (const rule of rules) {
-    if (rule.type === "top") {
+    if (rule.type === "topRatio") {
       topRule = rule;
       break;
     }
+  }
+
+  if (topRule && topRule.value) {
+    const topRatio = Number(topRule.value);
+    const topCount = Math.floor(originalItems.length * topRatio);
+    // sort by score
+    originalItems.sort((a, b) => {
+      return b.getWeightedScore() - a.getWeightedScore();
+    });
+
+    originalItems = originalItems.slice(0, topCount);
+    // sort by originalPublished
   }
 
   // remove duplicated items

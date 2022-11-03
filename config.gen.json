@@ -1923,9 +1923,8 @@
       },
       "rules": [
         {
-          "type": "greaterEqual",
-          "key": "getWeightedScore",
-          "value": "40000"
+          "type": "topRatio",
+          "value": "0.4"
         }
       ]
     },
@@ -1939,9 +1938,8 @@
       },
       "rules": [
         {
-          "type": "greaterEqual",
-          "key": "getWeightedScore",
-          "value": "70000"
+          "type": "topRatio",
+          "value": "0.4"
         }
       ]
     },
@@ -1950,9 +1948,8 @@
       "type": "reddit",
       "rules": [
         {
-          "type": "greaterEqual",
-          "key": "getWeightedScore",
-          "value": "4500"
+          "type": "topRatio",
+          "value": "0.1"
         }
       ],
       "api": [
@@ -1973,9 +1970,8 @@
       "type": "reddit",
       "rules": [
         {
-          "type": "greaterEqual",
-          "key": "getWeightedScore",
-          "value": "100"
+          "type": "topRatio",
+          "value": "0.2"
         }
       ],
       "api": [
@@ -2016,9 +2012,8 @@
       "type": "reddit",
       "rules": [
         {
-          "type": "greaterEqual",
-          "key": "getWeightedScore",
-          "value": "4000"
+          "type": "topRatio",
+          "value": "0.1"
         }
       ],
       "api": {
@@ -2032,9 +2027,8 @@
       "type": "reddit",
       "rules": [
         {
-          "type": "greaterEqual",
-          "key": "getWeightedScore",
-          "value": "15"
+          "type": "topRatio",
+          "value": "0.2"
         }
       ],
       "api": {
@@ -2060,9 +2054,8 @@
       ],
       "rules": [
         {
-          "type": "greaterEqual",
-          "key": "getWeightedScore",
-          "value": "40"
+          "type": "topRatio",
+          "value": "0.2"
         }
       ]
     },
@@ -2076,9 +2069,8 @@
       "type": "ph",
       "rules": [
         {
-          "type": "greaterEqual",
-          "key": "getWeightedScore",
-          "value": "20"
+          "type": "topRatio",
+          "value": "0.8"
         }
       ]
     },
@@ -2099,9 +2091,8 @@
       "type": "reddit",
       "rules": [
         {
-          "type": "greaterEqual",
-          "key": "getWeightedScore",
-          "value": "400"
+          "type": "topRatio",
+          "value": "0.3"
         }
       ]
     },
@@ -2110,9 +2101,8 @@
       "type": "devto",
       "rules": [
         {
-          "type": "greaterEqual",
-          "key": "getWeightedScore",
-          "value": "40"
+          "type": "topRatio",
+          "value": "0.5"
         }
       ],
       "api": {
@@ -2133,9 +2123,8 @@
       "type": "reddit",
       "rules": [
         {
-          "type": "greaterEqual",
-          "key": "getWeightedScore",
-          "value": "4"
+          "type": "topRatio",
+          "value": "0.8"
         }
       ]
     },
@@ -2168,9 +2157,8 @@
       "type": "twitterlink",
       "rules": [
         {
-          "type": "greaterEqual",
-          "key": "getWeightedScore",
-          "value": "150"
+          "type": "topRatio",
+          "value": "0.5"
         },
         {
           "type": "equal",
@@ -2192,9 +2180,8 @@
       "type": "twitterlink",
       "rules": [
         {
-          "type": "greaterEqual",
-          "key": "getWeightedScore",
-          "value": "80"
+          "type": "topRatio",
+          "value": "0.5"
         },
         {
           "type": "notEqual",
@@ -2216,9 +2203,8 @@
       "type": "twitterlink",
       "rules": [
         {
-          "type": "greaterEqual",
-          "key": "getWeightedScore",
-          "value": "50"
+          "type": "topRatio",
+          "value": "0.6"
         }
       ]
     },
@@ -2259,9 +2245,8 @@
       "id": "source-twitter-stocks",
       "rules": [
         {
-          "type": "greaterEqual",
-          "key": "getWeightedScore",
-          "value": "500"
+          "type": "topRatio",
+          "value": "0.4"
         }
       ]
     },
@@ -2321,9 +2306,8 @@
       "id": "source-crypto-twitter",
       "rules": [
         {
-          "type": "greaterEqual",
-          "key": "getWeightedScore",
-          "value": "200"
+          "type": "topRatio",
+          "value": "0.4"
         }
       ]
     },
@@ -2337,9 +2321,8 @@
       "id": "source-crypto-twitter",
       "rules": [
         {
-          "type": "greaterEqual",
-          "key": "getWeightedScore",
-          "value": "3000"
+          "type": "topRatio",
+          "value": "0.4"
         }
       ]
     },
@@ -2381,9 +2364,8 @@
       },
       "rules": [
         {
-          "type": "greaterEqual",
-          "key": "getWeightedScore",
-          "value": "5"
+          "type": "topRatio",
+          "value": "0.8"
         }
       ]
     },
@@ -2397,9 +2379,8 @@
       },
       "rules": [
         {
-          "type": "greaterEqual",
-          "key": "getWeightedScore",
-          "value": "50"
+          "type": "topRatio",
+          "value": "0.8"
         }
       ]
     },
@@ -2422,9 +2403,8 @@
       },
       "rules": [
         {
-          "type": "greaterEqual",
-          "key": "getWeightedScore",
-          "value": "10"
+          "type": "topRatio",
+          "value": "0.8"
         }
       ]
     },
@@ -2441,9 +2421,8 @@
       "type": "thechinaproject",
       "rules": [
         {
-          "type": "greaterEqual",
-          "key": "getWeightedScore",
-          "value": "10"
+          "type": "topRatio",
+          "value": "0.5"
         }
       ]
     },
@@ -2457,9 +2436,8 @@
       },
       "rules": [
         {
-          "type": "greaterEqual",
-          "key": "getWeightedScore",
-          "value": "10"
+          "type": "topRatio",
+          "value": "0.7"
         }
       ]
     },
@@ -2482,9 +2460,8 @@
       },
       "rules": [
         {
-          "type": "greaterEqual",
-          "key": "getWeightedScore",
-          "value": "50"
+          "type": "topRatio",
+          "value": "0.7"
         }
       ]
     },
@@ -2507,9 +2484,8 @@
       },
       "rules": [
         {
-          "type": "greaterEqual",
-          "key": "getWeightedScore",
-          "value": "200"
+          "type": "topRatio",
+          "value": "0.5"
         }
       ]
     },
@@ -2569,9 +2545,8 @@
       },
       "rules": [
         {
-          "type": "greaterEqual",
-          "key": "getWeightedScore",
-          "value": "50"
+          "type": "topRatio",
+          "value": "0.5"
         },
         {
           "type": "notInclude",
@@ -2612,9 +2587,8 @@
       ],
       "rules": [
         {
-          "type": "greaterEqual",
-          "key": "getWeightedScore",
-          "value": "50"
+          "type": "topRatio",
+          "value": "0.5"
         },
         {
           "type": "equal",
@@ -2741,9 +2715,8 @@
       },
       "rules": [
         {
-          "type": "greaterEqual",
-          "key": "getWeightedScore",
-          "value": "50"
+          "type": "topRatio",
+          "value": "0.5"
         }
       ]
     }
