@@ -1198,6 +1198,30 @@ sites:
         short_title: "ポリティコ"
         description: "人気のポリティコの最新 の投稿"
         keywords: "ポリティコ"
+  businessinsider:
+    port: 8039
+    priority: 32
+    archive: true
+    category: Finance
+    tags:
+      - news
+      - source-twitter-businessinsider
+    translations:
+      zh-Hans:
+        title: "Business Insider"
+        short_title: "Business Insider"
+        description: "用中文浏览商业内幕(Business Insider)相关报道"
+        keywords: "商业内幕,财经,财经新闻"
+      en:
+        title: "Business Insider"
+        short_title: "Business Insider"
+        description: "See what''s buzzing on Business Insider in your native language"
+        keywords: "Business Insider"
+      ja:
+        title: "ビジネスインサイダー"
+        short_title: "ビジネスインサイダー"
+        description: "人気のビジネスインサイダーの最新 の投稿"
+        keywords: "ビジネスインサイダー"
 
 versions:
   - prefix: ""
@@ -1869,4 +1893,18 @@ sources:
     rules:
       - type: topRatio
         value: "0.5"
-
+  - id: source-rss-businessinsider
+    type: rss
+    api:
+      - url: https://www.businessinsider.com/rss
+        name: Business Insider
+        home_page_url: https://www.businessinsider.com/
+  - id: source-twitter-businessinsider
+    type: twitterlink
+    api:
+      url: businessinsider
+      name: Business Insider Twitter
+      home_page_url: https://twitter.com/businessinsider
+    rules:
+      - type: topRatio
+        value: "0.8"
