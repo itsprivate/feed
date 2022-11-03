@@ -1598,7 +1598,8 @@
       "category": "News",
       "tags": [
         "news",
-        "source-rss-politico"
+        "source-rss-politico",
+        "source-twitter-politico"
       ],
       "translations": {
         "zh-Hans": {
@@ -2722,6 +2723,22 @@
           "name": "Politico Politics",
           "home_page_url": "https://www.politico.com/politics",
           "url": "https://rss.politico.com/politics-news.xml"
+        }
+      ]
+    },
+    {
+      "id": "source-twitter-politico",
+      "type": "twitterlink",
+      "api": {
+        "url": "politico",
+        "name": "Politico Twitter",
+        "home_page_url": "https://twitter.com/politico"
+      },
+      "rules": [
+        {
+          "type": "greaterEqual",
+          "key": "getWeightedScore",
+          "value": "50"
         }
       ]
     }
