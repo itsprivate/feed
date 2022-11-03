@@ -2582,7 +2582,7 @@
       "rules": [
         {
           "type": "topRatio",
-          "value": "0.5"
+          "value": "0.7"
         },
         {
           "type": "notInclude",
@@ -2624,7 +2624,7 @@
       "rules": [
         {
           "type": "topRatio",
-          "value": "0.5"
+          "value": "0.6"
         },
         {
           "type": "equal",
