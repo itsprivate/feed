@@ -2563,37 +2563,17 @@
       "type": "twitterlink",
       "api": [
         {
-          "url": "markets",
-          "name": "Bloomberg Markets Twitter",
-          "home_page_url": "https://twitter.com/markets"
-        },
-        {
-          "url": "economics",
-          "name": "Bloomberg Economics Twitter",
-          "home_page_url": "https://twitter.com/economics"
-        },
-        {
-          "url": "technology",
-          "name": "Bloomberg Technology Twitter",
-          "home_page_url": "https://twitter.com/technology"
-        },
-        {
-          "url": "bpolitics",
-          "name": "Bloomberg Politics Twitter",
-          "home_page_url": "https://twitter.com/bpolitics"
-        },
-        {
-          "url": "BBGVisualData",
-          "name": "Bloomberg Visual Data Twitter",
-          "home_page_url": "https://twitter.com/BBGVisualData"
-        },
-        {
-          "url": "opinion",
-          "name": "Bloomberg Opinion Twitter",
-          "home_page_url": "https://twitter.com/opinion"
+          "url": "business",
+          "name": "Bloomberg Twitter",
+          "home_page_url": "https://twitter.com/business"
         }
       ],
       "rules": [
+        {
+          "type": "greaterEqual",
+          "key": "getWeightedScore",
+          "value": "50"
+        },
         {
           "type": "equal",
           "key": "getHostname",
