@@ -445,6 +445,12 @@ export default async function fetchSources(
       log.info(
         `${sourceOrder}/${filteredSources.length} ${sourceId} fetched ${originalItems.length} raw items from ${sourceUrl} `,
       );
+      // @ts-ignore: ignore
+      originalItems = originalItems.map((originalItem) =>
+        new (adapters[sourceType])(
+          originalItem,
+        )
+      );
       sourceStat.raw_count = originalItems.length;
       // if google news limit time
       if (sourceType === "googlenews") {
@@ -467,12 +473,7 @@ export default async function fetchSources(
         );
       }
       originalItems = filterByRules(
-        // @ts-ignore: hard to type
-        originalItems.map((originalItem) =>
-          new (adapters[sourceType])(
-            originalItem,
-          )
-        ),
+        originalItems,
         rules,
       ) as Item<unknown>[];
 
