@@ -66,9 +66,6 @@
         <br />
         查看站点文章新鲜度：
         <a class="contrast" href="/stats/fresh/">Fresh Stats</a>
-        <br />
-        查看源过滤情况：
-        <a class="contrast" href="/stats/api/">API Stats</a>
       </p>
       <h2>近7日数据</h2>
 
@@ -116,41 +113,45 @@
           {{/apis}}
         </ul>
       </details>
-      <div class="stat" id="{{{site_identifier}}}-stat"></div>
-      {{/sites}}
+      {{#apis}}
+      <h4>{{name}}</h4>
+      <div class="stat" id="{{{site_identifier}}}_{{{id}}}"></div>
+      {{/apis}} {{/sites}}
     </div>
     <script src="/assets/d3.v6.min.js"></script>
     <script src="/assets/billboard-3.6.2.js"></script>
     <script type="text/javascript">
-        {{#sites}}
-      var {{{site_identifier}}}Chart = bb.generate({
-      bindto: "#{{{site_identifier}}}-stat",
-          data: {
-            x: "x",
-            type: "line",
-            columns:{{{data}}},
-          },
-          axis: {
-            x: {
-              type: "timeseries",
-              tick:{
-                  fit: false,
-                  count:6
-              }
-            },
-          },
-          zoom: {
-            enabled: true,
-            type: "drag",
-          },
-          tooltip: {
-            format: {
-              title: function (x) {
-                return d3.timeFormat("%Y-%m-%d %H:%M")(x);
-              },
-            },
-          },
-        });
+      {{#sites}}
+          {{#apis}}
+      var {{{site_identifier}}}_{{{id}}} = bb.generate({
+        bindto: "#{{{site_identifier}}}_{{{id}}}",
+                data: {
+                  x: "x",
+                  type: "line",
+                  columns:{{{data}}},
+                },
+                axis: {
+                  x: {
+                    type: "timeseries",
+                    tick:{
+                        fit: false,
+                        count:6
+                    }
+                  },
+                },
+                zoom: {
+                  enabled: true,
+                  type: "drag",
+                },
+                tooltip: {
+                  format: {
+                    title: function (x) {
+                      return d3.timeFormat("%Y-%m-%d %H:%M")(x);
+                    },
+                  },
+                },
+              });
+        {{/apis}}
       {{/sites}}
     </script>
   </body>

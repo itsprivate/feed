@@ -6,6 +6,7 @@ import {
   RunOptions,
   Source,
   SourceAPIConfig,
+  SourceStat,
   SourceStatGroup,
   Stat,
 } from "../interface.ts";
@@ -35,6 +36,7 @@ import copyStaticAssets from "../copy-static-assets.ts";
 
 interface API extends SourceAPIConfig {
   name: string;
+  id: string;
   source_id: string;
   rules: Rule[];
 }
@@ -48,6 +50,7 @@ interface FreshStat {
 }
 interface APIInfo extends API {
   daily_count: number;
+  data: string;
 }
 
 interface SiteStatInfo {
@@ -78,6 +81,9 @@ export default async function buildSite(options: RunOptions) {
 
   const statsTemplateString = await Deno.readTextFile(
     "./templates/stats.html",
+  );
+  const apiStatsTemplateString = await Deno.readTextFile(
+    "./templates/api-stats.html",
   );
   const freshStatsTemplateString = await Deno.readTextFile(
     "./templates/fresh-stats.html",
@@ -361,6 +367,8 @@ export default async function buildSite(options: RunOptions) {
     for (const apiItem of api) {
       apiMap.set(apiItem.name, {
         ...apiItem,
+        id: source.id.replace(/\-/g, "_") +
+          apiItem.name.replace(/\s/g, "_").replace(/\./g, "_"),
         source_id: source.id,
         rules: source.rules || [],
       });
@@ -409,8 +417,10 @@ export default async function buildSite(options: RunOptions) {
   }
 
   const recentlyStats: SiteStatInfo[] = [];
-  const allSiteStats: Record<string, Record<string, Record<string, number>>> =
-    {};
+  const allSiteStats: Record<
+    string,
+    Record<string, Record<string, SourceStat>>
+  > = {};
   const allSiteFreshStats: Record<string, Record<string, FreshStat>> = {};
 
   const timeline: string[] = [];
@@ -459,7 +469,7 @@ export default async function buildSite(options: RunOptions) {
               statItem.in_other || 0;
             allSiteFreshStats[siteIdentifier][beijingDay].count +=
               statItem.count || 0;
-            allSiteStats[siteIdentifier][apiKey][time] = statItem.count;
+            allSiteStats[siteIdentifier][apiKey][time] = statItem;
           }
         }
       }
@@ -494,7 +504,17 @@ export default async function buildSite(options: RunOptions) {
       const apiInfo: APIInfo = {
         ...api,
         daily_count: 0,
+        data: "",
       };
+      const apiStatData: (string | number)[][] = [[
+        "x",
+        ...timeline.map((item) =>
+          new Date(new Date(item).getTime() + 8 * 60 * 60 * 1000).toISOString()
+        ),
+      ]];
+      const apiRawCountData: (string | number)[] = ["原始"];
+      const apiFilterdCountData: (string | number)[] = ["过滤后"];
+      const apiUniqueCountData: (string | number)[] = ["去重后"];
       siteStat.apis.push(apiInfo);
 
       for (const point of timeline) {
@@ -504,7 +524,18 @@ export default async function buildSite(options: RunOptions) {
         if (!allSiteStats[siteIdentifier][apiName]) {
           allSiteStats[siteIdentifier][apiName] = {};
         }
-        const count = allSiteStats[siteIdentifier][apiName][point] || 0;
+        const apiStat = allSiteStats[siteIdentifier][apiName][point] || {
+          raw_count: 0,
+          filtered_count: 0,
+          unique_count: 0,
+          count: 0,
+          in_12: 0,
+          in_24: 0,
+          in_48: 0,
+          in_72: 0,
+          in_other: 0,
+        };
+        const count = apiStat.count;
         const time = new Date(point).getTime();
         // if in 24hours
         if (now.getTime() - time < 24 * 60 * 60 * 1000) {
@@ -512,7 +543,14 @@ export default async function buildSite(options: RunOptions) {
           apiInfo.daily_count += count;
         }
         statData[index].push(count);
+        apiRawCountData.push(apiStat.raw_count);
+        apiFilterdCountData.push(apiStat.filtered_count);
+        apiUniqueCountData.push(apiStat.count);
       }
+      apiStatData[1] = apiRawCountData;
+      apiStatData[2] = apiFilterdCountData;
+      apiStatData[3] = apiUniqueCountData;
+      apiInfo.data = JSON.stringify(apiStatData, null, 2);
       index++;
     }
     siteStat.data = JSON.stringify(statData, null, 2);
@@ -563,6 +601,7 @@ export default async function buildSite(options: RunOptions) {
         const apiInfo: APIInfo = {
           ...api,
           daily_count: 0,
+          data: "",
         };
         siteStat.apis.push(apiInfo);
         for (const point of months) {
@@ -620,6 +659,13 @@ export default async function buildSite(options: RunOptions) {
     `stats/index.html`,
   );
   await writeTextFile(indexPath, statsHtml);
+  // @ts-ignore: add meta
+  const apiStatsHtml = mustache.render(apiStatsTemplateString, statsData);
+  const apiStatIndexPath = getDistFilePath(
+    indexSubDomain,
+    `stats/api/index.html`,
+  );
+  await writeTextFile(apiStatIndexPath, apiStatsHtml);
   // build fresh stats
   const freshStats: SiteFreshInfo[] = [];
   for (const siteIdentifier of siteIdentifiers) {
