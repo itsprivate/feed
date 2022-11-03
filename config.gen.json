@@ -2170,7 +2170,7 @@
         {
           "type": "greaterEqual",
           "key": "getWeightedScore",
-          "value": "100"
+          "value": "150"
         }
       ]
     },

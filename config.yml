@@ -1522,7 +1522,7 @@ sources:
     rules:
       - type: greaterEqual
         key: getWeightedScore
-        value: "100"
+        value: "150"
   - api:
       url: wsj
       name: Wall Street Journal Twitter
