@@ -2529,7 +2529,7 @@
         {
           "type": "greaterEqual",
           "key": "getWeightedScore",
-          "value": "30"
+          "value": "50"
         },
         {
           "type": "notInclude",

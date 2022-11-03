@@ -1741,7 +1741,7 @@ sources:
     rules:
       - type: greaterEqual
         key: getWeightedScore
-        value: "30"
+        value: "50"
       - type: notInclude
         key: getHostname
         value: "www.youtube.com"
