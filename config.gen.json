@@ -2586,7 +2586,7 @@
       "rules": [
         {
           "type": "topRatio",
-          "value": "0.55"
+          "value": "0.625"
         },
         {
           "type": "notInclude",
@@ -2602,11 +2602,6 @@
           "type": "notInclude",
           "key": "getUrl",
           "value": "www.reuoers.com/lifestyle"
-        },
-        {
-          "type": "notInclude",
-          "key": "getUrl",
-          "value": "www.reuters.com/legal"
         },
         {
           "type": "include",

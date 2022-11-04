@@ -1772,7 +1772,7 @@ sources:
       home_page_url: https://twitter.com/Reuters
     rules:
       - type: topRatio
-        value: "0.55"
+        value: "0.625"
       - type: notInclude
         key: getHostname
         value: "www.youtube.com"
@@ -1782,9 +1782,6 @@ sources:
       - type: notInclude
         key: getUrl
         value: www.reuoers.com/lifestyle
-      - type: notInclude
-        key: getUrl
-        value: www.reuters.com/legal
       - type: include
         key: getHostname
         value: "reuters.com"
