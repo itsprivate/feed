@@ -1533,7 +1533,7 @@ sources:
     type: twitterlink
     rules:
       - type: topRatio
-        value: "0.5"
+        value: "0.4"
       - type: equal
         key: getHostname
         value: www.nytimes.com
@@ -1547,7 +1547,7 @@ sources:
     type: twitterlink
     rules:
       - type: topRatio
-        value: "0.5"
+        value: "0.4"
       - type: notEqual
         key: getUrl
         value: "https://www.wsj.com/"
@@ -1815,7 +1815,7 @@ sources:
       #   home_page_url: https://twitter.com/opinion
     rules:
       - type: topRatio
-        value: "0.5"
+        value: "0.35"
       - type: equal
         key: getHostname
         value: www.bloomberg.com
