@@ -492,7 +492,7 @@ export default async function buildSite(options: RunOptions) {
     const statData: (string | number)[][] = [[
       "x",
       ...timeline.map((item) =>
-        new Date(new Date(item).getTime() + 8 * 60 * 60 * 1000).toISOString()
+        new Date(new Date(item).getTime()).toISOString()
       ),
     ]];
     const siteApis = siteApiMap.get(siteIdentifier) || [];
@@ -509,7 +509,7 @@ export default async function buildSite(options: RunOptions) {
       const apiStatData: (string | number)[][] = [[
         "x",
         ...timeline.map((item) =>
-          new Date(new Date(item).getTime() + 8 * 60 * 60 * 1000).toISOString()
+          new Date(new Date(item).getTime()).toISOString()
         ),
       ]];
       const apiRawCountData: (string | number)[] = ["原始"];
