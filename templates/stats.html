@@ -59,6 +59,8 @@
     <div>
       <p>
         Latest Build At: <span id="build-time">{{{build_time}}}</span>
+        <br />
+        运行状态：<span id="status">-</span>
 
         <br />
         查看历年数据：{{#years}}
@@ -119,10 +121,53 @@
       <div class="stat" id="{{{site_identifier}}}-stat"></div>
       {{/sites}}
     </div>
+    <script>
+      // status
+      const latestBuildTime = "{{{build_time}}}";
+      const latestBuildDate = new Date(latestBuildTime);
+      const now = new Date();
+      const diff = now - latestBuildDate;
+      function timeSince(date) {
+        var seconds = Math.floor((new Date() - date) / 1000);
+
+        var interval = Math.floor(seconds / 31536000);
+
+        if (interval > 1) {
+          return interval + " 年";
+        }
+        interval = Math.floor(seconds / 2592000);
+        if (interval > 1) {
+          return interval + " 个月";
+        }
+        interval = Math.floor(seconds / 86400);
+        if (interval > 1) {
+          return interval + " 天";
+        }
+        interval = Math.floor(seconds / 3600);
+        if (interval > 1) {
+          return interval + " 小时";
+        }
+        interval = Math.floor(seconds / 60);
+        if (interval > 1) {
+          return interval + " 分钟";
+        }
+        return Math.floor(seconds) + " 秒";
+      }
+      const status = document.getElementById("status");
+      if (diff > 1000 * 60 * 60 * 2) {
+        status.innerHTML =
+          "可能异常, 最后更新于 " +
+          timeSince(latestBuildDate) +
+          ' 前，可以加 <a class="contrast" href="{{{_advice_url}}}">Telegram 群组</a>反馈。';
+      } else {
+        status.innerText =
+          "正常, 最后更新于 " + timeSince(latestBuildDate) + " 前";
+      }
+    </script>
     <script src="/assets/d3.v6.min.js"></script>
     <script src="/assets/billboard-3.6.2.js"></script>
+    {{#sites}}
     <script type="text/javascript">
-        {{#sites}}
       var {{{site_identifier}}}Chart = bb.generate({
       bindto: "#{{{site_identifier}}}-stat",
           data: {
@@ -151,7 +196,7 @@
             },
           },
         });
-      {{/sites}}
     </script>
+    {{/sites}}
   </body>
 </html>

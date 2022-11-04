@@ -104,25 +104,23 @@
     </div>
     <script src="/assets/d3.v6.min.js"></script>
     <script src="/assets/billboard-3.6.2.js"></script>
+    {{#sites}} {{#groups}}
     <script type="text/javascript">
-          {{#sites}}
-            {{#groups}}
-        var {{{site_identifier}}}Chart = bb.generate({
-            bindto: "#{{{site_identifier}}}-{{{title}}}-stat",
-            data: {
-              type: "pie",
-              columns:{{{data}}},
-            },
-            tooltip: {
-              format: {
-                value: function(value, ratio, id) {
-                  return value + " (" + (ratio*100).toFixed(1) + "%)";
-                }
+      var {{{site_identifier}}}Chart = bb.generate({
+          bindto: "#{{{site_identifier}}}-{{{title}}}-stat",
+          data: {
+            type: "pie",
+            columns:{{{data}}},
+          },
+          tooltip: {
+            format: {
+              value: function(value, ratio, id) {
+                return value + " (" + (ratio*100).toFixed(1) + "%)";
               }
-             }
-          });
-      {{/groups}}
-        {{/sites}}
+            }
+           }
+        });
     </script>
+    {{/groups}} {{/sites}}
   </body>
 </html>

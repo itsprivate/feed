@@ -646,11 +646,11 @@ export default async function buildSite(options: RunOptions) {
   yearDirs.sort((a, b) => Number(b) - Number(a));
 
   // buils stats
-  // console.log("recentlyGroups", recentlyGroups);
   const statsData = {
     sites: recentlyStats,
     build_time: formatIsoDate(now),
     years: yearDirs,
+    _advice_url: config.advice_url,
   };
   // @ts-ignore: add meta
   const statsHtml = mustache.render(statsTemplateString, statsData);

@@ -120,9 +120,8 @@
     </div>
     <script src="/assets/d3.v6.min.js"></script>
     <script src="/assets/billboard-3.6.2.js"></script>
+    {{#sites}} {{#apis}}
     <script type="text/javascript">
-      {{#sites}}
-          {{#apis}}
       var {{{site_identifier}}}_{{{id}}} = bb.generate({
         bindto: "#{{{site_identifier}}}_{{{id}}}",
                 data: {
@@ -151,8 +150,7 @@
                   },
                 },
               });
-        {{/apis}}
-      {{/sites}}
     </script>
+    {{/apis}} {{/sites}}
   </body>
 </html>
