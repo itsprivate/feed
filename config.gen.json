@@ -339,7 +339,7 @@
     },
     "reddit": {
       "port": 8005,
-      "priority": 28,
+      "priority": 17,
       "redirect": true,
       "category": "Entertainment",
       "max_image_height": 520,
@@ -772,7 +772,7 @@
       "archive": true,
       "category": "News",
       "redirect": true,
-      "priority": 28,
+      "priority": 23,
       "tags": [
         "depth",
         "news",
@@ -1222,7 +1222,7 @@
     },
     "theguardian": {
       "port": 8028,
-      "priority": 20,
+      "priority": 28,
       "archive": true,
       "category": "News",
       "tags": [
@@ -1297,7 +1297,7 @@
     "ft": {
       "port": 8030,
       "category": "News",
-      "priority": 22,
+      "priority": 29,
       "archive": true,
       "tags": [
         "news",
