@@ -1772,7 +1772,7 @@ sources:
       home_page_url: https://twitter.com/Reuters
     rules:
       - type: topRatio
-        value: "0.5"
+        value: "0.55"
       - type: notInclude
         key: getHostname
         value: "www.youtube.com"
