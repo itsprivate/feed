@@ -1561,7 +1561,7 @@ sources:
     type: twitterlink
     rules:
       - type: topRatio
-        value: "0.6"
+        value: "0.8"
   - api:
       - url: charliebilello
         name: Charlie Bilello Twitter
