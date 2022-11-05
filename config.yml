@@ -1813,12 +1813,6 @@ sources:
     rules:
       - type: topRatio
         value: "0.625"
-      - type: equal
-        key: getHostname
-        value: www.bloomberg.com
-      - type: notInclude
-        key: getUrl
-        value: "https://www.bloomberg.com/account/newsletters"
       - type: notInclude
         key: getUrl
         value: "podcast"
