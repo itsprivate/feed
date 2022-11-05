@@ -1781,7 +1781,7 @@ sources:
         value: "www.reuters.com/video"
       - type: notInclude
         key: getUrl
-        value: www.reuoers.com/lifestyle
+        value: www.reuters.com/lifestyle
       - type: include
         key: getHostname
         value: "reuters.com"
