@@ -654,7 +654,9 @@ export default class Item<T> {
     let lite_content_html = "";
     const isSensitive = item._sensitive || false;
     if (!isSensitive && !isLite) {
-      if (item._video) {
+      if (
+        item._video && item._video.sources && item._video.sources.length > 0
+      ) {
         const sources = item._video.sources;
         const height = item._video.height;
         const width = item._video.width;
@@ -670,14 +672,16 @@ export default class Item<T> {
           content_html += ` poster="${poster}"`;
         }
 
+        // for (const source of sources) {
+        //   content_html += `<source src="${source.url}"`;
+        //   if (source.type) {
+        //     content_html += ` type="${source.type}"`;
+        //   }
+        //   content_html += `>`;
+        // }
+        content_html += ` src="${sources[0].url}"`;
+
         content_html += `>`;
-        for (const source of sources) {
-          content_html += `<source src="${source.url}"`;
-          if (source.type) {
-            content_html += ` type="${source.type}"`;
-          }
-          content_html += `>`;
-        }
         content_html += "your browser does not support the video tag.</video>";
       } else if (item._embed) {
         // add embed code
