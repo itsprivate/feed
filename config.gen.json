@@ -2623,7 +2623,7 @@
       "rules": [
         {
           "type": "topRatio",
-          "value": "0.5"
+          "value": "0.625"
         },
         {
           "type": "equal",
