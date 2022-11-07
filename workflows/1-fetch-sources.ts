@@ -368,28 +368,35 @@ export default async function fetchSources(
             reject(error);
           });
         });
+        try {
+          // @ts-ignore: ignore
+          // then call tweet v2 api to fetch details
+          // @ts-ignore: ignore quoted type
+          originalJson = result.filter((item) => {
+            const isQuoted = item.is_quote_status === true;
+            const in_reply_to_status_id = item.in_reply_to_status_id_str;
+            const retweet = item.retweeted_status;
+            let isRetweetQuoted = false;
+            if (
+              retweet &&
+              (retweet.is_quote_status === true ||
+                retweet.in_reply_to_status_id_str)
+            ) {
+              isRetweetQuoted = true;
+            }
 
-        // @ts-ignore: ignore
-        // then call tweet v2 api to fetch details
-        // @ts-ignore: ignore quoted type
-        originalJson = result.filter((item) => {
-          const isQuoted = item.is_quote_status === true;
-          const in_reply_to_status_id = item.in_reply_to_status_id_str;
-          const retweet = item.retweeted_status;
-          let isRetweetQuoted = false;
-          if (
-            retweet &&
-            (retweet.is_quote_status === true ||
-              retweet.in_reply_to_status_id_str)
-          ) {
-            isRetweetQuoted = true;
-          }
+            if (isQuoted || in_reply_to_status_id || isRetweetQuoted) {
+              return false;
+            }
+            return true;
+          });
+        } catch (e) {
+          log.error(`fetch ${sourceUrl} failed`);
+          log.error(e);
+          // TODO report
+          continue;
+        }
 
-          if (isQuoted || in_reply_to_status_id || isRetweetQuoted) {
-            return false;
-          }
-          return true;
-        });
         // console.log("originalJson.length", originalJson.length);
 
         const ids = originalJson.map((item: { id_str: string }) => item.id_str);

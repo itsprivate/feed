@@ -67,3 +67,5 @@ export { default as mustache } from "https://jspm.dev/mustache@4.2.0";
 export { default as jsonfeedToAtom } from "https://jspm.dev/jsonfeed-to-atom@1.2.2";
 export { default as jsonfeedToRSS } from "https://jspm.dev/jsonfeed-to-rss@3.0.6";
 export { default as tweetPatch } from "https://jspm.dev/tweet-patch@2.0.5";
+
+export { parse as parseXml } from "https://deno.land/x/xml@2.0.4/mod.ts";

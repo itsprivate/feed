@@ -1578,9 +1578,9 @@ sources:
       - url: michaelbatnick
         name: Michael Batnick Twitter
         home_page_url: https://twitter.com/michaelbatnick
-      - url: InvestmentTalkk
-        name: Investment Talk Twitter
-        home_page_url: https://twitter.com/InvestmentTalkk
+      # - url: InvestmentTalkk
+      #   name: Investment Talk Twitter
+      #   home_page_url: https://twitter.com/InvestmentTalkk
     type: twitter
     id: source-twitter-stocks
     rules:
