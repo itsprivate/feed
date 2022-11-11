@@ -111,8 +111,13 @@ export default async function buildSite(options: RunOptions) {
   });
 
   // resort
-  siteIdentifiers = resortSites(indexSubDomain, siteIdentifiers, config);
+  const allSiteIdentifiers = resortSites(
+    indexSubDomain,
+    siteIdentifiers,
+    config,
+  );
 
+  siteIdentifiers = allSiteIdentifiers;
   // multiple languages support
   const languages = config.languages;
 
@@ -402,7 +407,7 @@ export default async function buildSite(options: RunOptions) {
   }
   const targetSiteIdentifiersMap = new Map<string, string[]>();
   const siteApiMap = new Map<string, string[]>();
-  for (const siteIdentifier of siteIdentifiers) {
+  for (const siteIdentifier of allSiteIdentifiers) {
     const siteConfig = sitesMap[siteIdentifier];
     const siteIsOnlyDev = siteConfig.dev && !isDev();
     const siteTags = siteConfig.tags || [];
@@ -506,7 +511,7 @@ export default async function buildSite(options: RunOptions) {
     return new Date(a).getTime() - new Date(b).getTime();
   });
 
-  for (const siteIdentifier of siteIdentifiers) {
+  for (const siteIdentifier of allSiteIdentifiers) {
     const siteConfig = sitesMap[siteIdentifier];
     const siteStat: SiteStatInfo = {
       site_identifier: siteIdentifier,
@@ -606,7 +611,7 @@ export default async function buildSite(options: RunOptions) {
     const months = Object.keys(statYearContent);
     // sort months
     months.sort((a, b) => Number(a) - Number(b));
-    for (const siteIdentifier of siteIdentifiers) {
+    for (const siteIdentifier of allSiteIdentifiers) {
       const siteConfig = sitesMap[siteIdentifier];
       const siteStat: SiteStatInfo = {
         site_identifier: siteIdentifier,
@@ -694,7 +699,7 @@ export default async function buildSite(options: RunOptions) {
   await writeTextFile(apiStatIndexPath, apiStatsHtml);
   // build fresh stats
   const freshStats: SiteFreshInfo[] = [];
-  for (const siteIdentifier of siteIdentifiers) {
+  for (const siteIdentifier of allSiteIdentifiers) {
     const siteFreshInfo: SiteFreshInfo = {
       site_identifier: siteIdentifier,
       site_title: sitesMap[siteIdentifier].translations!["zh-Hans"].title,
