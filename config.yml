@@ -1080,6 +1080,8 @@ sites:
     priority: 32
     archive: true
     category: News
+    related:
+      - reutersnew
     tags:
       - news
       - source-twitter-reuters
