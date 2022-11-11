@@ -1234,6 +1234,7 @@ sites:
     priority: 18
     archive: false
     category: News
+    hide: true
     related:
       - reuters
     tags:
