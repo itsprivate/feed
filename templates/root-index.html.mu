@@ -194,6 +194,9 @@
       .small{
         font-size: 0.9375em;
       }
+      .text-xs{
+        font-size: 0.9rem;
+      }
       .muted {
         color: #828282;
       }
@@ -483,7 +486,7 @@
     </details>
     {{#_groups}}
           <details open id="{{site_identifier}}" class="sites">
-            <summary class="stick px bold text-lg">{{{title}}}<span class="muted">&nbsp;-</span> <a href="{{home_page_url}}" class="muted small">{{hostname}}</a></summary>
+            <summary class="stick px bold text-lg">{{{title}}}<span class="muted">&nbsp;-</span> <a href="{{home_page_url}}" class="muted small">{{hostname}}</a>&nbsp;{{#related}}<a class="muted text-xs" href="{{{url}}}">👉 {{short_title}}</a>{{/related}}</summary>
                 <input class="site-checkbox" id="{{site_identifier}}-checkbox" type="checkbox">
                 <div class="feed-content">
                   <div class="container mb px-xs">

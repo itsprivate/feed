@@ -151,8 +151,8 @@ export default function feedToHTML(
   // });
 
   // resort
-  relatedSites = resortSites(relatedSites, config);
-  otherSites = resortSites(otherSites, config);
+  relatedSites = resortSites(siteIdentifier, relatedSites, config);
+  otherSites = resortSites(siteIdentifier, otherSites, config);
   //@ts-ignore: add meta data
   feedJson._related_sites = relatedSites.map(
     (item, index) => {

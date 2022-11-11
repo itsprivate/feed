@@ -73,6 +73,8 @@ export interface SiteConfig extends GeneralSiteConfig {
   max_image_height?: number;
   dev?: boolean;
   port?: number;
+  hide?: boolean;
+  related?: string[];
   redirect?: boolean;
   domain?: string;
   layout?: string;

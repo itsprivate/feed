@@ -1,34 +1,13 @@
 import { Author } from "../interface.ts";
 import Item from "../item.ts";
+import { formatId } from "../util.ts";
 export default class rss extends Item<RSSItem> {
   getOriginalPublishedDate(): Date {
     return new Date(this.originalItem.published as string);
   }
   getId(): string {
-    // encode url id
-    let isUrl = false;
     let id = this.originalItem.id as string;
-    try {
-      const url = new URL(id);
-      isUrl = true;
-    } catch (_e) {
-      // not url
-    }
-    if (isUrl) {
-      const url = new URL(id);
-      id = url.hostname.replace(/\./g, "-") + "-" +
-        url.pathname.replace(/\//g, "-");
-    }
-    if (id) {
-      id = id.replace(/[^a-zA-Z0-9-]/g, "-");
-
-      // if id is too long, use md5
-      if (id.length > 200) {
-        return id.slice(0, 200);
-      }
-    }
-
-    return id;
+    return formatId(id);
   }
   getTitle(): string {
     const title = this.originalItem.title.value as string;

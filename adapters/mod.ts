@@ -13,7 +13,9 @@ import thechinaproject from "./thechinaproject.ts";
 import twitterlink from "./twitterlink.ts";
 import twittercbarraud from "./twittercbarraud.ts";
 import spectator from "./spectator.ts";
+import sitemap from "./sitemap.ts";
 export type ItemType = Item<RedditItem | HnItem>;
+
 const adapters: Record<string, Type<Item<RedditItem>>> = {
   // @ts-ignore: hard to type
   reddit,
@@ -41,5 +43,7 @@ const adapters: Record<string, Type<Item<RedditItem>>> = {
   twittercbarraud,
   // @ts-ignore: hard to type
   spectator,
+  // @ts-ignore: hard to type
+  sitemap,
 };
 export default adapters;

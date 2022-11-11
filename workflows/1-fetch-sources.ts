@@ -32,7 +32,7 @@ import {
 } from "../util.ts";
 import Item from "../item.ts";
 import filterByRules from "../filter-by-rules.ts";
-import { fs, parseFeed, path, SimpleTwitter } from "../deps.ts";
+import { fs, parseFeed, parseXml, path, SimpleTwitter } from "../deps.ts";
 import log from "../log.ts";
 import fetchPHData from "../sources/fetch-ph.ts";
 import { getTweets as fetchTwitterV2Data } from "../sources/fetch-twitter.ts";
@@ -323,6 +323,19 @@ export default async function fetchSources(
           const xml = await originItemResult.text();
           originalJson = await parseFeed(xml);
           itemsPath = "entries";
+        } catch (e) {
+          log.error(`fetch ${sourceUrl} failed`);
+          log.error(e);
+          // TODO report
+          continue;
+        }
+      } else if (sourceType === "sitemap") {
+        try {
+          const originItemResult = await request(sourceUrl);
+
+          const xml = await originItemResult.text();
+          originalJson = await parseXml(xml);
+          itemsPath = "urlset.url";
         } catch (e) {
           log.error(`fetch ${sourceUrl} failed`);
           log.error(e);

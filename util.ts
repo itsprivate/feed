@@ -651,14 +651,30 @@ export const getGeneralTranslations = function (
 
   return currentTranslations;
 };
-export function resortSites(siteIdentifiers: string[], config: Config) {
+export function resortSites(
+  siteIdentifier: string,
+  siteIdentifiers: string[],
+  config: Config,
+) {
+  const relatedSites = config.sites[siteIdentifier].related ?? [];
+
   // by priority
   // lower is more priority
   const sitesMap = config.sites;
   const sortedSites = siteIdentifiers.sort((a, b) => {
-    const aPriority = sitesMap[a].priority ?? 50;
-    const bPriority = sitesMap[b].priority ?? 50;
-    return aPriority - bPriority;
+    if (relatedSites.includes(a) && relatedSites.includes(b)) {
+      const aPriority = sitesMap[a].priority ?? 50;
+      const bPriority = sitesMap[b].priority ?? 50;
+      return aPriority - bPriority;
+    } else if (relatedSites.includes(a)) {
+      return -1;
+    } else if (relatedSites.includes(b)) {
+      return 1;
+    } else {
+      const aPriority = sitesMap[a].priority ?? 50;
+      const bPriority = sitesMap[b].priority ?? 50;
+      return aPriority - bPriority;
+    }
   });
   return sortedSites;
 }
@@ -1282,4 +1298,28 @@ export function hasSameKeys<T>(
 export function getSiteIdentifierByRelativePath(relativePath: string): string {
   const siteIdentifier = relativePath.split(path.sep)[0];
   return siteIdentifier;
+}
+export function formatId(id: string): string {
+  let isUrl = false;
+  try {
+    const url = new URL(id);
+    isUrl = true;
+  } catch (_e) {
+    // not url
+  }
+
+  if (isUrl) {
+    const url = new URL(id);
+    id = url.hostname.replace(/\./g, "-") + "-" +
+      url.pathname.replace(/\//g, "-");
+  }
+  if (id) {
+    id = id.replace(/[^a-zA-Z0-9-]/g, "-");
+
+    // if id is too long, use md5
+    if (id.length > 200) {
+      return id.slice(0, 200);
+    }
+  }
+  return id;
 }

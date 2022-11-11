@@ -15,6 +15,7 @@ translations:
     tags_label: 所有标签
     archive_label: 历史归档
     issues_label: 往期精选
+    newest_label: 最新
     more_label: 更多
     less_label: 收起
     more_post_label: 好吧, 如果你还没看够... 以下👇
@@ -33,6 +34,7 @@ translations:
     subscription_label: Subscription
     powered_by_label: Made by ❤️
     stat_label: View Stat
+    newest_label: Newest
     table_of_contents_label: Table of Contents
     languages_label: Languages supported
     version_label: Versions supported
@@ -57,6 +59,7 @@ translations:
     powered_by_label: 製作者 ❤️
     stat_label: 統計を見る
     languages_label: 他の言語
+    newest_label: 最新
     version_label: バージョン
     more_sites_label: 他のフィード
     tags_label: すべてのタグ
@@ -1000,6 +1003,9 @@ sites:
     priority: 18
     archive: true
     category: Finance
+    label: newest_label 
+    related:
+      - bloombergnew
     tags:
       - news
       - finance
@@ -1221,6 +1227,60 @@ sites:
         short_title: "ビジネスインサイダー"
         description: "人気のビジネスインサイダーの最新 の投稿"
         keywords: "ビジネスインサイダー"
+  bloombergnew:
+    port: 8040
+    priority: 18
+    archive: false
+    category: Finance
+    label: newest_label 
+    hide: true
+    related:
+      - bloombergnew
+    tags:
+      - news
+      - finance
+      - source-sitemap-bloomberg
+    translations:
+      "zh-Hans":
+        title: '彭博社最新报道'
+        short_title: "彭博最新"
+        description: '用中文浏览彭博社最新报道'
+        keywords: "彭博社,财经,财经新闻"
+      'en':
+        title: 'Bloomberg Newest'
+        short_title: "Bloomberg Newest"
+        description: 'See what''s buzzing on Bloomberg Newest in your native language'
+        keywords: "Bloomberg Newest"
+      'ja':
+        title: 'ブルームバーグ最新'
+        short_title: "ブルームバーグ最新"
+        description: '人気のブルームバーグ最新 の投稿'
+        keywords: "ブルームバーグ最新"
+        
+  reutersnew:
+    port: 8041
+    priority: 18
+    archive: false
+    category: News
+    tags:
+      - news
+      - source-sitemap-reuters
+    translations:
+      "zh-Hans":
+        title: '路透社最新报道'
+        short_title: "路透最新"
+        description: '用中文浏览路透社最新报道'
+        keywords: "路透社,财经,财经新闻"
+      'en':
+        title: 'Reuters Newest'
+        short_title: "Reuters Newest"
+        description: 'See what''s buzzing on Reuters Newest in your native language'
+        keywords: "Reuters Newest"
+      'ja':
+        title: 'ルーターズ最新'
+        short_title: "ルーターズ最新"
+        description: '人気のルーターズ最新 の投稿'
+        keywords: "ルーターズ最新"
 
 versions:
   - prefix: ""
@@ -1902,3 +1962,28 @@ sources:
     rules:
       - type: topRatio
         value: "0.8"
+  - id: source-owen-rss
+    type: rss
+    api:
+      - url: https://blog.mollywhite.net/feed.xml
+        name: Molly White
+        home_page_url: https://blog.mollywhite.net/
+
+  - id: source-sitemap-bloomberg
+    type: sitemap
+    api:
+      url: https://www.bloomberg.com/feeds/sitemap_news.xml
+      name: Bloomberg Sitemap
+      home_page_url: https://www.bloomberg.com/
+    rules:
+      - type: limit
+        value: "50"
+  - id: source-sitemap-reuters
+    type: sitemap
+    api:
+      url: https://www.reuters.com/arc/outboundfeeds/news-sitemap/?outputType=xml
+      name: Reuters Sitemap
+      home_page_url: https://www.reuters.com
+    rules:
+      - type: limit
+        value: "50"

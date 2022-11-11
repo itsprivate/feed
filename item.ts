@@ -588,6 +588,8 @@ export default class Item<T> {
         log.warn(`unsupported version ${options.versionCode}, use default`);
       }
     }
+    const siteConfig = config.sites[siteIdentifier];
+    const isArchive = siteConfig.archive !== false;
     const isLite = versionCode === "lite";
     const version = config.versions.find((v) => v.code === versionCode);
     if (!version) {
@@ -729,23 +731,41 @@ export default class Item<T> {
           originalTranslationObj.title,
         );
       }
-      lite_content_html += `<a href="${item.id}">${
-        formatHumanTime(
-          new Date(item._original_published),
-        )
-      }</a>&nbsp;&nbsp;${finalTitle} (<a href="${itemUrl}">${itemUrlObj.hostname}</a>)`;
+      if (isArchive) {
+        lite_content_html += `<a href="${item.id}">${
+          formatHumanTime(
+            new Date(item._original_published),
+          )
+        }</a>&nbsp;&nbsp;${finalTitle} (<a href="${itemUrl}">${itemUrlObj.hostname}</a>)`;
+      } else {
+        lite_content_html +=
+          `<time class="dt-published published muted" datetime="${item._original_published}">${
+            formatHumanTime(
+              new Date(item._original_published),
+            )
+          }</time>&nbsp;&nbsp;${finalTitle} (<a href="${itemUrl}">${itemUrlObj.hostname}</a>)`;
+      }
       content_html +=
         `<div>${finalTitle} (<a href="${itemUrl}">${itemUrlObj.hostname}</a>)</div>`;
 
       summary += `${originalTranslationObj.title}`;
       content_text += `${originalTranslationObj.title}`;
     }
-    content_html +=
-      `<footer><a href="${item.id}"><time class="dt-published published" datetime="${item._original_published}">${
-        formatHumanTime(
-          new Date(item._original_published as string),
-        )
-      }</time></a>&nbsp;&nbsp;`;
+    if (isArchive) {
+      content_html +=
+        `<footer><a href="${item.id}"><time class="dt-published published" datetime="${item._original_published}">${
+          formatHumanTime(
+            new Date(item._original_published as string),
+          )
+        }</time></a>&nbsp;&nbsp;`;
+    } else {
+      content_html +=
+        `<footer><time class="dt-published published muted" datetime="${item._original_published}">${
+          formatHumanTime(
+            new Date(item._original_published as string),
+          )
+        }</time>&nbsp;&nbsp;`;
+    }
 
     const currentTranslations = getCurrentTranslations(
       siteIdentifier,

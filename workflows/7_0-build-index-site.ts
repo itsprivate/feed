@@ -107,7 +107,8 @@ export default async function buildSite(options: RunOptions) {
   }
   // filter standalone
   siteIdentifiers = siteIdentifiers.filter((siteIdentifier) => {
-    return !config.sites[siteIdentifier].standalone;
+    return !config.sites[siteIdentifier].standalone &&
+      config.sites[siteIdentifier].hide !== true;
   });
 
   // resort
@@ -239,6 +240,26 @@ export default async function buildSite(options: RunOptions) {
           language.code,
           config,
         );
+        const siteConfig = config.sites[siteIdentifier];
+        const related = siteConfig.related || [];
+        const relatedSites = related.map((relatedSiteIdentifier) => {
+          const relatedSiteConfig = config.sites[relatedSiteIdentifier];
+          const relatedSiteTranslations = getCurrentTranslations(
+            relatedSiteIdentifier,
+            language.code,
+            config,
+          );
+          return {
+            title: relatedSiteTranslations.title,
+            short_title: relatedSiteTranslations.short_title ||
+              relatedSiteTranslations.title,
+            url: siteIdentifierToUrl(
+              relatedSiteIdentifier,
+              pathnameWithVersion,
+              config,
+            ),
+          };
+        });
         const takedCount = 24;
         const takedItems = siteItemsGroups.slice(0, takedCount)
           .map(
@@ -255,6 +276,7 @@ export default async function buildSite(options: RunOptions) {
           "title": currentTranslations.title,
           "hostname": siteIdentifierToDomain(siteIdentifier),
           "site_identifier": siteIdentifier,
+          "related": relatedSites,
           "home_page_url": siteIdentifierToUrl(
             siteIdentifier,
             pathnameWithVersion,
