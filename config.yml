@@ -1205,7 +1205,7 @@ sites:
     label: newest_label 
     hide: true
     related:
-      - bloombergnew
+      - bloomberg
     tags:
       - news
       - finance
@@ -1232,6 +1232,8 @@ sites:
     priority: 18
     archive: false
     category: News
+    related:
+      - reuters
     tags:
       - news
       - source-sitemap-reuters
