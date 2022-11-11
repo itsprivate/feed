@@ -1457,6 +1457,9 @@
       "priority": 32,
       "archive": true,
       "category": "News",
+      "related": [
+        "reutersnew"
+      ],
       "tags": [
         "news",
         "source-twitter-reuters"
@@ -2048,7 +2051,7 @@
       "rules": [
         {
           "type": "topRatio",
-          "value": "0.4"
+          "value": "0.7"
         }
       ]
     },
@@ -2190,13 +2193,7 @@
         "name": "Product Hunt",
         "home_page_url": "https://www.producthunt.com/"
       },
-      "type": "ph",
-      "rules": [
-        {
-          "type": "topRatio",
-          "value": "0.8"
-        }
-      ]
+      "type": "ph"
     },
     {
       "id": "source-crypto-reddit",
@@ -2604,7 +2601,7 @@
       "rules": [
         {
           "type": "topRatio",
-          "value": "0.5"
+          "value": "0.7"
         }
       ]
     },
@@ -2707,7 +2704,7 @@
       "rules": [
         {
           "type": "topRatio",
-          "value": "0.625"
+          "value": "0.9"
         },
         {
           "type": "notInclude",

@@ -1460,7 +1460,7 @@ sources:
       home_page_url: https://www.reddit.com/r/all/top/
     rules:
       - type: topRatio
-        value: "0.4"
+        value: "0.7"
   - id: source-reddit-ask
     type: reddit
     api:
@@ -1543,9 +1543,6 @@ sources:
       name: Product Hunt
       home_page_url: https://www.producthunt.com/
     type: ph
-    rules:
-      - type: topRatio
-        value: "0.8"
   - id: source-crypto-reddit
     api:
       - url: https://www.reddit.com/r/CryptoCurrency/top/.json?raw_json=1
@@ -1794,7 +1791,7 @@ sources:
       home_page_url: https://www.reddit.com/r/worldnews/
     rules:
       - type: topRatio
-        value: "0.5"
+        value: "0.7"
   - id: source-the-guardian
     type: rss
     api:
@@ -1875,7 +1872,7 @@ sources:
       #   home_page_url: https://twitter.com/opinion
     rules:
       - type: topRatio
-        value: "0.625"
+        value: "0.9"
       - type: notInclude
         key: getUrl
         value: "podcast"
