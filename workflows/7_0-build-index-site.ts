@@ -107,8 +107,7 @@ export default async function buildSite(options: RunOptions) {
   }
   // filter standalone
   siteIdentifiers = siteIdentifiers.filter((siteIdentifier) => {
-    return !config.sites[siteIdentifier].standalone &&
-      config.sites[siteIdentifier].hide !== true;
+    return !config.sites[siteIdentifier].standalone;
   });
 
   // resort
@@ -159,6 +158,11 @@ export default async function buildSite(options: RunOptions) {
         feedJson._site_tags = indexConfig.tags;
       }
       let feedItems: FeedItem[] = [];
+      // remove hide sites
+      siteIdentifiers = siteIdentifiers.filter((siteIdentifier) => {
+        return config.sites[siteIdentifier].hide !== true;
+      });
+
       for (const siteIdentifier of siteIdentifiers) {
         const currentFeedJsonPath = path.join(
           getDistPath(),

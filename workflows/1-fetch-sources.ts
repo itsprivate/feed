@@ -319,7 +319,6 @@ export default async function fetchSources(
       ) {
         try {
           const originItemResult = await request(sourceUrl);
-
           const xml = await originItemResult.text();
           originalJson = await parseFeed(xml);
           itemsPath = "entries";

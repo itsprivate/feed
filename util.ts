@@ -63,6 +63,9 @@ export async function request(
   };
   const r = await fetch(url, params);
   clearTimeout(id);
+  if (!r.ok) {
+    throw new Error(`Request failed: ${url}`);
+  }
   return r;
 }
 
