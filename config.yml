@@ -662,36 +662,6 @@ sites:
         short_title: サイドプロジェクト
         description: 人気のサイドプロジェクトを日本語で閲覧
         keywords: "buzzing,サイドプロジェクト"
-  hnnew:
-    port: 8018
-    redirect: true
-    priority: 24
-    archive: true
-    category: Tech
-    tags:
-      - hn
-      - source-hackernews-new
-    translations:
-      "zh-Hans":
-        title: "Hacker News 最新提交"
-        short_title: "HN最新"
-        description: "用中文浏览Hacker News 最新提交, Points >= 2 "
-        keywords: "HackerNews 头条, Hacker News 中文, Hacker News Story"
-      "en":
-        title: "Hacker News Newest"
-        short_title: "HN Newest"
-        description: "Hacker News Newest"
-        keywords: "HackerNews 头条, Hacker News 中文, Hacker News Story"
-      "ja":
-        title: "Hacker News の最新の投稿"
-        short_title: "HN最新"
-        description: "人気の Hacker News の最新 の投稿"
-        keywords: "HackerNews 头条, Hacker News 中文, Hacker News Story"
-      "zh-Hant":
-        title: "Hacker News 最新提交"
-        short_title: "HN最新"
-        description: "用中文浏览Hacker News 最新提交"
-        keywords: "HackerNews 头条, Hacker News 中文, Hacker News Story"
   newyorker:
     port: 8019
     archive: true
@@ -1281,7 +1251,36 @@ sites:
         short_title: "ルーターズ最新"
         description: '人気のルーターズ最新 の投稿'
         keywords: "ルーターズ最新"
-
+  hnnew:
+    port: 8018
+    redirect: true
+    priority: 24
+    archive: true
+    category: Tech
+    tags:
+      - hn
+      - source-hackernews-new
+    translations:
+      "zh-Hans":
+        title: "Hacker News 最新提交"
+        short_title: "HN最新"
+        description: "用中文浏览Hacker News 最新提交, Points >= 2 "
+        keywords: "HackerNews 头条, Hacker News 中文, Hacker News Story"
+      "en":
+        title: "Hacker News Newest"
+        short_title: "HN Newest"
+        description: "Hacker News Newest"
+        keywords: "HackerNews 头条, Hacker News 中文, Hacker News Story"
+      "ja":
+        title: "Hacker News の最新の投稿"
+        short_title: "HN最新"
+        description: "人気の Hacker News の最新 の投稿"
+        keywords: "HackerNews 头条, Hacker News 中文, Hacker News Story"
+      "zh-Hant":
+        title: "Hacker News 最新提交"
+        short_title: "HN最新"
+        description: "用中文浏览Hacker News 最新提交"
+        keywords: "HackerNews 头条, Hacker News 中文, Hacker News Story"
 versions:
   - prefix: ""
     code: "default"
