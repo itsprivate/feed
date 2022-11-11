@@ -112,7 +112,7 @@ export default async function buildSite(options: RunOptions) {
   });
 
   // resort
-  siteIdentifiers = resortSites(siteIdentifiers, config);
+  siteIdentifiers = resortSites(indexSubDomain, siteIdentifiers, config);
 
   // multiple languages support
   const languages = config.languages;
