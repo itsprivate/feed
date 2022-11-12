@@ -2015,7 +2015,7 @@ sources:
       home_page_url: https://www.bloomberg.com/
     rules:
       - type: limit
-        value: "50"
+        value: "100"
   - id: source-sitemap-reuters
     type: sitemap
     api:
@@ -2024,7 +2024,7 @@ sources:
       home_page_url: https://www.reuters.com
     rules:
       - type: limit
-        value: "50"
+        value: "100"
 
   - id: source-rss-economist
     type: economic

@@ -2928,7 +2928,7 @@
       "rules": [
         {
           "type": "limit",
-          "value": "50"
+          "value": "100"
         }
       ]
     },
@@ -2943,7 +2943,7 @@
       "rules": [
         {
           "type": "limit",
-          "value": "50"
+          "value": "100"
         }
       ]
     },
