@@ -154,6 +154,8 @@ export default async function formatItems(
         item = new (adapters[parsedFilename.type])(
           originalItem,
         );
+        // delay 10 ms
+        await new Promise((resolve) => setTimeout(resolve, 2));
         itemJson = await callWithTimeout(
           item.getFormatedItem.bind(item, { imageCachedMap }),
           30000,

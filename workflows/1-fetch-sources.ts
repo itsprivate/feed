@@ -686,6 +686,7 @@ export default async function fetchSources(
         ),
         item.getRawItem(),
       );
+      theOrder++;
     }
   }
   recentlySources.unshift(currentSourceStatGroup);
