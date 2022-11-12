@@ -2016,15 +2016,6 @@ sources:
     rules:
       - type: limit
         value: "50"
-      - type: notInclude
-        key: getUrl
-        value: "podcast"
-      - type: include
-        key: getUrl
-        value: "https://www.bloomberg.com/news/"
-      - type: notInclude
-        key: getUrl
-        value: "https://www.bloomberg.com/news/videos/"
   - id: source-sitemap-reuters
     type: sitemap
     api:
