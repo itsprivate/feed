@@ -782,6 +782,9 @@
       "category": "News",
       "redirect": true,
       "priority": 23,
+      "related": [
+        "economistnew"
+      ],
       "tags": [
         "depth",
         "news",
