@@ -7,7 +7,8 @@ export default class rss extends Item<RSSItem> {
   }
   getId(): string {
     let id = this.originalItem.id as string;
-    return formatId(id);
+    const formatedId = formatId(id);
+    return formatedId;
   }
   getTitle(): string {
     const title = this.originalItem.title.value as string;

@@ -203,6 +203,7 @@
       "port": 8001,
       "category": "Tech",
       "priority": 28,
+      "hide": true,
       "tags": [
         "hn",
         "source-hackernews-index"
@@ -239,6 +240,10 @@
       "category": "Featured",
       "port": 8002,
       "redirect": true,
+      "related": [
+        "hnnew",
+        "hnfront"
+      ],
       "tags": [
         "hn",
         "www",
@@ -1681,7 +1686,6 @@
     },
     "reutersnew": {
       "port": 8041,
-      "priority": 18,
       "archive": false,
       "category": "News",
       "hide": true,
@@ -1719,12 +1723,58 @@
         }
       }
     },
+    "economistnew": {
+      "port": 8042,
+      "archive": false,
+      "category": "Finance",
+      "hide": true,
+      "related": [
+        "economist"
+      ],
+      "tags": [
+        "news",
+        "source-rss-economist"
+      ],
+      "translations": {
+        "zh-Hans": {
+          "title": "经济学人最新报道",
+          "short_title": "经济学人最新",
+          "description": "用中文浏览经济学人最新报道",
+          "keywords": "经济学人,财经,财经新闻"
+        },
+        "en": {
+          "title": "Economist Newest",
+          "short_title": "Economist Newest",
+          "description": "See what's buzzing on Economist Newest in your native language",
+          "keywords": "Economist Newest"
+        },
+        "ja": {
+          "title": "経済学人最新",
+          "short_title": "経済学人最新",
+          "description": "人気の経済学人最新 の投稿",
+          "keywords": "経済学人最新"
+        },
+        "zh-Hant": {
+          "title": "經濟學人最新報道",
+          "short_title": "經濟學人最新",
+          "description": "用中文瀏覽經濟學人最新報道",
+          "keywords": "經濟學人,財經,財經新聞"
+        }
+      }
+    },
     "hnnew": {
       "port": 8018,
       "redirect": true,
       "priority": 24,
       "archive": true,
       "category": "Tech",
+      "hide": true,
+      "related": [
+        "hn",
+        "hnfront",
+        "showhn",
+        "askhn"
+      ],
       "tags": [
         "hn",
         "source-hackernews-new"
@@ -2876,6 +2926,21 @@
         {
           "type": "limit",
           "value": "50"
+        },
+        {
+          "type": "notInclude",
+          "key": "getUrl",
+          "value": "podcast"
+        },
+        {
+          "type": "include",
+          "key": "getUrl",
+          "value": "https://www.bloomberg.com/news/"
+        },
+        {
+          "type": "notInclude",
+          "key": "getUrl",
+          "value": "https://www.bloomberg.com/news/videos/"
         }
       ]
     },
@@ -2891,6 +2956,108 @@
         {
           "type": "limit",
           "value": "50"
+        }
+      ]
+    },
+    {
+      "id": "source-rss-economist",
+      "type": "economic",
+      "rules": [
+        {
+          "type": "limit",
+          "value": 10
+        }
+      ],
+      "api": [
+        {
+          "url": "https://www.economist.com/the-world-this-week/rss.xml",
+          "name": "The Economist World This Week",
+          "home_page_url": "https://www.economist.com/the-world-this-week"
+        },
+        {
+          "url": "https://www.economist.com/leaders/rss.xml",
+          "name": "The Economist Leaders",
+          "home_page_url": "https://www.economist.com/leaders"
+        },
+        {
+          "url": "https://www.economist.com/finance-and-economics/rss.xml",
+          "name": "The Economist Finance and Economics",
+          "home_page_url": "https://www.economist.com/finance-and-economics"
+        },
+        {
+          "url": "https://www.economist.com/business/rss.xml",
+          "name": "The Economist Business",
+          "home_page_url": "https://www.economist.com/business"
+        },
+        {
+          "url": "https://www.economist.com/science-and-technology/rss.xml",
+          "name": "The Economist Science and Technology",
+          "home_page_url": "https://www.economist.com/science-and-technology"
+        },
+        {
+          "url": "https://www.economist.com/briefing/rss.xml",
+          "name": "The Economist Briefing",
+          "home_page_url": "https://www.economist.com/briefing"
+        },
+        {
+          "url": "https://www.economist.com/special-report/rss.xml",
+          "name": "The Economist Special Report",
+          "home_page_url": "https://www.economist.com/special-report"
+        },
+        {
+          "url": "https://www.economist.com/britain/rss.xml",
+          "name": "The Economist Britain",
+          "home_page_url": "https://www.economist.com/britain"
+        },
+        {
+          "url": "https://www.economist.com/europe/rss.xml",
+          "name": "The Economist Europe",
+          "home_page_url": "https://www.economist.com/europe"
+        },
+        {
+          "url": "https://www.economist.com/united-states/rss.xml",
+          "name": "The Economist United States",
+          "home_page_url": "https://www.economist.com/united-states"
+        },
+        {
+          "url": "https://www.economist.com/the-americas/rss.xml",
+          "name": "The Economist The Americas",
+          "home_page_url": "https://www.economist.com/the-americas"
+        },
+        {
+          "url": "https://www.economist.com/middle-east-and-africa/rss.xml",
+          "name": "The Economist Middle East and Africa",
+          "home_page_url": "https://www.economist.com/middle-east-and-africa"
+        },
+        {
+          "url": "https://www.economist.com/asia/rss.xml",
+          "name": "The Economist Asia",
+          "home_page_url": "https://www.economist.com/asia"
+        },
+        {
+          "url": "https://www.economist.com/china/rss.xml",
+          "name": "The Economist China",
+          "home_page_url": "https://www.economist.com/china"
+        },
+        {
+          "url": "https://www.economist.com/international/rss.xml",
+          "name": "The Economist International",
+          "home_page_url": "https://www.economist.com/international"
+        },
+        {
+          "url": "https://www.economist.com/books-and-arts/rss.xml",
+          "name": "The Economist Books and Arts",
+          "home_page_url": "https://www.economist.com/books-and-arts"
+        },
+        {
+          "url": "https://www.economist.com/obituary/rss.xml",
+          "name": "The Economist Obituary",
+          "home_page_url": "https://www.economist.com/obituary"
+        },
+        {
+          "url": "https://www.economist.com/graphic-detail/rss.xml",
+          "name": "The Economist Graphic Detail",
+          "home_page_url": "https://www.economist.com/graphic-detail"
         }
       ]
     }

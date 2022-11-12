@@ -14,6 +14,7 @@ import twitterlink from "./twitterlink.ts";
 import twittercbarraud from "./twittercbarraud.ts";
 import spectator from "./spectator.ts";
 import sitemap from "./sitemap.ts";
+import economic from "./economic.ts";
 export type ItemType = Item<RedditItem | HnItem>;
 
 const adapters: Record<string, Type<Item<RedditItem>>> = {
@@ -45,5 +46,7 @@ const adapters: Record<string, Type<Item<RedditItem>>> = {
   spectator,
   // @ts-ignore: hard to type
   sitemap,
+  // @ts-ignore: hard to type
+  economic,
 };
 export default adapters;

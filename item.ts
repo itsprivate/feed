@@ -76,7 +76,11 @@ export default class Item<T> {
         type === "lobste" || type === "hn" || type === "newyorker" ||
         type === "rss" || type === "thechinaproject")
     ) {
-      keys.push(`${this.getTitle()!.toLowerCase()}`);
+      keys.push(
+        `${this.getTitlePrefix().toLowerCase()}${
+          this.getTitle()!.toLowerCase()
+        }${this.getTitleSuffix().toLowerCase()}`,
+      );
     }
     return keys;
   }

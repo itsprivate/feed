@@ -294,6 +294,7 @@ export default async function fetchSources(
     const sourceType = source.type;
     let itemsPath = source.itemsPath || "";
     const rules = source.rules || [];
+    const itemsToSaved: Item<unknown>[] = [];
     // fetch source, and parse it to item;
     for (const sourceApiConfig of sourceUrls) {
       const sourceUrl = sourceApiConfig.url;
@@ -314,7 +315,8 @@ export default async function fetchSources(
       let totalUniqued = 0;
       let originalJson;
       if (
-        sourceType === "rss" || sourceType === "googlenews" ||
+        sourceType === "rss" || sourceType === "economic" ||
+        sourceType === "googlenews" ||
         sourceType === "newyorker" || sourceType === "lobste"
       ) {
         try {
@@ -578,14 +580,7 @@ export default async function fetchSources(
           );
           if (filterdItems.length > 0) {
             // not exists
-            // save original item to file
-            await writeJSONFile(
-              item.getRawPath(
-                targetSiteIdentifiersMap.get(sourceId)!,
-                itemOrder,
-              ),
-              item.getRawItem(),
-            );
+            itemsToSaved.push(item);
             log.debug(
               `fetched raw data to ${
                 item.getRawPath(
@@ -664,6 +659,33 @@ export default async function fetchSources(
       // add new
       stat[checkedMonth][source.id][sourceName].count += sourceStat.count;
       stat[checkedMonth][source.id][sourceName].checked_at = statChcedAt;
+    }
+
+    // resort itemsToSaved from old to new , cause we need to keep the order of items
+
+    itemsToSaved.sort((a, b) => {
+      const aDate = a.getOriginalPublishedDate();
+      const bDate = b.getOriginalPublishedDate();
+      if (aDate > bDate) {
+        return 1;
+      }
+      if (aDate < bDate) {
+        return -1;
+      }
+      return 0;
+    });
+
+    // save items
+    let theOrder = 0;
+    for (const item of itemsToSaved) {
+      // save original item to file
+      await writeJSONFile(
+        item.getRawPath(
+          targetSiteIdentifiersMap.get(sourceId)!,
+          theOrder,
+        ),
+        item.getRawItem(),
+      );
     }
   }
   recentlySources.unshift(currentSourceStatGroup);
