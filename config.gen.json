@@ -2783,6 +2783,16 @@
         {
           "type": "limit",
           "value": "20"
+        },
+        {
+          "type": "notInclude",
+          "key": "getTags",
+          "value": "U.S. News & World Report"
+        },
+        {
+          "type": "notInclude",
+          "key": "getTags",
+          "value": "Yahoo News"
         }
       ]
     },
