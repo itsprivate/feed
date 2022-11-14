@@ -18,6 +18,7 @@ import {
   getDataRawPath,
   getDataStatsPath,
   getDataTranslatedPath,
+  getDuplicatedRule,
   getRecentlySiteStatPath,
   getRecentlySourcesStatPath,
   getSiteIdentifierByRelativePath,
@@ -299,6 +300,7 @@ export default async function fetchSources(
     for (const sourceApiConfig of sourceUrls) {
       const sourceUrl = sourceApiConfig.url;
       const sourceName = sourceApiConfig.name;
+      const deduplicated = getDuplicatedRule(rules);
       const sourceStat: SourceStat = {
         raw_count: 0,
         filtered_count: 0,
@@ -547,6 +549,7 @@ export default async function fetchSources(
         const duplicatedFiles = hasSameKeys(
           currentMergedRawKeysMap,
           item.getCachedKeys(),
+          deduplicated,
         );
         if (duplicatedFiles.length > 0) {
           // delete all cached files
@@ -566,6 +569,7 @@ export default async function fetchSources(
         duplicatedKeys = hasSameKeys(
           currentmergedKeysMap,
           item.getCachedKeys(),
+          deduplicated,
         );
         if (duplicatedKeys.length > 0) {
           // log.info(`duplicatedKeys: ${duplicatedKeys}`);

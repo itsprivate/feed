@@ -62,6 +62,7 @@ export default async function translateItems(
     // get current Itemsjson
     for (const siteIdentifier of targetSiteIdentifiers) {
       const currentItemsPath = getCurrentItemsFilePath(siteIdentifier);
+      const siteConfig = config.sites[siteIdentifier];
       let currentItemsJson: ItemsJson = {
         items: {},
       };
@@ -148,6 +149,7 @@ export default async function translateItems(
       const sameKeys = hasSameKeys(
         currentTranslationsMap,
         itemInstance.getCachedKeys(),
+        "and",
       );
       if (sameKeys.length > 0) {
         const cachedTranslations = sameKeys[0];

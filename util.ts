@@ -23,6 +23,7 @@ import {
   ParsedArchiveUrl,
   ParsedFilename,
   ParsedFilenameWithTime,
+  Rule,
   SiteConfig,
   Source,
   SourceAPIConfig,
@@ -1289,13 +1290,39 @@ export function liteUrlToUrl(
   return urlObj.href;
 }
 
+export function getDuplicatedRule(
+  rules: Rule[],
+): string | undefined {
+  let deduplicatedRule: Rule | undefined;
+  for (const rule of rules) {
+    if (rule.type === "deduplicate") {
+      deduplicatedRule = rule;
+      break;
+    }
+  }
+  let deduplicated: string | undefined;
+  if (deduplicatedRule) {
+    deduplicated = deduplicatedRule.value as string;
+  }
+  return deduplicated;
+}
 export function hasSameKeys<T>(
   currentKeysMap: Map<string, T>,
   newKeys: string[],
+  deduplicated = "or",
 ): T[] {
   const currentKeys = Array.from(currentKeysMap.keys());
   const sameKeys = currentKeys.filter((key) => newKeys.includes(key));
-  return sameKeys.map((key) => currentKeysMap.get(key)!);
+  if (sameKeys.length === newKeys.length) {
+    // all match
+    return sameKeys.map((key) => currentKeysMap.get(key)!);
+  } else {
+    // part match
+    if (deduplicated === "and") {
+      return [];
+    }
+    return sameKeys.map((key) => currentKeysMap.get(key)!);
+  }
 }
 
 export function getSiteIdentifierByRelativePath(relativePath: string): string {

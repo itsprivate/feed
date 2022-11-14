@@ -207,7 +207,9 @@ export default async function buildCurrent(
         const duplicatedKeys = hasSameKeys(
           currentKeysMap,
           itemInstance.getCachedKeys(),
+          siteConfig.deduplicated,
         );
+
         if (duplicatedKeys.length > 0) {
           log.info(`${item.url} is duplicated, will drop it.`);
           filesNeedToBeDeleted.add(file);
