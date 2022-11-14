@@ -2135,11 +2135,6 @@
       ],
       "api": [
         {
-          "url": "https://www.reddit.com/r/TooAfraidToAsk/top/.json?raw_json=1",
-          "name": "Too Afraid To Ask Subreddit",
-          "home_page_url": "https://www.reddit.com/r/TooAfraidToAsk/"
-        },
-        {
           "url": "https://www.reddit.com/r/NoStupidQuestions/top/.json?raw_json=1",
           "name": "No Stupid Questions Subreddit",
           "home_page_url": "https://www.reddit.com/r/NoStupidQuestions/"
