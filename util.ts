@@ -1293,32 +1293,32 @@ export function liteUrlToUrl(
 export function getDuplicatedRule(
   rules: Rule[],
 ): string | undefined {
-  let deduplicatedRule: Rule | undefined;
+  let deduplicateRule: Rule | undefined;
   for (const rule of rules) {
     if (rule.type === "deduplicate") {
-      deduplicatedRule = rule;
+      deduplicateRule = rule;
       break;
     }
   }
-  let deduplicated: string | undefined;
-  if (deduplicatedRule) {
-    deduplicated = deduplicatedRule.value as string;
+  let deduplicate: string | undefined;
+  if (deduplicateRule) {
+    deduplicate = deduplicateRule.value as string;
   }
-  return deduplicated;
+  return deduplicate;
 }
 export function hasSameKeys<T>(
   currentKeysMap: Map<string, T>,
   newKeys: string[],
-  deduplicated = "or",
+  deduplicate = "or",
 ): T[] {
   const currentKeys = Array.from(currentKeysMap.keys());
   const sameKeys = currentKeys.filter((key) => newKeys.includes(key));
-  if (sameKeys.length === newKeys.length) {
+  if (sameKeys.length >= newKeys.length) {
     // all match
     return sameKeys.map((key) => currentKeysMap.get(key)!);
   } else {
     // part match
-    if (deduplicated === "and") {
+    if (deduplicate === "and") {
       return [];
     }
     return sameKeys.map((key) => currentKeysMap.get(key)!);

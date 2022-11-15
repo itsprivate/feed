@@ -207,7 +207,7 @@ export default async function buildCurrent(
         const duplicatedKeys = hasSameKeys(
           currentKeysMap,
           itemInstance.getCachedKeys(),
-          siteConfig.deduplicated,
+          siteConfig.deduplicate,
         );
 
         if (duplicatedKeys.length > 0) {

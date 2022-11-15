@@ -1208,7 +1208,7 @@ sites:
   bloombergnew:
     port: 8040
     priority: 18
-    deduplicated: and
+    deduplicate: and
     archive: false
     category: Finance
     label: newest_label 
@@ -1241,7 +1241,7 @@ sites:
     archive: false
     category: News
     hide: true
-    deduplicated: and
+    deduplicate: and
     related:
       - reuters
     tags:
@@ -2024,7 +2024,7 @@ sources:
     rules:
       - type: limit
         value: "100"
-      - type: deduplicated
+      - type: deduplicate
         value: "and"
   - id: source-sitemap-reuters
     type: sitemap
@@ -2035,7 +2035,7 @@ sources:
     rules:
       - type: limit
         value: "100"
-      - type: deduplicated
+      - type: deduplicate
         value: "and"
 
   - id: source-rss-economist

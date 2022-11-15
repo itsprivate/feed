@@ -300,7 +300,7 @@ export default async function fetchSources(
     for (const sourceApiConfig of sourceUrls) {
       const sourceUrl = sourceApiConfig.url;
       const sourceName = sourceApiConfig.name;
-      const deduplicated = getDuplicatedRule(rules);
+      const deduplicate = getDuplicatedRule(rules);
       const sourceStat: SourceStat = {
         raw_count: 0,
         filtered_count: 0,
@@ -549,7 +549,7 @@ export default async function fetchSources(
         const duplicatedFiles = hasSameKeys(
           currentMergedRawKeysMap,
           item.getCachedKeys(),
-          deduplicated,
+          deduplicate,
         );
         if (duplicatedFiles.length > 0) {
           // delete all cached files
@@ -569,7 +569,7 @@ export default async function fetchSources(
         duplicatedKeys = hasSameKeys(
           currentmergedKeysMap,
           item.getCachedKeys(),
-          deduplicated,
+          deduplicate,
         );
         if (duplicatedKeys.length > 0) {
           // log.info(`duplicatedKeys: ${duplicatedKeys}`);
@@ -582,6 +582,7 @@ export default async function fetchSources(
             [item],
             rules.filter((rule) => rule.type !== "topRatio"),
           );
+
           if (filterdItems.length > 0) {
             // not exists
             itemsToSaved.push(item);

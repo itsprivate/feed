@@ -74,7 +74,7 @@ export default class Item<T> {
       (type === "googlenews" ||
         type === "twitter" || type === "twitterlink" ||
         type === "lobste" || type === "hn" || type === "newyorker" ||
-        type === "rss" || type === "thechinaproject")
+        type === "rss" || type === "thechinaproject" || type === "sitemap")
     ) {
       keys.push(
         `${this.getTitlePrefix().toLowerCase()}${

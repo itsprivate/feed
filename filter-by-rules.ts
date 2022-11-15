@@ -6,7 +6,7 @@ export default function filterByRules<T>(
   rules: Rule[],
 ): Item<T>[] {
   let limitRule: Rule | undefined;
-  let deduplicatedRule: Rule | undefined;
+  let deduplicateRule: Rule | undefined;
   for (const rule of rules) {
     if (rule.type === "limit") {
       limitRule = rule;
@@ -16,13 +16,13 @@ export default function filterByRules<T>(
 
   for (const rule of rules) {
     if (rule.type === "deduplicate") {
-      deduplicatedRule = rule;
+      deduplicateRule = rule;
       break;
     }
   }
-  let deduplicated: string | undefined;
-  if (deduplicatedRule) {
-    deduplicated = deduplicatedRule.value as string;
+  let deduplicate: string | undefined;
+  if (deduplicateRule) {
+    deduplicate = deduplicateRule.value as string;
   }
   if (limitRule) {
     originalItems = originalItems.slice(0, Number(limitRule.value));
@@ -58,7 +58,7 @@ export default function filterByRules<T>(
       continue;
     }
     const itemCachedKeys = item.getCachedKeys();
-    if (hasSameKeys(keysMap, itemCachedKeys, deduplicated).length > 0) {
+    if (hasSameKeys(keysMap, itemCachedKeys, deduplicate).length > 0) {
       continue;
     }
     // check rules

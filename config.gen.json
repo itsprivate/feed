@@ -1648,7 +1648,7 @@
     "bloombergnew": {
       "port": 8040,
       "priority": 18,
-      "deduplicated": "and",
+      "deduplicate": "and",
       "archive": false,
       "category": "Finance",
       "label": "newest_label",
@@ -1693,7 +1693,7 @@
       "archive": false,
       "category": "News",
       "hide": true,
-      "deduplicated": "and",
+      "deduplicate": "and",
       "related": [
         "reuters"
       ],
@@ -2938,7 +2938,7 @@
           "value": "100"
         },
         {
-          "type": "deduplicated",
+          "type": "deduplicate",
           "value": "and"
         }
       ]
@@ -2957,7 +2957,7 @@
           "value": "100"
         },
         {
-          "type": "deduplicated",
+          "type": "deduplicate",
           "value": "and"
         }
       ]
