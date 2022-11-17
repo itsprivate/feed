@@ -487,7 +487,7 @@
     {{#_groups}}
           <details open id="{{site_identifier}}" class="sites">
             <summary class="stick px bold text-lg">{{{title}}}<span class="muted">&nbsp;-</span> <a href="{{home_page_url}}" class="muted small">{{hostname}}</a>&nbsp;{{#related}}<a class="muted text-xs" href="{{{url}}}">👉 {{short_title}}</a>&nbsp;{{/related}}</summary>
-                <input class="site-checkbox" id="{{site_identifier}}-checkbox" type="checkbox">
+                <input class="site-checkbox" checked id="{{site_identifier}}-checkbox" type="checkbox">
                 <div class="feed-content">
                   <div class="container mb px-xs">
                     {{#items}}
@@ -507,7 +507,7 @@
                     </div>
                   {{/remaining_count}}
                 </div>
-                <label class="site-checkbox-label mx" for="{{site_identifier}}-checkbox"></label>
+                <label class="site-checkbox-label mx my" for="{{site_identifier}}-checkbox"></label>
           </details>
       {{/_groups}}
       <footer class="footer">
@@ -526,8 +526,8 @@
      </div>
      <script>
         // close details element
-        var elements = document.querySelectorAll(".sites")
-        var localstorageKey = 'buzzing_closed_ids';
+      var elements = document.querySelectorAll(".sites")
+      var localstorageKey = 'buzzing_closed_ids';
       var currentClosedIds = localStorage.getItem(localstorageKey) || "";
       var currentClosedIdsArray = currentClosedIds.split(",").filter(element => element);
       for (var i=0;i<currentClosedIdsArray.length;i++){
@@ -557,6 +557,9 @@
             }
 
           }else{
+            // set targetId to hash
+            // back to top
+
             // add to localStorage
             // check unique 
             if (closedIdsArray.indexOf(targetId) == -1){
@@ -568,6 +571,18 @@
           if (isChanged){
             var newClosedIds = closedIdsArray.join(",");
             localStorage.setItem(localstorageKey, newClosedIds);
+            if(targetStatus===false){
+              try{
+                var targetElement = event.target;
+                var position = targetElement.getBoundingClientRect();
+                var top = position.top;
+                if(top < 0){
+                  window.scrollBy(0, position.top);
+                }
+              }catch(_e){
+                  // ignore
+              }
+            }
           }
           
         })
