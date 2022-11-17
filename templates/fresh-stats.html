@@ -32,6 +32,9 @@
       .flex-1 {
         flex: 1;
       }
+      .min-width {
+        min-width: 200px;
+      }
       a.contrast:link,
       a.contrast:visited {
         color: initial;
@@ -91,7 +94,7 @@
       </h3>
       <div class="flex flex-wrap">
         {{#groups}}
-        <div class="flex-1">
+        <div class="flex-1 min-width">
           <h4 class="text-center">{{title}} ({{count}})</h4>
           <div
             class="stat w-full"
