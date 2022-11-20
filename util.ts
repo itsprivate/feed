@@ -710,7 +710,7 @@ export const addZero = function (num: number): string {
 
 export function weekOfYear(date: Date): WeekOfYear {
   const workingDate = new Date(
-    Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()),
+    Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()),
   );
 
   const day = workingDate.getUTCDay();
