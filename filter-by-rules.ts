@@ -1,6 +1,7 @@
 import { Rule } from "./interface.ts";
 import { get, hasSameKeys } from "./util.ts";
 import Item from "./item.ts";
+import log from "./log.ts";
 export default function filterByRules<T>(
   originalItems: Item<T>[],
   rules: Rule[],
@@ -100,6 +101,29 @@ export default function filterByRules<T>(
         }
       } else if (type === "notInclude") {
         if ((originalValue as string[]).includes(value)) {
+          isAllRulesFine = false;
+          break;
+        }
+      } else if (type === "startsWith") {
+        if (!(originalValue as string).startsWith(value)) {
+          isAllRulesFine = false;
+          break;
+        }
+      } else if (type === "endsWith") {
+        if (!(originalValue as string).endsWith(value)) {
+          isAllRulesFine = false;
+          break;
+        }
+      } else if (type === "notStartsWith") {
+        if ((originalValue as string).startsWith(value)) {
+          isAllRulesFine = false;
+          break;
+        }
+      } else if (type === "notEndsWith") {
+        if ((originalValue as string).endsWith(value)) {
+          log.debug(
+            `remove originalValue, for rule ${key}  notEndsWith: ${value}`,
+          );
           isAllRulesFine = false;
           break;
         }

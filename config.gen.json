@@ -2784,7 +2784,12 @@
       "rules": [
         {
           "type": "limit",
-          "value": "20"
+          "value": "1000"
+        },
+        {
+          "type": "notEndsWith",
+          "key": "getHostname",
+          "value": ".cn"
         },
         {
           "type": "notInclude",
