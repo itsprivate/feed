@@ -3,6 +3,7 @@
 prod-current.zip
 prod-cache.zip
 /prod-archive*/
+deno.lock
 **/*.zip
 current.zip
 archive.zip

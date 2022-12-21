@@ -1403,7 +1403,7 @@ sources:
   - id: source-google-newsall
     api:
       - url: https://news.google.com/rss/topics/CAAqJggKIiBDQkFTRWdvSUwyMHZNRGx1YlY4U0FtVnVHZ0pWVXlnQVAB?hl=en-US&gl=US&ceid=US:en
-        name: Google News World
+        name: Google News World All
         home_page_url: https://news.google.com/topics/CAAqJggKIiBDQkFTRWdvSUwyMHZNRGx1YlY4U0FtVnVHZ0pWVXlnQVAB?hl=en-US&gl=US&ceid=US:en
     type: googlenews
     rules:
@@ -1937,9 +1937,9 @@ sources:
       - type: notInclude
         key: getTags
         value: "U.S. News & World Report"
-      - type: notInclude
-        key: getTags
-        value: "Yahoo News"
+      # - type: notInclude
+      #   key: getTags
+      #   value: "Yahoo News"
   - api:
       url: spectatorindex
       name: The Spectator Index Twitter
@@ -2101,3 +2101,9 @@ sources:
       - url: https://www.economist.com/graphic-detail/rss.xml
         name: The Economist Graphic Detail
         home_page_url: https://www.economist.com/graphic-detail
+
+  - id: source-my-rss
+    api:
+      url: https://www.tbray.org/ongoing/ongoing.atom
+      name: Tim Bray
+      home_page_url: https://www.tbray.org/ongoing/
