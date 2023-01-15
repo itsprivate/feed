@@ -460,9 +460,6 @@
             </ul>
             {{/_sources.0}}
             {{latest_build_at_lable}}: {{_latest_build_time}} &nbsp; <a href="/stats/">{{stat_label}}</a>
-            <br />
-            {{ powered_by_label }}:
-            <a href="https://www.owenyoung.com">Owen</a> (<a href="https://twitter.com/OwenYoungZh">Twitter</a>)
           </div>
         </div>
         {{#_page_title}}

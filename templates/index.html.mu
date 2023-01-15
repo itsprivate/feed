@@ -390,9 +390,6 @@
           {{#_social_links}}<li><a href="{{url}}">{{name}}</a></li>{{/_social_links}}
           </ul>
           {{latest_build_at_lable}}: {{_latest_build_time}} &nbsp; <a href="https://www.buzzing.cc/stats/#{{{_site_identifier}}}">{{stat_label}}</a>
-          <br />
-          {{ powered_by_label }}:
-          <a href="https://www.owenyoung.com">Owen</a> (<a href="https://twitter.com/OwenYoungZh">Twitter</a>)
         </div>
       </div>
       {{#_page_title}}
