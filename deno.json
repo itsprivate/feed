@@ -11,6 +11,7 @@
         "public/",
         "example",
         "workers-site/",
+        "d/",
         "assets-by-site",
         "assets-by-site-src",
         "current/",

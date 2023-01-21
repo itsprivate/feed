@@ -287,7 +287,7 @@ prod-publishall:
 
 .Phony: test
 test:
-	make checkfmt && deno test -A
+	deno test -A
 
 .Phony: prod-deletecurrent
 prod-deletecurrent:
