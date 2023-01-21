@@ -15,6 +15,7 @@ import {
 import log from "../log.ts";
 import Translation from "../translate.ts";
 import SourceItemAdapter from "../adapters/source.ts";
+import D from "../d.ts";
 
 export default async function translateItems(
   options: RunOptions,
@@ -94,8 +95,9 @@ export default async function translateItems(
 
     // yes
     // start instance
-    const translation = new Translation();
-    await translation.init();
+    // const translation = new Translation();
+    // await translation.init();
+    const translation = new D();
 
     let total = 0;
     let translateWithAPITotal = 0;
@@ -279,6 +281,6 @@ export default async function translateItems(
       `translated ${total} items, failed ${failedTotal} items, use api: ${translateWithAPITotal}, use cache: ${translateWithCacheTotal}`,
     );
 
-    await translation.close();
+    // await translation.close();
   }
 }

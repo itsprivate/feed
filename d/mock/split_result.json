@@ -1,0 +1,95 @@
+{
+  "jsonrpc": "2.0",
+  "id": 7081866,
+  "result": {
+    "lang": {
+      "detected": "EN",
+      "isConfident": true,
+      "detectedLanguages": {
+        "EN": 1
+      }
+    },
+    "texts": [
+      {
+        "chunks": [
+          {
+            "sentences": [
+              {
+                "prefix": "",
+                "text": "This week, Qatar will host the final matches of the 2022 World Cup soccer tournament."
+              }
+            ]
+          },
+          {
+            "sentences": [
+              {
+                "prefix": " ",
+                "text": "The Middle Eastern emirate spent huge amounts of money on the event—$220 billion, by some estimates."
+              }
+            ]
+          },
+          {
+            "sentences": [
+              {
+                "prefix": " ",
+                "text": "But as a public relations exercise, that spending may have been wasted:"
+              }
+            ]
+          },
+          {
+            "sentences": [
+              {
+                "prefix": " ",
+                "text": "Qatar has drawn widespread criticism for alleged corruption involved in winning hosting rights in the first place and the apparent mistreatment of guest workers who built the stadiums and infrastructure."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "chunks": [
+          {
+            "sentences": [
+              {
+                "prefix": "",
+                "text": "How stable is Qatar’s economy?"
+              }
+            ]
+          },
+          {
+            "sentences": [
+              {
+                "prefix": " ",
+                "text": "How privileged are Qatari citizens compared to their guest workers?"
+              }
+            ]
+          },
+          {
+            "sentences": [
+              {
+                "prefix": " ",
+                "text": "And how might climate change affect its economy?"
+              }
+            ]
+          },
+          {
+            "sentences": [
+              {
+                "prefix": " ",
+                "text": "Those are a few of the questions that came up in my recent conversation with Foreign Policy economics columnist Adam Tooze on the podcast we co-host, Ones and Tooze."
+              }
+            ]
+          },
+          {
+            "sentences": [
+              {
+                "prefix": " ",
+                "text": "What follows is an excerpt, edited for length and clarity."
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

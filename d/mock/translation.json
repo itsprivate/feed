@@ -1,0 +1,30 @@
+{
+  "jsonrpc": "2.0",
+  "id": 50459696,
+  "result": {
+    "translations": [
+      {
+        "beams": [
+          {
+            "postprocessed_sentence": "本周，卡塔尔将举办2022年世界杯足球赛的最后一场比赛。",
+            "num_symbols": 19
+          }
+        ],
+        "quality": "normal"
+      },
+      {
+        "beams": [
+          {
+            "postprocessed_sentence": "卡塔尔的经济有多稳定？",
+            "num_symbols": 9
+          }
+        ],
+        "quality": "normal"
+      }
+    ],
+    "target_lang": "ZH",
+    "source_lang": "EN",
+    "source_lang_is_confident": false,
+    "detectedLanguages": {}
+  }
+}
