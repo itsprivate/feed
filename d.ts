@@ -20,7 +20,7 @@ export default class Translation {
         lang !== "zh-Hans"
       )
     ) {
-      await delay(300);
+      await delay(100);
       const result = await d.translateList({
         url: "https://google.com",
         text: [
