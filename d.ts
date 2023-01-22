@@ -32,7 +32,7 @@ export default class Translation {
       results[targetLanguage] = result.text[0];
     }
     if (results["zh-Hant"]) {
-      results["zh-Hans"] = toZhHant(results["zh-Hant"]);
+      results["zh-Hant"] = toZhHant(results["zh-Hant"]);
     }
     // console.log("results", results);
     return results;
