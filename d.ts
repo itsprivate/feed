@@ -17,7 +17,7 @@ export default class Translation {
     const results: Record<string, string> = {};
     for (
       const targetLanguage of targetLanguages.filter((lang) =>
-        lang !== "zh-Hans"
+        lang !== "zh-Hant"
       )
     ) {
       await delay(100);
@@ -31,8 +31,8 @@ export default class Translation {
       });
       results[targetLanguage] = result.text[0];
     }
-    if (results["zh-Hant"]) {
-      results["zh-Hant"] = toZhHant(results["zh-Hant"]);
+    if (results["zh-Hans"]) {
+      results["zh-Hant"] = toZhHant(results["zh-Hans"]);
     }
     // console.log("results", results);
     return results;

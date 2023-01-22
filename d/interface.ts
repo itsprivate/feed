@@ -514,7 +514,7 @@ export declare const languages: readonly [
   "yua",
   "yue",
   "zh-CN",
-  "zh-Hant",
+  "zh-Hans",
   "zh-TW",
   "zh",
   "zu",

@@ -16,7 +16,7 @@ const langMap: [Language, string][] = [
   ["auto", "auto"],
   ["zh-CN", "ZH"],
   ["zh-TW", "ZH"],
-  ["zh-Hant", "ZH"],
+  ["zh-Hans", "ZH"],
   ["zh", "ZH"],
   ["de", "DE"],
   ["en", "EN"],
