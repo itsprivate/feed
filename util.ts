@@ -1034,6 +1034,7 @@ export async function getRedirectedUrlDirectly(url: string): Promise<string> {
   }
   return url;
 }
+
 export async function getRedirectedUrl(url: string): Promise<string> {
   const fetchResult = await request(url, {
     method: "HEAD",

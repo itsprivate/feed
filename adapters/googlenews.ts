@@ -69,7 +69,33 @@ export default class googlenews extends RSS {
       id = await sha1(title);
       this.id = id;
     }
-    this.url = await getRedirectedUrlDirectly(super.getUrl());
+    // this.url = await getRedirectedUrlDirectly(super.getUrl());
+    this.url = await getGoogleNewsRedirectUrl(super.getUrl());
     this.id = await sha1(this.url);
+  }
+}
+
+async function getGoogleNewsRedirectUrl(url: string): Promise<string> {
+  // Opening <a href="
+  const response = await request(url);
+  const body = await response.text();
+  // get text between Opening <a href=" and Closing "
+  const realUrl = getGoogleNewsRedirectUrlByBody(body);
+  if (realUrl) {
+    return realUrl;
+  } else {
+    throw new Error("Can't get redirect url from google news");
+  }
+}
+
+export function getGoogleNewsRedirectUrlByBody(body: string): string | null {
+  // Opening <a href=""
+
+  const regex = /Opening <a href="(.+?)"/;
+  const match = regex.exec(body);
+  if (match) {
+    return match[1];
+  } else {
+    return null;
   }
 }

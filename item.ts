@@ -239,6 +239,7 @@ export default class Item<T> {
       this.image = null;
       return null;
     }
+    log.debug("image url", url);
     const urlObj = new URL(url);
     const domain = urlObj.hostname;
     try {
