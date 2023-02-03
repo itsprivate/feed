@@ -1010,6 +1010,9 @@
     "china": {
       "port": 8023,
       "priority": 12,
+      "related": [
+        "redditchina"
+      ],
       "category": "Featured",
       "archive": true,
       "tags": [
@@ -1427,6 +1430,7 @@
       "port": 8034,
       "priority": 27,
       "category": "Discuss",
+      "hide": true,
       "archive": true,
       "tags": [
         "china",
