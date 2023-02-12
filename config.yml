@@ -772,7 +772,7 @@ sites:
         keywords: "Linux 头条, Linux 中文, Linux Story"
   china:
     port: 8023
-    priority: 12
+    priority: 16
     related:
       - redditchina
     category: Featured
