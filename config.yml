@@ -1066,7 +1066,6 @@ sites:
     # max_image_height: 520
     tags:
       - china
-      - www
       - source-reddit-china
     translations:
       "zh-Hans":
