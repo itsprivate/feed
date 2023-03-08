@@ -14,7 +14,8 @@ import {
 } from "../util.ts";
 import log from "../log.ts";
 import SourceItemAdapter from "../adapters/source.ts";
-import D from "../d.ts";
+// import D from "../d.ts";
+import DPro from "../dp.ts";
 
 export default async function translateItems(
   options: RunOptions,
@@ -96,7 +97,7 @@ export default async function translateItems(
     // start instance
     // const translation = new Translation();
     // await translation.init();
-    const translation = new D();
+    const translation = new DPro();
 
     let total = 0;
     let translateWithAPITotal = 0;
