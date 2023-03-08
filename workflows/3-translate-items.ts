@@ -13,7 +13,6 @@ import {
   writeJSONFile,
 } from "../util.ts";
 import log from "../log.ts";
-import Translation from "../translate.ts";
 import SourceItemAdapter from "../adapters/source.ts";
 import D from "../d.ts";
 

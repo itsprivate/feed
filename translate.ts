@@ -1,4 +1,4 @@
-import { Browser, Page, puppeteer } from "./bad-deps.ts";
+import { Browser, Page, puppeteer } from "./puppeteer_deps.ts";
 import { isMock } from "./util.ts";
 import log from "./log.ts";
 import { fs, YAML } from "./deps.ts";
