@@ -1,4 +1,4 @@
-import { Deepl as DPro } from "https://esm.sh/immersive-translate@2.0.8";
+import { Deepl as DPro } from "https://esm.sh/immersive-translate@1.0.8";
 import { delay } from "./deps.ts";
 import { toZhHant } from "./to-zh-hant.ts";
 import { Language } from "./d/interface.ts";
