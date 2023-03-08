@@ -1,6 +1,5 @@
 import StreamParser from "./parser.ts";
 import { Credentials } from "./models.ts";
-import { deepAssign as merge } from "https://deno.land/std@0.159.0/_util/deep_assign.ts";
 // Package version
 const VERSION = 0.1;
 
@@ -9,7 +8,7 @@ class SimpleTwitter {
   requestDefaults: any;
 
   constructor(public options: any) {
-    this.options = merge(
+    this.options = mergeDeep(
       {
         consumer_key: null,
         consumer_secret: null,
@@ -58,7 +57,7 @@ class SimpleTwitter {
     }
 
     // Configure default request options
-    this.requestDefaults = merge(
+    this.requestDefaults = mergeDeep(
       authentication_options,
       this.options.request_options,
     );
@@ -124,7 +123,7 @@ class SimpleTwitter {
     }
 
     // Build the options to pass to our custom request object
-    const options = merge(this.requestDefaults, {
+    const options = mergeDeep(this.requestDefaults, {
       method: method.toLowerCase(), // Request method - get || post
     });
 
@@ -250,3 +249,36 @@ class SimpleTwitter {
 }
 
 export default SimpleTwitter;
+/**
+ * Simple object check.
+ * @param item
+ * @returns {boolean}
+ */
+// @ts-ignore: it's ok
+export function isObject(item) {
+  return (item && typeof item === "object" && !Array.isArray(item));
+}
+
+/**
+ * Deep merge two objects.
+ * @param target
+ * @param ...sources
+ */
+// @ts-ignore: it's ok
+export function mergeDeep(target, ...sources) {
+  if (!sources.length) return target;
+  const source = sources.shift();
+
+  if (isObject(target) && isObject(source)) {
+    for (const key in source) {
+      if (isObject(source[key])) {
+        if (!target[key]) Object.assign(target, { [key]: {} });
+        mergeDeep(target[key], source[key]);
+      } else {
+        Object.assign(target, { [key]: source[key] });
+      }
+    }
+  }
+
+  return mergeDeep(target, ...sources);
+}
