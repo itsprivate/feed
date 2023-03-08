@@ -1,15 +1,15 @@
 // std
-export * as YAML from "https://deno.land/std@0.151.0/encoding/yaml.ts";
-export * as TOML from "https://deno.land/std@0.151.0/encoding/toml.ts";
-export * as path from "https://deno.land/std@0.151.0/path/mod.ts";
-export * as fs from "https://deno.land/std@0.151.0/fs/mod.ts";
-export * as dotenv from "https://deno.land/std@0.151.0/dotenv/mod.ts";
-export * as datetime from "https://deno.land/std@0.151.0/datetime/mod.ts";
-export * as asyncMod from "https://deno.land/std@0.151.0/async/mod.ts";
-export * as flags from "https://deno.land/std@0.151.0/flags/mod.ts";
-export * as colors from "https://deno.land/std@0.151.0/fmt/colors.ts";
-export { delay } from "https://deno.land/std@0.151.0/async/delay.ts";
-export { DateTimeFormatter } from "https://deno.land/std@0.151.0/datetime/formatter.ts";
+export * as YAML from "https://deno.land/std@0.178.0/encoding/yaml.ts";
+export * as TOML from "https://deno.land/std@0.178.0/encoding/toml.ts";
+export * as path from "https://deno.land/std@0.178.0/path/mod.ts";
+export * as fs from "https://deno.land/std@0.178.0/fs/mod.ts";
+export * as dotenv from "https://deno.land/std@0.178.0/dotenv/mod.ts";
+export * as datetime from "https://deno.land/std@0.178.0/datetime/mod.ts";
+export * as asyncMod from "https://deno.land/std@0.178.0/async/mod.ts";
+export * as flags from "https://deno.land/std@0.178.0/flags/mod.ts";
+export * as colors from "https://deno.land/std@0.178.0/fmt/colors.ts";
+export { delay } from "https://deno.land/std@0.178.0/async/delay.ts";
+export { DateTimeFormatter } from "https://deno.land/std@0.178.0/datetime/_common.ts";
 export {
   assert,
   assertAlmostEquals,
@@ -23,15 +23,15 @@ export {
   assertRejects,
   assertStringIncludes,
   assertThrows,
-} from "https://deno.land/std@0.151.0/testing/asserts.ts";
-export { serve } from "https://deno.land/std@0.152.0/http/server.ts";
-export { contentType } from "https://deno.land/std@0.152.0/media_types/mod.ts";
+} from "https://deno.land/std@0.178.0/testing/asserts.ts";
+export { serve } from "https://deno.land/std@0.178.0/http/server.ts";
+export { contentType } from "https://deno.land/std@0.178.0/media_types/mod.ts";
 export {
   serveDir,
   serveFile,
-} from "https://deno.land/x/std@0.152.0/http/file_server.ts";
-export * as posixPath from "https://deno.land/std@0.152.0/path/posix.ts";
-export { config as dotenvConfig } from "https://deno.land/std@0.152.0/dotenv/mod.ts";
+} from "https://deno.land/std@0.178.0/http/file_server.ts";
+export * as posixPath from "https://deno.land/std@0.178.0/path/posix.ts";
+export { load as dotenvConfig } from "https://deno.land/std@0.178.0/dotenv/mod.ts";
 // third party modules
 
 export { default as SimpleTwitter } from "./twit-deno/simple_twitter_deno.ts";
