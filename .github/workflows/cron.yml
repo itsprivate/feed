@@ -44,7 +44,7 @@ jobs:
         run: npm install -g wrangler
       - uses: denoland/setup-deno@v1
         with:
-          deno-version: v1.29.4
+          deno-version: v1.31.1
       - uses: actions/cache@v3
         with:
           path: |
