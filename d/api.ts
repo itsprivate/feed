@@ -121,19 +121,25 @@ export async function requestTranslation(
     to: targetLanguage,
     text: [],
   };
-  response.result.translations.forEach((translation, index) => {
-    const jobIndex = jobsIndexes[index]!;
-    if (finalResult.text[jobIndex] === undefined) {
-      finalResult.text[jobIndex] = "";
-    }
-    const originalSentencePrefix = data.params.jobs[index].sentences[0].prefix;
+  if (response && response.result && response.result.translations) {
+    response.result.translations.forEach((translation, index) => {
+      const jobIndex = jobsIndexes[index]!;
+      if (finalResult.text[jobIndex] === undefined) {
+        finalResult.text[jobIndex] = "";
+      }
+      const originalSentencePrefix =
+        data.params.jobs[index].sentences[0].prefix;
 
-    const originalSentencePre = data.params.jobs[index].sentences[0].prefix;
-    finalResult.text[jobIndex] = finalResult.text[jobIndex] +
-      originalSentencePrefix + translation.beams[0].sentences[0].text;
-  });
+      const originalSentencePre = data.params.jobs[index].sentences[0].prefix;
+      finalResult.text[jobIndex] = finalResult.text[jobIndex] +
+        originalSentencePrefix + translation.beams[0].sentences[0].text;
+    });
 
-  return finalResult;
+    return finalResult;
+  } else {
+    console.warn("No response from deepl", response);
+    throw new Error("No response from deepl");
+  }
 }
 
 export async function translate(
