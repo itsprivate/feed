@@ -1,6 +1,12 @@
 import { Author } from "../interface.ts";
 import Item from "../item.ts";
-const prefixies = ["Show HN: ", "Ask HN: ", "Tell HN: ", "Poll: "];
+const prefixies = [
+  "Show HN: ",
+  "Ask HN: ",
+  "Tell HN: ",
+  "Poll: ",
+  "Launch HN: ",
+];
 export default class hn extends Item<HnItem> {
   getOriginalPublishedDate(): Date {
     return new Date(this.originalItem.created_at as string);
