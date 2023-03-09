@@ -19,6 +19,8 @@ const langMap: [Language, string][] = [
   ["ru", "RU"],
   ["tr", "tr"],
 ];
+const d = new DPro(Deno.env.get("IM_DEEPL_AUTH_KEY"));
+
 export default class Translation {
   /** Translator lang to custom lang */
   private static readonly langMap = new Map(langMap);
@@ -36,7 +38,6 @@ export default class Translation {
     sourceLanguage: string,
     targetLanguages: string[],
   ): Promise<Record<string, string>> {
-    const d = new DPro(Deno.env.get("IM_DEEPL_AUTH_KEY"));
     // console.log("sourceLanguage", sourceLanguage);
     // console.log("targetLanguages", targetLanguages);
     const results: Record<string, string> = {};
