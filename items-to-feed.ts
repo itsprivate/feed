@@ -187,6 +187,11 @@ export default function itemsToFeed(
     "title": siteTitle,
     "description": siteDescription,
     "icon": siteIdentifierToUrl(siteIdentifier, "/icon.png", config),
+    "_apple_touch_icon": siteIdentifierToUrl(
+      siteIdentifier,
+      "/apple-touch-icon.png",
+      config,
+    ),
     "_latest_build_time": formatIsoDate(new Date()),
     "favicon": siteIdentifierToUrl(siteIdentifier, "/favicon.ico", config),
     "language": language.code,

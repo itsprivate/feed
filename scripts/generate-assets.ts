@@ -19,11 +19,19 @@ export default async function generateIcons() {
     // await Deno.writeFile(getDistFilePath(siteIdentifier, "icon.png"), icon);
     // generate apple-touch-icon
     const appleTouchIcon = await resize(icon, {
-      width: 180,
-      height: 180,
+      width: 150,
+      height: 150,
     });
     await Deno.writeFile(
       path.join("assets-by-site", siteIdentifier, "icon.png"),
+      appleTouchIcon,
+      {
+        create: true,
+      },
+    );
+
+    await Deno.writeFile(
+      path.join("assets-by-site", siteIdentifier, "apple-touch-icon.png"),
       appleTouchIcon,
       {
         create: true,

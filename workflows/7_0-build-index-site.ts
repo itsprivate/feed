@@ -135,7 +135,17 @@ export default async function buildSite(options: RunOptions) {
         "version": "https://jsonfeed.org/version/1",
         "title": currentIndexTranslations.title,
         "description": currentIndexTranslations.description,
-        "icon": siteIdentifierToUrl(indexSubDomain, "/icon.png", config),
+        "icon": siteIdentifierToUrl(
+          indexSubDomain,
+          "/icon.png",
+          config,
+        ),
+        "_apple_touch_icon": siteIdentifierToUrl(
+          indexSubDomain,
+          "/apple-touch-icon.png",
+          config,
+        ),
+
         "favicon": siteIdentifierToUrl(indexSubDomain, "/favicon.ico", config),
         "_latest_build_time": formatIsoDate(now),
         "language": language.code,
@@ -394,6 +404,9 @@ export default async function buildSite(options: RunOptions) {
   const apiMap = new Map<string, API>();
   for (const source of config.sources) {
     sourcesMap.set(source.id, source);
+    if (source.id === "source-google-news") {
+      console.log(source.rules);
+    }
     const api = Array.isArray(source.api) ? source.api : [source.api];
     for (const apiItem of api) {
       apiMap.set(apiItem.name, {

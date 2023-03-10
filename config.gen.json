@@ -1009,7 +1009,7 @@
     },
     "china": {
       "port": 8023,
-      "priority": 12,
+      "priority": 21,
       "related": [
         "redditchina"
       ],
@@ -1434,7 +1434,6 @@
       "archive": true,
       "tags": [
         "china",
-        "www",
         "source-reddit-china"
       ],
       "translations": {

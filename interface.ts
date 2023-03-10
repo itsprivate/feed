@@ -216,6 +216,7 @@ export interface Feedjson {
   home_page_url: string;
   feed_url: string;
   _latest_build_time: string;
+  _apple_touch_icon: string;
   items: FeedItem[];
   _site_version: string;
   _tags?: string[];
