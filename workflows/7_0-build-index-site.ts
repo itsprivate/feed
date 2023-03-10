@@ -137,16 +137,20 @@ export default async function buildSite(options: RunOptions) {
         "description": currentIndexTranslations.description,
         "icon": siteIdentifierToUrl(
           indexSubDomain,
-          "/icon.png",
+          "/icon.png?v=20230310",
           config,
         ),
         "_apple_touch_icon": siteIdentifierToUrl(
           indexSubDomain,
-          "/apple-touch-icon.png",
+          "/apple-touch-icon.png?v=20230310",
           config,
         ),
 
-        "favicon": siteIdentifierToUrl(indexSubDomain, "/favicon.ico", config),
+        "favicon": siteIdentifierToUrl(
+          indexSubDomain,
+          "/favicon.ico?v=20230310",
+          config,
+        ),
         "_latest_build_time": formatIsoDate(now),
         "language": language.code,
         "_site_version": version.code,
