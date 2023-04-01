@@ -1291,6 +1291,33 @@ sites:
         short_title: "経済学人最新"
         description: '人気の経済学人最新 の投稿'
         keywords: "経済学人最新"
+
+  #模仿newyork的格式，category的属性没找到合适的,大概science比较合适。
+  phys:
+    port: 8043
+    archive: true
+    category: News
+    redirect: false
+    tags:
+      - news
+      - source-phys
+    translations:
+      "zh-Hans":
+        title: "世界科技研究新闻资讯网最新报道"
+        description: "用中文浏览世界科技研究新闻资讯网"
+        keyworkds: "世界科技研究,科学"
+        short_title: "世界科技研究新闻资讯网最新"
+      "en":
+        title: "PHYS Newest"
+        short_title: "PHYS Newest"
+        description: "See what's buzzing on PHYS in your native language"
+        keywords: "PHYS Newest"
+      "ja":
+        title: "PHYS最新レポート"
+        short_title: "PHYS最新"
+        description: "人気の最新科学記事を日本語で閲覧する"
+        keywords: "PHYS最新レポート"
+
   hnnew:
     port: 8018
     redirect: true
@@ -2103,7 +2130,14 @@ sources:
       - url: https://www.economist.com/graphic-detail/rss.xml
         name: The Economist Graphic Detail
         home_page_url: https://www.economist.com/graphic-detail
-
+  #add source phys.org
+  - api:
+      url: https://phys.org/rss-feed/
+      name: Phys
+      home_page_url: https://phys.org/
+    type: phys
+    id: source-phys
+    
   - id: source-my-rss
     api:
       url: https://www.tbray.org/ongoing/ongoing.atom
