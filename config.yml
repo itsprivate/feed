@@ -1303,10 +1303,10 @@ sites:
       - source-phys
     translations:
       "zh-Hans":
-        title: "世界科技研究新闻资讯网最新报道"
-        description: "用中文浏览世界科技研究新闻资讯网"
+        title: "PHYS 最新"
+        description: "用中文浏览 phys.org 最新报道"
         keyworkds: "世界科技研究,科学"
-        short_title: "世界科技研究新闻资讯网最新"
+        short_title: "PHYS"
       "en":
         title: "PHYS Newest"
         short_title: "PHYS Newest"
