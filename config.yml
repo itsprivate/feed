@@ -1303,17 +1303,17 @@ sites:
       - source-phys
     translations:
       "zh-Hans":
-        title: "PHYS 最新"
+        title: "phys.org 最新"
         description: "用中文浏览 phys.org 最新报道"
         keyworkds: "世界科技研究,科学"
         short_title: "PHYS"
       "en":
-        title: "PHYS Newest"
+        title: "phys.org Newest"
         short_title: "PHYS Newest"
         description: "See what's buzzing on PHYS in your native language"
         keywords: "PHYS Newest"
       "ja":
-        title: "PHYS最新レポート"
+        title: "phys.org 最新レポート"
         short_title: "PHYS最新"
         description: "人気の最新科学記事を日本語で閲覧する"
         keywords: "PHYS最新レポート"
