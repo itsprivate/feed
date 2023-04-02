@@ -319,7 +319,8 @@ export default async function fetchSources(
       if (
         sourceType === "rss" || sourceType === "economic" ||
         sourceType === "googlenews" ||
-        sourceType === "newyorker" || sourceType === "lobste"
+        sourceType === "newyorker" || sourceType === "lobste" ||
+        sourceType === "phys"
       ) {
         try {
           const originItemResult = await request(sourceUrl);
