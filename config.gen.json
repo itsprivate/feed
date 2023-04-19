@@ -1773,36 +1773,144 @@
     "phys": {
       "port": 8043,
       "archive": true,
-      "category": "News",
+      "category": "Tech",
       "redirect": false,
       "tags": [
-        "news",
+        "tech",
         "source-phys"
       ],
       "translations": {
         "zh-Hans": {
-          "title": "世界科技研究新闻资讯网最新报道",
-          "description": "用中文浏览世界科技研究新闻资讯网",
+          "title": "phys.org 最新",
+          "description": "用中文浏览 phys.org 最新报道",
           "keyworkds": "世界科技研究,科学",
-          "short_title": "世界科技研究新闻资讯网最新"
+          "short_title": "PHYS"
         },
         "en": {
-          "title": "PHYS Newest",
+          "title": "phys.org Newest",
           "short_title": "PHYS Newest",
           "description": "See what's buzzing on PHYS in your native language",
           "keywords": "PHYS Newest"
         },
         "ja": {
-          "title": "PHYS最新レポート",
+          "title": "phys.org 最新レポート",
           "short_title": "PHYS最新",
           "description": "人気の最新科学記事を日本語で閲覧する",
           "keywords": "PHYS最新レポート"
         },
         "zh-Hant": {
-          "title": "世界科技研究新聞資訊網最新報道",
-          "description": "用中文瀏覽世界科技研究新聞資訊網",
+          "title": "phys.org 最新",
+          "description": "用中文瀏覽 phys.org 最新報道",
           "keyworkds": "世界科技研究,科學",
-          "short_title": "世界科技研究新聞資訊網最新"
+          "short_title": "PHYS"
+        }
+      }
+    },
+    "nature": {
+      "port": 8044,
+      "archive": true,
+      "category": "Tech",
+      "redirect": false,
+      "tags": [
+        "tech",
+        "source-nature"
+      ],
+      "translations": {
+        "zh-Hans": {
+          "title": "自然杂志",
+          "description": "用中文浏览 Nature (自然杂志) 最新报道",
+          "keyworkds": "Nature,自然,科学",
+          "short_title": "Nature"
+        },
+        "en": {
+          "title": "Nature  Newest",
+          "short_title": "Nature Newest",
+          "description": "See what's buzzing on Nature in your native language",
+          "keywords": "Nature Newest"
+        },
+        "ja": {
+          "title": "Nature 最新レポート",
+          "short_title": "Nature",
+          "description": "人気の最新 Nature 記事を日本語で閲覧する",
+          "keywords": "Nature最新レポート"
+        },
+        "zh-Hant": {
+          "title": "自然雜誌",
+          "description": "用中文瀏覽 Nature (自然雜誌) 最新報道",
+          "keyworkds": "Nature,自然,科學",
+          "short_title": "Nature"
+        }
+      }
+    },
+    "sciencealert": {
+      "port": 8045,
+      "archive": true,
+      "category": "Tech",
+      "redirect": false,
+      "tags": [
+        "tech",
+        "source-sciencealert"
+      ],
+      "translations": {
+        "zh-Hans": {
+          "title": "Science Alert 杂志",
+          "description": "用中文浏览 Science Alert 杂志最新报道",
+          "keyworkds": "Science Alert,自然,科学",
+          "short_title": "ScienceAlert"
+        },
+        "en": {
+          "title": "Science Alert",
+          "short_title": "Science Alert Newest",
+          "description": "See what's buzzing on Science Alert in your native language",
+          "keywords": "Science Alert Newest"
+        },
+        "ja": {
+          "title": "Science Alert 最新レポート",
+          "short_title": "Science Alert",
+          "description": "人気の最新 Science Alert 記事を日本語で閲覧する",
+          "keywords": "Science Alert最新レポート"
+        },
+        "zh-Hant": {
+          "title": "Science Alert 雜誌",
+          "description": "用中文瀏覽 Science Alert 雜誌最新報道",
+          "keyworkds": "Science Alert,自然,科學",
+          "short_title": "ScienceAlert"
+        }
+      }
+    },
+    "bigthink": {
+      "port": 8046,
+      "archive": true,
+      "category": "Tech",
+      "redirect": false,
+      "tags": [
+        "tech",
+        "source-bigthink"
+      ],
+      "translations": {
+        "zh-Hans": {
+          "title": "Big Think",
+          "description": "用中文浏览 Big Think 最新报道",
+          "keyworkds": "Big Think,自然,科学",
+          "short_title": "BigThink"
+        },
+        "en": {
+          "title": "Big Think",
+          "short_title": "Big Think Newest",
+          "description": "See what's buzzing on Big Think in your native language",
+          "keywords": "Big Think Newest"
+        },
+        "ja": {
+          "title": "Big Think 最新レポート",
+          "short_title": "Big Think",
+          "description": "人気の最新 Big Think 記事を日本語で閲覧する",
+          "keywords": "Big Think最新レポート"
+        },
+        "zh-Hant": {
+          "title": "Big Think",
+          "description": "用中文瀏覽 Big Think 最新報道",
+          "keyworkds": "Big Think,自然,科學",
+          "short_title": "BigThink"
         }
       }
     },
@@ -3111,6 +3219,33 @@
       },
       "type": "phys",
       "id": "source-phys"
+    },
+    {
+      "id": "source-nature",
+      "api": {
+        "url": "https://www.nature.com/nature.rss",
+        "name": "Nature",
+        "home_page_url": "https://www.nature.com/"
+      },
+      "type": "rss"
+    },
+    {
+      "id": "source-sciencealert",
+      "api": {
+        "url": "https://www.sciencealert.com/feed",
+        "name": "Science Alert",
+        "home_page_url": "https://www.sciencealert.com/"
+      },
+      "type": "rss"
+    },
+    {
+      "id": "source-bigthink",
+      "api": {
+        "url": "https://bigthink.com/feed/all",
+        "name": "Big Think",
+        "home_page_url": "https://bigthink.com/"
+      },
+      "type": "rss"
     },
     {
       "id": "source-my-rss",

@@ -55,8 +55,14 @@ export async function request(
   const headers = new Headers(init.headers);
   headers.set(
     "User-Agent",
-    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36",
+    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Safari/537.36 Edg/112.0.1722.48",
   );
+  headers.set(
+    "accept",
+    "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+  );
+  headers.set("accept-language", "en-US,en;q=0.9,zh-CN;q=0.8,zh;q=0.7");
+  headers.set("cache-control", "no-cache");
   const params = {
     ...init,
     signal: c.signal,
@@ -65,7 +71,7 @@ export async function request(
   const r = await fetch(url, params);
   clearTimeout(id);
   if (!r.ok) {
-    throw new Error(`Request failed: ${url}`);
+    throw new Error(`Request failed: ${url}, ${r.status}`);
   }
   return r;
 }
@@ -1341,6 +1347,16 @@ export function formatId(id: string): string {
     const url = new URL(id);
     id = url.hostname.replace(/\./g, "-") + "-" +
       url.pathname.replace(/\//g, "-");
+    // params
+    const params = url.searchParams;
+    if (params.get("p")) {
+      // add p param
+      id += "-" + params.get("p");
+    }
+    if (params.get("id")) {
+      // add id param
+      id += "-" + params.get("id");
+    }
   }
   if (id) {
     id = id.replace(/[^a-zA-Z0-9-]/g, "-");
