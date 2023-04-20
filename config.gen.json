@@ -1811,6 +1811,9 @@
       "archive": true,
       "category": "Tech",
       "redirect": false,
+      "related": [
+        "sciencealert"
+      ],
       "tags": [
         "tech",
         "source-nature"
@@ -1847,6 +1850,10 @@
       "archive": true,
       "category": "Tech",
       "redirect": false,
+      "hide": true,
+      "related": [
+        "nature"
+      ],
       "tags": [
         "tech",
         "source-sciencealert"
@@ -1911,6 +1918,42 @@
           "description": "用中文瀏覽 Big Think 最新報道",
           "keyworkds": "Big Think,自然,科學",
           "short_title": "BigThink"
+        }
+      }
+    },
+    "atlantic": {
+      "port": 8047,
+      "archive": true,
+      "category": "News",
+      "redirect": false,
+      "tags": [
+        "news",
+        "source-theatlantic"
+      ],
+      "translations": {
+        "zh-Hans": {
+          "title": "大西洋周刊",
+          "description": "用中文浏览大西洋周刊 (The Atlantic) 最新报道",
+          "keyworkds": "大西洋周刊,新闻,科学",
+          "short_title": "大西洋周刊"
+        },
+        "en": {
+          "title": "The Atlantic",
+          "short_title": "The Atlantic Newest",
+          "description": "See what's buzzing on The Atlantic in your native language",
+          "keywords": "The Atlantic Newest"
+        },
+        "ja": {
+          "title": "The Atlantic 最新レポート",
+          "short_title": "The Atlantic",
+          "description": "人気の最新 The Atlantic 記事を日本語で閲覧する",
+          "keywords": "The Atlantic最新レポート"
+        },
+        "zh-Hant": {
+          "title": "大西洋週刊",
+          "description": "用中文瀏覽大西洋週刊 (The Atlantic) 最新報道",
+          "keyworkds": "大西洋週刊,新聞,科學",
+          "short_title": "大西洋週刊"
         }
       }
     },
@@ -3244,6 +3287,15 @@
         "url": "https://bigthink.com/feed/all",
         "name": "Big Think",
         "home_page_url": "https://bigthink.com/"
+      },
+      "type": "rss"
+    },
+    {
+      "id": "source-theatlantic",
+      "api": {
+        "url": "https://www.theatlantic.com/feed/all/",
+        "name": "The Atlantic",
+        "home_page_url": "https://www.theatlantic.com/"
       },
       "type": "rss"
     },

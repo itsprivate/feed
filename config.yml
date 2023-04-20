@@ -1397,6 +1397,32 @@ sites:
         short_title: "Big Think"
         description: "人気の最新 Big Think 記事を日本語で閲覧する"
         keywords: "Big Think最新レポート"
+
+  atlantic:
+    port: 8047
+    archive: true
+    category: News
+    redirect: false
+    tags:
+      - news
+      - source-theatlantic
+    translations:
+      "zh-Hans":
+        title: "大西洋周刊"
+        description: "用中文浏览大西洋周刊 (The Atlantic) 最新报道"
+        keyworkds: "大西洋周刊,新闻,科学"
+        short_title: "大西洋周刊"
+      "en":
+        title: "The Atlantic"
+        short_title: "The Atlantic Newest"
+        description: "See what's buzzing on The Atlantic in your native language"
+        keywords: "The Atlantic Newest"
+      "ja":
+        title: "The Atlantic 最新レポート"
+        short_title: "The Atlantic"
+        description: "人気の最新 The Atlantic 記事を日本語で閲覧する"
+        keywords: "The Atlantic最新レポート"
+
   hnnew:
     port: 8018
     redirect: true
@@ -2234,6 +2260,12 @@ sources:
       url: https://bigthink.com/feed/all
       name: Big Think
       home_page_url: https://bigthink.com/
+    type: rss
+  - id: source-theatlantic
+    api:
+      url: https://www.theatlantic.com/feed/all/
+      name: The Atlantic
+      home_page_url: https://www.theatlantic.com/
     type: rss
   - id: source-my-rss
     api:
