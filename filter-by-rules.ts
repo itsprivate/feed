@@ -8,8 +8,6 @@ export default function filterByRules<T>(
 ): Item<T>[] {
   let limitRule: Rule | undefined;
   let deduplicateRule: Rule | undefined;
-  console.log("originalItems", originalItems);
-  console.log("rules", rules);
   for (const rule of rules) {
     if (rule.type === "limit") {
       limitRule = rule;
@@ -62,7 +60,6 @@ export default function filterByRules<T>(
     }
     const itemCachedKeys = item.getCachedKeys();
     if (hasSameKeys(keysMap, itemCachedKeys, deduplicate).length > 0) {
-      console.log("same keys", itemCachedKeys);
       continue;
     }
     // check rules
