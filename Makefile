@@ -224,7 +224,7 @@ prod-uploadcurrent:
 	make prod-uploadcache 
 .Phony: prod-uploadcache
 prod-uploadcache:
-	make prod-compresscache && curl --digest --max-time 100 -u $(DUFS_SECRETS) -T ./prod-cache.zip $(DUFS_URL)/prod-cache.zip && aws s3 cp ./prod-cache.zip  s3://feed/prod-cache.zip --endpoint-url $(AWS_ENDPOINT)
+	make prod-compresscache && aws s3 cp ./prod-cache.zip  s3://feed/prod-cache.zip --endpoint-url $(AWS_ENDPOINT)
 
 .Phony: prod-delete-hidden
 prod-delete-hidden:
