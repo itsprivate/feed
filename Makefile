@@ -249,7 +249,7 @@ uploadarchive:
 
 .Phony: prod-uploadarchive
 prod-uploadarchive:
-	PROD=1 deno run -A ./scripts/upload-archive.ts && make prod-awsuploadarchive
+	PROD=1 ONLY_S3=1 deno run -A ./scripts/upload-archive.ts && make prod-awsuploadarchive
 
 
 
