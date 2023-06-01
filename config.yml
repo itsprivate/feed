@@ -1404,7 +1404,7 @@ sites:
   bearblogtrending:
     port: 8049
     archive: true
-    category: Tech
+    category: Featured
     redirect: false
     hide: true
     tags:
