@@ -2327,7 +2327,7 @@ sources:
       name: Live Science
       home_page_url: https://www.livescience.com/
     type: rss
- - id: source-bearblogtrending 
+  - id: source-bearblogtrending 
     api:
       url: https://bearblog.dev/discover/feed/
       name: Bear Blog Trending
