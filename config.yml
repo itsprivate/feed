@@ -1401,7 +1401,7 @@ sites:
         description: "人気の最新 Live Science 記事を日本語で閲覧する"
         keywords: "Live Science最新レポート"
         
-  bearblogtrending:
+  bearblog:
     port: 8049
     archive: true
     category: Featured
@@ -1412,13 +1412,13 @@ sites:
       - source-bearblogtrending
     translations:
       "zh-Hans":
-        title: "Bear Blog趋势"
-        description: "用中文浏览 Bear Blog 最新趋势"
+        title: "Bear Blog"
+        description: "用中文浏览 Bear Blog 热门博文"
         keyworkds: "博客"
-        short_title: "Bear Blog趋势"
+        short_title: "Bear"
       "en":
-        title: "Bear Blog Trending"
-        short_title: "Bear Blog Trending"
+        title: "Bear Blog"
+        short_title: "Bear"
         description: "See what's buzzing on Bear Blog Trending in your native language"
         keywords: "Bear Blog Trending"
       "ja":
