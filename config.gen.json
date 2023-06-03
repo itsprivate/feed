@@ -1885,6 +1885,83 @@
         }
       }
     },
+    "livescience": {
+      "port": 8048,
+      "archive": true,
+      "category": "Tech",
+      "redirect": false,
+      "hide": true,
+      "related": [
+        "nature"
+      ],
+      "tags": [
+        "tech",
+        "source-livescience"
+      ],
+      "translations": {
+        "zh-Hans": {
+          "title": "生活科学",
+          "description": "用中文浏览 生活科学 最新报道",
+          "keyworkds": "自然,生活科学",
+          "short_title": "生活科学"
+        },
+        "en": {
+          "title": "Live Science",
+          "short_title": "Live Science",
+          "description": "See what's buzzing on Live Science in your native language",
+          "keywords": "Live Science"
+        },
+        "ja": {
+          "title": "Live Science 最新レポート",
+          "short_title": "Live Science",
+          "description": "人気の最新 Live Science 記事を日本語で閲覧する",
+          "keywords": "Live Science最新レポート"
+        },
+        "zh-Hant": {
+          "title": "生活科學",
+          "description": "用中文瀏覽 生活科學 最新報道",
+          "keyworkds": "自然,生活科學",
+          "short_title": "生活科學"
+        }
+      }
+    },
+    "bearblog": {
+      "port": 8049,
+      "archive": true,
+      "category": "Featured",
+      "redirect": false,
+      "hide": true,
+      "tags": [
+        "blog",
+        "source-bearblogtrending"
+      ],
+      "translations": {
+        "zh-Hans": {
+          "title": "Bear Blog趋势",
+          "description": "用中文浏览 Bear Blog 最新趋势",
+          "keyworkds": "博客",
+          "short_title": "Bear Blog趋势"
+        },
+        "en": {
+          "title": "Bear Blog Trending",
+          "short_title": "Bear Blog Trending",
+          "description": "See what's buzzing on Bear Blog Trending in your native language",
+          "keywords": "Bear Blog Trending"
+        },
+        "ja": {
+          "title": "Bear Blog トレンド",
+          "short_title": "Bear Blog トレンド",
+          "description": "人気の最新 Bear Blog トレンド 記事を日本語で閲覧する",
+          "keywords": "Bear Blog トレンド"
+        },
+        "zh-Hant": {
+          "title": "Bear Blog趨勢",
+          "description": "用中文瀏覽 Bear Blog 最新趨勢",
+          "keyworkds": "博客",
+          "short_title": "Bear Blog趨勢"
+        }
+      }
+    },
     "bigthink": {
       "port": 8046,
       "archive": true,
@@ -3296,6 +3373,24 @@
         "url": "https://www.theatlantic.com/feed/all/",
         "name": "The Atlantic",
         "home_page_url": "https://www.theatlantic.com/"
+      },
+      "type": "rss"
+    },
+    {
+      "id": "source-livescience",
+      "api": {
+        "url": "https://www.livescience.com/feeds/all",
+        "name": "Live Science",
+        "home_page_url": "https://www.livescience.com/"
+      },
+      "type": "rss"
+    },
+    {
+      "id": "source-bearblogtrending",
+      "api": {
+        "url": "https://bearblog.dev/discover/feed/",
+        "name": "Bear Blog Trending",
+        "home_page_url": "https://bearblog.dev/discover/"
       },
       "type": "rss"
     },
