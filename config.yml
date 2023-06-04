@@ -1513,6 +1513,33 @@ sites:
         short_title: "HN最新"
         description: "用中文浏览Hacker News 最新提交"
         keywords: "HackerNews 头条, Hacker News 中文, Hacker News Story"
+  
+  securelist:
+    port: 8050
+    archive: true
+    category: News
+    redirect: false
+    hide: true
+    tags:
+      - kaspersky
+      - source-securelist
+    translations:
+      "zh-Hans":
+        title: "Secure List"
+        description: "用中文浏览 Secure List 热门博文"
+        keyworkds: "news,security"
+        short_title: "securelist"
+      "en":
+        title: "Secure List"
+        short_title: "securelist"
+        description: "See what's buzzing on Secure List Trending in your native language"
+        keywords: "Secure List Trending"
+      "ja":
+        title: "Secure List トレンド"
+        short_title: "securelist"
+        description: "人気の最新 Secure List トレンド 記事を日本語で閲覧する"
+        keywords: "Secure List トレンド"
+
 versions:
   - prefix: ""
     code: "default"
@@ -2338,3 +2365,9 @@ sources:
       url: https://www.tbray.org/ongoing/ongoing.atom
       name: Tim Bray
       home_page_url: https://www.tbray.org/ongoing/
+  - id: source-securelist
+    api:
+      url: https://securelist.com/feed/
+      name: Secure List
+      home_page_url: https://securelist.com/
+    type: rss
