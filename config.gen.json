@@ -1937,14 +1937,14 @@
       ],
       "translations": {
         "zh-Hans": {
-          "title": "Bear Blog趋势",
-          "description": "用中文浏览 Bear Blog 最新趋势",
+          "title": "Bear Blog",
+          "description": "用中文浏览 Bear Blog 热门博文",
           "keyworkds": "博客",
-          "short_title": "Bear Blog趋势"
+          "short_title": "Bear"
         },
         "en": {
-          "title": "Bear Blog Trending",
-          "short_title": "Bear Blog Trending",
+          "title": "Bear Blog",
+          "short_title": "Bear",
           "description": "See what's buzzing on Bear Blog Trending in your native language",
           "keywords": "Bear Blog Trending"
         },
@@ -1955,10 +1955,10 @@
           "keywords": "Bear Blog トレンド"
         },
         "zh-Hant": {
-          "title": "Bear Blog趨勢",
-          "description": "用中文瀏覽 Bear Blog 最新趨勢",
+          "title": "Bear Blog",
+          "description": "用中文瀏覽 Bear Blog 熱門博文",
           "keyworkds": "博客",
-          "short_title": "Bear Blog趨勢"
+          "short_title": "Bear"
         }
       }
     },
