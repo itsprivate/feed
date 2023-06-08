@@ -58,9 +58,18 @@ export default function filterByRules<T>(
     if (!item.isValid()) {
       continue;
     }
-    const itemCachedKeys = item.getCachedKeys();
-    if (hasSameKeys(keysMap, itemCachedKeys, deduplicate).length > 0) {
+    let itemCachedKeys = [];
+    try {
+      itemCachedKeys = item.getCachedKeys();
+      if (hasSameKeys(keysMap, itemCachedKeys, deduplicate).length > 0) {
+        continue;
+      }
+    } catch (e) {
+      log.error(e);
+      log.error(`error in filterByRules, item: ${JSON.stringify(item)}`);
+
       continue;
+      // throw e;
     }
     // check rules
     let isAllRulesFine = true;
