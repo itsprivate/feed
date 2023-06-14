@@ -181,6 +181,8 @@ export default async function fetchSources(
     if (entry.isFile && entry.name.endsWith(".json")) {
       const filenmae = path.basename(entry.path);
       const parsedFilename = parseItemIdentifierWithTime(filenmae);
+            log.info(`start adapter ${parsedFilename.type}, ${entry.path}`)
+
       const fileContent = await readJSONFile(entry.path);
       let fileInstance;
       try {
@@ -300,6 +302,7 @@ export default async function fetchSources(
     for (const sourceApiConfig of sourceUrls) {
       const sourceUrl = sourceApiConfig.url;
       const sourceName = sourceApiConfig.name;
+      log.info('sourceName', sourceName);
       const deduplicate = getDuplicatedRule(rules);
       const sourceStat: SourceStat = {
         raw_count: 0,
@@ -374,7 +377,10 @@ export default async function fetchSources(
           // since_id,
           ...source.params,
         };
-        const result = await new Promise((resolve, reject) => {
+        let result;
+        try{
+
+         result = await new Promise((resolve, reject) => {
           simpleTwitter.get("statuses/user_timeline", params, function (
             error: unknown,
             tweets: unknown,
@@ -385,6 +391,11 @@ export default async function fetchSources(
             reject(error);
           });
         });
+        }catch(e){
+          log.error(`fetchTwitterTimeline error`, e);
+          continue
+        }
+
         try {
           // @ts-ignore: ignore
           // then call tweet v2 api to fetch details
@@ -423,7 +434,8 @@ export default async function fetchSources(
             originalJson = tweetV2Result;
           } catch (e) {
             log.error(`fetchTwitterV2Data error`, ids);
-            throw e;
+            // throw e;
+            continue;
           }
         } else {
           originalJson = [];
