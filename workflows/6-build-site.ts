@@ -22,7 +22,7 @@ export default async function buildSite(options: RunOptions) {
   let siteIdentifiers: string[] = [];
   const startTime = Date.now();
   const indexTemplateString = await Deno.readTextFile(
-    "./templates/index.html.mu",
+    "./templates/index.html.mu"
   );
   // build all sites cause buzzing index need it.
   // let changedSites: string[] | undefined;
@@ -63,26 +63,20 @@ export default async function buildSite(options: RunOptions) {
   let siteOrder = 0;
   for (const siteIdentifier of siteIdentifiers) {
     siteOrder++;
-    const currentItemsFilePath = getCurrentItemsFilePath(
-      siteIdentifier,
-    );
+    const currentItemsFilePath = getCurrentItemsFilePath(siteIdentifier);
     const itemsRelativePath = path.relative(
       `${getDataCurrentItemsPath()}/${siteIdentifierToPath(siteIdentifier)}`,
-      currentItemsFilePath,
+      currentItemsFilePath
     );
     let currentItemsJson: ItemsJson = { items: {} };
     try {
-      currentItemsJson = await readJSONFile(
-        currentItemsFilePath,
-      );
+      currentItemsJson = await readJSONFile(currentItemsFilePath);
     } catch (_e) {
       // ignore
     }
 
     //check if need to archive items
-    const currentItemsJsonKeys = Object.keys(
-      currentItemsJson,
-    );
+    const currentItemsJsonKeys = Object.keys(currentItemsJson);
 
     if (currentItemsJsonKeys.length > 0) {
       // multiple languages support
@@ -98,12 +92,12 @@ export default async function buildSite(options: RunOptions) {
             config,
             {
               versionCode: version.code,
-            },
+            }
           );
           // write to dist file
           const feedPath = getDistFilePath(
             siteIdentifier,
-            `${language.prefix}${version.prefix}feed.json`,
+            `${language.prefix}${version.prefix}feed.json`
           );
           await writeJSONFile(feedPath, feedJson);
 
@@ -135,38 +129,49 @@ export default async function buildSite(options: RunOptions) {
 
           // build feed.xml
           // @ts-ignore: npm module
-          const feedOutput = jsonfeedToAtom(feedJson, {
-            language: feedJson.language,
-          });
+          let feedOutput = "";
+          try {
+            // first remove \\b
+
+            feedOutput = jsonfeedToAtom(feedJson, {
+              language: feedJson.language,
+            });
+          } catch (e) {
+            // remove \\b
+            const jsonStr = JSON.stringify(feedJson);
+            const jsonStr2 = jsonStr.replace(/\\b/g, "");
+            const feedJson2 = JSON.parse(jsonStr2);
+            feedOutput = jsonfeedToAtom(feedJson2, {
+              language: feedJson.language,
+            });
+          }
           // const rssOutput = "";
           // write to dist file
           const rssPath = getDistFilePath(
             siteIdentifier,
-            `${language.prefix}${version.prefix}feed.xml`,
+            `${language.prefix}${version.prefix}feed.xml`
           );
           await writeTextFile(rssPath, feedOutput);
 
           const indexPath = getDistFilePath(
             siteIdentifier,
-            `${language.prefix}${version.prefix}index.html`,
+            `${language.prefix}${version.prefix}index.html`
           );
           const indexHTML = await feedToHTML(
             feedJson,
             config,
             indexTemplateString,
             config.languages,
-            config.versions,
+            config.versions
           );
           await writeTextFile(indexPath, indexHTML);
         }
       }
       log.info(
-        `${siteOrder}/${siteIdentifiers.length} ${siteIdentifier} build success`,
+        `${siteOrder}/${siteIdentifiers.length} ${siteIdentifier} build success`
       );
     } else {
-      log.info(
-        `skip build ${siteIdentifier}, cause no items to be build`,
-      );
+      log.info(`skip build ${siteIdentifier}, cause no items to be build`);
     }
 
     // copy static assets
@@ -180,8 +185,6 @@ export default async function buildSite(options: RunOptions) {
   }
   const endTime = Date.now();
   log.info(
-    `build all sites success, cost ${
-      Math.floor((endTime - startTime) / 1000)
-    }s`,
+    `build all sites success, cost ${Math.floor((endTime - startTime) / 1000)}s`
   );
 }

@@ -41,9 +41,7 @@ export {
   Element,
 } from "https://deno.land/x/deno_dom@v0.1.36-alpha/deno-dom-wasm.ts";
 export { retry } from "https://deno.land/x/retry@v2.0.0/mod.ts";
-export type {
-  DOMParserMimeType,
-} from "https://deno.land/x/deno_dom@v0.1.33-alpha/deno-dom-wasm.ts";
+export type { DOMParserMimeType } from "https://deno.land/x/deno_dom@v0.1.33-alpha/deno-dom-wasm.ts";
 export { parseFeed } from "https://deno.land/x/rss@0.5.6/mod.ts";
 
 export { default as staticFiles } from "https://deno.land/x/static_files@1.1.6/mod.ts";
@@ -64,8 +62,8 @@ export { default as kebabCase } from "https://jspm.dev/lodash@4.17.21/kebabCase"
 export { default as camelCase } from "https://jspm.dev/lodash@4.17.21/camelCase";
 export { default as groupBy } from "https://jspm.dev/lodash@4.17.21/groupBy";
 export { default as mustache } from "https://esm.sh/mustache@4.2.0";
-export { default as jsonfeedToAtom } from "https://esm.sh/jsonfeed-to-atom@1.2.2";
-export { default as jsonfeedToRSS } from "https://esm.sh/jsonfeed-to-rss@3.0.6";
+export { default as jsonfeedToAtom } from "https://esm.sh/jsonfeed-to-atom@1.2.4";
+export { default as jsonfeedToRSS } from "https://esm.sh/jsonfeed-to-rss@3.0.7";
 export { default as tweetPatch } from "https://esm.sh/tweet-patch@2.0.5";
 
 export { parse as parseXml } from "https://deno.land/x/xml@2.1.0/mod.ts";
