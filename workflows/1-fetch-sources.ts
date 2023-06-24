@@ -38,7 +38,7 @@ import log from "../log.ts";
 import fetchPHData from "../sources/fetch-ph.ts";
 import { getTweets as fetchTwitterV2Data } from "../sources/fetch-twitter.ts";
 export default async function fetchSources(
-  options: RunOptions,
+  options: RunOptions
 ): Promise<{ postTasks: Task[] }> {
   const config = options.config;
   const sitesMap = config.sites;
@@ -122,7 +122,7 @@ export default async function fetchSources(
         }
         let currentKeyssJson: string[] = [];
         try {
-          currentKeyssJson = await readJSONFile(currentKeysPath) as string[];
+          currentKeyssJson = (await readJSONFile(currentKeysPath)) as string[];
         } catch (e) {
           // ignore
           log.debug(`read keys json file error: ${e}`);
@@ -133,7 +133,7 @@ export default async function fetchSources(
         }
         for (const key of currentItemsKeys) {
           const itemInstance = new SourceItemAdapter(
-            currentItemsJson.items[key],
+            currentItemsJson.items[key]
           );
           const cachedKeys = itemInstance.getCachedKeys();
           for (const cachedKey of cachedKeys) {
@@ -153,13 +153,11 @@ export default async function fetchSources(
   // is exists translated file
   // ensure folder exists
   await fs.ensureDir(getDataTranslatedPath());
-  for await (
-    const entry of fs.walk(getDataTranslatedPath())
-  ) {
+  for await (const entry of fs.walk(getDataTranslatedPath())) {
     if (entry.isFile && entry.name.endsWith(".json")) {
       const siteRelativePath = path.relative(
         getDataTranslatedPath(),
-        entry.path,
+        entry.path
       );
       const siteIdentifier = getSiteIdentifierByRelativePath(siteRelativePath);
       const fileContent = await readJSONFile(entry.path);
@@ -175,13 +173,11 @@ export default async function fetchSources(
   }
   // also get current raw keys
   await fs.ensureDir(getDataRawPath());
-  for await (
-    const entry of fs.walk(getDataRawPath())
-  ) {
+  for await (const entry of fs.walk(getDataRawPath())) {
     if (entry.isFile && entry.name.endsWith(".json")) {
       const filenmae = path.basename(entry.path);
       const parsedFilename = parseItemIdentifierWithTime(filenmae);
-            log.info(`start adapter ${parsedFilename.type}, ${entry.path}`)
+      log.info(`start adapter ${parsedFilename.type}, ${entry.path}`);
 
       const fileContent = await readJSONFile(entry.path);
       let fileInstance;
@@ -204,9 +200,10 @@ export default async function fetchSources(
             currentRawKeysMap.get(targetSiteIdentifier)!.set(itemKey, []);
           }
 
-          currentRawKeysMap.get(targetSiteIdentifier)!.get(itemKey)?.push(
-            entry.path,
-          );
+          currentRawKeysMap
+            .get(targetSiteIdentifier)!
+            .get(itemKey)
+            ?.push(entry.path);
         }
       }
     }
@@ -223,12 +220,12 @@ export default async function fetchSources(
           const aKey = path.basename(a).replace(/\.json$/, "");
           const aParsed = parseItemIdentifierWithTime(aKey);
           const aNumber = Number(
-            `${aParsed.year}${aParsed.month}${aParsed.day}${aParsed.hour}${aParsed.minute}${aParsed.second}${aParsed.millisecond}`,
+            `${aParsed.year}${aParsed.month}${aParsed.day}${aParsed.hour}${aParsed.minute}${aParsed.second}${aParsed.millisecond}`
           );
           const bKey = path.basename(b).replace(/\.json$/, "");
           const bParsed = parseItemIdentifierWithTime(bKey);
           const bNumber = Number(
-            `${bParsed.year}${bParsed.month}${bParsed.day}${bParsed.hour}${bParsed.minute}${bParsed.second}${bParsed.millisecond}`,
+            `${bParsed.year}${bParsed.month}${bParsed.day}${bParsed.hour}${bParsed.minute}${bParsed.second}${bParsed.millisecond}`
           );
           return bNumber - aNumber;
         });
@@ -252,7 +249,7 @@ export default async function fetchSources(
     for (const [key, paths] of currentMap) {
       for (const p of paths) {
         const parsed = parseItemIdentifierWithTime(
-          path.basename(p).replace(/\.json$/, ""),
+          path.basename(p).replace(/\.json$/, "")
         );
         const parsedDate = new Date(
           Date.UTC(
@@ -262,8 +259,8 @@ export default async function fetchSources(
             Number(parsed.hour),
             Number(parsed.minute),
             Number(parsed.second),
-            Number(parsed.millisecond),
-          ),
+            Number(parsed.millisecond)
+          )
         );
         const now = new Date();
         const diff = now.getTime() - parsedDate.getTime();
@@ -282,8 +279,9 @@ export default async function fetchSources(
   }
 
   // unique filteredSources
-  filteredSources = Array.from(new Set(filteredSources.map((item) => item.id)))
-    .map((id) => sourcesMap.get(id)!);
+  filteredSources = Array.from(
+    new Set(filteredSources.map((item) => item.id))
+  ).map((id) => sourcesMap.get(id)!);
   let sourceOrder = 0;
   let itemOrder = 0;
   for (const source of filteredSources) {
@@ -302,7 +300,7 @@ export default async function fetchSources(
     for (const sourceApiConfig of sourceUrls) {
       const sourceUrl = sourceApiConfig.url;
       const sourceName = sourceApiConfig.name;
-      log.info('sourceName', sourceName);
+      log.info("sourceName", sourceName);
       const deduplicate = getDuplicatedRule(rules);
       const sourceStat: SourceStat = {
         raw_count: 0,
@@ -320,9 +318,11 @@ export default async function fetchSources(
       let totalUniqued = 0;
       let originalJson;
       if (
-        sourceType === "rss" || sourceType === "economic" ||
+        sourceType === "rss" ||
+        sourceType === "economic" ||
         sourceType === "googlenews" ||
-        sourceType === "newyorker" || sourceType === "lobste" ||
+        sourceType === "newyorker" ||
+        sourceType === "lobste" ||
         sourceType === "phys"
       ) {
         try {
@@ -350,7 +350,8 @@ export default async function fetchSources(
           continue;
         }
       } else if (
-        sourceType === "twittercbarraud" || sourceType === "twitterlink" ||
+        sourceType === "twittercbarraud" ||
+        sourceType === "twitterlink" ||
         sourceType === "twitter" ||
         sourceType === "thechinaproject" ||
         sourceType === "spectator"
@@ -378,22 +379,22 @@ export default async function fetchSources(
           ...source.params,
         };
         let result;
-        try{
-
-         result = await new Promise((resolve, reject) => {
-          simpleTwitter.get("statuses/user_timeline", params, function (
-            error: unknown,
-            tweets: unknown,
-          ) {
-            if (!error) {
-              resolve(tweets);
-            }
-            reject(error);
+        try {
+          result = await new Promise((resolve, reject) => {
+            simpleTwitter.get(
+              "statuses/user_timeline",
+              params,
+              function (error: unknown, tweets: unknown) {
+                if (!error) {
+                  resolve(tweets);
+                }
+                reject(error);
+              }
+            );
           });
-        });
-        }catch(e){
+        } catch (e) {
           log.error(`fetchTwitterTimeline error`, e);
-          continue
+          continue;
         }
 
         try {
@@ -427,19 +428,19 @@ export default async function fetchSources(
 
         // console.log("originalJson.length", originalJson.length);
 
-        const ids = originalJson.map((item: { id_str: string }) => item.id_str);
-        if (ids.length > 0) {
-          try {
-            const tweetV2Result = await fetchTwitterV2Data(ids);
-            originalJson = tweetV2Result;
-          } catch (e) {
-            log.error(`fetchTwitterV2Data error`, ids);
-            // throw e;
-            continue;
-          }
-        } else {
-          originalJson = [];
-        }
+        // const ids = originalJson.map((item: { id_str: string }) => item.id_str);
+        // if (ids.length > 0) {
+        //   try {
+        //     const tweetV2Result = await fetchTwitterV2Data(ids);
+        //     originalJson = tweetV2Result;
+        //   } catch (e) {
+        //     log.error(`fetchTwitterV2Data error`, ids);
+        //     // throw e;
+        //     continue;
+        //   }
+        // } else {
+        //   originalJson = [];
+        // }
       } else if (sourceType === "ph") {
         // producthunt graphql api
         try {
@@ -479,13 +480,11 @@ export default async function fetchSources(
       }
 
       log.info(
-        `${sourceOrder}/${filteredSources.length} ${sourceId} fetched ${originalItems.length} raw items from ${sourceUrl} `,
+        `${sourceOrder}/${filteredSources.length} ${sourceId} fetched ${originalItems.length} raw items from ${sourceUrl} `
       );
       // @ts-ignore: ignore
-      originalItems = originalItems.map((originalItem) =>
-        new (adapters[sourceType])(
-          originalItem,
-        )
+      originalItems = originalItems.map(
+        (originalItem) => new adapters[sourceType](originalItem)
       );
       sourceStat.raw_count = originalItems.length;
       // if google news limit time
@@ -505,21 +504,16 @@ export default async function fetchSources(
               const diff = now.getTime() - published.getTime();
               return diff < 24 * 60 * 60 * 1000;
             }
-          },
+          }
         );
       }
-      originalItems = filterByRules(
-        originalItems,
-        rules,
-      ) as Item<unknown>[];
+      originalItems = filterByRules(originalItems, rules) as Item<unknown>[];
 
       sourceStat.filtered_count = originalItems.length;
-      log.info(
-        `got ${originalItems.length} valid items by rules`,
-      );
+      log.info(`got ${originalItems.length} valid items by rules`);
       // resort items from old to new , cause we need to keep the order of items
       // @ts-ignore: hard to type
-      originalItems = (originalItems).sort((a, b) => {
+      originalItems = originalItems.sort((a, b) => {
         const aDate = a.getOriginalPublishedDate();
         const bDate = b.getOriginalPublishedDate();
         if (aDate > bDate) {
@@ -531,9 +525,7 @@ export default async function fetchSources(
         return 0;
       });
 
-      const targetSiteIdentifiers = targetSiteIdentifiersMap.get(
-        sourceId,
-      )!;
+      const targetSiteIdentifiers = targetSiteIdentifiersMap.get(sourceId)!;
       const currentMergedRawKeysMap: Map<string, string[]> = new Map();
       const currentmergedKeysMap: Map<string, boolean> = new Map();
 
@@ -555,14 +547,14 @@ export default async function fetchSources(
         }
       }
 
-      for (const item of (originalItems as Item<unknown>[])) {
+      for (const item of originalItems as Item<unknown>[]) {
         await item.init();
         // check if current raw already has one, delete others
 
         const duplicatedFiles = hasSameKeys(
           currentMergedRawKeysMap,
           item.getCachedKeys(),
-          deduplicate,
+          deduplicate
         );
         if (duplicatedFiles.length > 0) {
           // delete all cached files
@@ -582,7 +574,7 @@ export default async function fetchSources(
         duplicatedKeys = hasSameKeys(
           currentmergedKeysMap,
           item.getCachedKeys(),
-          deduplicate,
+          deduplicate
         );
         if (duplicatedKeys.length > 0) {
           // log.info(`duplicatedKeys: ${duplicatedKeys}`);
@@ -593,19 +585,17 @@ export default async function fetchSources(
           totalUniqued++;
           const filterdItems = filterByRules(
             [item],
-            rules.filter((rule) => rule.type !== "topRatio"),
+            rules.filter((rule) => rule.type !== "topRatio")
           );
 
           if (filterdItems.length > 0) {
             // not exists
             itemsToSaved.push(item);
             log.debug(
-              `fetched raw data to ${
-                item.getRawPath(
-                  targetSiteIdentifiersMap.get(sourceId)!,
-                  itemOrder,
-                )
-              }`,
+              `fetched raw data to ${item.getRawPath(
+                targetSiteIdentifiersMap.get(sourceId)!,
+                itemOrder
+              )}`
             );
             itemOrder++;
             total++;
@@ -633,10 +623,9 @@ export default async function fetchSources(
               }
 
               for (const itemCachedKey of itemCachedKeys) {
-                currentKeysMap.get(targetSiteIdentifier)!.set(
-                  itemCachedKey,
-                  true,
-                );
+                currentKeysMap
+                  .get(targetSiteIdentifier)!
+                  .set(itemCachedKey, true);
               }
             }
             for (const itemCachedKey of itemCachedKeys) {
@@ -651,9 +640,7 @@ export default async function fetchSources(
       }
       sourceStat.count = total;
       sourceStat.unique_count = totalUniqued;
-      log.info(
-        `saved ${total} items by unique keys and second filter`,
-      );
+      log.info(`saved ${total} items by unique keys and second filter`);
       if (!currentSourceStatGroup.s[source.id]) {
         currentSourceStatGroup.s[source.id] = {};
       }
@@ -698,11 +685,8 @@ export default async function fetchSources(
     for (const item of itemsToSaved) {
       // save original item to file
       await writeJSONFile(
-        item.getRawPath(
-          targetSiteIdentifiersMap.get(sourceId)!,
-          theOrder,
-        ),
-        item.getRawItem(),
+        item.getRawPath(targetSiteIdentifiersMap.get(sourceId)!, theOrder),
+        item.getRawItem()
       );
       theOrder++;
     }

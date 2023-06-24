@@ -16,4 +16,23 @@ export default class twitterlink extends Twitter {
 
     return category;
   }
+  getImageMetaUrl(): string | undefined {
+    // check is bloomberg
+    let url = this.getUrl();
+    const urlObj = new URL(url);
+    const authors = this.getAuthors();
+    const author = authors[0];
+    const authorUrl = author.url;
+    const authorUrlObj = new URL(authorUrl);
+    const screenName = authorUrlObj.pathname.split("/")[1];
+    console.log("urlObj", urlObj);
+    console.log("authorUrlObj", authorUrlObj);
+    if (urlObj.hostname === "www.bloomberg.com") {
+      const nitterUrl = `https://nitter.freedit.eu/${screenName}/status/${this.getId()}`;
+      console.log("nitterUrl", nitterUrl);
+      return nitterUrl;
+    } else {
+      return undefined;
+    }
+  }
 }

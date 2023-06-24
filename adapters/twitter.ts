@@ -1,51 +1,25 @@
 import { Author, Video } from "../interface.ts";
 import Item from "../item.ts";
-import { request, tryToRemoveUnnecessaryParams } from "../util.ts";
+import { request } from "../util.ts";
 import log from "../log.ts";
-import {
-  Media,
-  TweetURL,
-  TwitterV2Item,
-  User,
-} from "../sources/fetch-twitter.ts";
-export default class twitter extends Item<TwitterV2Item> {
-  constructor(item: TwitterV2Item) {
-    const tweetType = twitter.getTweetType(item);
-    if (tweetType === "replied_to") {
+export default class twitterv1 extends Item<TwitterItem> {
+  private url = "";
+  constructor(item: TwitterItem) {
+    if (item.quoted_status) {
       throw new Error("Quoted tweets are not supported");
     }
     let tweet = item;
-    if (tweetType === "retweeted" && item.referenced_tweets) {
+    if (item.retweeted_status) {
       // @ts-ignore: Unreachable code error
-      const newTweet = item.includes.tweets.find((tweet) =>
-        tweet.id === item.referenced_tweets![0].id
-      );
-      const tweetClone = {
-        ...newTweet,
-        includes: {
-          ...item.includes,
-        },
-      };
-      tweet = tweetClone as TwitterV2Item;
+      tweet = item.retweeted_status;
     }
     super(tweet);
-  }
-  static getTweetType(originalItem: TwitterV2Item): string {
-    // console.log("originalItem", originalItem);
-    if (
-      originalItem.referenced_tweets &&
-      originalItem.referenced_tweets.length > 0
-    ) {
-      return originalItem.referenced_tweets[0].type;
-    } else {
-      return "tweet";
-    }
   }
   getOriginalPublishedDate(): Date {
     return new Date(this.originalItem.created_at);
   }
   getId(): string {
-    return this.originalItem.id as string;
+    return this.originalItem.id_str as string;
   }
   isValid(): boolean {
     const title = this.getFallbackTitle();
@@ -55,20 +29,47 @@ export default class twitter extends Item<TwitterV2Item> {
     }
     return true;
   }
+  async init(): Promise<void> {
+    await super.init();
+    // check if already init
+
+    const url = this.getUrl();
+
+    const urlObj = new URL(url);
+
+    const hostname = urlObj.hostname;
+    if (hostname === "on.wsj.com") {
+      const fetchResult = await request(url);
+      log.debug(
+        `twitter url fetch result: `,
+        url,
+        fetchResult.status,
+        fetchResult.url
+      );
+      const fetchedUrlObj = new URL(fetchResult.url);
+      // remove search params
+      fetchedUrlObj.search = "";
+      this.url = fetchedUrlObj.href;
+    }
+  }
 
   getFallbackTitle(): string {
     const tweet = this.originalItem;
-    let title = this.originalItem.text as string;
+    let title = this.originalItem.full_text as string;
+
+    if (tweet.entities.media && Array.isArray(tweet.entities.media)) {
+      for (let i = 0; i < tweet.entities.media.length; i++) {
+        title = title.replace(tweet.entities.media[i].url, "");
+      }
+    }
 
     // and replace the real links
-    if (tweet && tweet.entities) {
-      if (tweet.entities.urls && tweet.entities.urls.length > 0) {
-        // not for latest url
-        for (let i = 0; i < tweet.entities.urls.length; i++) {
-          const urlEntity = tweet.entities.urls[i];
-          // replace other url with empty
-          title = title.replace(urlEntity.url, "");
-        }
+    if (tweet.entities.urls.length > 0) {
+      // not for latest url
+      for (let i = 0; i < tweet.entities.urls.length; i++) {
+        const urlEntity = tweet.entities.urls[i];
+        // replace other url with empty
+        title = title.replace(urlEntity.url, "");
       }
     }
 
@@ -76,11 +77,21 @@ export default class twitter extends Item<TwitterV2Item> {
   }
 
   getScore(): number {
-    return this.originalItem.public_metrics.like_count;
+    return this.originalItem.favorite_count;
   }
 
   getNumComments(): number {
-    return this.originalItem.public_metrics.retweet_count;
+    return this.originalItem.retweet_count;
+  }
+  getRawItem(): TwitterItem {
+    if (this.url) {
+      if (this.originalItem.entities.urls.length > 0) {
+        this.originalItem.entities.urls[
+          this.originalItem.entities.urls.length - 1
+        ].expanded_url = this.url;
+      }
+    }
+    return this.originalItem;
   }
   isNeedToGetRedirectedUrl(): boolean {
     const url = this.getUrl();
@@ -90,78 +101,45 @@ export default class twitter extends Item<TwitterV2Item> {
     const hostname = urlObj.hostname;
 
     if (
-      hostname === "nyti.ms" || hostname === "econ.st" ||
-      hostname === "on.wsj.com" || hostname === "bit.ly" ||
+      hostname === "nyti.ms" ||
+      hostname === "econ.st" ||
+      hostname === "on.wsj.com" ||
+      hostname === "bit.ly" ||
       hostname === "on.ft"
     ) {
-      // v2 do not need fetch redirect url
-      return false;
+      return true;
     } else {
       return false;
-    }
-  }
-  getLastUrlEntity(): TweetURL | undefined {
-    const tweet = this.originalItem;
-    if (
-      tweet.entities && tweet.entities.urls && tweet.entities.urls.length > 0
-    ) {
-      for (let i = tweet.entities.urls.length - 1; i >= 0; i--) {
-        const urlEntity = tweet.entities.urls[i];
-        if (urlEntity.unwound_url && urlEntity.title && !urlEntity.media_key) {
-          return urlEntity;
-        }
-      }
     }
   }
   getTitle(): string | null | undefined {
     const url = this.getUrl();
     const urlObj = new URL(url);
     const hostname = urlObj.hostname;
-
-    const originalItem = this.originalItem;
-    const urlEntity = this.getLastUrlEntity();
-    if (urlEntity) {
-      if (urlEntity.status === 200 && urlEntity.title) {
-        return urlEntity.title;
-      }
-    } else {
+    if (
+      hostname === "www.bloomberg.com" ||
+      hostname === "bloom.bg" ||
+      hostname === "trib.al"
+    ) {
       return null;
+    } else {
+      return undefined;
     }
-    return null;
-  }
-  getTweetAuthor(): User {
-    const author_id = this.originalItem.author_id;
-    const includes = this.originalItem.includes;
-    if (includes && includes.users) {
-      const user = includes.users.find((user) => user.id === author_id);
-      if (user) {
-        return user;
-      }
-    }
-    throw new Error("Cannot find author");
   }
   getUrl(): string {
-    const urlEntity = this.getLastUrlEntity();
-    let finalUrl = "";
-    if (urlEntity && urlEntity.unwound_url) {
-      finalUrl = urlEntity.unwound_url;
-    } else if (urlEntity && urlEntity.expanded_url) {
-      finalUrl = urlEntity.expanded_url;
-    } else {
-      const author = this.getTweetAuthor();
-
-      finalUrl =
-        `https://twitter.com/${author.username}/status/${this.originalItem.id}`;
+    if (this.url) {
+      return this.url;
     }
-    finalUrl = tryToRemoveUnnecessaryParams(finalUrl);
+    // check entities for urls
+    const tweet = this.originalItem;
+    if (tweet.entities.urls.length > 0) {
+      return tweet.entities.urls[tweet.entities.urls.length - 1].expanded_url;
+    }
 
-    return finalUrl;
+    return `https://twitter.com/${this.originalItem.user.screen_name}/status/${this.originalItem.id_str}`;
   }
   getExternalUrl(): string | undefined {
-    const author = this.getTweetAuthor();
-
-    const twitterUrl =
-      `https://twitter.com/${author.username}/status/${this.originalItem.id}`;
+    const twitterUrl = `https://twitter.com/${this.originalItem.user.screen_name}/status/${this.originalItem.id_str}`;
     if (twitterUrl === this.getUrl()) {
       return;
     } else {
@@ -169,14 +147,13 @@ export default class twitter extends Item<TwitterV2Item> {
     }
   }
   getAuthors(): Author[] {
-    const author = this.getTweetAuthor();
     return [
       {
-        name: author.name,
-        url: `https://twitter.com/${author.username}`,
-        avatar: author.profile_image_url.replace(
+        name: this.originalItem.user.name,
+        url: `https://twitter.com/${this.originalItem.user.screen_name}`,
+        avatar: this.originalItem.user.profile_image_url_https.replace(
           `_normal.`,
-          `.`,
+          `.`
         ),
       },
     ];
@@ -185,69 +162,273 @@ export default class twitter extends Item<TwitterV2Item> {
   getTags(): string[] {
     return this.getAuthors().map((author) => author.name);
   }
-  getTweetFirstMedia(): Media | undefined {
-    const mediaKeys = this.originalItem.attachments?.media_keys;
-    if (mediaKeys && mediaKeys.length > 0) {
-      const includes = this.originalItem.includes;
-      if (includes && includes.media) {
-        const media = includes.media.find((media) =>
-          media.media_key === mediaKeys[0]
-        );
-        if (media) {
-          return media;
-        }
-      }
-    }
-  }
   getImage(): string | null | undefined {
-    const urlEntity = this.getLastUrlEntity();
-    if (urlEntity && urlEntity.images) {
-      const images = urlEntity.images;
-      if (images.length > 0) {
-        return images[0].url;
+    const image = this.originalItem.entities.media?.[0]?.media_url_https;
+    if (!image) {
+      if (this.getUrl() !== this.getExternalUrl()) {
+        // return undefined, so parent can try to fetch image
+        // check is bloomberg
+        return undefined;
+      } else {
+        return null;
       }
-    }
-
-    const media = this.getTweetFirstMedia();
-    if (media && media.type === "photo") {
-      return media.url;
     } else {
-      return null;
+      return image;
     }
   }
   getSensitive(): boolean {
     return this.originalItem.possibly_sensitive || false;
   }
   getVideo(): Video | undefined {
+    const tweet = this.originalItem;
+    let bitrate: number | undefined = 0;
+    let hq_video_url = "";
+    let content_type = "";
     let poster = "";
-    const media = this.getTweetFirstMedia();
-    if (media && media.type === "video") {
-      if (
-        media.variants && media.variants.length > 0 && media.preview_image_url
-      ) {
-        if (media.preview_image_url) {
-          poster = media.preview_image_url;
-        }
-        const highestBitrate = media.variants.reduce((prev, current) => {
-          let currentBitrate = current.bit_rate || 0;
-          if (current.content_type !== "video/mp4") {
-            currentBitrate = 0;
+    let large: Large | undefined = undefined;
+    if (tweet?.extended_entities?.media[0]?.video_info?.variants) {
+      poster = tweet.extended_entities.media[0].media_url_https;
+      const videoInfo = tweet?.extended_entities?.media[0]?.video_info;
+      for (let j = 0; j < videoInfo.variants.length; j++) {
+        if (videoInfo.variants[j].bitrate) {
+          if (
+            tweet?.extended_entities?.media[0]?.video_info?.variants[j]
+              .bitrate! > (bitrate as number)
+          ) {
+            bitrate = videoInfo.variants[j].bitrate;
+            hq_video_url = videoInfo.variants[j].url;
+            content_type = videoInfo.variants[j].content_type;
           }
-          return (prev.bit_rate || 0) > currentBitrate ? prev : current;
-        }, media.variants[0]);
-        return {
-          sources: [
-            {
-              url: highestBitrate.url,
-              type: highestBitrate.content_type,
-            },
-          ],
-          poster,
-          width: media.width,
-          height: media.height,
-        };
-        // get large size
+        }
+      }
+
+      // get large size
+      const sizes = tweet?.extended_entities?.media[0]?.sizes;
+      large = sizes?.large;
+      if (!large) {
+        large = sizes?.medium;
+      }
+      if (!large) {
+        large = sizes?.small;
+      }
+      if (!large) {
+        large = sizes?.thumb;
       }
     }
+
+    if (hq_video_url) {
+      return {
+        sources: [
+          {
+            url: hq_video_url,
+            type: content_type,
+          },
+        ],
+        poster,
+        width: large?.w,
+        height: large?.h,
+      };
+    }
   }
+}
+
+// function parseTweetFulltext(tweet: TwitterItem): {
+
+// }
+export interface TwitterItem {
+  created_at: string;
+  id: number;
+  id_str: string;
+  full_text: string;
+  truncated: boolean;
+  display_text_range: number[];
+  entities: TwitterItemEntities;
+  possibly_sensitive?: boolean;
+  source: string;
+  in_reply_to_status_id: null;
+  in_reply_to_status_id_str: null;
+  in_reply_to_user_id: null;
+  in_reply_to_user_id_str: null;
+  in_reply_to_screen_name: null;
+  user: User;
+  geo: null;
+  coordinates: null;
+  place: null;
+  contributors: null;
+  retweeted_status?: RetweetedStatus;
+  is_quote_status: boolean;
+  retweet_count: number;
+  favorite_count: number;
+  favorited: boolean;
+  retweeted: boolean;
+  lang: string;
+  extended_entities: ExtendedEntities;
+  quoted_status?: RetweetedStatus;
+}
+
+export interface TwitterItemEntities {
+  hashtags: Hashtag[];
+  symbols: any[];
+  user_mentions: UserMention[];
+  urls: any[];
+  media?: Media[];
+}
+
+export interface Hashtag {
+  text: string;
+  indices: number[];
+}
+
+export interface Media {
+  id: number;
+  id_str: string;
+  indices: number[];
+  media_url: string;
+  media_url_https: string;
+  url: string;
+  display_url: string;
+  expanded_url: string;
+  type: string;
+  sizes: Sizes;
+  video_info?: VideoInfo;
+  additional_media_info?: AdditionalMediaInfo;
+}
+
+export interface AdditionalMediaInfo {
+  title: string;
+  description: string;
+  embeddable: boolean;
+  monetizable: boolean;
+}
+
+export interface Sizes {
+  thumb: Large;
+  small: Large;
+  large: Large;
+  medium: Large;
+}
+
+export interface Large {
+  w: number;
+  h: number;
+  resize: string;
+}
+
+export interface VideoInfo {
+  aspect_ratio: number[];
+  duration_millis: number;
+  variants: Variant[];
+}
+
+export interface Variant {
+  bitrate?: number;
+  content_type: string;
+  url: string;
+}
+
+export interface UserMention {
+  screen_name: string;
+  name: string;
+  id: number;
+  id_str: string;
+  indices: number[];
+}
+
+export interface RetweetedStatus {
+  created_at: string;
+  id: number;
+  id_str: string;
+  full_text: string;
+  truncated: boolean;
+  display_text_range: number[];
+  entities: TwitterItemEntities;
+  extended_entities: ExtendedEntities;
+  source: string;
+  in_reply_to_status_id: null;
+  in_reply_to_status_id_str: null;
+  in_reply_to_user_id: null;
+  in_reply_to_user_id_str: null;
+  in_reply_to_screen_name: null;
+  user: User;
+  geo: null;
+  coordinates: null;
+  place: null;
+  contributors: null;
+  is_quote_status: boolean;
+  retweet_count: number;
+  favorite_count: number;
+  favorited: boolean;
+  retweeted: boolean;
+  possibly_sensitive: boolean;
+  lang: string;
+}
+
+export interface ExtendedEntities {
+  media: Media[];
+}
+
+export interface User {
+  id: number;
+  id_str: string;
+  name: string;
+  screen_name: string;
+  location: string;
+  description: string;
+  url: string;
+  entities: UserEntities;
+  protected: boolean;
+  followers_count: number;
+  friends_count: number;
+  listed_count: number;
+  created_at: string;
+  favourites_count: number;
+  utc_offset: null;
+  time_zone: null;
+  geo_enabled: boolean;
+  verified: boolean;
+  statuses_count: number;
+  lang: null;
+  contributors_enabled: boolean;
+  is_translator: boolean;
+  is_translation_enabled: boolean;
+  profile_background_color: string;
+  profile_background_image_url: string;
+  profile_background_image_url_https: string;
+  profile_background_tile: boolean;
+  profile_image_url: string;
+  profile_image_url_https: string;
+  profile_banner_url: string;
+  profile_link_color: string;
+  profile_sidebar_border_color: string;
+  profile_sidebar_fill_color: string;
+  profile_text_color: string;
+  profile_use_background_image: boolean;
+  has_extended_profile: boolean;
+  default_profile: boolean;
+  default_profile_image: boolean;
+  following: null;
+  follow_request_sent: null;
+  notifications: null;
+  translator_type: string;
+  withheld_in_countries: any[];
+}
+
+export interface UserEntities {
+  url: Description;
+  description: Description;
+}
+
+export interface Description {
+  urls: URL[];
+}
+
+export interface URL {
+  url: string;
+  expanded_url: string;
+  display_url: string;
+  indices: number[];
+}
+
+export interface ExtendedEntities {
+  media: Media[];
 }

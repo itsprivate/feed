@@ -72,14 +72,17 @@ export default class Item<T> {
     if (
       this.getTitle() &&
       (type === "googlenews" ||
-        type === "twitter" || type === "twitterlink" ||
-        type === "lobste" || type === "hn" || type === "newyorker" ||
-        type === "rss" || type === "thechinaproject" || type === "sitemap")
+        type === "twitter" ||
+        type === "twitterlink" ||
+        type === "lobste" ||
+        type === "hn" ||
+        type === "newyorker" ||
+        type === "rss" ||
+        type === "thechinaproject" ||
+        type === "sitemap")
     ) {
       keys.push(
-        `${this.getTitlePrefix().toLowerCase()}${
-          this.getTitle()!.toLowerCase()
-        }${this.getTitleSuffix().toLowerCase()}`,
+        `${this.getTitlePrefix().toLowerCase()}${this.getTitle()!.toLowerCase()}${this.getTitleSuffix().toLowerCase()}`
       );
     }
     return keys;
@@ -194,10 +197,16 @@ export default class Item<T> {
     }
     return undefined;
   }
+  getImageMetaUrl(): string | undefined {
+    return undefined;
+  }
   async tryToLoadImage(
-    imageCachedMap?: Record<string, string>,
+    imageCachedMap?: Record<string, string>
   ): Promise<string | null> {
-    const url = this.getRealUrl();
+    let url = this.getRealUrl();
+    if (this.getImageMetaUrl()) {
+      url = this.getImageMetaUrl() as string;
+    }
 
     if (imageCachedMap && imageCachedMap[url]) {
       this.image = imageCachedMap[url];
@@ -227,7 +236,7 @@ export default class Item<T> {
             };
           } else {
             throw new Error(
-              `fetch ${url} failed, content type is not text/html, it is ${contentType}`,
+              `fetch ${url} failed, content type is not text/html, it is ${contentType}`
             );
           }
         } else {
@@ -253,16 +262,13 @@ export default class Item<T> {
           return null;
         }
       }
-      const doc = new DOMParser().parseFromString(
-        resource.text,
-        "text/html",
-      );
+      const doc = new DOMParser().parseFromString(resource.text, "text/html");
       const metadata = getMetadata(doc, url);
 
       if (metadata.image) {
         // check image is valid
         const imageResult = await request(metadata.image, {
-          method: "HEAD",
+          method: "GET",
         });
         if (imageResult.ok) {
           this.image = metadata.image;
@@ -301,7 +307,7 @@ export default class Item<T> {
     }
   }
   async tryToLoadTitle(
-    imageCachedMap?: Record<string, string>,
+    imageCachedMap?: Record<string, string>
   ): Promise<string | null> {
     const url = this.getRealUrl();
 
@@ -333,7 +339,7 @@ export default class Item<T> {
             };
           } else {
             throw new Error(
-              `fetch ${url} failed, content type is not text/html, it is ${contentType}`,
+              `fetch ${url} failed, content type is not text/html, it is ${contentType}`
             );
           }
         } else {
@@ -346,10 +352,7 @@ export default class Item<T> {
       return null;
     }
     try {
-      const doc = new DOMParser().parseFromString(
-        resource.text,
-        "text/html",
-      );
+      const doc = new DOMParser().parseFromString(resource.text, "text/html");
       const metadata = getMetadata(doc, url);
       if (metadata.title) {
         this.title = metadata.title;
@@ -391,9 +394,9 @@ export default class Item<T> {
     if (targetSiteIdentifiers.length === 0) {
       throw new Error("targetSiteIdentifiers can not be empty");
     }
-    return `${getDataRawPath()}/${this.getModifiedYear()}/${this.getModifiedMonth()}/${this.getModifiedDay()}/${
-      targetSiteIdentifiers.join("_")
-    }/${this.getItemIdentifierWithTime(order)}.json`;
+    return `${getDataRawPath()}/${this.getModifiedYear()}/${this.getModifiedMonth()}/${this.getModifiedDay()}/${targetSiteIdentifiers.join(
+      "_"
+    )}/${this.getItemIdentifierWithTime(order)}.json`;
   }
   getRawItem(): T {
     return this.originalItem;
@@ -411,21 +414,21 @@ export default class Item<T> {
     return false;
   }
   getFormatedPath(targetSiteIdentifiers: string[]): string {
-    return `${getDataFormatedPath()}/${this.getModifiedYear()}/${this.getModifiedMonth()}/${this.getModifiedDay()}/${
-      targetSiteIdentifiers.join("_")
-    }/${this.getItemIdentifier()}.json`;
+    return `${getDataFormatedPath()}/${this.getModifiedYear()}/${this.getModifiedMonth()}/${this.getModifiedDay()}/${targetSiteIdentifiers.join(
+      "_"
+    )}/${this.getItemIdentifier()}.json`;
   }
   getTranslatedPath(targetSiteIdentifiers: string[]): string {
-    return `${getDataTranslatedPath()}/${this.getModifiedYear()}/${this.getModifiedMonth()}/${this.getModifiedDay()}/${
-      targetSiteIdentifiers.join("_")
-    }/${this.getItemIdentifier()}.json`;
+    return `${getDataTranslatedPath()}/${this.getModifiedYear()}/${this.getModifiedMonth()}/${this.getModifiedDay()}/${targetSiteIdentifiers.join(
+      "_"
+    )}/${this.getItemIdentifier()}.json`;
   }
   getExternalUrl(): string | undefined {
     return undefined;
   }
   getTranslation(): Record<string, string> {
     return {
-      "title": this.getTitle() || this.getFallbackTitle(),
+      title: this.getTitle() || this.getFallbackTitle(),
     };
   }
   getFullTranslations(): Record<string, Record<string, string>> | undefined {
@@ -501,7 +504,7 @@ export default class Item<T> {
     return "";
   }
   async getFormatedItem(
-    options?: GetFormatedItemOptions,
+    options?: GetFormatedItemOptions
   ): Promise<FormatedItem> {
     const formatedItem = this.getFormatedItemSync();
     if (this.isNeedToGetRedirectedUrl()) {
@@ -581,7 +584,7 @@ export default class Item<T> {
     siteIdentifier: string,
     language: Language,
     config: Config,
-    options?: GetFeedItemSyncOptions,
+    options?: GetFeedItemSyncOptions
   ): FeedItem {
     let versionCode = "default";
     if (options && options.versionCode) {
@@ -629,13 +632,13 @@ export default class Item<T> {
     const translationObj = getItemTranslations(
       item._translations || {},
       language.code,
-      item._original_language,
+      item._original_language
     );
 
     const originalTranslationObj = getItemTranslations(
       item._translations || {},
       item._original_language,
-      item._original_language,
+      item._original_language
     );
     const translationFields = Object.keys(translationObj);
     for (const translationField of translationFields) {
@@ -662,7 +665,9 @@ export default class Item<T> {
     const isSensitive = item._sensitive || false;
     if (!isSensitive && !isLite) {
       if (
-        item._video && item._video.sources && item._video.sources.length > 0
+        item._video &&
+        item._video.sources &&
+        item._video.sources.length > 0
       ) {
         const sources = item._video.sources;
         const height = item._video.height;
@@ -715,15 +720,17 @@ export default class Item<T> {
           }
         } else {
           throw new Error(
-            "not supported embed type: " + embedProvider + embedType + " , " +
-              embedUrl,
+            "not supported embed type: " +
+              embedProvider +
+              embedType +
+              " , " +
+              embedUrl
           );
         }
       } else if (item.image) {
         const imageUrl = new URL(item.image);
 
-        content_html +=
-          `<div><img loading="lazy" class="u-photo" src="${item.image}" alt="${imageUrl.hostname} image"></div>`;
+        content_html += `<div><img loading="lazy" class="u-photo" src="${item.image}" alt="${imageUrl.hostname} image"></div>`;
       }
     }
 
@@ -732,50 +739,48 @@ export default class Item<T> {
       let finalTitle = originalTranslationObj.title;
       if (this.getType() === "twitter") {
         // @ts-ignore: npm modules
-        finalTitle = tweetPatch(
-          originalTranslationObj.title,
-        );
+        finalTitle = tweetPatch(originalTranslationObj.title);
       }
       if (isArchive) {
-        lite_content_html += `<a href="${item.id}">${
-          formatHumanTime(
-            new Date(item._original_published),
-          )
-        }</a>&nbsp;&nbsp;${finalTitle} (<a href="${itemUrl}">${itemUrlObj.hostname}</a>)`;
+        lite_content_html += `<a href="${item.id}">${formatHumanTime(
+          new Date(item._original_published)
+        )}</a>&nbsp;&nbsp;${finalTitle} (<a href="${itemUrl}">${
+          itemUrlObj.hostname
+        }</a>)`;
       } else {
-        lite_content_html +=
-          `<time class="dt-published published muted" datetime="${item._original_published}">${
-            formatHumanTime(
-              new Date(item._original_published),
-            )
-          }</time>&nbsp;&nbsp;${finalTitle} (<a href="${itemUrl}">${itemUrlObj.hostname}</a>)`;
+        lite_content_html += `<time class="dt-published published muted" datetime="${
+          item._original_published
+        }">${formatHumanTime(
+          new Date(item._original_published)
+        )}</time>&nbsp;&nbsp;${finalTitle} (<a href="${itemUrl}">${
+          itemUrlObj.hostname
+        }</a>)`;
       }
-      content_html +=
-        `<div>${finalTitle} (<a href="${itemUrl}">${itemUrlObj.hostname}</a>)</div>`;
+      content_html += `<div>${finalTitle} (<a href="${itemUrl}">${itemUrlObj.hostname}</a>)</div>`;
 
       summary += `${originalTranslationObj.title}`;
       content_text += `${originalTranslationObj.title}`;
     }
     if (isArchive) {
-      content_html +=
-        `<footer><a href="${item.id}"><time class="dt-published published" datetime="${item._original_published}">${
-          formatHumanTime(
-            new Date(item._original_published as string),
-          )
-        }</time></a>&nbsp;&nbsp;`;
+      content_html += `<footer><a href="${
+        item.id
+      }"><time class="dt-published published" datetime="${
+        item._original_published
+      }">${formatHumanTime(
+        new Date(item._original_published as string)
+      )}</time></a>&nbsp;&nbsp;`;
     } else {
-      content_html +=
-        `<footer><time class="dt-published published muted" datetime="${item._original_published}">${
-          formatHumanTime(
-            new Date(item._original_published as string),
-          )
-        }</time>&nbsp;&nbsp;`;
+      content_html += `<footer><time class="dt-published published muted" datetime="${
+        item._original_published
+      }">${formatHumanTime(
+        new Date(item._original_published as string)
+      )}</time>&nbsp;&nbsp;`;
     }
 
     const currentTranslations = getCurrentTranslations(
       siteIdentifier,
       language.code,
-      config,
+      config
     );
     let index = 0;
 
@@ -783,11 +788,10 @@ export default class Item<T> {
     if (this.getLinks({ isUseHTML: true }).length > 0) {
       for (const link of this.getLinks({ isUseHTML: true })) {
         const isGreaterFirst = index >= 1;
-        const linkName = currentTranslations[link.name] ??
-          link.name;
-        content_html += `${
-          isGreaterFirst ? "&nbsp;&nbsp;" : ""
-        }<a href="${link.url}">${linkName}</a>`;
+        const linkName = currentTranslations[link.name] ?? link.name;
+        content_html += `${isGreaterFirst ? "&nbsp;&nbsp;" : ""}<a href="${
+          link.url
+        }">${linkName}</a>`;
         index++;
       }
     }
@@ -803,8 +807,7 @@ export default class Item<T> {
     const linkMap: Record<string, boolean> = {};
     if (this.getLinks().length > 0) {
       for (const link of this.getLinks()) {
-        const linkName = currentTranslations[link.name] ??
-          link.name;
+        const linkName = currentTranslations[link.name] ?? link.name;
         linkMap[link.url] = true;
         // check if old.reddit
         const linkUrlObj = new URL(link.url);
@@ -842,17 +845,25 @@ export default class Item<T> {
       "bloomberg",
     ];
     if (
-      !diabled_taglinks.includes(siteIdentifier) && item.tags &&
-      Array.isArray(item.tags) && item.tags.length > 0
+      !diabled_taglinks.includes(siteIdentifier) &&
+      item.tags &&
+      Array.isArray(item.tags) &&
+      item.tags.length > 0
     ) {
       for (const tag of item.tags) {
         const isGreaterFirst = index >= 1;
         if (!isLite) {
-          content_html += `${isGreaterFirst ? "&nbsp;&nbsp;" : ""}<a href="${
-            tagToUrl(tag, siteIdentifier, language, version, config)
-          }">#${tag}</a>`;
+          content_html += `${
+            isGreaterFirst ? "&nbsp;&nbsp;" : ""
+          }<a href="${tagToUrl(
+            tag,
+            siteIdentifier,
+            language,
+            version,
+            config
+          )}">#${tag}</a>`;
         }
-        ">#${tag}</a>`";
+        (">#${tag}</a>`");
         tag_links.push({
           name: tag,
           url: tagToUrl(tag, siteIdentifier, language, version, config),
@@ -884,7 +895,8 @@ export default class Item<T> {
     item._lite_content_html = lite_content_html;
     // add feed 1.0 adapter author
     if (
-      item.authors && Array.isArray(item.authors) &&
+      item.authors &&
+      Array.isArray(item.authors) &&
       item.authors.length > 0
     ) {
       item.author = item.authors[0];
