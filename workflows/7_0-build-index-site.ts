@@ -76,20 +76,18 @@ export default async function buildSite(options: RunOptions) {
   let siteIdentifiers: string[] = [];
   const now = new Date();
   const indexTemplateString = await Deno.readTextFile(
-    "./templates/root-index.html.mu",
+    "./templates/root-index.html.mu"
   );
 
-  const statsTemplateString = await Deno.readTextFile(
-    "./templates/stats.html",
-  );
+  const statsTemplateString = await Deno.readTextFile("./templates/stats.html");
   const apiStatsTemplateString = await Deno.readTextFile(
-    "./templates/api-stats.html",
+    "./templates/api-stats.html"
   );
   const freshStatsTemplateString = await Deno.readTextFile(
-    "./templates/fresh-stats.html",
+    "./templates/fresh-stats.html"
   );
   const yearlyStatsTemplateString = await Deno.readTextFile(
-    "./templates/yearly-stats.html",
+    "./templates/yearly-stats.html"
   );
   for await (const dirEntry of Deno.readDir(getDistPath())) {
     if (dirEntry.isDirectory && !dirEntry.name.startsWith(".")) {
@@ -114,7 +112,7 @@ export default async function buildSite(options: RunOptions) {
   const allSiteIdentifiers = resortSites(
     indexSubDomain,
     siteIdentifiers,
-    config,
+    config
   );
 
   siteIdentifiers = allSiteIdentifiers;
@@ -129,40 +127,40 @@ export default async function buildSite(options: RunOptions) {
       const currentIndexTranslations = getCurrentTranslations(
         indexSubDomain,
         language.code,
-        config,
+        config
       );
       const feedJson: Feedjson = {
-        "version": "https://jsonfeed.org/version/1",
-        "title": currentIndexTranslations.title,
-        "description": currentIndexTranslations.description,
-        "icon": siteIdentifierToUrl(
+        version: "https://jsonfeed.org/version/1",
+        title: currentIndexTranslations.title,
+        description: currentIndexTranslations.description,
+        icon: siteIdentifierToUrl(
           indexSubDomain,
           "/icon.png?v=20230310",
-          config,
+          config
         ),
-        "_apple_touch_icon": siteIdentifierToUrl(
+        _apple_touch_icon: siteIdentifierToUrl(
           indexSubDomain,
           "/apple-touch-icon.png?v=20230310",
-          config,
+          config
         ),
 
-        "favicon": siteIdentifierToUrl(
+        favicon: siteIdentifierToUrl(
           indexSubDomain,
           "/favicon.ico?v=20230310",
-          config,
+          config
         ),
-        "_latest_build_time": formatIsoDate(now),
-        "language": language.code,
-        "_site_version": version.code,
-        "home_page_url": siteIdentifierToUrl(
+        _latest_build_time: formatIsoDate(now),
+        language: language.code,
+        _site_version: version.code,
+        home_page_url: siteIdentifierToUrl(
           indexSubDomain,
           pathnameWithVersion,
-          config,
+          config
         ),
-        "feed_url": siteIdentifierToUrl(
+        feed_url: siteIdentifierToUrl(
           indexSubDomain,
           `${pathnameWithVersion}feed.json`,
-          config,
+          config
         ),
         items: [],
         _sources: [],
@@ -188,13 +186,11 @@ export default async function buildSite(options: RunOptions) {
           siteIdentifier,
           language.prefix,
           version.prefix,
-          "feed.json",
+          "feed.json"
         );
         let siteFeedJson: Feedjson;
         try {
-          siteFeedJson = await readJSONFile(
-            currentFeedJsonPath,
-          ) as Feedjson;
+          siteFeedJson = (await readJSONFile(currentFeedJsonPath)) as Feedjson;
         } catch (e) {
           log.info(`can not read feed.json file: ${currentFeedJsonPath}`);
           throw e;
@@ -209,12 +205,12 @@ export default async function buildSite(options: RunOptions) {
             item._site_identifier = siteIdentifier;
             // @ts-ignore: add meta
             item._human_time = formatHumanTime(
-              new Date(item._original_published),
+              new Date(item._original_published)
             );
             // @ts-ignore: add meta
             item._category = config.sites[siteIdentifier].category;
             return item;
-          }),
+          })
         );
       }
       // format format _groups
@@ -261,7 +257,7 @@ export default async function buildSite(options: RunOptions) {
         const currentTranslations = getCurrentTranslations(
           siteIdentifier,
           language.code,
-          config,
+          config
         );
         const siteConfig = config.sites[siteIdentifier];
         const related = siteConfig.related || [];
@@ -270,68 +266,67 @@ export default async function buildSite(options: RunOptions) {
           const relatedSiteTranslations = getCurrentTranslations(
             relatedSiteIdentifier,
             language.code,
-            config,
+            config
           );
           return {
             title: relatedSiteTranslations.title,
-            short_title: relatedSiteTranslations.short_title ||
+            short_title:
+              relatedSiteTranslations.short_title ||
               relatedSiteTranslations.title,
             url: siteIdentifierToUrl(
               relatedSiteIdentifier,
               pathnameWithVersion,
-              config,
+              config
             ),
           };
         });
         const takedCount = 24;
-        const takedItems = siteItemsGroups.slice(0, takedCount)
-          .map(
-            (item: FeedItem, index: number) => {
-              // @ts-ignore: add meta
-              item.order = index + 1;
-              return item;
-            },
-          );
-        const remainingCount = siteItemsGroups.length -
-          takedCount;
+        const takedItems = siteItemsGroups
+          .slice(0, takedCount)
+          .map((item: FeedItem, index: number) => {
+            // @ts-ignore: add meta
+            item.order = index + 1;
+            return item;
+          });
+        const remainingCount = siteItemsGroups.length - takedCount;
         feedJson.items = feedJson.items.concat(takedItems);
         return {
-          "title": currentTranslations.title,
-          "hostname": siteIdentifierToDomain(siteIdentifier),
-          "site_identifier": siteIdentifier,
-          "related": relatedSites,
-          "home_page_url": siteIdentifierToUrl(
+          title: currentTranslations.title,
+          hostname: siteIdentifierToDomain(siteIdentifier),
+          site_identifier: siteIdentifier,
+          related: relatedSites,
+          home_page_url: siteIdentifierToUrl(
             siteIdentifier,
             pathnameWithVersion,
-            config,
+            config
           ),
-          "home_page_next_url": siteIdentifierToUrl(
+          home_page_next_url: siteIdentifierToUrl(
             siteIdentifier,
             `${pathname}#${takedItems.length}`,
-            config,
+            config
           ),
-          "atom_url": siteIdentifierToUrl(
+          atom_url: siteIdentifierToUrl(
             siteIdentifier,
             `${pathnameWithVersion}feed.xml`,
-            config,
+            config
           ),
-          "home_page_lite_url": siteIdentifierToUrl(
+          home_page_lite_url: siteIdentifierToUrl(
             siteIdentifier,
             pathname + liteVersion.prefix,
-            config,
+            config
           ),
-          "home_page_next_lite_url": siteIdentifierToUrl(
+          home_page_next_lite_url: siteIdentifierToUrl(
             siteIdentifier,
             `${pathname}${liteVersion.prefix}#${takedItems.length}`,
-            config,
+            config
           ),
-          "remaining_count": remainingCount,
+          remaining_count: remainingCount,
           // @ts-ignore: add meta
-          "remaining_label": mustache.render(
+          remaining_label: mustache.render(
             currentTranslations.more_posts_label,
             {
-              "count": remainingCount,
-            },
+              count: remainingCount,
+            }
           ),
           items: takedItems,
         };
@@ -339,7 +334,7 @@ export default async function buildSite(options: RunOptions) {
       // write to dist file
       const feedPath = getDistFilePath(
         indexSubDomain,
-        `${language.prefix}${version.prefix}feed.json`,
+        `${language.prefix}${version.prefix}feed.json`
       );
       await writeJSONFile(feedPath, feedJson);
       feedJson.items = feedJson.items.map((item) => {
@@ -378,20 +373,20 @@ export default async function buildSite(options: RunOptions) {
       // write to dist file
       const rssPath = getDistFilePath(
         indexSubDomain,
-        `${language.prefix}${version.prefix}feed.xml`,
+        `${language.prefix}${version.prefix}feed.xml`
       );
       await writeTextFile(rssPath, feedOutput);
 
       const indexPath = getDistFilePath(
         indexSubDomain,
-        `${language.prefix}${version.prefix}index.html`,
+        `${language.prefix}${version.prefix}index.html`
       );
       const indexHTML = feedToHTML(
         feedJson,
         config,
         indexTemplateString,
         config.languages,
-        config.versions,
+        config.versions
       );
       await writeTextFile(indexPath, indexHTML);
 
@@ -415,7 +410,8 @@ export default async function buildSite(options: RunOptions) {
     for (const apiItem of api) {
       apiMap.set(apiItem.name, {
         ...apiItem,
-        id: source.id.replace(/\-/g, "_") +
+        id:
+          source.id.replace(/\-/g, "_") +
           apiItem.name.replace(/\s/g, "_").replace(/\./g, "_"),
         source_id: source.id,
         rules: source.rules || [],
@@ -537,12 +533,14 @@ export default async function buildSite(options: RunOptions) {
       data: "[]",
       apis: [],
     };
-    const statData: (string | number)[][] = [[
-      "x",
-      ...timeline.map((item) =>
-        new Date(new Date(item).getTime()).toISOString()
-      ),
-    ]];
+    const statData: (string | number)[][] = [
+      [
+        "x",
+        ...timeline.map((item) =>
+          new Date(new Date(item).getTime()).toISOString()
+        ),
+      ],
+    ];
     const siteApis = siteApiMap.get(siteIdentifier) || [];
     let index = 1;
     for (const apiName of siteApis) {
@@ -554,12 +552,14 @@ export default async function buildSite(options: RunOptions) {
         daily_count: 0,
         data: "",
       };
-      const apiStatData: (string | number)[][] = [[
-        "x",
-        ...timeline.map((item) =>
-          new Date(new Date(item).getTime()).toISOString()
-        ),
-      ]];
+      const apiStatData: (string | number)[][] = [
+        [
+          "x",
+          ...timeline.map((item) =>
+            new Date(new Date(item).getTime()).toISOString()
+          ),
+        ],
+      ];
       const apiRawCountData: (string | number)[] = ["原始"];
       const apiFilterdCountData: (string | number)[] = ["过滤后"];
       const apiUniqueCountData: (string | number)[] = ["去重后"];
@@ -623,7 +623,7 @@ export default async function buildSite(options: RunOptions) {
     const yearlyStats: SiteStatInfo[] = [];
     const statYearPath = path.join(statsPath, statYear + ".json");
 
-    const statYearContent = await readJSONFile(statYearPath) as Stat;
+    const statYearContent = (await readJSONFile(statYearPath)) as Stat;
     // console.log("statYearContent", statYearContent);
     const months = Object.keys(statYearContent);
     // sort months
@@ -637,10 +637,7 @@ export default async function buildSite(options: RunOptions) {
         data: "[]",
         apis: [],
       };
-      const statData: (string | number)[][] = [[
-        "x",
-        ...months,
-      ]];
+      const statData: (string | number)[][] = [["x", ...months]];
       const siteApis = siteApiMap.get(siteIdentifier) || [];
       let index = 1;
       for (const apiName of siteApis) {
@@ -659,11 +656,10 @@ export default async function buildSite(options: RunOptions) {
           if (!statYearContent[point][apiInfo.source_id]) {
             statYearContent[point][apiInfo.source_id] = {};
           }
-          const item = statYearContent[point][apiInfo.source_id][apiName] ||
-            {
-              count: 0,
-              checked_at: new Date(0).toISOString(),
-            };
+          const item = statYearContent[point][apiInfo.source_id][apiName] || {
+            count: 0,
+            checked_at: new Date(0).toISOString(),
+          };
           // console.log("item", item);
           siteStat.daily_count += item.count;
           apiInfo.daily_count += item.count;
@@ -681,13 +677,10 @@ export default async function buildSite(options: RunOptions) {
       is2022: statYear === "2022",
     };
     // @ts-ignore: add meta
-    const statsHtml = mustache.render(
-      yearlyStatsTemplateString,
-      statsData,
-    );
+    const statsHtml = mustache.render(yearlyStatsTemplateString, statsData);
     const indexPath = getDistFilePath(
       indexSubDomain,
-      `stats/${statYear}/index.html`,
+      `stats/${statYear}/index.html`
     );
     await writeTextFile(indexPath, statsHtml);
   }
@@ -702,16 +695,13 @@ export default async function buildSite(options: RunOptions) {
   };
   // @ts-ignore: add meta
   const statsHtml = mustache.render(statsTemplateString, statsData);
-  const indexPath = getDistFilePath(
-    indexSubDomain,
-    `stats/index.html`,
-  );
+  const indexPath = getDistFilePath(indexSubDomain, `stats/index.html`);
   await writeTextFile(indexPath, statsHtml);
   // @ts-ignore: add meta
   const apiStatsHtml = mustache.render(apiStatsTemplateString, statsData);
   const apiStatIndexPath = getDistFilePath(
     indexSubDomain,
-    `stats/api/index.html`,
+    `stats/api/index.html`
   );
   await writeTextFile(apiStatIndexPath, apiStatsHtml);
   // build fresh stats
@@ -722,11 +712,12 @@ export default async function buildSite(options: RunOptions) {
       site_title: sitesMap[siteIdentifier].translations!["zh-Hans"].title,
       groups: [],
     };
-    const siteFreshData = allSiteFreshStats[siteIdentifier];
+    const siteFreshData = allSiteFreshStats[siteIdentifier] || {};
     const keys = Object.keys(siteFreshData);
     // sort by MM-dd
-    keys.sort((a, b) =>
-      Number(b.slice(0, 2) + b.slice(3)) - Number(a.slice(0, 2) + a.slice(3))
+    keys.sort(
+      (a, b) =>
+        Number(b.slice(0, 2) + b.slice(3)) - Number(a.slice(0, 2) + a.slice(3))
     );
     for (const key of keys) {
       const data = siteFreshData[key];
@@ -753,11 +744,11 @@ export default async function buildSite(options: RunOptions) {
   // @ts-ignore: add meta
   const freshStatsHtml = mustache.render(
     freshStatsTemplateString,
-    freshStatsData,
+    freshStatsData
   );
   const freshIndexPath = getDistFilePath(
     indexSubDomain,
-    `stats/fresh/index.html`,
+    `stats/fresh/index.html`
   );
   await writeTextFile(freshIndexPath, freshStatsHtml);
 }
