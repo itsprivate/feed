@@ -86,16 +86,16 @@ sites:
     tags: ["all"]
     priority: 0
     translations:
-      'zh-Hans':
-        title: '编辑精选'
-        short_title: '编辑精选'
+      "zh-Hans":
+        title: "编辑精选"
+        short_title: "编辑精选"
         url: "https://www.owenyoung.com/categories/journal/"
-      'en':
+      "en":
         title: "Editor's Picks"
         short_title: "Editor's Picks"
         url: "https://www.owenyoung.com/categories/journal/"
-      'ja':
-        title: 'エディターズピック'
+      "ja":
+        title: "エディターズピック"
         url: "https://www.owenyoung.com/categories/journal/"
 
   www:
@@ -483,6 +483,7 @@ sites:
   quora:
     port: 8012
     archive: true
+    hidden: true
     priority: 102
     redirect: true
     category: Discuss
@@ -544,6 +545,7 @@ sites:
   nytimes:
     port: 8014
     archive: true
+    hidden: true
     category: News
     redirect: true
     priority: 28
@@ -577,6 +579,7 @@ sites:
     archive: true
     category: News
     redirect: true
+    hidden: true
     priority: 31
     tags:
       - depth
@@ -608,6 +611,7 @@ sites:
     archive: true
     category: News
     redirect: true
+    hidden: true
     priority: 23
     related:
       - economistnew
@@ -724,7 +728,7 @@ sites:
         keywords: "buzzing,ビデオ"
   lobste:
     port: 8021
-    priority: 30 
+    priority: 30
     category: Tech
     archive: true
     tags:
@@ -812,19 +816,19 @@ sites:
       - source-reddit-feminism
     translations:
       "zh-Hans":
-        title: '国外女权主义讨论'
+        title: "国外女权主义讨论"
         short_title: "女权主义"
-        description: '用中文浏览国外有关女权主义的讨论'
+        description: "用中文浏览国外有关女权主义的讨论"
         keywords: "女权,女权主义"
-      'en':
-        title: 'Feminism'
+      "en":
+        title: "Feminism"
         short_title: "Feminism"
-        description: 'See what''s buzzing on Feminism in your native language'
+        description: "See what's buzzing on Feminism in your native language"
         keywords: "Feminism"
-      'ja':
-        title: '女性主義'
+      "ja":
+        title: "女性主義"
         short_title: "女性主義"
-        description: '人気の女性主義の最新 の投稿'
+        description: "人気の女性主義の最新 の投稿"
         keywords: "女性主義"
   tech:
     port: 8025
@@ -837,19 +841,19 @@ sites:
       - source-reddit-technology
     translations:
       "zh-Hans":
-        title: '国外科技头条'
+        title: "国外科技头条"
         short_title: "科技"
-        description: '用中文浏览国外科技相关新闻'
+        description: "用中文浏览国外科技相关新闻"
         keywords: "科技,科技头条"
-      'en':
-        title: 'Tech'
+      "en":
+        title: "Tech"
         short_title: "Tech"
-        description: 'See what''s buzzing on Tech in your native language'
+        description: "See what's buzzing on Tech in your native language"
         keywords: "Tech"
-      'ja':
-        title: 'テクノロジー'
+      "ja":
+        title: "テクノロジー"
         short_title: "テクノロジー"
-        description: '人気のテクノロジーの最新 の投稿'
+        description: "人気のテクノロジーの最新 の投稿"
         keywords: "テクノロジー"
   worldnews:
     port: 8026
@@ -862,19 +866,19 @@ sites:
       - source-reddit-worldnews
     translations:
       "zh-Hans":
-        title: 'Reddit新闻小组'
+        title: "Reddit新闻小组"
         short_title: "Reddit新闻小组"
-        description: '用中文浏览Reddit全球新闻小组讨论'
+        description: "用中文浏览Reddit全球新闻小组讨论"
         keywords: "新闻,全球新闻,世界新闻"
-      'en':
-        title: 'Reddit World News'
+      "en":
+        title: "Reddit World News"
         short_title: "Reddit World News"
-        description: 'See what''s buzzing on Reddit World News in your native language'
+        description: "See what's buzzing on Reddit World News in your native language"
         keywords: "Reddit World News"
-      'ja':
-        title: 'Reddit ワールドニュース'
+      "ja":
+        title: "Reddit ワールドニュース"
         short_title: "Reddit ワールドニュース"
-        description: '人気のReddit ワールドニュースの最新 の投稿'
+        description: "人気のReddit ワールドニュースの最新 の投稿"
         keywords: "Reddit ワールドニュース"
   finance:
     port: 8027
@@ -887,19 +891,19 @@ sites:
       - source-google-finance
     translations:
       "zh-Hans":
-        title: '国外财经新闻'
+        title: "国外财经新闻"
         short_title: "财经新闻"
-        description: '用中文浏览国外财经相关新闻'
+        description: "用中文浏览国外财经相关新闻"
         keywords: "财经,财经新闻"
-      'en':
-        title: 'Finance'
+      "en":
+        title: "Finance"
         short_title: "Finance"
-        description: 'See what''s buzzing on Finance in your native language'
+        description: "See what's buzzing on Finance in your native language"
         keywords: "Finance"
-      'ja':
-        title: 'ファイナンス'
+      "ja":
+        title: "ファイナンス"
         short_title: "ファイナンス"
-        description: '人気のファイナンスの最新 の投稿'
+        description: "人気のファイナンスの最新 の投稿"
         keywords: "ファイナンス"
   theguardian:
     port: 8028
@@ -912,19 +916,19 @@ sites:
       - source-the-guardian
     translations:
       "zh-Hans":
-        title: '卫报'
+        title: "卫报"
         short_title: "卫报"
-        description: '用中文浏览英国卫报相关报道'
+        description: "用中文浏览英国卫报相关报道"
         keywords: "卫报,财经,财经新闻"
-      'en':
-        title: 'The Guardian'
+      "en":
+        title: "The Guardian"
         short_title: "The Guardian"
-        description: 'See what''s buzzing on The Guardian in your native language'
+        description: "See what's buzzing on The Guardian in your native language"
         keywords: "The Guardian"
-      'ja':
-        title: 'ガーディアン'
+      "ja":
+        title: "ガーディアン"
         short_title: "ガーディアン"
-        description: '人気のガーディアンの最新 の投稿'
+        description: "人気のガーディアンの最新 の投稿"
         keywords: "ガーディアン"
   sky:
     port: 8029
@@ -937,19 +941,19 @@ sites:
       - source-skynews
     translations:
       "zh-Hans":
-        title: '天空新闻'
+        title: "天空新闻"
         short_title: "天空新闻"
-        description: '用中文浏览英国天空新闻相关报道'
+        description: "用中文浏览英国天空新闻相关报道"
         keywords: "天空新闻,财经,财经新闻"
-      'en':
-        title: 'Sky News'
+      "en":
+        title: "Sky News"
         short_title: "Sky News"
-        description: 'See what''s buzzing on Sky News in your native language'
+        description: "See what's buzzing on Sky News in your native language"
         keywords: "Sky News"
-      'ja':
-        title: 'スカイニュース'
+      "ja":
+        title: "スカイニュース"
         short_title: "スカイニュース"
-        description: '人気のスカイニュースの最新 の投稿'
+        description: "人気のスカイニュースの最新 の投稿"
         keywords: "スカイニュース"
   ft:
     port: 8030
@@ -962,26 +966,27 @@ sites:
       - source-ft
     translations:
       "zh-Hans":
-        title: '金融时报'
+        title: "金融时报"
         short_title: "金融时报"
-        description: '用中文浏览英国金融时报相关报道'
+        description: "用中文浏览英国金融时报相关报道"
         keywords: "金融时报,财经,财经新闻"
-      'en':
-        title: 'Financial Times'
+      "en":
+        title: "Financial Times"
         short_title: "Financial Times"
-        description: 'See what''s buzzing on Financial Times in your native language'
+        description: "See what's buzzing on Financial Times in your native language"
         keywords: "Financial Times"
-      'ja':
-        title: 'ファイナンシャルタイムズ'
+      "ja":
+        title: "ファイナンシャルタイムズ"
         short_title: "ファイナンシャルタイムズ"
-        description: '人気のファイナンシャルタイムズの最新 の投稿'
+        description: "人気のファイナンシャルタイムズの最新 の投稿"
         keywords: "ファイナンシャルタイムズ"
   bloomberg:
     port: 8031
     priority: 18
     archive: true
+    hidden: true
     category: Finance
-    label: newest_label 
+    label: newest_label
     related:
       - bloombergnew
     tags:
@@ -991,19 +996,19 @@ sites:
       - source-twitter-bloomberg
     translations:
       "zh-Hans":
-        title: '彭博社'
+        title: "彭博社"
         short_title: "彭博社"
-        description: '用中文浏览彭博社相关报道'
+        description: "用中文浏览彭博社相关报道"
         keywords: "彭博社,财经,财经新闻"
-      'en':
-        title: 'Bloomberg'
+      "en":
+        title: "Bloomberg"
         short_title: "Bloomberg"
-        description: 'See what''s buzzing on Bloomberg in your native language'
+        description: "See what's buzzing on Bloomberg in your native language"
         keywords: "Bloomberg"
-      'ja':
-        title: 'ブルームバーグ'
+      "ja":
+        title: "ブルームバーグ"
         short_title: "ブルームバーグ"
-        description: '人気のブルームバーグの最新 の投稿'
+        description: "人気のブルームバーグの最新 の投稿"
         keywords: "ブルームバーグ"
   breaking:
     port: 8032
@@ -1015,17 +1020,17 @@ sites:
       - www
       - source-specindex
     translations:
-      'zh-Hans':
+      "zh-Hans":
         title: "全球突发新闻"
         short_title: "突发新闻"
         description: "用中文浏览全球突发新闻"
         keywords: "突发新闻"
-      'en':
+      "en":
         title: "Breaking News"
         short_title: "Breaking News"
         description: "See what''s buzzing on Breaking News in your native language"
         keywords: "Breaking News"
-      'ja':
+      "ja":
         title: "ブレイキングニュース"
         short_title: "ブレイキングニュース"
         description: "人気のブレイキングニュースの最新 の投稿"
@@ -1042,24 +1047,24 @@ sites:
       - source-rss-yahoofinance
       - source-googleyahoofinance
     translations:
-      'zh-Hans':
+      "zh-Hans":
         title: "雅虎财经"
         short_title: "雅虎财经"
         description: "用中文浏览雅虎财经相关报道"
         keywords: "雅虎财经"
-      'en':
+      "en":
         title: "Yahoo Finance"
         short_title: "Yahoo Finance"
         description: "See what''s buzzing on Yahoo Finance in your native language"
         keywords: "Yahoo Finance"
-      'ja':
+      "ja":
         title: "ヤフーファイナンス"
         short_title: "ヤフーファイナンス"
         description: "人気のヤフーファイナンスの最新 の投稿"
         keywords: "ヤフーファイナンス"
   redditchina:
     port: 8034
-    priority: 27 
+    priority: 27
     category: Discuss
     hide: true
     archive: true
@@ -1073,12 +1078,12 @@ sites:
         short_title: "中国小组"
         description: "用中文浏览国外Reddit中国小组里的热门讨论"
         keywords: "中国,关于中国"
-      'en':
+      "en":
         title: "Reddit China"
         short_title: "Reddit China"
         description: "See what''s buzzing on Reddit China in your native language"
         keywords: "Reddit China"
-      'ja':
+      "ja":
         title: "Reddit中国"
         short_title: "Reddit中国"
         description: "人気のReddit中国の最新 の投稿"
@@ -1087,6 +1092,7 @@ sites:
     port: 8035
     priority: 32
     archive: true
+    hidden: true
     category: News
     related:
       - reutersnew
@@ -1095,19 +1101,19 @@ sites:
       - source-twitter-reuters
     translations:
       "zh-Hans":
-        title: '路透社'
+        title: "路透社"
         short_title: "路透社"
-        description: '用中文浏览路透社相关报道'
+        description: "用中文浏览路透社相关报道"
         keywords: "路透社,财经,财经新闻"
-      'en':
-        title: 'Reuters'
+      "en":
+        title: "Reuters"
         short_title: "Reuters"
-        description: 'See what''s buzzing on Reuters in your native language'
+        description: "See what's buzzing on Reuters in your native language"
         keywords: "Reuters"
-      'ja':
-        title: 'レイチャーズ'
+      "ja":
+        title: "レイチャーズ"
         short_title: "レイチャーズ"
-        description: '人気のレイチャーズの最新 の投稿'
+        description: "人気のレイチャーズの最新 の投稿"
         keywords: "レイチャーズ"
   bbc:
     port: 8036
@@ -1119,19 +1125,19 @@ sites:
       - source-rss-bbcworld
     translations:
       "zh-Hans":
-        title: 'BBC'
+        title: "BBC"
         short_title: "BBC"
-        description: '用中文浏览BBC相关报道'
+        description: "用中文浏览BBC相关报道"
         keywords: "BBC,财经,财经新闻"
-      'en':
-        title: 'BBC'
+      "en":
+        title: "BBC"
         short_title: "BBC"
-        description: 'See what''s buzzing on BBC in your native language'
+        description: "See what's buzzing on BBC in your native language"
         keywords: "BBC"
-      'ja':
-        title: 'BBC'
+      "ja":
+        title: "BBC"
         short_title: "BBC"
-        description: '人気のBBCの最新 の投稿'
+        description: "人気のBBCの最新 の投稿"
         keywords: "BBC"
   googlenews:
     port: 8037
@@ -1186,6 +1192,7 @@ sites:
   businessinsider:
     port: 8039
     priority: 32
+    hidden: true
     archive: true
     category: Finance
     tags:
@@ -1213,8 +1220,8 @@ sites:
     deduplicate: and
     archive: false
     category: Finance
-    label: newest_label 
-    hide: true
+    label: newest_label
+    hide: false
     related:
       - bloomberg
     tags:
@@ -1223,26 +1230,26 @@ sites:
       - source-sitemap-bloomberg
     translations:
       "zh-Hans":
-        title: '彭博社最新报道'
+        title: "彭博社最新报道"
         short_title: "彭博最新"
-        description: '用中文浏览彭博社最新报道'
+        description: "用中文浏览彭博社最新报道"
         keywords: "彭博社,财经,财经新闻"
-      'en':
-        title: 'Bloomberg Newest'
+      "en":
+        title: "Bloomberg Newest"
         short_title: "Bloomberg Newest"
-        description: 'See what''s buzzing on Bloomberg Newest in your native language'
+        description: "See what's buzzing on Bloomberg Newest in your native language"
         keywords: "Bloomberg Newest"
-      'ja':
-        title: 'ブルームバーグ最新'
+      "ja":
+        title: "ブルームバーグ最新"
         short_title: "ブルームバーグ最新"
-        description: '人気のブルームバーグ最新 の投稿'
+        description: "人気のブルームバーグ最新 の投稿"
         keywords: "ブルームバーグ最新"
-        
+
   reutersnew:
     port: 8041
     archive: false
     category: News
-    hide: true
+    hide: false
     deduplicate: and
     related:
       - reuters
@@ -1251,25 +1258,26 @@ sites:
       - source-sitemap-reuters
     translations:
       "zh-Hans":
-        title: '路透社最新报道'
+        title: "路透社最新报道"
         short_title: "路透最新"
-        description: '用中文浏览路透社最新报道'
+        description: "用中文浏览路透社最新报道"
         keywords: "路透社,财经,财经新闻"
-      'en':
-        title: 'Reuters Newest'
+      "en":
+        title: "Reuters Newest"
         short_title: "Reuters Newest"
-        description: 'See what''s buzzing on Reuters Newest in your native language'
+        description: "See what's buzzing on Reuters Newest in your native language"
         keywords: "Reuters Newest"
-      'ja':
-        title: 'ルーターズ最新'
+      "ja":
+        title: "ルーターズ最新"
         short_title: "ルーターズ最新"
-        description: '人気のルーターズ最新 の投稿'
+        description: "人気のルーターズ最新 の投稿"
         keywords: "ルーターズ最新"
   economistnew:
-    port: 8042
+    port: 8043
     archive: false
     category: Finance
-    hide: true
+    hide: false
+    priority: 16
     related:
       - economist
     tags:
@@ -1277,19 +1285,19 @@ sites:
       - source-rss-economist
     translations:
       "zh-Hans":
-        title: '经济学人最新报道'
+        title: "经济学人最新报道"
         short_title: "经济学人最新"
-        description: '用中文浏览经济学人最新报道'
+        description: "用中文浏览经济学人最新报道"
         keywords: "经济学人,财经,财经新闻"
-      'en':
-        title: 'Economist Newest'
+      "en":
+        title: "Economist Newest"
         short_title: "Economist Newest"
-        description: 'See what''s buzzing on Economist Newest in your native language'
+        description: "See what's buzzing on Economist Newest in your native language"
         keywords: "Economist Newest"
-      'ja':
-        title: '経済学人最新'
+      "ja":
+        title: "経済学人最新"
         short_title: "経済学人最新"
-        description: '人気の経済学人最新 の投稿'
+        description: "人気の経済学人最新 の投稿"
         keywords: "経済学人最新"
 
   #模仿newyork的格式，category的属性没找到合适的,大概science比较合适。
@@ -1372,7 +1380,7 @@ sites:
         short_title: "Science Alert"
         description: "人気の最新 Science Alert 記事を日本語で閲覧する"
         keywords: "Science Alert最新レポート"
-  
+
   livescience:
     port: 8048
     archive: true
@@ -1400,7 +1408,7 @@ sites:
         short_title: "Live Science"
         description: "人気の最新 Live Science 記事を日本語で閲覧する"
         keywords: "Live Science最新レポート"
-        
+
   bearblog:
     port: 8049
     archive: true
@@ -1426,7 +1434,7 @@ sites:
         short_title: "Bear Blog トレンド"
         description: "人気の最新 Bear Blog トレンド 記事を日本語で閲覧する"
         keywords: "Bear Blog トレンド"
-        
+
   bigthink:
     port: 8046
     archive: true
@@ -1781,7 +1789,7 @@ sources:
         home_page_url: https://www.reddit.com/r/Bitcoin/
     type: reddit
     rules:
-      - type: topRatio 
+      - type: topRatio
         value: "0.3"
 
   - id: source-devto
@@ -2114,7 +2122,7 @@ sources:
   - id: source-google-china
     type: googlenews
     api:
-      url: https://news.google.com/rss/topics/CAAqIggKIhxDQkFTRHdvSkwyMHZNR1F3TlhjekVnSmxiaWdBUAE?hl=en-US&gl=US&ceid=US%3Aen 
+      url: https://news.google.com/rss/topics/CAAqIggKIhxDQkFTRHdvSkwyMHZNR1F3TlhjekVnSmxiaWdBUAE?hl=en-US&gl=US&ceid=US%3Aen
       name: Google News China
     rules:
       - type: limit
@@ -2148,7 +2156,7 @@ sources:
     type: rss
 
   - id: source-googleyahoofinance
-    api: 
+    api:
       url: https://news.google.com/rss/search?q=yahoo+finance&hl=en-US&gl=US&ceid=US%3Aen
       name: Google News Yahoo Finance
       home_page_url: https://news.google.com/search?q=yahoo+finance&hl=en-US&gl=US&ceid=US%3Aen
@@ -2308,7 +2316,7 @@ sources:
       name: Science Alert
       home_page_url: https://www.sciencealert.com/
     type: rss
-    
+
   - id: source-bigthink
     api:
       url: https://bigthink.com/feed/all
@@ -2327,7 +2335,7 @@ sources:
       name: Live Science
       home_page_url: https://www.livescience.com/
     type: rss
-  - id: source-bearblogtrending 
+  - id: source-bearblogtrending
     api:
       url: https://bearblog.dev/discover/feed/
       name: Bear Blog Trending
