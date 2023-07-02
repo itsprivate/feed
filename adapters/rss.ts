@@ -31,10 +31,9 @@ export default class rss extends Item<RSSItem> {
       this.originalItem["media:content"] &&
       this.originalItem["media:content"].length > 0
     ) {
-      return this
-        .originalItem["media:content"][
-          this.originalItem["media:content"].length - 1
-        ].url;
+      return this.originalItem["media:content"][
+        this.originalItem["media:content"].length - 1
+      ].url;
     } else {
       return undefined;
     }
@@ -54,16 +53,16 @@ export default class rss extends Item<RSSItem> {
   getTags(): string[] {
     let tags: string[] = [];
 
-    if (
-      this.originalItem.categories &&
-      Array.isArray(this.originalItem.categories)
-    ) {
-      this.originalItem.categories.forEach((item) => {
-        tags.push(item.label);
-      });
-    }
-    // unique
-    tags = [...new Set(tags)];
+    // if (
+    //   this.originalItem.categories &&
+    //   Array.isArray(this.originalItem.categories)
+    // ) {
+    //   this.originalItem.categories.forEach((item) => {
+    //     tags.push(item.label);
+    //   });
+    // }
+    // // unique
+    // tags = [...new Set(tags)];
     return tags;
   }
 }
