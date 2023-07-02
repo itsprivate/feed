@@ -483,7 +483,7 @@ sites:
   quora:
     port: 8012
     archive: true
-    hidden: true
+    hide: true
     priority: 102
     redirect: true
     category: Discuss
@@ -545,7 +545,7 @@ sites:
   nytimes:
     port: 8014
     archive: true
-    hidden: true
+    hide: true
     category: News
     redirect: true
     priority: 28
@@ -579,7 +579,7 @@ sites:
     archive: true
     category: News
     redirect: true
-    hidden: true
+    hide: true
     priority: 31
     tags:
       - depth
@@ -611,7 +611,7 @@ sites:
     archive: true
     category: News
     redirect: true
-    hidden: true
+    hide: true
     priority: 23
     related:
       - economistnew
@@ -984,7 +984,7 @@ sites:
     port: 8031
     priority: 18
     archive: true
-    hidden: true
+    hide: true
     category: Finance
     label: newest_label
     related:
@@ -992,7 +992,6 @@ sites:
     tags:
       - news
       - finance
-      - www
       - source-twitter-bloomberg
     translations:
       "zh-Hans":
@@ -1015,9 +1014,9 @@ sites:
     priority: 19
     archive: true
     category: News
+    hide: true
     tags:
       - news
-      - www
       - source-specindex
     translations:
       "zh-Hans":
@@ -1092,7 +1091,7 @@ sites:
     port: 8035
     priority: 32
     archive: true
-    hidden: true
+    hide: true
     category: News
     related:
       - reutersnew
@@ -1117,7 +1116,7 @@ sites:
         keywords: "レイチャーズ"
   bbc:
     port: 8036
-    priority: 33
+    priority: 20
     archive: true
     category: News
     tags:
@@ -1166,7 +1165,7 @@ sites:
         short_title: グーグルニュース
   politico:
     port: 8038
-    priority: 29
+    priority: 40
     archive: true
     category: News
     tags:
@@ -1192,7 +1191,7 @@ sites:
   businessinsider:
     port: 8039
     priority: 32
-    hidden: true
+    hide: true
     archive: true
     category: Finance
     tags:
@@ -1273,7 +1272,7 @@ sites:
         description: "人気のルーターズ最新 の投稿"
         keywords: "ルーターズ最新"
   economistnew:
-    port: 8043
+    port: 8042
     archive: false
     category: Finance
     hide: false
@@ -1465,6 +1464,7 @@ sites:
     archive: true
     category: News
     redirect: false
+    priority: 19
     tags:
       - news
       - source-theatlantic

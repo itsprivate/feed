@@ -624,6 +624,7 @@
     "quora": {
       "port": 8012,
       "archive": true,
+      "hide": true,
       "priority": 102,
       "redirect": true,
       "category": "Discuss",
@@ -701,6 +702,7 @@
     "nytimes": {
       "port": 8014,
       "archive": true,
+      "hide": true,
       "category": "News",
       "redirect": true,
       "priority": 28,
@@ -742,6 +744,7 @@
       "archive": true,
       "category": "News",
       "redirect": true,
+      "hide": true,
       "priority": 31,
       "tags": [
         "depth",
@@ -781,6 +784,7 @@
       "archive": true,
       "category": "News",
       "redirect": true,
+      "hide": true,
       "priority": 23,
       "related": [
         "economistnew"
@@ -1313,6 +1317,7 @@
       "port": 8031,
       "priority": 18,
       "archive": true,
+      "hide": true,
       "category": "Finance",
       "label": "newest_label",
       "related": [
@@ -1321,7 +1326,6 @@
       "tags": [
         "news",
         "finance",
-        "www",
         "source-twitter-bloomberg"
       ],
       "translations": {
@@ -1356,9 +1360,9 @@
       "priority": 19,
       "archive": true,
       "category": "News",
+      "hide": true,
       "tags": [
         "news",
-        "www",
         "source-specindex"
       ],
       "translations": {
@@ -1467,6 +1471,7 @@
       "port": 8035,
       "priority": 32,
       "archive": true,
+      "hide": true,
       "category": "News",
       "related": [
         "reutersnew"
@@ -1504,7 +1509,7 @@
     },
     "bbc": {
       "port": 8036,
-      "priority": 33,
+      "priority": 20,
       "archive": true,
       "category": "News",
       "tags": [
@@ -1577,7 +1582,7 @@
     },
     "politico": {
       "port": 8038,
-      "priority": 29,
+      "priority": 40,
       "archive": true,
       "category": "News",
       "tags": [
@@ -1615,6 +1620,7 @@
     "businessinsider": {
       "port": 8039,
       "priority": 32,
+      "hide": true,
       "archive": true,
       "category": "Finance",
       "tags": [
@@ -1655,7 +1661,7 @@
       "archive": false,
       "category": "Finance",
       "label": "newest_label",
-      "hide": true,
+      "hide": false,
       "related": [
         "bloomberg"
       ],
@@ -1695,7 +1701,7 @@
       "port": 8041,
       "archive": false,
       "category": "News",
-      "hide": true,
+      "hide": false,
       "deduplicate": "and",
       "related": [
         "reuters"
@@ -1735,7 +1741,8 @@
       "port": 8042,
       "archive": false,
       "category": "Finance",
-      "hide": true,
+      "hide": false,
+      "priority": 16,
       "related": [
         "economist"
       ],
@@ -2003,6 +2010,7 @@
       "archive": true,
       "category": "News",
       "redirect": false,
+      "priority": 19,
       "tags": [
         "news",
         "source-theatlantic"
