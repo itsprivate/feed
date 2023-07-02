@@ -356,6 +356,9 @@ export default async function fetchSources(
         sourceType === "thechinaproject" ||
         sourceType === "spectator"
       ) {
+        // continue
+        continue;
+        // mastondon
         const bearerToken = Deno.env.get("TWITTER_BEARER_TOKEN");
         if (!bearerToken) {
           throw new Error("TWITTER_BEARER_TOKEN is not set");

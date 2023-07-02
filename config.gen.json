@@ -2042,6 +2042,44 @@
         }
       }
     },
+    "arstechnica": {
+      "port": 8048,
+      "archive": true,
+      "category": "Tech",
+      "redirect": false,
+      "priority": 24,
+      "tags": [
+        "tech",
+        "source-arstechnica-rss",
+        "www"
+      ],
+      "translations": {
+        "zh-Hans": {
+          "title": "Ars Technica",
+          "description": "用中文浏览 Ars Technica 最新报道",
+          "keyworkds": "Ars Technica,自然,科学",
+          "short_title": "Ars Technica"
+        },
+        "en": {
+          "title": "Ars Technica",
+          "short_title": "Ars Technica Newest",
+          "description": "See what's buzzing on Ars Technica in your native language",
+          "keywords": "Ars Technica Newest"
+        },
+        "ja": {
+          "title": "Ars Technica 最新レポート",
+          "short_title": "Ars Technica",
+          "description": "人気の最新 Ars Technica 記事を日本語で閲覧する",
+          "keywords": "Ars Technica最新レポート"
+        },
+        "zh-Hant": {
+          "title": "Ars Technica",
+          "description": "用中文瀏覽 Ars Technica 最新報道",
+          "keyworkds": "Ars Technica,自然,科學",
+          "short_title": "Ars Technica"
+        }
+      }
+    },
     "hnnew": {
       "port": 8018,
       "redirect": true,
@@ -3408,6 +3446,15 @@
         "url": "https://www.tbray.org/ongoing/ongoing.atom",
         "name": "Tim Bray",
         "home_page_url": "https://www.tbray.org/ongoing/"
+      }
+    },
+    {
+      "id": "source-arstechnica-rss",
+      "type": "rss",
+      "api": {
+        "url": "https://feeds.arstechnica.com/arstechnica/index",
+        "name": "Ars Technica",
+        "home_page_url": "https://arstechnica.com/"
       }
     }
   ]
