@@ -38,17 +38,10 @@ export default async function main() {
     ]);
   } else if (args.build) {
     // only build stage
-    stage = stage.concat([
-      "build_site",
-      "build_index_site",
-    ]);
+    stage = stage.concat(["build_site", "build_index_site"]);
   } else if (args.serve) {
     // only build stage
-    stage = stage.concat([
-      "build_site",
-      "build_index_site",
-      "serve_site",
-    ]);
+    stage = stage.concat(["build_site", "build_index_site", "serve_site"]);
   } else {
     stage = stage.concat([
       "fetch",
@@ -70,10 +63,10 @@ export default async function main() {
 
   let sites: string[] | undefined;
   if (args.stage) {
-    stage = (args.stage).split(",");
+    stage = args.stage.split(",");
   }
   if (args["extra-stage"]) {
-    const extraStages = (args["extra-stage"]).split(",");
+    const extraStages = args["extra-stage"].split(",");
     stage = stage.concat(extraStages);
   }
   if (args.site) {
@@ -173,13 +166,29 @@ export default async function main() {
     Array.isArray(siteIdentifiers) &&
     siteIdentifiers.length > 0
   ) {
+    let portMap: Record<number, string> = {};
     for (const siteIdentifier of siteIdentifiers) {
       const siteConfig = sitesMap[siteIdentifier];
-      serveSite(siteIdentifier, siteConfig.port || 8000);
+      const port = siteConfig.port || 8000;
+      if (portMap[port]) {
+        throw new Error(
+          `port ${port} is already used by site ${portMap[port]}`
+        );
+      }
+      portMap[port] = siteIdentifier;
+      serveSite(siteIdentifier, port);
     }
 
     if (stage.includes("build_index_site")) {
-      serveSite("www", config.sites.www.port || 9001);
+      const port = config.sites.www.port || 9001;
+      if (portMap[port]) {
+        throw new Error(
+          `port ${port} is already used by site ${portMap[port]}`
+        );
+      }
+      portMap[port] = "www";
+
+      serveSite("www", port);
     }
   } else {
     log.info("skip serve_site stage");

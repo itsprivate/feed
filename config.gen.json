@@ -1893,7 +1893,7 @@
       }
     },
     "livescience": {
-      "port": 8048,
+      "port": 8049,
       "archive": true,
       "category": "Tech",
       "redirect": false,
@@ -1933,7 +1933,7 @@
       }
     },
     "bearblog": {
-      "port": 8049,
+      "port": 8050,
       "archive": true,
       "category": "Featured",
       "redirect": false,

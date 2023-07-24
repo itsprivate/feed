@@ -1381,7 +1381,7 @@ sites:
         keywords: "Science Alert最新レポート"
 
   livescience:
-    port: 8048
+    port: 8049
     archive: true
     category: Tech
     redirect: false
@@ -1409,7 +1409,7 @@ sites:
         keywords: "Live Science最新レポート"
 
   bearblog:
-    port: 8049
+    port: 8050
     archive: true
     category: Featured
     redirect: false
