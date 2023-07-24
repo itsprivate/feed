@@ -12,8 +12,13 @@ export default class rss extends Item<RSSItem> {
   }
   getTitle(): string {
     const title = this.originalItem.title.value as string;
-
-    return title;
+    // remove the tag, if any
+    try {
+      const result = title.replace(/<[^>]*>/g, "");
+      return result;
+    } catch (e) {
+      return title;
+    }
   }
   getTitlePrefix(): string {
     return "";
