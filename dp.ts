@@ -3,6 +3,7 @@ import { isMock } from "./util.ts";
 import { delay } from "./deps.ts";
 import { toZhHant } from "./to-zh-hant.ts";
 import { Language } from "./d/interface.ts";
+import { request } from "./util.ts";
 
 const langMap: [Language, string][] = [
   ["auto", "auto"],
@@ -20,7 +21,7 @@ const langMap: [Language, string][] = [
   ["ru", "RU"],
   ["tr", "tr"],
 ];
-const d = new DPro(Deno.env.get("IM_DEEPL_AUTH_KEY"));
+// const d = new DPro(Deno.env.get("IM_DEEPL_AUTH_KEY"));
 
 export default class Translation {
   /** Translator lang to custom lang */
@@ -28,16 +29,15 @@ export default class Translation {
 
   /** Custom lang to translator lang */
   private static readonly langMapReverse = new Map(
-    langMap.map(([translatorLang, lang]) => [lang, translatorLang]),
+    langMap.map(([translatorLang, lang]) => [lang, translatorLang])
   );
 
-  constructor() {
-  }
+  constructor() {}
 
   async translate(
     sentence: string,
     sourceLanguage: string,
-    targetLanguages: string[],
+    targetLanguages: string[]
   ): Promise<Record<string, string>> {
     if (isMock()) {
       const response: Record<string, string> = {};
@@ -49,25 +49,42 @@ export default class Translation {
     // console.log("sourceLanguage", sourceLanguage);
     // console.log("targetLanguages", targetLanguages);
     const results: Record<string, string> = {};
-    for (
-      const targetLanguage of targetLanguages.filter((lang) =>
-        lang !== "zh-Hant"
-      )
-    ) {
+    for (const targetLanguage of targetLanguages.filter(
+      (lang) => lang !== "zh-Hant"
+    )) {
       await delay(20);
       // @ts-ignore: it's ok
-      const sourceLanguageRemote = Translation.langMap.get(sourceLanguage) ||
-        sourceLanguage;
+      const sourceLanguageRemote =
+        // @ts-ignore: it's ok
+        Translation.langMap.get(sourceLanguage) || sourceLanguage;
       // @ts-ignore: it's ok
-      const targetLanguageRemote = Translation.langMap.get(targetLanguage) ||
-        targetLanguage;
+      const targetLanguageRemote =
+        // @ts-ignore: it's ok
+        Translation.langMap.get(targetLanguage) || targetLanguage;
 
-      const result = await d.translateText(
-        sentence,
-        sourceLanguageRemote as Language,
-        targetLanguageRemote as Language,
-      );
-      results[targetLanguage] = result.text;
+      // const result = await d.translateText(
+      //   sentence,
+      //   sourceLanguageRemote as Language,
+      //   targetLanguageRemote as Language
+      // );
+
+      const res = await fetch("https://api2.immersivetranslate.com/deepl", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          text: [sentence],
+          source_lang: sourceLanguageRemote,
+          target_lang: targetLanguageRemote,
+        }),
+      });
+      const result = await res.json();
+      if (res.ok) {
+        results[targetLanguage] = result.text;
+      } else {
+        throw new Error(JSON.stringify(result));
+      }
     }
     if (results["zh-Hans"]) {
       results["zh-Hant"] = toZhHant(results["zh-Hans"]);
