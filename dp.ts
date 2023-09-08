@@ -68,20 +68,30 @@ export default class Translation {
       //   targetLanguageRemote as Language
       // );
 
-      const res = await fetch("https://api2.immersivetranslate.com/deepl", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          text: [sentence],
-          source_lang: sourceLanguageRemote,
-          target_lang: targetLanguageRemote,
-        }),
-      });
+      const res = await fetch(
+        "https://api2.immersivetranslate.com/deepl/translate",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            token: Deno.env.get("IM_DEEPL_TOKEN")!,
+          },
+          body: JSON.stringify({
+            text: [sentence],
+            source_lang: sourceLanguageRemote,
+            target_lang: targetLanguageRemote,
+          }),
+        }
+      );
       const result = await res.json();
-      if (res.ok) {
-        results[targetLanguage] = result.text;
+      if (
+        res.ok &&
+        result &&
+        result.translations &&
+        result.translations[0] &&
+        result.translations[0].text
+      ) {
+        results[targetLanguage] = result.translations[0].text;
       } else {
         throw new Error(JSON.stringify(result));
       }
