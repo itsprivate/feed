@@ -35,6 +35,23 @@ export default async function serveSite(port = 8000) {
     "./templates/404.html",
   );
   const handler = async (request: Request): Promise<Response> => {
+    // is robots.txt
+    const urlObj = new URL(request.url);
+    const pathname = urlObj.pathname;
+    if (pathname === "/robots.txt") {
+      return new Response("User-agent: *\nDisallow: /", {
+        headers: {
+          "content-type": "text/plain; charset=utf-8",
+        },
+      });
+    }
+    const userAgent = request.headers.get("user-agent") || "";
+
+    // 检查 User-Agent 是否包含特定的机器人标识
+    if (userAgent.includes("bot")) {
+      return new Response("bot is not allowed", { status: 403 });
+    }
+
     if (addTrailSlash(request.url)) {
       return addTrailSlash(request.url)!;
     }
@@ -191,9 +208,7 @@ export default async function serveSite(port = 8000) {
       return notfound(notfoundTemplateString, config, filePath);
     }
   };
-  log.info(
-    `HTTP webserver running. Access it at: http://localhost:${port}/`,
-  );
+  log.info(`HTTP webserver running. Access it at: http://localhost:${port}/`);
   serve(handler, { port });
 }
 
