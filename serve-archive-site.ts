@@ -50,8 +50,11 @@ export default async function serveSite(port = 8000) {
     // 检查 User-Agent 是否包含特定的机器人标识
     if (userAgent.includes("bot")) {
       return new Response("bot is not allowed", { status: 403 });
+    } else if (userAgent.includes("spider")) {
+      return new Response("bot is not allowed", { status: 403 });
+    } else if (!userAgent) {
+      return new Response("bot is not allowed", { status: 403 });
     }
-
     if (addTrailSlash(request.url)) {
       return addTrailSlash(request.url)!;
     }
