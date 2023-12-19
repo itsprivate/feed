@@ -403,11 +403,11 @@
       <div class="card-inner">
         {{#_is_lite}}
         <div class="mb mt0 break-word">
-          <a class="p-name entry-title bold no-underline u-url" href="{{{url}}}">{{#order}}<span>{{ . }}. </span>{{/order}}{{{title}}}</a>{{#_sensitive}}<span>&nbsp;(</span><span class="nsfw">NSFW</span><span>)</span>{{/_sensitive}}{{#_links}}&nbsp;<a class="no-underline muted xsmall" href="{{{url}}}">{{{name}}}</a>{{/_links}}{{#_tag_links}}&nbsp;<a class="no-underline muted xsmall" href="{{{url}}}">#{{{name}}}</a>{{/_tag_links}}</div>
+          <a target="_blank" class="p-name entry-title bold no-underline u-url" href="{{{url}}}">{{#order}}<span>{{ . }}. </span>{{/order}}{{{title}}}</a>{{#_sensitive}}<span>&nbsp;(</span><span class="nsfw">NSFW</span><span>)</span>{{/_sensitive}}{{#_links}}&nbsp;<a class="no-underline muted xsmall" target="_blank" href="{{{url}}}">{{{name}}}</a>{{/_links}}{{#_tag_links}}&nbsp;<a class="no-underline muted xsmall" href="{{{url}}}">#{{{name}}}</a>{{/_tag_links}}</div>
         {{/_is_lite}}
         {{^_is_lite}}
         <div class="mb mt0">
-          <a class="p-name entry-title bold no-underline u-url" href="{{{url}}}">{{#order}}<span>{{ . }}. </span>{{/order}}{{{title}}}</a>{{#_sensitive}}<span>&nbsp;(</span><span class="nsfw">NSFW</span><span>)</span>{{/_sensitive}}
+          <a class="p-name entry-title bold no-underline u-url" href="{{{url}}}"  target="_blank">{{#order}}<span>{{ . }}. </span>{{/order}}{{{title}}}</a>{{#_sensitive}}<span>&nbsp;(</span><span class="nsfw">NSFW</span><span>)</span>{{/_sensitive}}
         </div>
         {{/_is_lite}}
         <div class="no-underline p-summary entry-summary secondary pre-line small italic">{{{content_html}}}</div>

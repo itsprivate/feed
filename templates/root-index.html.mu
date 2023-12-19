@@ -491,7 +491,7 @@
                       <div class="article h-entry hentry card">
                         <div class="card-inner"> 
                         <div class="mb-sm mt0">
-                          <a class="p-name entry-title bold small no-underline u-url" href="{{{url}}}">{{#order}}<span>{{ . }}. </span>{{/order}}{{{title}}}</a>{{#_sensitive}}<span>&nbsp;(</span><span class="nsfw small">NSFW</span><span>)</span>{{/_sensitive}}{{#_links}}&nbsp;<a class="no-underline muted small" href="{{{url}}}">{{{name}}}</a>{{/_links}}</div>
+                          <a class="p-name entry-title bold small no-underline u-url"  target="_blank" href="{{{url}}}">{{#order}}<span>{{ . }}. </span>{{/order}}{{{title}}}</a>{{#_sensitive}}<span>&nbsp;(</span><span class="nsfw small">NSFW</span><span>)</span>{{/_sensitive}}{{#_links}}&nbsp;<a  target="_blank" class="no-underline muted small" href="{{{url}}}">{{{name}}}</a>{{/_links}}</div>
                         <div class="no-underline p-summary entry-summary secondary pre-line small italic">{{{content_html}}}</div>
                         </div>
                       </div>
