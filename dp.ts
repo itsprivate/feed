@@ -29,7 +29,7 @@ export default class Translation {
 
   /** Custom lang to translator lang */
   private static readonly langMapReverse = new Map(
-    langMap.map(([translatorLang, lang]) => [lang, translatorLang])
+    langMap.map(([translatorLang, lang]) => [lang, translatorLang]),
   );
 
   constructor() {}
@@ -37,7 +37,7 @@ export default class Translation {
   async translate(
     sentence: string,
     sourceLanguage: string,
-    targetLanguages: string[]
+    targetLanguages: string[],
   ): Promise<Record<string, string>> {
     if (isMock()) {
       const response: Record<string, string> = {};
@@ -50,7 +50,7 @@ export default class Translation {
     // console.log("targetLanguages", targetLanguages);
     const results: Record<string, string> = {};
     for (const targetLanguage of targetLanguages.filter(
-      (lang) => lang !== "zh-Hant"
+      (lang) => lang !== "zh-Hant",
     )) {
       await delay(20);
       // @ts-ignore: it's ok
@@ -81,17 +81,15 @@ export default class Translation {
             source_lang: sourceLanguageRemote,
             target_lang: targetLanguageRemote,
           }),
-        }
+        },
       );
       const result = await res.json();
-      if (
-        res.ok &&
-        result &&
-        result.translations &&
-        result.translations[0] &&
-        result.translations[0].text
-      ) {
-        results[targetLanguage] = result.translations[0].text;
+      if (res.ok && result && result.translations && result.translations[0]) {
+        if (result.translations[0].text) {
+          results[targetLanguage] = result.translations[0].text;
+        } else {
+          results[targetLanguage] = sentence;
+        }
       } else {
         throw new Error(JSON.stringify(result));
       }
