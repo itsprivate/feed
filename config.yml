@@ -1221,8 +1221,6 @@ sites:
     category: Finance
     label: newest_label
     hide: false
-    related:
-      - bloomberg
     tags:
       - news
       - finance
