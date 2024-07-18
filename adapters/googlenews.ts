@@ -69,8 +69,8 @@ export default class googlenews extends RSS {
       id = await sha1(title);
       this.id = id;
     }
-    // this.url = await getRedirectedUrlDirectly(super.getUrl());
-    this.url = await getGoogleNewsRedirectUrl(super.getUrl());
+    this.url = await getRedirectedUrlDirectly(super.getUrl());
+    // this.url = await getGoogleNewsRedirectUrl(super.getUrl());
     this.id = await sha1(this.url);
   }
 }
@@ -84,7 +84,8 @@ async function getGoogleNewsRedirectUrl(url: string): Promise<string> {
   if (realUrl) {
     return realUrl;
   } else {
-    throw new Error("Can't get redirect url from google news");
+    return url;
+    // throw new Error("Can't get redirect url from google news");
   }
 }
 
