@@ -26,6 +26,9 @@ export default class googlenews extends RSS {
 
     return [];
   }
+  getImage() {
+    return null;
+  }
   getTitleSuffix(): string {
     const title = super.getTitle();
     const latestIndex = title.lastIndexOf(" - ");
