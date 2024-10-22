@@ -27,7 +27,7 @@ builddev:
 # only build site
 .Phony: prod-build
 prod-build:
-	 PROD=1 deno run -A main.ts --build
+	 PROD=1 deno run --v8-flags="--max-old-space-size=8192" -A main.ts --build
 .Phony: prod-buildsite
 prod-buildsite:
 	 PROD=1 deno run -A main.ts --build --site ${site}
