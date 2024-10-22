@@ -41,10 +41,12 @@ export default class ph extends Item<PHItem> {
     const author = node.user.name;
     const authorUrl = node.user.url;
     if (author && authorUrl) {
-      return [{
-        name: author,
-        url: authorUrl,
-      }];
+      return [
+        {
+          name: author,
+          url: authorUrl,
+        },
+      ];
     }
     return [];
   }
@@ -63,8 +65,8 @@ export default class ph extends Item<PHItem> {
     const node = this.originalItem.node;
     let url = "";
     if (node.media && node.media.length > 0) {
-      const imageItem = node.media.find((item) =>
-        item.type === `image` && item.url
+      const imageItem = node.media.find(
+        (item) => item.type === `image` && item.url,
       );
 
       if (imageItem) {
@@ -89,7 +91,8 @@ export default class ph extends Item<PHItem> {
         const urlObj = new URL(url);
         if (
           urlObj.hostname === `www.youtube.com` ||
-          urlObj.hostname === `youtu.be` || urlObj.hostname === `youtube.com`
+          urlObj.hostname === `youtu.be` ||
+          urlObj.hostname === `youtube.com`
         ) {
           // transform url to https://www.youtube.com/watch?v=nQCMDPWON5A&t=43s
           if (urlObj.hostname === `youtu.be`) {
@@ -100,7 +103,10 @@ export default class ph extends Item<PHItem> {
             });
             const urlMatch = urlPattern.exec(url);
             if (urlMatch) {
-              urlObj.searchParams.set(`v`, urlMatch.pathname.groups.id);
+              urlObj.searchParams.set(
+                `v`,
+                urlMatch.pathname.groups.id as string,
+              );
             } else {
               throw new Error(`cannot parse youtube url: ${url}`);
             }
@@ -111,7 +117,7 @@ export default class ph extends Item<PHItem> {
             });
             const result = urlPattern.exec(url);
             if (result) {
-              urlObj.searchParams.set(`v`, result.pathname.groups.id);
+              urlObj.searchParams.set(`v`, result.pathname.groups.id as string);
               urlObj.pathname = `/watch`;
             }
             if (urlObj.hostname === "youtube.com") {

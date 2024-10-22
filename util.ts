@@ -1165,9 +1165,9 @@ export function parseArchiveUrl(
     throw new NotFound("Not found matached route");
   }
   const parsedPathnameGroups = parsedRoute.pathname.groups;
-  const siteIdentifier = parsedPathnameGroups.siteIdentifier;
-  const scope = parsedPathnameGroups.scope;
-  const value = parsedPathnameGroups[0];
+  const siteIdentifier = parsedPathnameGroups.siteIdentifier as string;
+  const scope = parsedPathnameGroups.scope as string;
+  const value = parsedPathnameGroups[0] as string;
   let itemsFilePath = "";
   let pageType = "index.html";
   let id = "";
