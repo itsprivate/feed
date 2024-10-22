@@ -41,13 +41,13 @@ jobs:
         uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version: 20
           cache: "npm"
       - name: install wrangler
         run: npm install -g wrangler
       - uses: denoland/setup-deno@v1
         with:
-          deno-version: v1.31.1
+          deno-version: v1.46
       - uses: actions/cache@v3
         with:
           path: |
