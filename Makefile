@@ -11,7 +11,7 @@ source-all:
 
 .Phony: prod-source
 prod-source:
-	PROD=1 deno run --v8-flags="--max-old-space-size=8192"  -A main.ts --source
+	PROD=1 deno run --v8-flags="--max-old-space-size=14288"  -A main.ts --source
 .Phony: prod-sourcesite
 prod-sourcesite:
 	PROD=1 deno run -A main.ts --source --site ${site}
