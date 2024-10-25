@@ -143,7 +143,7 @@ archivesite:
 
 .Phony: tr
 tr:
-	deno run -A main.ts --stage translate --site wsj
+	deno run -A main.ts --stage translate --site devfeed
 
 .Phony: trsite
 trsite:
