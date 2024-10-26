@@ -57,10 +57,7 @@ export default function feedToHTML(
   if (!version) {
     throw new Error(`version code ${versionCode} not found`);
   }
-  const currentTranslations = getGeneralTranslations(
-    languageCode,
-    config,
-  );
+  const currentTranslations = getGeneralTranslations(languageCode, config);
   feedJson = {
     ...currentTranslations,
     ...feedJson,
@@ -103,42 +100,36 @@ export default function feedToHTML(
   });
   // related sites is has common tags sites
   let otherSites: string[] = [];
-  let relatedSites = getFeedSiteIdentifiers(config).concat([
-    indexSubDomain,
-    "picks",
-  ])
-    .filter(
-      (site) => {
-        const siteTags = sitesMap[site].tags;
+  let relatedSites = getFeedSiteIdentifiers(config)
+    .concat([indexSubDomain, "picks"])
+    .filter((site) => {
+      const siteTags = sitesMap[site].tags;
 
-        const currentSiteTags = feedJson._site_tags;
-        if (sitesMap[site].dev === true) {
-          return false;
-        }
-        // ignore self
-        if (site === siteIdentifier) {
-          return false;
-        }
+      const currentSiteTags = feedJson._site_tags;
+      if (sitesMap[site].dev === true) {
+        return false;
+      }
+      // ignore self
+      if (site === siteIdentifier) {
+        return false;
+      }
 
-        if (siteTags && siteTags.includes("all")) {
+      if (siteTags && siteTags.includes("all")) {
+        return true;
+      }
+      if (siteTags && currentSiteTags) {
+        const isRelated = siteTags.some((tag) => currentSiteTags.includes(tag));
+        if (isRelated) {
           return true;
-        }
-        if (siteTags && currentSiteTags) {
-          const isRelated = siteTags.some((tag) =>
-            currentSiteTags.includes(tag)
-          );
-          if (isRelated) {
-            return true;
-          } else {
-            otherSites.push(site);
-            return false;
-          }
         } else {
           otherSites.push(site);
           return false;
         }
-      },
-    );
+      } else {
+        otherSites.push(site);
+        return false;
+      }
+    });
   // resort ,self is no.1
   // relatedSites.sort((a, b) => {
   //   if (a === siteIdentifier) {
@@ -154,8 +145,8 @@ export default function feedToHTML(
   relatedSites = resortSites(siteIdentifier, relatedSites, config);
   otherSites = resortSites(siteIdentifier, otherSites, config);
   //@ts-ignore: add meta data
-  feedJson._related_sites = relatedSites.map(
-    (item, index) => {
+  feedJson._related_sites = relatedSites
+    .map((item, index) => {
       const siteTranslations = getCurrentTranslations(
         item,
         language.code,
@@ -171,11 +162,7 @@ export default function feedToHTML(
         config,
       );
       if (item === indexSubDomain) {
-        url = siteIdentifierToUrl(
-          item,
-          "/" + language.prefix,
-          config,
-        );
+        url = siteIdentifierToUrl(item, "/" + language.prefix, config);
       }
       if (siteTranslations.url) {
         url = siteTranslations.url;
@@ -187,9 +174,25 @@ export default function feedToHTML(
         url,
         is_last: index === relatedSites.length - 1,
         active: item === siteIdentifier,
+        siteIdentifier: item,
       };
-    },
-  );
+    })
+    .sort((a, b) => {
+      // siteIdentifier == www, is always first
+      if (a.siteIdentifier === indexSubDomain) {
+        return -1;
+      }
+      if (b.siteIdentifier === indexSubDomain) {
+        return 1;
+      }
+      if (a.siteIdentifier === siteIdentifier) {
+        return -1;
+      }
+      if (b.siteIdentifier === siteIdentifier) {
+        return 1;
+      }
+      return 0;
+    });
 
   const siteTranslations = getCurrentTranslations(
     siteIdentifier,
@@ -228,28 +231,26 @@ export default function feedToHTML(
   });
   // add advice link
   //@ts-ignore: add meta data
-  feedJson._other_sites = otherSites.map(
-    (item, index) => {
-      const siteTranslations = getCurrentTranslations(
-        item,
-        language.code,
-        config,
-      );
-      const siteShortName = siteTranslations.short_title;
-      const siteName = siteTranslations.title;
+  feedJson._other_sites = otherSites.map((item, index) => {
+    const siteTranslations = getCurrentTranslations(
+      item,
+      language.code,
+      config,
+    );
+    const siteShortName = siteTranslations.short_title;
+    const siteName = siteTranslations.title;
 
-      return {
-        //@ts-ignore: add meta data
-        name: siteShortName || siteName,
-        url: siteIdentifierToUrl(
-          item,
-          "/" + language.prefix + version.prefix,
-          config,
-        ),
-        is_last: false,
-      };
-    },
-  );
+    return {
+      //@ts-ignore: add meta data
+      name: siteShortName || siteName,
+      url: siteIdentifierToUrl(
+        item,
+        "/" + language.prefix + version.prefix,
+        config,
+      ),
+      is_last: false,
+    };
+  });
   // @ts-ignore: add meta data
   feedJson._other_sites.push({
     name: currentTranslations.advice_label,
@@ -265,13 +266,7 @@ export default function feedToHTML(
     feedJson._tag_list = feedJson._tags.map((tag, index) => {
       return {
         name: tag,
-        url: tagToUrl(
-          tag,
-          siteIdentifier,
-          language,
-          version,
-          config,
-        ),
+        url: tagToUrl(tag, siteIdentifier, language, version, config),
         is_last: index === feedJson._tags!.length - 1,
       };
     });
@@ -282,13 +277,7 @@ export default function feedToHTML(
     feedJson._archive_list = feedJson._archive.map((item, index) => {
       return {
         name: item,
-        url: archiveToUrl(
-          item,
-          siteIdentifier,
-          language,
-          version,
-          config,
-        ),
+        url: archiveToUrl(item, siteIdentifier, language, version, config),
         is_last: index === feedJson._archive!.length - 1,
       };
     });
@@ -300,13 +289,7 @@ export default function feedToHTML(
     feedJson._issue_list = feedJson._issues.map((item, index) => {
       return {
         name: item,
-        url: issueToUrl(
-          item,
-          siteIdentifier,
-          language,
-          version,
-          config,
-        ),
+        url: issueToUrl(item, siteIdentifier, language, version, config),
         is_last: index === feedJson._issues!.length - 1,
       };
     });
