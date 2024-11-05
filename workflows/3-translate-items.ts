@@ -61,6 +61,11 @@ export default async function translateItems(options: RunOptions) {
     for (const siteIdentifier of targetSiteIdentifiers) {
       const currentItemsPath = getCurrentItemsFilePath(siteIdentifier);
       const siteConfig = config.sites[siteIdentifier];
+      // is stop, skip
+      if (siteConfig.stop) {
+        continue;
+      }
+
       let currentItemsJson: ItemsJson = {
         items: {},
       };

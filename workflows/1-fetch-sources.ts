@@ -38,7 +38,7 @@ import log from "../log.ts";
 import fetchPHData from "../sources/fetch-ph.ts";
 import { getTweets as fetchTwitterV2Data } from "../sources/fetch-twitter.ts";
 export default async function fetchSources(
-  options: RunOptions
+  options: RunOptions,
 ): Promise<{ postTasks: Task[] }> {
   const config = options.config;
   const sitesMap = config.sites;
@@ -85,6 +85,10 @@ export default async function fetchSources(
 
   for (const siteIdentifier of siteIdentifiers) {
     const siteConfig = sitesMap[siteIdentifier];
+    // is stop, skip
+    if (siteConfig.stop) {
+      continue;
+    }
     const siteIsOnlyDev = siteConfig.dev && !isDev();
     const siteTags = siteConfig.tags || [];
     const siteSources: Source[] = [];
@@ -133,7 +137,7 @@ export default async function fetchSources(
         }
         for (const key of currentItemsKeys) {
           const itemInstance = new SourceItemAdapter(
-            currentItemsJson.items[key]
+            currentItemsJson.items[key],
           );
           const cachedKeys = itemInstance.getCachedKeys();
           for (const cachedKey of cachedKeys) {
@@ -157,7 +161,7 @@ export default async function fetchSources(
     if (entry.isFile && entry.name.endsWith(".json")) {
       const siteRelativePath = path.relative(
         getDataTranslatedPath(),
-        entry.path
+        entry.path,
       );
       const siteIdentifier = getSiteIdentifierByRelativePath(siteRelativePath);
       const fileContent = await readJSONFile(entry.path);
@@ -220,12 +224,12 @@ export default async function fetchSources(
           const aKey = path.basename(a).replace(/\.json$/, "");
           const aParsed = parseItemIdentifierWithTime(aKey);
           const aNumber = Number(
-            `${aParsed.year}${aParsed.month}${aParsed.day}${aParsed.hour}${aParsed.minute}${aParsed.second}${aParsed.millisecond}`
+            `${aParsed.year}${aParsed.month}${aParsed.day}${aParsed.hour}${aParsed.minute}${aParsed.second}${aParsed.millisecond}`,
           );
           const bKey = path.basename(b).replace(/\.json$/, "");
           const bParsed = parseItemIdentifierWithTime(bKey);
           const bNumber = Number(
-            `${bParsed.year}${bParsed.month}${bParsed.day}${bParsed.hour}${bParsed.minute}${bParsed.second}${bParsed.millisecond}`
+            `${bParsed.year}${bParsed.month}${bParsed.day}${bParsed.hour}${bParsed.minute}${bParsed.second}${bParsed.millisecond}`,
           );
           return bNumber - aNumber;
         });
@@ -249,7 +253,7 @@ export default async function fetchSources(
     for (const [key, paths] of currentMap) {
       for (const p of paths) {
         const parsed = parseItemIdentifierWithTime(
-          path.basename(p).replace(/\.json$/, "")
+          path.basename(p).replace(/\.json$/, ""),
         );
         const parsedDate = new Date(
           Date.UTC(
@@ -259,8 +263,8 @@ export default async function fetchSources(
             Number(parsed.hour),
             Number(parsed.minute),
             Number(parsed.second),
-            Number(parsed.millisecond)
-          )
+            Number(parsed.millisecond),
+          ),
         );
         const now = new Date();
         const diff = now.getTime() - parsedDate.getTime();
@@ -280,7 +284,7 @@ export default async function fetchSources(
 
   // unique filteredSources
   filteredSources = Array.from(
-    new Set(filteredSources.map((item) => item.id))
+    new Set(filteredSources.map((item) => item.id)),
   ).map((id) => sourcesMap.get(id)!);
   let sourceOrder = 0;
   let itemOrder = 0;
@@ -392,7 +396,7 @@ export default async function fetchSources(
                   resolve(tweets);
                 }
                 reject(error);
-              }
+              },
             );
           });
         } catch (e) {
@@ -483,11 +487,11 @@ export default async function fetchSources(
       }
 
       log.info(
-        `${sourceOrder}/${filteredSources.length} ${sourceId} fetched ${originalItems.length} raw items from ${sourceUrl} `
+        `${sourceOrder}/${filteredSources.length} ${sourceId} fetched ${originalItems.length} raw items from ${sourceUrl} `,
       );
       // @ts-ignore: ignore
       originalItems = originalItems.map(
-        (originalItem) => new adapters[sourceType](originalItem)
+        (originalItem) => new adapters[sourceType](originalItem),
       );
       sourceStat.raw_count = originalItems.length;
       // if google news limit time
@@ -507,7 +511,7 @@ export default async function fetchSources(
               const diff = now.getTime() - published.getTime();
               return diff < 24 * 60 * 60 * 1000;
             }
-          }
+          },
         );
       }
       originalItems = filterByRules(originalItems, rules) as Item<unknown>[];
@@ -557,7 +561,7 @@ export default async function fetchSources(
         const duplicatedFiles = hasSameKeys(
           currentMergedRawKeysMap,
           item.getCachedKeys(),
-          deduplicate
+          deduplicate,
         );
         if (duplicatedFiles.length > 0) {
           // delete all cached files
@@ -577,7 +581,7 @@ export default async function fetchSources(
         duplicatedKeys = hasSameKeys(
           currentmergedKeysMap,
           item.getCachedKeys(),
-          deduplicate
+          deduplicate,
         );
         if (duplicatedKeys.length > 0) {
           // log.info(`duplicatedKeys: ${duplicatedKeys}`);
@@ -588,7 +592,7 @@ export default async function fetchSources(
           totalUniqued++;
           const filterdItems = filterByRules(
             [item],
-            rules.filter((rule) => rule.type !== "topRatio")
+            rules.filter((rule) => rule.type !== "topRatio"),
           );
 
           if (filterdItems.length > 0) {
@@ -597,8 +601,8 @@ export default async function fetchSources(
             log.debug(
               `fetched raw data to ${item.getRawPath(
                 targetSiteIdentifiersMap.get(sourceId)!,
-                itemOrder
-              )}`
+                itemOrder,
+              )}`,
             );
             itemOrder++;
             total++;
@@ -689,7 +693,7 @@ export default async function fetchSources(
       // save original item to file
       await writeJSONFile(
         item.getRawPath(targetSiteIdentifiersMap.get(sourceId)!, theOrder),
-        item.getRawItem()
+        item.getRawItem(),
       );
       theOrder++;
     }

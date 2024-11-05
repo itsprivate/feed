@@ -54,15 +54,19 @@ export default async function archive(options: RunOptions) {
 
   for (const siteIdentifier of siteIdentifiers) {
     const siteConfig = options.config.sites[siteIdentifier];
+    // is stop, skip
+    if (siteConfig.stop) {
+      continue;
+    }
+
     if (siteConfig.archive === false) {
       log.info(
         `${siteIdentifier}: skip archive as it is configured not archived`,
       );
       continue;
     }
-    const currentToBeArchivedFilePath = getCurrentToBeArchivedItemsFilePath(
-      siteIdentifier,
-    );
+    const currentToBeArchivedFilePath =
+      getCurrentToBeArchivedItemsFilePath(siteIdentifier);
     let currentToBeArchivedItemsJson: ItemsJson = { items: {} };
     try {
       currentToBeArchivedItemsJson = await readJSONFile(
@@ -76,23 +80,24 @@ export default async function archive(options: RunOptions) {
     const currentToBeArchivedItemsKeys = Object.keys(
       currentToBeArchivedItemsJson.items,
     );
-    const currentToBeArchivedItemsKeysSorted = currentToBeArchivedItemsKeys
-      .sort((a, b) => {
-        const aModified = currentToBeArchivedItemsJson
-          .items[a]["date_published"]!;
-        const bModified = currentToBeArchivedItemsJson
-          .items[b]["date_published"]!;
+    const currentToBeArchivedItemsKeysSorted =
+      currentToBeArchivedItemsKeys.sort((a, b) => {
+        const aModified =
+          currentToBeArchivedItemsJson.items[a]["date_published"]!;
+        const bModified =
+          currentToBeArchivedItemsJson.items[b]["date_published"]!;
         return new Date(aModified) > new Date(bModified) ? -1 : 1;
       });
 
     if (currentToBeArchivedItemsKeysSorted.length > 0) {
       // yes check to be archived
 
-      const oldestToBeArchivedItem = currentToBeArchivedItemsJson.items[
-        currentToBeArchivedItemsKeysSorted[
-          currentToBeArchivedItemsKeysSorted.length - 1
-        ]
-      ];
+      const oldestToBeArchivedItem =
+        currentToBeArchivedItemsJson.items[
+          currentToBeArchivedItemsKeysSorted[
+            currentToBeArchivedItemsKeysSorted.length - 1
+          ]
+        ];
       // if their date_published is less than current week
 
       const oldestToBeArchivedItemDate = new Date(
@@ -139,9 +144,7 @@ export default async function archive(options: RunOptions) {
               // load remote tag files
               await loadS3ArchiveFile(archiveFilePath);
               try {
-                const result = await readJSONFile(
-                  archiveFilePath,
-                );
+                const result = await readJSONFile(archiveFilePath);
                 archiedGroups[archivedFolder] = result.items;
               } catch (e) {
                 // ignore
@@ -169,12 +172,9 @@ export default async function archive(options: RunOptions) {
             siteIdentifier,
             `archive/${archivedFolder}/items.json`,
           );
-          await writeJSONFile(
-            archivedItemsPath,
-            {
-              items: archiedGroups[archivedFolder],
-            },
-          );
+          await writeJSONFile(archivedItemsPath, {
+            items: archiedGroups[archivedFolder],
+          });
           if (!currentArchive.includes(archivedFolder)) {
             currentArchive.unshift(archivedFolder);
           }
@@ -196,9 +196,7 @@ export default async function archive(options: RunOptions) {
         currentToBeArchivedItemsJson = null;
       } else {
         // no archive items
-        log.info(
-          `${siteIdentifier}: no need to archive items`,
-        );
+        log.info(`${siteIdentifier}: no need to archive items`);
       }
     } else {
       log.info(

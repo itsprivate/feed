@@ -76,18 +76,18 @@ export default async function buildSite(options: RunOptions) {
   let siteIdentifiers: string[] = [];
   const now = new Date();
   const indexTemplateString = await Deno.readTextFile(
-    "./templates/root-index.html.mu"
+    "./templates/root-index.html.mu",
   );
 
   const statsTemplateString = await Deno.readTextFile("./templates/stats.html");
   const apiStatsTemplateString = await Deno.readTextFile(
-    "./templates/api-stats.html"
+    "./templates/api-stats.html",
   );
   const freshStatsTemplateString = await Deno.readTextFile(
-    "./templates/fresh-stats.html"
+    "./templates/fresh-stats.html",
   );
   const yearlyStatsTemplateString = await Deno.readTextFile(
-    "./templates/yearly-stats.html"
+    "./templates/yearly-stats.html",
   );
   for await (const dirEntry of Deno.readDir(getDistPath())) {
     if (dirEntry.isDirectory && !dirEntry.name.startsWith(".")) {
@@ -112,7 +112,7 @@ export default async function buildSite(options: RunOptions) {
   const allSiteIdentifiers = resortSites(
     indexSubDomain,
     siteIdentifiers,
-    config
+    config,
   );
 
   siteIdentifiers = allSiteIdentifiers;
@@ -127,7 +127,7 @@ export default async function buildSite(options: RunOptions) {
       const currentIndexTranslations = getCurrentTranslations(
         indexSubDomain,
         language.code,
-        config
+        config,
       );
       const feedJson: Feedjson = {
         version: "https://jsonfeed.org/version/1",
@@ -136,18 +136,18 @@ export default async function buildSite(options: RunOptions) {
         icon: siteIdentifierToUrl(
           indexSubDomain,
           "/icon.png?v=20230310",
-          config
+          config,
         ),
         _apple_touch_icon: siteIdentifierToUrl(
           indexSubDomain,
           "/apple-touch-icon.png?v=20230310",
-          config
+          config,
         ),
 
         favicon: siteIdentifierToUrl(
           indexSubDomain,
           "/favicon.ico?v=20230310",
-          config
+          config,
         ),
         _latest_build_time: formatIsoDate(now),
         language: language.code,
@@ -155,12 +155,12 @@ export default async function buildSite(options: RunOptions) {
         home_page_url: siteIdentifierToUrl(
           indexSubDomain,
           pathnameWithVersion,
-          config
+          config,
         ),
         feed_url: siteIdentifierToUrl(
           indexSubDomain,
           `${pathnameWithVersion}feed.json`,
-          config
+          config,
         ),
         items: [],
         _sources: [],
@@ -177,7 +177,10 @@ export default async function buildSite(options: RunOptions) {
       let feedItems: FeedItem[] = [];
       // remove hide sites
       siteIdentifiers = siteIdentifiers.filter((siteIdentifier) => {
-        return config.sites[siteIdentifier].hide !== true;
+        return (
+          config.sites[siteIdentifier].hide !== true &&
+          config.sites[siteIdentifier].stop !== true
+        );
       });
 
       for (const siteIdentifier of siteIdentifiers) {
@@ -186,7 +189,7 @@ export default async function buildSite(options: RunOptions) {
           siteIdentifier,
           language.prefix,
           version.prefix,
-          "feed.json"
+          "feed.json",
         );
         let siteFeedJson: Feedjson;
         try {
@@ -205,12 +208,12 @@ export default async function buildSite(options: RunOptions) {
             item._site_identifier = siteIdentifier;
             // @ts-ignore: add meta
             item._human_time = formatHumanTime(
-              new Date(item._original_published)
+              new Date(item._original_published),
             );
             // @ts-ignore: add meta
             item._category = config.sites[siteIdentifier].category;
             return item;
-          })
+          }),
         );
       }
       // format format _groups
@@ -257,7 +260,7 @@ export default async function buildSite(options: RunOptions) {
         const currentTranslations = getCurrentTranslations(
           siteIdentifier,
           language.code,
-          config
+          config,
         );
         const siteConfig = config.sites[siteIdentifier];
         const related = siteConfig.related || [];
@@ -266,7 +269,7 @@ export default async function buildSite(options: RunOptions) {
           const relatedSiteTranslations = getCurrentTranslations(
             relatedSiteIdentifier,
             language.code,
-            config
+            config,
           );
           return {
             title: relatedSiteTranslations.title,
@@ -276,7 +279,7 @@ export default async function buildSite(options: RunOptions) {
             url: siteIdentifierToUrl(
               relatedSiteIdentifier,
               pathnameWithVersion,
-              config
+              config,
             ),
           };
         });
@@ -298,27 +301,27 @@ export default async function buildSite(options: RunOptions) {
           home_page_url: siteIdentifierToUrl(
             siteIdentifier,
             pathnameWithVersion,
-            config
+            config,
           ),
           home_page_next_url: siteIdentifierToUrl(
             siteIdentifier,
             `${pathname}#${takedItems.length}`,
-            config
+            config,
           ),
           atom_url: siteIdentifierToUrl(
             siteIdentifier,
             `${pathnameWithVersion}feed.xml`,
-            config
+            config,
           ),
           home_page_lite_url: siteIdentifierToUrl(
             siteIdentifier,
             pathname + liteVersion.prefix,
-            config
+            config,
           ),
           home_page_next_lite_url: siteIdentifierToUrl(
             siteIdentifier,
             `${pathname}${liteVersion.prefix}#${takedItems.length}`,
-            config
+            config,
           ),
           remaining_count: remainingCount,
           // @ts-ignore: add meta
@@ -326,7 +329,7 @@ export default async function buildSite(options: RunOptions) {
             currentTranslations.more_posts_label,
             {
               count: remainingCount,
-            }
+            },
           ),
           items: takedItems,
         };
@@ -334,7 +337,7 @@ export default async function buildSite(options: RunOptions) {
       // write to dist file
       const feedPath = getDistFilePath(
         indexSubDomain,
-        `${language.prefix}${version.prefix}feed.json`
+        `${language.prefix}${version.prefix}feed.json`,
       );
       await writeJSONFile(feedPath, feedJson);
       feedJson.items = feedJson.items.map((item) => {
@@ -373,20 +376,20 @@ export default async function buildSite(options: RunOptions) {
       // write to dist file
       const rssPath = getDistFilePath(
         indexSubDomain,
-        `${language.prefix}${version.prefix}feed.xml`
+        `${language.prefix}${version.prefix}feed.xml`,
       );
       await writeTextFile(rssPath, feedOutput);
 
       const indexPath = getDistFilePath(
         indexSubDomain,
-        `${language.prefix}${version.prefix}index.html`
+        `${language.prefix}${version.prefix}index.html`,
       );
       const indexHTML = feedToHTML(
         feedJson,
         config,
         indexTemplateString,
         config.languages,
-        config.versions
+        config.versions,
       );
       await writeTextFile(indexPath, indexHTML);
 
@@ -537,7 +540,7 @@ export default async function buildSite(options: RunOptions) {
       [
         "x",
         ...timeline.map((item) =>
-          new Date(new Date(item).getTime()).toISOString()
+          new Date(new Date(item).getTime()).toISOString(),
         ),
       ],
     ];
@@ -556,7 +559,7 @@ export default async function buildSite(options: RunOptions) {
         [
           "x",
           ...timeline.map((item) =>
-            new Date(new Date(item).getTime()).toISOString()
+            new Date(new Date(item).getTime()).toISOString(),
           ),
         ],
       ];
@@ -680,7 +683,7 @@ export default async function buildSite(options: RunOptions) {
     const statsHtml = mustache.render(yearlyStatsTemplateString, statsData);
     const indexPath = getDistFilePath(
       indexSubDomain,
-      `stats/${statYear}/index.html`
+      `stats/${statYear}/index.html`,
     );
     await writeTextFile(indexPath, statsHtml);
   }
@@ -701,7 +704,7 @@ export default async function buildSite(options: RunOptions) {
   const apiStatsHtml = mustache.render(apiStatsTemplateString, statsData);
   const apiStatIndexPath = getDistFilePath(
     indexSubDomain,
-    `stats/api/index.html`
+    `stats/api/index.html`,
   );
   await writeTextFile(apiStatIndexPath, apiStatsHtml);
   // build fresh stats
@@ -717,7 +720,7 @@ export default async function buildSite(options: RunOptions) {
     // sort by MM-dd
     keys.sort(
       (a, b) =>
-        Number(b.slice(0, 2) + b.slice(3)) - Number(a.slice(0, 2) + a.slice(3))
+        Number(b.slice(0, 2) + b.slice(3)) - Number(a.slice(0, 2) + a.slice(3)),
     );
     for (const key of keys) {
       const data = siteFreshData[key];
@@ -744,11 +747,11 @@ export default async function buildSite(options: RunOptions) {
   // @ts-ignore: add meta
   const freshStatsHtml = mustache.render(
     freshStatsTemplateString,
-    freshStatsData
+    freshStatsData,
   );
   const freshIndexPath = getDistFilePath(
     indexSubDomain,
-    `stats/fresh/index.html`
+    `stats/fresh/index.html`,
   );
   await writeTextFile(freshIndexPath, freshStatsHtml);
 }

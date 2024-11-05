@@ -22,24 +22,24 @@ import SourceItem from "../adapters/source.ts";
 import log from "../log.ts";
 import { MAX_ITEMS_PER_PAGE } from "../constant.ts";
 
-export default async function buildCurrent(
-  options: RunOptions,
-) {
+export default async function buildCurrent(options: RunOptions) {
   // get all 3-translated files
   // is exists translated files folder
   // ensure folder exists
   await fs.ensureDir(getDataTranslatedPath());
   const sites = options.siteIdentifiers || [];
   const { groups, targetSiteIdentifiers } =
-    await getFilesByTargetSiteIdentifiers(
-      getDataTranslatedPath(),
-      sites,
-    );
+    await getFilesByTargetSiteIdentifiers(getDataTranslatedPath(), sites);
   const filesNeedToBeDeleted = new Set<string>();
   const changedSites: string[] = [];
   for (const siteIdentifier of targetSiteIdentifiers) {
     const files = groups[siteIdentifier] || [];
     const siteConfig = options.config.sites[siteIdentifier];
+    // is stop, skip
+    if (siteConfig.stop) {
+      continue;
+    }
+
     if (files.length > 0) {
       log.info(
         `start collect ${siteIdentifier} current items, got ${files.length} translated items`,
@@ -54,7 +54,7 @@ export default async function buildCurrent(
         items: {},
       };
       try {
-        currentItemsJson = await readJSONFile(currentItemsPath) as ItemsJson;
+        currentItemsJson = (await readJSONFile(currentItemsPath)) as ItemsJson;
       } catch (e) {
         // ignore
         log.debug(`read json file error: ${e}`);
@@ -62,7 +62,7 @@ export default async function buildCurrent(
 
       let currentKeyssJson: string[] = [];
       try {
-        currentKeyssJson = await readJSONFile(currentKeysPath) as string[];
+        currentKeyssJson = (await readJSONFile(currentKeysPath)) as string[];
       } catch (e) {
         // ignore
         log.debug(`read keys json file error: ${e}`);
@@ -155,13 +155,10 @@ export default async function buildCurrent(
             // try to get current tagd file, merge them
             // load remote tag files
             try {
-              await retry(
-                async () => loadS3ArchiveFile(tagFilePath),
-                {
-                  maxTry: 3,
-                  delay: 1000,
-                },
-              );
+              await retry(async () => loadS3ArchiveFile(tagFilePath), {
+                maxTry: 3,
+                delay: 1000,
+              });
             } catch (e) {
               log.error(`load s3 archive file error: ${tagFilePath}`);
               throw e;
@@ -191,7 +188,7 @@ export default async function buildCurrent(
         });
       });
       for (const file of files) {
-        const item = await readJSONFile(file) as FormatedItem;
+        const item = (await readJSONFile(file)) as FormatedItem;
         const id = item["id"];
 
         // handle tags
@@ -287,33 +284,24 @@ export default async function buildCurrent(
       const tagFilePaths = Object.keys(tagFiles);
       for (const tagFilePath of tagFilePaths) {
         // only write max 1000 items
-        await writeJSONFile(
-          tagFilePath,
-          {
-            meta: tagFiles[tagFilePath].meta,
-            items: arrayToObj(getLatestItems(tagFiles[tagFilePath].items)),
-          },
-        );
+        await writeJSONFile(tagFilePath, {
+          meta: tagFiles[tagFilePath].meta,
+          items: arrayToObj(getLatestItems(tagFiles[tagFilePath].items)),
+        });
       }
 
       // write archive files
       // write archiveFiles
       const archiveFilePaths = Object.keys(archiveFiles);
       for (const archiveFilePath of archiveFilePaths) {
-        await writeJSONFile(
-          archiveFilePath,
-          archiveFiles[archiveFilePath],
-        );
+        await writeJSONFile(archiveFilePath, archiveFiles[archiveFilePath]);
       }
       // write new current items to file
 
-      await writeJSONFile(
-        currentItemsPath,
-        {
-          ...currentItemsJson,
-          items: arrayToObj(getLatestItems(currentItemsJson.items)),
-        },
-      );
+      await writeJSONFile(currentItemsPath, {
+        ...currentItemsJson,
+        items: arrayToObj(getLatestItems(currentItemsJson.items)),
+      });
 
       // write curernt keys json
       //
@@ -340,10 +328,7 @@ export default async function buildCurrent(
       // } catch (_e) {
       //   // ignore
       // }
-      await writeJSONFile(
-        getChangedSitePaths(),
-        changedSites,
-      );
+      await writeJSONFile(getChangedSitePaths(), changedSites);
     }
   }
   // delete old files

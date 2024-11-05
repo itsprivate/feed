@@ -74,6 +74,7 @@ export interface SiteConfig extends GeneralSiteConfig {
   dev?: boolean;
   port?: number;
   hide?: boolean;
+  stop?: boolean;
   deduplicate?: string;
   related?: string[];
   redirect?: boolean;
