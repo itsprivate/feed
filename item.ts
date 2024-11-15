@@ -82,7 +82,7 @@ export default class Item<T> {
         type === "sitemap")
     ) {
       keys.push(
-        `${this.getTitlePrefix().toLowerCase()}${this.getTitle()!.toLowerCase()}${this.getTitleSuffix().toLowerCase()}`
+        `${this.getTitlePrefix().toLowerCase()}${this.getTitle()!.toLowerCase()}${this.getTitleSuffix().toLowerCase()}`,
       );
     }
     return keys;
@@ -201,7 +201,7 @@ export default class Item<T> {
     return undefined;
   }
   async tryToLoadImage(
-    imageCachedMap?: Record<string, string>
+    imageCachedMap?: Record<string, string>,
   ): Promise<string | null> {
     let url = this.getRealUrl();
     if (this.getImageMetaUrl()) {
@@ -236,7 +236,7 @@ export default class Item<T> {
             };
           } else {
             throw new Error(
-              `fetch ${url} failed, content type is not text/html, it is ${contentType}`
+              `fetch ${url} failed, content type is not text/html, it is ${contentType}`,
             );
           }
         } else {
@@ -307,7 +307,7 @@ export default class Item<T> {
     }
   }
   async tryToLoadTitle(
-    imageCachedMap?: Record<string, string>
+    imageCachedMap?: Record<string, string>,
   ): Promise<string | null> {
     const url = this.getRealUrl();
 
@@ -339,7 +339,7 @@ export default class Item<T> {
             };
           } else {
             throw new Error(
-              `fetch ${url} failed, content type is not text/html, it is ${contentType}`
+              `fetch ${url} failed, content type is not text/html, it is ${contentType}`,
             );
           }
         } else {
@@ -395,7 +395,7 @@ export default class Item<T> {
       throw new Error("targetSiteIdentifiers can not be empty");
     }
     return `${getDataRawPath()}/${this.getModifiedYear()}/${this.getModifiedMonth()}/${this.getModifiedDay()}/${targetSiteIdentifiers.join(
-      "_"
+      "_",
     )}/${this.getItemIdentifierWithTime(order)}.json`;
   }
   getRawItem(): T {
@@ -415,12 +415,12 @@ export default class Item<T> {
   }
   getFormatedPath(targetSiteIdentifiers: string[]): string {
     return `${getDataFormatedPath()}/${this.getModifiedYear()}/${this.getModifiedMonth()}/${this.getModifiedDay()}/${targetSiteIdentifiers.join(
-      "_"
+      "_",
     )}/${this.getItemIdentifier()}.json`;
   }
   getTranslatedPath(targetSiteIdentifiers: string[]): string {
     return `${getDataTranslatedPath()}/${this.getModifiedYear()}/${this.getModifiedMonth()}/${this.getModifiedDay()}/${targetSiteIdentifiers.join(
-      "_"
+      "_",
     )}/${this.getItemIdentifier()}.json`;
   }
   getExternalUrl(): string | undefined {
@@ -504,7 +504,7 @@ export default class Item<T> {
     return "";
   }
   async getFormatedItem(
-    options?: GetFormatedItemOptions
+    options?: GetFormatedItemOptions,
   ): Promise<FormatedItem> {
     const formatedItem = this.getFormatedItemSync();
     if (this.isNeedToGetRedirectedUrl()) {
@@ -575,6 +575,16 @@ export default class Item<T> {
       }
     }
 
+    // check is title is valid
+    if (
+      formatedItem._translations &&
+      !formatedItem._translations[this.getOriginalLanguage()].title
+    ) {
+      throw new Error(
+        `title is empty for ${this.getItemIdentifier()} ${this.getUrl()}`,
+      );
+    }
+
     return formatedItem;
   }
   isValid(): boolean {
@@ -584,7 +594,7 @@ export default class Item<T> {
     siteIdentifier: string,
     language: Language,
     config: Config,
-    options?: GetFeedItemSyncOptions
+    options?: GetFeedItemSyncOptions,
   ): FeedItem {
     let versionCode = "default";
     if (options && options.versionCode) {
@@ -632,13 +642,13 @@ export default class Item<T> {
     const translationObj = getItemTranslations(
       item._translations || {},
       language.code,
-      item._original_language
+      item._original_language,
     );
 
     const originalTranslationObj = getItemTranslations(
       item._translations || {},
       item._original_language,
-      item._original_language
+      item._original_language,
     );
     const translationFields = Object.keys(translationObj);
     for (const translationField of translationFields) {
@@ -724,7 +734,7 @@ export default class Item<T> {
               embedProvider +
               embedType +
               " , " +
-              embedUrl
+              embedUrl,
           );
         }
       } else if (item.image) {
@@ -743,7 +753,7 @@ export default class Item<T> {
       }
       if (isArchive) {
         lite_content_html += `<a href="${item.id}">${formatHumanTime(
-          new Date(item._original_published)
+          new Date(item._original_published),
         )}</a>&nbsp;&nbsp;${finalTitle} (<a href="${itemUrl}">${
           itemUrlObj.hostname
         }</a>)`;
@@ -751,7 +761,7 @@ export default class Item<T> {
         lite_content_html += `<time class="dt-published published muted" datetime="${
           item._original_published
         }">${formatHumanTime(
-          new Date(item._original_published)
+          new Date(item._original_published),
         )}</time>&nbsp;&nbsp;${finalTitle} (<a href="${itemUrl}">${
           itemUrlObj.hostname
         }</a>)`;
@@ -767,20 +777,20 @@ export default class Item<T> {
       }"><time class="dt-published published" datetime="${
         item._original_published
       }">${formatHumanTime(
-        new Date(item._original_published as string)
+        new Date(item._original_published as string),
       )}</time></a>&nbsp;&nbsp;`;
     } else {
       content_html += `<footer><time class="dt-published published muted" datetime="${
         item._original_published
       }">${formatHumanTime(
-        new Date(item._original_published as string)
+        new Date(item._original_published as string),
       )}</time>&nbsp;&nbsp;`;
     }
 
     const currentTranslations = getCurrentTranslations(
       siteIdentifier,
       language.code,
-      config
+      config,
     );
     let index = 0;
 
@@ -860,7 +870,7 @@ export default class Item<T> {
             siteIdentifier,
             language,
             version,
-            config
+            config,
           )}">#${tag}</a>`;
         }
         (">#${tag}</a>`");
