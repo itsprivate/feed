@@ -39,6 +39,16 @@ jobs:
     steps:
       - name: Check out repository code
         uses: actions/checkout@v3
+      - name: print aws cli version
+        run: aws --version
+      - id: install-aws-cli
+        uses: unfor19/install-aws-cli-action@v1
+        with:
+          version: 2.22.35 # default
+          verbose: false # default
+          arch: amd64 # allowed values: amd64, arm64
+      - name: print aws cli version
+        run: aws --version
       - uses: actions/setup-node@v3
         with:
           node-version: 20
