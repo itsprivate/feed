@@ -1,8 +1,6 @@
 import { assertEquals, assertNotEquals } from "./deps.ts";
 import HnItem from "./adapters/hn.ts";
-import hnExampleJson from "./example/current/1-raw/2022/08/22/en_hn_2022_08_22_32407873.json" assert {
-  type: "json",
-};
+import hnExampleJson from "./example/current/1-raw/2022/08/22/en_hn_2022_08_22_32407873.json" with { type: "json" };
 import { parseItemIdentifier } from "./util.ts";
 import ItemAdapter from "./adapters/mod.ts";
 const list = [
@@ -50,9 +48,7 @@ for (const testItem of list) {
 }
 
 Deno.test("parseItemIdentifier #10", () => {
-  const parsed = parseItemIdentifier(
-    "en_hn_2022_08_26__32407873",
-  );
+  const parsed = parseItemIdentifier("en_hn_2022_08_26__32407873");
   assertEquals(parsed, {
     type: "hn",
     id: "32407873",
@@ -63,9 +59,7 @@ Deno.test("parseItemIdentifier #10", () => {
   });
 });
 Deno.test("parseItemIdentifier #11", () => {
-  const parsed = parseItemIdentifier(
-    "en_hn_2022_08_23___32407873_-1223",
-  );
+  const parsed = parseItemIdentifier("en_hn_2022_08_23___32407873_-1223");
   assertEquals(parsed, {
     type: "hn",
     id: "_32407873_-1223",

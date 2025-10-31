@@ -1,4 +1,4 @@
-import issueMap from "./migrations/issue-map.json" assert { type: "json" };
+import issueMap from "./migrations/issue-map.json" with { type: "json" };
 import { Config } from "./interface.ts";
 import { archiveSubDomain, ROOT_DOMAIN } from "./constant.ts";
 import { getDistFilePath, writeTextFile } from "./util.ts";
@@ -15,8 +15,7 @@ export default async function generateRedirects(
   // }
   redirects += `/rss.xml /feed.xml 302\n`;
   for (const language of config.languages.reverse()) {
-    const targetPrefix =
-      `https://${archiveDomain}.${rootDomain}/${language.prefix}${siteIdentifier}`;
+    const targetPrefix = `https://${archiveDomain}.${rootDomain}/${language.prefix}${siteIdentifier}`;
     // generate issues
 
     const issueSitesKyes = Object.keys(issueMap);
@@ -28,18 +27,15 @@ export default async function generateRedirects(
         for (const issueKey of issueKeys) {
           // @ts-ignore: json
           const newIssue = issueMaps[issueKey];
-          redirects +=
-            `/${language.prefix}issues/${issueKey}/ ${targetPrefix}/issues/${newIssue}/ 302\n`;
-          redirects +=
-            `/${language.prefix}plain/issues/${issueKey}/ ${targetPrefix}/issues/${newIssue}/ 302\n`;
+          redirects += `/${language.prefix}issues/${issueKey}/ ${targetPrefix}/issues/${newIssue}/ 302\n`;
+          redirects += `/${language.prefix}plain/issues/${issueKey}/ ${targetPrefix}/issues/${newIssue}/ 302\n`;
         }
       }
     }
   }
 
   for (const language of config.languages.reverse()) {
-    const targetPrefix =
-      `https://${archiveDomain}.${rootDomain}/${language.prefix}${siteIdentifier}`;
+    const targetPrefix = `https://${archiveDomain}.${rootDomain}/${language.prefix}${siteIdentifier}`;
 
     // generate tags
     redirects += `/${language.prefix}tags/* ${targetPrefix}/tags/:splat 302\n`;

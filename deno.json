@@ -1,4 +1,5 @@
 {
+  "nodeModulesDir": "auto",
   "lint": {
     "files": {
       "exclude": ["workers-site/"]

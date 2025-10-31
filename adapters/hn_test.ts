@@ -1,8 +1,6 @@
 import { assertEquals } from "../deps.ts";
 import HnItem from "./hn.ts";
-import hnExampleJson from "../example/current/1-raw/2022/08/22/en_hn_2022_08_22_32407873.json" assert {
-  type: "json",
-};
+import hnExampleJson from "../example/current/1-raw/2022/08/22/en_hn_2022_08_22_32407873.json" with { type: "json" };
 import { identifierToCachedKey } from "../util.ts";
 Deno.test("hn parse raw json #1", () => {
   const item = new HnItem(hnExampleJson);

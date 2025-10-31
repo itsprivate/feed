@@ -57,7 +57,7 @@ jobs:
         run: npm install -g wrangler
       - uses: denoland/setup-deno@v1
         with:
-          deno-version: v1.46
+          deno-version: v2.5.4
       - uses: actions/cache@v3
         with:
           path: |
@@ -71,7 +71,8 @@ jobs:
           AWS_DEFAULT_REGION: ${{secrets.AWS_DEFAULT_REGION}}
           AWS_ENDPOINT: ${{secrets.AWS_ENDPOINT}}
       # - run: make install
-      - run: make prod-source
+      # - run: make prod-source
+        run: make prod-sourcesite site=china
         id: source
         continue-on-error: true
         env:

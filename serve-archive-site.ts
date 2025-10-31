@@ -21,7 +21,7 @@ import {
 } from "./interface.ts";
 import { indexSubDomain } from "./constant.ts";
 import notfound from "./notfound.ts";
-import config from "./config.gen.json" assert { type: "json" };
+import config from "./config.gen.json" with { type: "json" };
 export default async function serveSite(port = 8000) {
   const isLocal = Deno.env.get("LOCAL") === "1";
   if (isDebug()) {
