@@ -62,7 +62,8 @@ export async function request(url: string, init: RequestInit = {}) {
   headers.set("cache-control", "no-cache");
   // set cookie if host is news.google.com
   const urlObj = new URL(url);
-  if (urlObj.hostname === "news.google.com") {
+  const _hostParams = urlObj.searchParams.get("_host");
+  if (urlObj.hostname === "news.google.com" || _hostParams) {
     const GOOGLE_COOKIE = Deno.env.get("GOOGLE_COOKIE") as string;
     if (GOOGLE_COOKIE) {
       console.log("yes, detect GOOGLE_COOKIE");
