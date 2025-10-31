@@ -91,6 +91,7 @@ jobs:
           TRANSLATE_TIMEOUT: ${{ github.event.inputs.translate_timeout }}
           ALL: ${{ github.event_name=='push' && '1' ||  github.event.inputs.force_all }}
           SITE: ${{ github.event.inputs.site }}
+          GOOGLE_COOKIE: ${{secrets.GOOGLE_COOKIE}}
       - name: upload files
         run: make prod-upload
         env:
