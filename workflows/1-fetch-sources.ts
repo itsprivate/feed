@@ -332,7 +332,7 @@ export default async function fetchSources(
         try {
           const originItemResult = await request(sourceUrl);
           const xml = await originItemResult.text();
-          console.log("xml", xml);
+          // console.log("xml", xml);
           originalJson = await parseFeed(xml);
           itemsPath = "entries";
         } catch (e) {
