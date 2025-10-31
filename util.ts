@@ -60,6 +60,16 @@ export async function request(url: string, init: RequestInit = {}) {
   );
   headers.set("accept-language", "en-US,en;q=0.9,zh-CN;q=0.8,zh;q=0.7");
   headers.set("cache-control", "no-cache");
+  // set cookie if host is news.google.com
+  const urlObj = new URL(url);
+  if (urlObj.hostname === "news.google.com") {
+    const GOOGLE_COOKIE = Deno.env.get("GOOGLE_COOKIE") as string;
+    if (GOOGLE_COOKIE) {
+      console.log("yes, detect GOOGLE_COOKIE");
+    }
+    // GOOGLE_COOKIE
+    headers.set("cookie", GOOGLE_COOKIE);
+  }
   const params = {
     ...init,
     signal: c.signal,
@@ -382,9 +392,9 @@ export const urlToLanguageUrl = (
   const urlInfo = parsePageUrl(url, versions, languages);
   const urlObj = new URL(url);
   // check if url has a prefix
-  urlObj.pathname = `/${languagePrefix}${
-    urlInfo.version.prefix
-  }${urlInfo.pathname.slice(1)}`;
+  urlObj.pathname = `/${languagePrefix}${urlInfo.version.prefix}${urlInfo.pathname.slice(
+    1,
+  )}`;
   return urlObj.toString();
 };
 
@@ -397,9 +407,9 @@ export const urlToVersionUrl = (
   const urlInfo = parsePageUrl(url, versions, languages);
   const urlObj = new URL(url);
   // check if url has a prefix
-  urlObj.pathname = `/${
-    urlInfo.language.prefix
-  }${versionPrefix}${urlInfo.pathname.slice(1)}`;
+  urlObj.pathname = `/${urlInfo.language.prefix}${versionPrefix}${urlInfo.pathname.slice(
+    1,
+  )}`;
   return urlObj.toString();
 };
 export const parsePageUrl = (
@@ -794,9 +804,9 @@ export function tagToUrl(
   version: Version,
   config: Config,
 ): string {
-  return `${getArchiveSitePrefix(config)}/${language.prefix}${
-    version.prefix
-  }${siteIdentifier}/tags/${
+  return `${getArchiveSitePrefix(
+    config,
+  )}/${language.prefix}${version.prefix}${siteIdentifier}/tags/${
     // @ts-ignore: npm module
     slug(tag)
   }/`;
@@ -808,9 +818,9 @@ export function archiveToUrl(
   version: Version,
   config: Config,
 ): string {
-  return `${getArchiveSitePrefix(config)}/${language.prefix}${
-    version.prefix
-  }${siteIdentifier}/archive/${archiveKey}/`;
+  return `${getArchiveSitePrefix(
+    config,
+  )}/${language.prefix}${version.prefix}${siteIdentifier}/archive/${archiveKey}/`;
 }
 
 export function issueToUrl(
@@ -820,9 +830,9 @@ export function issueToUrl(
   version: Version,
   config: Config,
 ): string {
-  return `${getArchiveSitePrefix(config)}/${language.prefix}${
-    version.prefix
-  }${siteIdentifier}/issues/${issue}/`;
+  return `${getArchiveSitePrefix(
+    config,
+  )}/${language.prefix}${version.prefix}${siteIdentifier}/issues/${issue}/`;
 }
 export function postToUrl(
   id: string,
@@ -836,9 +846,9 @@ export function postToUrl(
     Date.UTC(Number(parsed.year), Number(parsed.month) - 1, Number(parsed.day)),
   );
   const week = weekOfYear(utcDate);
-  return `${getArchiveSitePrefix(config)}/${language.prefix}${
-    version.prefix
-  }${siteIdentifier}/posts/${week.path}/${id}/`;
+  return `${getArchiveSitePrefix(
+    config,
+  )}/${language.prefix}${version.prefix}${siteIdentifier}/posts/${week.path}/${id}/`;
 }
 
 export const formatNumber = (num: number): string => {
