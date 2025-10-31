@@ -71,8 +71,8 @@ jobs:
           AWS_DEFAULT_REGION: ${{secrets.AWS_DEFAULT_REGION}}
           AWS_ENDPOINT: ${{secrets.AWS_ENDPOINT}}
       # - run: make install
-      # - run: make prod-source
-      - run: make prod-sourcesite site=china
+      - run: make prod-source
+        # - run: make prod-sourcesite site=china
         id: source
         continue-on-error: true
         env:
