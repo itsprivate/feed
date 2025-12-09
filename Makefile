@@ -72,6 +72,10 @@ runall:
 serve:
 	deno run -A --watch=main.ts,templates/,config.yml main.ts --site devfeed --stage build_site,serve_site
 
+..Phony: server-archive
+server-archive:
+	DEBUG=1 PROD=1 deno run --watch --env-file -A  ./serve-archive-site.ts
+
 .Phony: serveindex
 serveindex:
 	deno run -A --watch=main.ts,templates/,config.yml main.ts --stage build_index_site,serve_site
