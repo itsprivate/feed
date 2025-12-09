@@ -1,0 +1,31 @@
+# Data directories
+current/
+dev-current/
+dev-archive/
+archive/
+prod-current/
+prod-archive/
+prod-cache/
+prod-public/
+prod-temp/
+cache/
+public/
+temp/
+
+# Build artifacts
+node_modules/
+
+# Git
+.git/
+.gitignore
+
+# Examples and tests
+example/
+
+# Other
+d/
+workers-site/
+scripts/
+*.md
+Makefile
+.env*
