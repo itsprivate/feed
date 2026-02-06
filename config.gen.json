@@ -438,7 +438,6 @@
         "reddit",
         "finance",
         "source-reddit-stocks",
-        "source-twitter-stocks",
         "source-reddit-wallstreetbets",
         "source-reddit-bogleheads"
       ],
@@ -557,8 +556,7 @@
       "priority": 100,
       "tags": [
         "tech",
-        "source-crypto-reddit",
-        "source-crypto-twitter"
+        "source-crypto-reddit"
       ],
       "translations": {
         "zh-Hans": {
@@ -629,12 +627,12 @@
       "port": 8012,
       "archive": true,
       "hide": true,
+      "stop": true,
       "priority": 102,
       "redirect": true,
       "category": "Discuss",
       "tags": [
-        "ask",
-        "source-quora"
+        "ask"
       ],
       "translations": {
         "zh-Hans": {
@@ -714,7 +712,7 @@
       "tags": [
         "depth",
         "news",
-        "source-twitter-nytimes"
+        "source-bluesky-nytimes"
       ],
       "translations": {
         "zh-Hans": {
@@ -754,7 +752,7 @@
       "tags": [
         "depth",
         "news",
-        "source-twitter-wsj"
+        "source-bluesky-wsj"
       ],
       "translations": {
         "zh-Hans": {
@@ -798,7 +796,7 @@
         "depth",
         "news",
         "www",
-        "source-twitter-economist"
+        "source-bluesky-economist"
       ],
       "translations": {
         "zh-Hans": {
@@ -1447,7 +1445,7 @@
       ],
       "tags": [
         "news",
-        "source-twitter-reuters"
+        "source-bluesky-reuters"
       ],
       "translations": {
         "zh-Hans": {
@@ -1557,7 +1555,7 @@
       "tags": [
         "news",
         "source-rss-politico",
-        "source-twitter-politico"
+        "source-bluesky-politico"
       ],
       "translations": {
         "zh-Hans": {
@@ -1594,7 +1592,7 @@
       "category": "Finance",
       "tags": [
         "news",
-        "source-twitter-businessinsider"
+        "source-bluesky-businessinsider"
       ],
       "translations": {
         "zh-Hans": {
@@ -2597,38 +2595,27 @@
     },
     {
       "api": {
-        "url": "nytimes",
-        "name": "New York Times Twitter",
-        "home_page_url": "https://twitter.com/nytimes"
+        "url": "https://public.api.bsky.app/xrpc/app.bsky.feed.getAuthorFeed?actor=nytimes.com&limit=30&filter=posts_with_links",
+        "name": "New York Times Bluesky",
+        "home_page_url": "https://bsky.app/profile/nytimes.com"
       },
-      "params": {
-        "include_rts": false
-      },
-      "id": "source-twitter-nytimes",
-      "type": "twitterlink",
+      "id": "source-bluesky-nytimes",
+      "type": "blueskylink",
       "rules": [
         {
           "type": "topRatio",
           "value": "0.5"
-        },
-        {
-          "type": "equal",
-          "key": "getHostname",
-          "value": "www.nytimes.com"
         }
       ]
     },
     {
       "api": {
-        "url": "wsj",
-        "name": "Wall Street Journal Twitter",
-        "home_page_url": "https://twitter.com/wsj"
+        "url": "https://public.api.bsky.app/xrpc/app.bsky.feed.getAuthorFeed?actor=wsj.com&limit=30&filter=posts_with_links",
+        "name": "Wall Street Journal Bluesky",
+        "home_page_url": "https://bsky.app/profile/wsj.com"
       },
-      "params": {
-        "include_rts": false
-      },
-      "id": "source-twitter-wsj",
-      "type": "twitterlink",
+      "id": "source-bluesky-wsj",
+      "type": "blueskylink",
       "rules": [
         {
           "type": "topRatio",
@@ -2643,69 +2630,18 @@
     },
     {
       "api": {
-        "url": "TheEconomist",
-        "name": "The Economist Twitter",
-        "home_page_url": "https://twitter.com/TheEconomist"
+        "url": "https://public.api.bsky.app/xrpc/app.bsky.feed.getAuthorFeed?actor=economist.com&limit=30&filter=posts_with_links",
+        "name": "The Economist Bluesky",
+        "home_page_url": "https://bsky.app/profile/economist.com"
       },
-      "params": {
-        "include_rts": false
-      },
-      "id": "source-twitter-economist",
-      "type": "twitterlink",
+      "id": "source-bluesky-economist",
+      "type": "blueskylink",
       "rules": [
         {
           "type": "topRatio",
           "value": "0.8"
         }
       ]
-    },
-    {
-      "api": [
-        {
-          "url": "charliebilello",
-          "name": "Charlie Bilello Twitter",
-          "home_page_url": "https://twitter.com/charliebilello"
-        },
-        {
-          "url": "Stocktwits",
-          "name": "Stocktwits Twitter",
-          "home_page_url": "https://twitter.com/Stocktwits"
-        },
-        {
-          "url": "MarketWatch",
-          "name": "Market Watch Twitter",
-          "home_page_url": "https://twitter.com/MarketWatch"
-        },
-        {
-          "url": "awealthofcs",
-          "name": "A Wealth of CS Twitter",
-          "home_page_url": "https://twitter.com/awealthofcs"
-        },
-        {
-          "url": "michaelbatnick",
-          "name": "Michael Batnick Twitter",
-          "home_page_url": "https://twitter.com/michaelbatnick"
-        }
-      ],
-      "type": "twitter",
-      "id": "source-twitter-stocks",
-      "rules": [
-        {
-          "type": "topRatio",
-          "value": "0.4"
-        }
-      ]
-    },
-    {
-      "id": "source-twitter-barraud",
-      "api": [
-        {
-          "url": "c_barraud",
-          "name": "Charles Barraud Twitter",
-          "home_page_url": "https://twitter.com/c_barraud"
-        }
-      ],
-      "type": "twittercbarraud"
     },
     {
       "id": "source-google-finance",
@@ -2739,55 +2675,6 @@
           "type": "notEqual",
           "key": "getHostname",
           "value": "electrek.co"
-        }
-      ]
-    },
-    {
-      "api": {
-        "url": "s2fmultiple",
-        "name": "S2F Multiple Twitter",
-        "home_page_url": "https://twitter.com/s2fmultiple"
-      },
-      "type": "twitter",
-      "id": "source-crypto-twitter",
-      "rules": [
-        {
-          "type": "topRatio",
-          "value": "0.4"
-        }
-      ]
-    },
-    {
-      "api": {
-        "url": "100trillionUSD",
-        "name": "100 Trillion USD Twitter",
-        "home_page_url": "https://twitter.com/100trillionUSD"
-      },
-      "type": "twitter",
-      "id": "source-crypto-twitter",
-      "rules": [
-        {
-          "type": "topRatio",
-          "value": "0.4"
-        }
-      ]
-    },
-    {
-      "api": {
-        "url": "Quora",
-        "name": "Quora Twitter",
-        "home_page_url": "https://twitter.com/Quora"
-      },
-      "params": {
-        "include_rts": false
-      },
-      "id": "source-quora",
-      "type": "twitterlink",
-      "rules": [
-        {
-          "type": "include",
-          "key": "getFallbackTitle",
-          "value": "?"
         }
       ]
     },
@@ -2851,24 +2738,6 @@
         {
           "type": "topRatio",
           "value": "0.8"
-        }
-      ]
-    },
-    {
-      "api": {
-        "url": "thechinaproj",
-        "name": "thechinaproj Twitter",
-        "home_page_url": "https://twitter.com/thechinaproj"
-      },
-      "params": {
-        "include_rts": true
-      },
-      "id": "source-thechinaproj",
-      "type": "thechinaproject",
-      "rules": [
-        {
-          "type": "topRatio",
-          "value": "0.5"
         }
       ]
     },
@@ -2987,69 +2856,32 @@
       ]
     },
     {
-      "id": "source-twitter-reuters",
-      "type": "twitterlink",
+      "id": "source-bluesky-reuters",
+      "type": "blueskylink",
       "api": {
-        "url": "Reuters",
-        "name": "Reuters Twitter",
-        "home_page_url": "https://twitter.com/Reuters"
+        "url": "https://public.api.bsky.app/xrpc/app.bsky.feed.getAuthorFeed?actor=reuters.com&limit=30&filter=posts_with_links",
+        "name": "Reuters Bluesky",
+        "home_page_url": "https://bsky.app/profile/reuters.com"
       },
       "rules": [
         {
           "type": "topRatio",
           "value": "0.625"
-        },
-        {
-          "type": "notInclude",
-          "key": "getHostname",
-          "value": "www.youtube.com"
-        },
-        {
-          "type": "notInclude",
-          "key": "getUrl",
-          "value": "www.reuters.com/video"
-        },
-        {
-          "type": "notInclude",
-          "key": "getUrl",
-          "value": "www.reuters.com/lifestyle"
-        },
-        {
-          "type": "include",
-          "key": "getHostname",
-          "value": "reuters.com"
         }
       ]
     },
     {
-      "id": "source-twitter-bloomberg",
-      "type": "twitterlink",
-      "api": [
-        {
-          "url": "business",
-          "name": "Bloomberg Twitter",
-          "home_page_url": "https://twitter.com/business"
-        }
-      ],
+      "id": "source-bluesky-bloomberg",
+      "type": "blueskylink",
+      "api": {
+        "url": "https://public.api.bsky.app/xrpc/app.bsky.feed.getAuthorFeed?actor=bloomberg.com&limit=30&filter=posts_with_links",
+        "name": "Bloomberg Bluesky",
+        "home_page_url": "https://bsky.app/profile/bloomberg.com"
+      },
       "rules": [
         {
           "type": "topRatio",
           "value": "0.9"
-        },
-        {
-          "type": "notInclude",
-          "key": "getUrl",
-          "value": "podcast"
-        },
-        {
-          "type": "include",
-          "key": "getUrl",
-          "value": "https://www.bloomberg.com/news/"
-        },
-        {
-          "type": "notInclude",
-          "key": "getUrl",
-          "value": "https://www.bloomberg.com/news/videos/"
         }
       ]
     },
@@ -3152,12 +2984,12 @@
       ]
     },
     {
-      "id": "source-twitter-politico",
-      "type": "twitterlink",
+      "id": "source-bluesky-politico",
+      "type": "blueskylink",
       "api": {
-        "url": "politico",
-        "name": "Politico Twitter",
-        "home_page_url": "https://twitter.com/politico"
+        "url": "https://public.api.bsky.app/xrpc/app.bsky.feed.getAuthorFeed?actor=politico.com&limit=30&filter=posts_with_links",
+        "name": "Politico Bluesky",
+        "home_page_url": "https://bsky.app/profile/politico.com"
       },
       "rules": [
         {
@@ -3178,12 +3010,12 @@
       ]
     },
     {
-      "id": "source-twitter-businessinsider",
-      "type": "twitterlink",
+      "id": "source-bluesky-businessinsider",
+      "type": "blueskylink",
       "api": {
-        "url": "BusinessInsider",
-        "name": "Business Insider Twitter",
-        "home_page_url": "https://twitter.com/BusinessInsider"
+        "url": "https://public.api.bsky.app/xrpc/app.bsky.feed.getAuthorFeed?actor=businessinsider.com&limit=30&filter=posts_with_links",
+        "name": "Business Insider Bluesky",
+        "home_page_url": "https://bsky.app/profile/businessinsider.com"
       },
       "rules": [
         {

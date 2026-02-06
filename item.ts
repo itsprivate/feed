@@ -74,6 +74,7 @@ export default class Item<T> {
       (type === "googlenews" ||
         type === "twitter" ||
         type === "twitterlink" ||
+        type === "blueskylink" ||
         type === "lobste" ||
         type === "hn" ||
         type === "newyorker" ||

@@ -16,6 +16,7 @@ import spectator from "./spectator.ts";
 import sitemap from "./sitemap.ts";
 import economic from "./economic.ts";
 import phys from "./phys.ts";
+import blueskylink from "./bluesky.ts";
 export type ItemType = Item<RedditItem | HnItem>;
 
 const adapters: Record<string, Type<Item<RedditItem>>> = {
@@ -51,5 +52,7 @@ const adapters: Record<string, Type<Item<RedditItem>>> = {
   economic,
   // @ts-ignore: hard to type
   phys,
+  // @ts-ignore: hard to type
+  blueskylink,
 };
 export default adapters;

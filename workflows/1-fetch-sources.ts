@@ -456,6 +456,16 @@ export default async function fetchSources(
         // } else {
         //   originalJson = [];
         // }
+      } else if (sourceType === "blueskylink") {
+        try {
+          const originItemResult = await request(sourceUrl);
+          originalJson = await originItemResult.json();
+          itemsPath = "feed";
+        } catch (e) {
+          log.error(`fetch bluesky ${sourceUrl} failed`);
+          log.error(e);
+          continue;
+        }
       } else if (sourceType === "ph") {
         // producthunt graphql api
         try {
