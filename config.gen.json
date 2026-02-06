@@ -348,15 +348,14 @@
     },
     "reddit": {
       "port": 8005,
+      "stop": true,
       "priority": 17,
-      "stop": false,
       "redirect": true,
       "category": "Entertainment",
       "max_image_height": 520,
       "tags": [
         "reddit",
-        "www",
-        "source-reddit-top"
+        "www"
       ],
       "translations": {
         "zh-Hans": {
@@ -388,16 +387,14 @@
     },
     "ask": {
       "port": 8007,
-      "stop": false,
+      "stop": true,
       "priority": 26,
       "redirect": true,
       "category": "Discuss",
       "max_image_height": 520,
       "tags": [
         "reddit",
-        "source-reddit-ask",
-        "www",
-        "source-reddit-askstupid"
+        "www"
       ],
       "translations": {
         "zh-Hans": {
@@ -429,17 +426,14 @@
     },
     "stocks": {
       "port": 8008,
-      "stop": false,
+      "stop": true,
       "redirect": true,
       "category": "Finance",
       "priority": 28,
       "max_image_height": 520,
       "tags": [
         "reddit",
-        "finance",
-        "source-reddit-stocks",
-        "source-reddit-wallstreetbets",
-        "source-reddit-bogleheads"
+        "finance"
       ],
       "translations": {
         "zh-Hans": {
@@ -549,14 +543,13 @@
     },
     "crypto": {
       "port": 8010,
-      "stop": false,
+      "stop": true,
       "archive": true,
       "redirect": true,
       "category": "Finance",
       "priority": 100,
       "tags": [
-        "tech",
-        "source-crypto-reddit"
+        "tech"
       ],
       "translations": {
         "zh-Hans": {
@@ -665,13 +658,12 @@
     "depth": {
       "port": 8013,
       "archive": true,
-      "stop": false,
+      "stop": true,
       "category": "Featured",
       "redirect": true,
       "priority": 17,
       "tags": [
         "depth",
-        "source-reddit-depth",
         "www"
       ],
       "translations": {
@@ -828,15 +820,14 @@
     },
     "sideproject": {
       "port": 8017,
-      "stop": false,
+      "stop": true,
       "archive": true,
       "redirect": true,
       "category": "Product",
       "priority": 40,
       "max_image_height": 360,
       "tags": [
-        "sideproject",
-        "source-reddit-sideproject"
+        "sideproject"
       ],
       "translations": {
         "zh-Hans": {
@@ -905,7 +896,7 @@
     },
     "videos": {
       "port": 8020,
-      "stop": false,
+      "stop": true,
       "archive": true,
       "redirect": false,
       "priority": 23,
@@ -913,9 +904,7 @@
       "tags": [
         "videos",
         "www",
-        "reddit",
-        "source-reddit-videos",
-        "source-reddit-mealtimevideos"
+        "reddit"
       ],
       "translations": {
         "zh-Hans": {
@@ -983,12 +972,11 @@
     "linux": {
       "port": 8022,
       "priority": 41,
-      "stop": false,
+      "stop": true,
       "archive": true,
       "category": "Dev",
       "tags": [
-        "linux",
-        "source-reddit-linux"
+        "linux"
       ],
       "translations": {
         "zh-Hans": {
@@ -1059,7 +1047,7 @@
     },
     "feminism": {
       "port": 8024,
-      "stop": false,
+      "stop": true,
       "priority": 30,
       "category": "Discuss",
       "archive": true,
@@ -1067,9 +1055,7 @@
       "tags": [
         "feminism",
         "ask",
-        "reddit",
-        "source-reddit-askfeminist",
-        "source-reddit-feminism"
+        "reddit"
       ],
       "translations": {
         "zh-Hans": {
@@ -1105,9 +1091,7 @@
       "archive": true,
       "category": "Tech",
       "tags": [
-        "reddit",
-        "hn",
-        "source-reddit-technology"
+        "hn"
       ],
       "translations": {
         "zh-Hans": {
@@ -1138,14 +1122,13 @@
     },
     "worldnews": {
       "port": 8026,
-      "stop": false,
+      "stop": true,
       "priority": 18,
       "archive": true,
       "category": "News",
       "tags": [
         "reddit",
-        "news",
-        "source-reddit-worldnews"
+        "news"
       ],
       "translations": {
         "zh-Hans": {
@@ -1399,13 +1382,13 @@
     },
     "redditchina": {
       "port": 8034,
+      "stop": true,
       "priority": 27,
       "category": "Discuss",
       "hide": true,
       "archive": true,
       "tags": [
-        "china",
-        "source-reddit-china"
+        "china"
       ],
       "translations": {
         "zh-Hans": {
@@ -2374,147 +2357,6 @@
       }
     },
     {
-      "id": "source-reddit-top",
-      "type": "reddit",
-      "api": {
-        "url": "https://www.reddit.com/r/all/top/.json?raw_json=1",
-        "name": "Reddit Popular",
-        "home_page_url": "https://www.reddit.com/r/all/top/"
-      },
-      "rules": [
-        {
-          "type": "topRatio",
-          "value": "0.7"
-        }
-      ]
-    },
-    {
-      "id": "source-reddit-ask",
-      "type": "reddit",
-      "api": {
-        "url": "https://www.reddit.com/r/AskReddit/top/.json?raw_json=1",
-        "name": "Ask Reddit Subreddit",
-        "home_page_url": "https://www.reddit.com/r/AskReddit/"
-      },
-      "rules": [
-        {
-          "type": "topRatio",
-          "value": "0.4"
-        }
-      ]
-    },
-    {
-      "id": "source-reddit-askstupid",
-      "type": "reddit",
-      "rules": [
-        {
-          "type": "topRatio",
-          "value": "0.1"
-        }
-      ],
-      "api": [
-        {
-          "url": "https://www.reddit.com/r/NoStupidQuestions/top/.json?raw_json=1",
-          "name": "No Stupid Questions Subreddit",
-          "home_page_url": "https://www.reddit.com/r/NoStupidQuestions/"
-        }
-      ]
-    },
-    {
-      "id": "source-reddit-ask",
-      "type": "reddit",
-      "rules": [
-        {
-          "type": "topRatio",
-          "value": "0.2"
-        }
-      ],
-      "api": [
-        {
-          "url": "https://www.reddit.com/r/Ask_Politics/top/.json?raw_json=1",
-          "name": "Ask Politics Subreddit",
-          "home_page_url": "https://www.reddit.com/r/Ask_Politics/"
-        },
-        {
-          "url": "https://www.reddit.com/r/AskHistorians/top/.json?raw_json=1",
-          "name": "Ask Historians Subreddit",
-          "home_page_url": "https://www.reddit.com/r/AskHistorians/"
-        },
-        {
-          "url": "https://www.reddit.com/r/AskWomen/top/.json?raw_json=1",
-          "name": "Ask Women Subreddit",
-          "home_page_url": "https://www.reddit.com/r/AskWomen/"
-        },
-        {
-          "url": "https://www.reddit.com/r/TrueAskReddit/top/.json?raw_json=1",
-          "name": "True Ask Reddit Subreddit",
-          "home_page_url": "https://www.reddit.com/r/TrueAskReddit/"
-        },
-        {
-          "url": "https://www.reddit.com/r/askscience/top/.json?raw_json=1",
-          "name": "Ask Science Subreddit",
-          "home_page_url": "https://www.reddit.com/r/askscience/"
-        },
-        {
-          "url": "https://www.reddit.com/r/askphilosophy/top/.json?raw_json=1",
-          "name": "Ask Philosophy Subreddit",
-          "home_page_url": "https://www.reddit.com/r/askphilosophy/"
-        }
-      ]
-    },
-    {
-      "id": "source-reddit-wallstreetbets",
-      "type": "reddit",
-      "rules": [
-        {
-          "type": "topRatio",
-          "value": "0.1"
-        }
-      ],
-      "api": {
-        "url": "https://www.reddit.com/r/wallstreetbets/top/.json?raw_json=1",
-        "name": "Wall Street Bets Subreddit",
-        "home_page_url": "https://www.reddit.com/r/wallstreetbets/"
-      }
-    },
-    {
-      "id": "source-reddit-bogleheads",
-      "type": "reddit",
-      "rules": [
-        {
-          "type": "topRatio",
-          "value": "0.2"
-        }
-      ],
-      "api": {
-        "url": "https://www.reddit.com/r/Bogleheads/top/.json?raw_json=1",
-        "name": "Bogleheads Subreddit",
-        "home_page_url": "https://www.reddit.com/r/Bogleheads/"
-      }
-    },
-    {
-      "id": "source-reddit-stocks",
-      "type": "reddit",
-      "api": [
-        {
-          "url": "https://www.reddit.com/r/stocks/top/.json?raw_json=1",
-          "name": "Stocks Subreddit",
-          "home_page_url": "https://www.reddit.com/r/stocks/"
-        },
-        {
-          "url": "https://www.reddit.com/r/investing/top/.json?raw_json=1",
-          "name": "Investing Subreddit",
-          "home_page_url": "https://www.reddit.com/r/investing/"
-        }
-      ],
-      "rules": [
-        {
-          "type": "topRatio",
-          "value": "0.2"
-        }
-      ]
-    },
-    {
       "id": "source-producthunt-top",
       "api": {
         "url": "https://api.producthunt.com/v2/api/graphql",
@@ -2522,28 +2364,6 @@
         "home_page_url": "https://www.producthunt.com/"
       },
       "type": "ph"
-    },
-    {
-      "id": "source-crypto-reddit",
-      "api": [
-        {
-          "url": "https://www.reddit.com/r/CryptoCurrency/top/.json?raw_json=1",
-          "name": "Crypto Currency Subreddit",
-          "home_page_url": "https://www.reddit.com/r/CryptoCurrency/"
-        },
-        {
-          "url": "https://www.reddit.com/r/Bitcoin/top/.json?raw_json=1",
-          "name": "Bitcoin Subreddit",
-          "home_page_url": "https://www.reddit.com/r/Bitcoin/"
-        }
-      ],
-      "type": "reddit",
-      "rules": [
-        {
-          "type": "topRatio",
-          "value": "0.3"
-        }
-      ]
     },
     {
       "id": "source-devto",
@@ -2559,39 +2379,6 @@
         "name": "Dev.to",
         "home_page_url": "https://dev.to/"
       }
-    },
-    {
-      "id": "source-reddit-sideproject",
-      "api": [
-        {
-          "url": "https://www.reddit.com/r/SideProject/top/.json?raw_json=1",
-          "name": "Side Project Subreddit",
-          "home_page_url": "https://www.reddit.com/r/SideProject/"
-        }
-      ],
-      "type": "reddit",
-      "rules": [
-        {
-          "type": "topRatio",
-          "value": "0.8"
-        }
-      ]
-    },
-    {
-      "api": [
-        {
-          "url": "https://www.reddit.com/r/TrueReddit/new/.json?raw_json=1",
-          "name": "True Reddit Subreddit",
-          "home_page_url": "https://www.reddit.com/r/TrueReddit/"
-        },
-        {
-          "url": "https://www.reddit.com/r/Foodforthought/new/.json?raw_json=1",
-          "name": "Food for Thought Subreddit",
-          "home_page_url": "https://www.reddit.com/r/Foodforthought/"
-        }
-      ],
-      "id": "source-reddit-depth",
-      "type": "reddit"
     },
     {
       "api": {
@@ -2688,36 +2475,6 @@
       "id": "source-newyorker"
     },
     {
-      "id": "source-reddit-mealtimevideos",
-      "type": "reddit",
-      "api": {
-        "url": "https://www.reddit.com/r/mealtimevideos/top/.json?raw_json=1",
-        "name": "Mealtime Videos Subreddit",
-        "home_page_url": "https://www.reddit.com/r/mealtimevideos/"
-      },
-      "rules": [
-        {
-          "type": "topRatio",
-          "value": "0.8"
-        }
-      ]
-    },
-    {
-      "id": "source-reddit-videos",
-      "type": "reddit",
-      "api": {
-        "url": "https://www.reddit.com/r/videos/top/.json?raw_json=1",
-        "name": "Videos Subreddit",
-        "home_page_url": "https://www.reddit.com/r/videos/"
-      },
-      "rules": [
-        {
-          "type": "topRatio",
-          "value": "0.8"
-        }
-      ]
-    },
-    {
       "id": "source-lobste",
       "type": "lobste",
       "api": {
@@ -2725,84 +2482,6 @@
         "name": "Lobste.rs",
         "home_page_url": "https://lobste.rs/"
       }
-    },
-    {
-      "id": "source-reddit-linux",
-      "type": "reddit",
-      "api": {
-        "url": "https://www.reddit.com/r/linux/new/.json?raw_json=1",
-        "name": "Linux Subreddit",
-        "home_page_url": "https://www.reddit.com/r/linux/"
-      },
-      "rules": [
-        {
-          "type": "topRatio",
-          "value": "0.8"
-        }
-      ]
-    },
-    {
-      "id": "source-reddit-china",
-      "type": "reddit",
-      "api": {
-        "url": "https://www.reddit.com/r/china/top/.json?raw_json=1",
-        "name": "China Subreddit",
-        "home_page_url": "https://www.reddit.com/r/China/"
-      },
-      "rules": [
-        {
-          "type": "topRatio",
-          "value": "0.7"
-        }
-      ]
-    },
-    {
-      "id": "source-reddit-askfeminist",
-      "type": "reddit",
-      "api": {
-        "url": "https://www.reddit.com/r/AskFeminists/top/.json?raw_json=1",
-        "name": "Ask Feminists Subreddit",
-        "home_page_url": "https://www.reddit.com/r/AskFeminists/"
-      }
-    },
-    {
-      "id": "source-reddit-feminism",
-      "type": "reddit",
-      "api": {
-        "url": "https://www.reddit.com/r/Feminism/top/.json?raw_json=1",
-        "name": "Feminism Subreddit",
-        "home_page_url": "https://www.reddit.com/r/Feminism/"
-      },
-      "rules": [
-        {
-          "type": "topRatio",
-          "value": "0.7"
-        }
-      ]
-    },
-    {
-      "id": "source-reddit-technology",
-      "type": "reddit",
-      "api": {
-        "url": "https://www.reddit.com/r/technology/top/.json?raw_json=1",
-        "name": "Technology Subreddit",
-        "home_page_url": "https://www.reddit.com/r/technology/"
-      }
-    },
-    {
-      "id": "source-reddit-worldnews",
-      "type": "reddit",
-      "api": {
-        "url": "https://www.reddit.com/r/worldnews/top/.json?raw_json=1",
-        "name": "World News Subreddit",
-        "home_page_url": "https://www.reddit.com/r/worldnews/"
-      },
-      "rules": [
-        {
-          "type": "topRatio",
-          "value": "0.7"
-        }
-      ]
     },
     {
       "id": "source-the-guardian",
