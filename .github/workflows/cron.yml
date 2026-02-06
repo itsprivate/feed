@@ -87,6 +87,9 @@ jobs:
           TWITTER_ACCESS_TOKEN_SECRET: ${{secrets.TWITTER_ACCESS_TOKEN_SECRET}}
           TWITTER_CONSUMER_SECRET: ${{secrets.TWITTER_CONSUMER_SECRET}}
           PRODUCTHUNT_TOKEN: ${{secrets.PRODUCTHUNT_TOKEN}}
+          REDDIT_CLIENT_ID: ${{secrets.REDDIT_CLIENT_ID}}
+          REDDIT_CLIENT_SECRET: ${{secrets.REDDIT_CLIENT_SECRET}}
+          REDLIB_URL: ${{secrets.REDLIB_URL}}
           TRANSLATE_COUNT: ${{ github.event.inputs.translate_count }}
           TRANSLATE_TIMEOUT: ${{ github.event.inputs.translate_timeout }}
           ALL: ${{ github.event_name=='push' && '1' ||  github.event.inputs.force_all }}

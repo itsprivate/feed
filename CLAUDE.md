@@ -4,27 +4,19 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a Deno-based RSS feed aggregator and static site generator that:
-- Fetches content from multiple sources (HN, Reddit, Twitter, RSS feeds, etc.)
-- Translates content to multiple languages (zh-Hans, zh-Hant, en, ja)
-- Generates static sites deployed to Cloudflare Pages
-- Archives historical content to S3-compatible storage
+Deno-based RSS feed aggregator and static site generator powering **buzzing.cc**. Fetches content from ~50 sources (HN, Reddit, Twitter, RSS, Google News, Product Hunt, etc.), translates to 4 languages (zh-Hans, zh-Hant, en, ja), and generates static sites deployed to Cloudflare Pages. Archives historical content to S3-compatible storage.
 
 ## Common Commands
 
 ```bash
-# Development - run full pipeline with watch mode (single site)
+# Development - run full pipeline (devfeed site, with watch mode)
 make run
 
-# Development - run specific site
+# Run specific site
 make runsite site=devfeed
 
-# Run tests
-make test           # or: deno test -A
-
-# Format code
-make fmt            # or: deno fmt
-make checkfmt       # check formatting: deno fmt --check
+# Run a specific stage on a specific site
+make stage stage=translate site=devfeed
 
 # Individual stages
 make fetch          # fetch from sources
@@ -33,75 +25,131 @@ make tr             # translate items
 make build          # build static sites
 make serve          # build and serve locally
 
+# Testing
+make test                            # run all tests: deno test -A
+deno test -A ./adapters/hn_test.ts   # run a single test file
+deno test -A --filter "test name"    # run tests matching a name
+
+# Formatting
+make fmt            # deno fmt
+make checkfmt       # deno fmt --check
+
+# Config regeneration (after editing config.yml)
+make config
+
 # Production variants (prefix with prod-)
 make prod-source    # fetch+format+translate+build_current
 make prod-build     # build all sites
 make prod-serve     # build and serve
 
-# Run specific stage on specific site
-make stage stage=translate site=devfeed
-
 # Cache management
 make loadcurrent    # download cache from S3
 make uploadcurrent  # upload cache to S3
+
+# Deploy a site to Cloudflare Pages
+make publish site=sitename
+make prod-publishall   # publish all sites
 ```
 
 ## Architecture
 
-### Pipeline Stages (workflows/)
-The main processing pipeline runs in numbered stages:
-1. `1-fetch-sources.ts` - Fetch raw content from configured sources
-2. `2-format-items.ts` - Normalize items to standard format (FormatedItem)
-3. `3-translate-items.ts` - Translate content using headless browser translation
-4. `4-build-current.ts` - Build current content cache
-5. `5-archive.ts` - Archive items for historical access
-6. `6-build-site.ts` - Generate static HTML sites
-7. `7_0-build-index-site.ts` - Build the index site (www)
-8. `7-serve-site.ts` - Local development server
+### Pipeline (main.ts → workflows/)
 
-### Adapters (adapters/)
-Source-specific adapters handle fetching and parsing:
-- `hn.ts` - Hacker News
-- `reddit.ts` - Reddit
-- `twitter.ts`, `twitterv2.ts` - Twitter/X
-- `rss.ts` - Generic RSS feeds
-- `googlenews.ts` - Google News
-- `ph.ts` - Product Hunt
-- And others for specific sites
+`main.ts` is the single entry point. It regenerates config, then runs numbered stages sequentially:
+
+1. **fetch** (`1-fetch-sources.ts`) — Fetches raw content from APIs, writes JSON to `cache/1-raw/`
+2. **format** (`2-format-items.ts`) — Instantiates adapter classes, calls `getFormatedItem()`, writes to `cache/2-formated/`
+3. **translate** (`3-translate-items.ts`) — Translates titles via DeepL Pro API (`dp.ts`), writes to `cache/3-translated/`. zh-Hant is auto-generated from zh-Hans in `build-config.ts`
+4. **build_current** (`4-build-current.ts`) — Merges translated items into `current/items/{site}/items.json`
+5. **archive** (`5-archive.ts`) — Archives items by week (currently disabled)
+6. **build_site** (`6-build-site.ts`) — Generates `feed.json`, `feed.xml`, `index.html` per (language × version) combination
+7. **build_index_site** (`7_0-build-index-site.ts`) — Builds the buzzing.cc homepage (www site)
+8. **serve_site** (`7-serve-site.ts`) — Local dev server
+
+CLI shortcuts: `--source` = stages 1-4, `--build` = stages 6-7, `--serve` = stages 6-8.
+
+### Adapter Pattern (adapters/)
+
+Each source type has an adapter class extending `Item<T>` (defined in `item.ts`), where `T` is the raw API response type. Adapters override getter methods: `getId()`, `getTitle()`, `getUrl()`, `getOriginalPublishedDate()`, `getScore()`, `getNumComments()`, `getImage()`, `getTags()`, etc. The base class's `getFormatedItem()` orchestrates building the normalized `FormatedItem`.
+
+Adapters are registered by type name in `adapters/mod.ts`. The `type` field in a source's config.yml entry must match a key in this registry.
+
+### Source-to-Site Mapping
+
+Sites and sources are linked via tags in `config.yml`. Each site has a `tags` array containing `source-*` entries that match source `id` fields. Example: site `hn` has tag `source-hackernews-new`, which matches the source with `id: source-hackernews-new`.
+
+### Key Data Types (interface.ts)
+
+- **`FormatedItem`** — Normalized item from any source (id, url, date, tags, translations, score, etc.)
+- **`FeedItem extends FormatedItem`** — Adds title, summary, content_html, author for display
+- **`Feedjson`** — JSON Feed format with items array and site metadata
+- **`ItemsJson`** — On-disk cache format: `{ meta, items: Record<string, FormatedItem>, tags }`
+- **`Config`** / **`SiteConfig`** / **`Source`** — Configuration types
+
+Item identifiers follow the pattern: `{lang}_{type}_{year}_{month}_{day}__{id}`
+
+### Site Generation
+
+For each site, `6-build-site.ts` generates output for every (language, version) combination:
+- Languages: zh-Hans (default, no prefix), zh-Hant, en, ja
+- Versions: default, lite
+
+Output goes to `public/{site}/` with paths like `en/lite/feed.json`. Templates are Mustache files in `templates/`.
 
 ### Key Files
-- `config.yml` - Site and source configuration
-- `config.gen.json` - Generated config (from config.yml via `make config`)
-- `main.ts` - Entry point, orchestrates stages
-- `interface.ts` - TypeScript interfaces for all data types
-- `item.ts` - Item class with formatting and translation logic
-- `util.ts` - Shared utilities
-- `deps.ts` - Centralized dependency imports
 
-### Directory Structure
-- `current/` / `prod-current/` - Current content cache
-- `archive/` / `prod-archive/` - Historical archives
-- `cache/` / `prod-cache/` - Translation and fetch cache
-- `public/` / `prod-public/` - Generated static sites
-- `templates/` - Mustache templates for HTML generation
+- `config.yml` — Master config (~2400 lines): all sites, sources, translations, languages, versions
+- `config.gen.json` — Generated from config.yml via `make config` / `build-config.ts`
+- `item.ts` — Base `Item<T>` class (~700 lines), core adapter abstraction
+- `interface.ts` — All TypeScript interfaces
+- `util.ts` — Shared utilities (file paths, HTTP, slugs, dates, S3)
+- `deps.ts` — Centralized dependency imports
+- `dp.ts` — Active translation backend (DeepL Pro via Immersive Translate API)
+- `filter-by-rules.ts` — Rule engine: limit, deduplicate, topRatio, notEqual, notInclude, notEndsWith
+- `items-to-feed.ts` — Converts `ItemsJson` to `Feedjson`
+- `feed-to-html.ts` — Renders `Feedjson` to HTML via Mustache
+- `constant.ts` — `ROOT_DOMAIN` ("buzzing.cc"), item limits
+
+### Runtime Data Directories (gitignored)
+
+- `cache/1-raw/`, `cache/2-formated/`, `cache/3-translated/` — Pipeline stage outputs
+- `current/items/{site}/` — Current merged items per site
+- `public/{site}/` — Generated static site output
+- `archive/` — Historical archives
+- Prefix with `prod-` when `PROD=1`
 
 ## Environment Variables
 
-- `PROD=1` - Use production paths (prod-current, prod-archive, etc.)
-- `DEBUG=1` - Enable debug logging
-- `MOCK=0` - Disable translation mocking
-- `HEADLESS=1` - Run browser in headless mode
-- `NO_SERVE=1` - Skip serving after build
-- `NO_TRANSLATE=1` - Skip translation stage
-- `SITE=sitename` - Target specific site
+- `PROD=1` — Use production paths (prod-current, prod-cache, etc.)
+- `DEBUG=1` — Enable debug logging
+- `MOCK=0` — Disable translation mocking (dev mode mocks by default)
+- `NO_TRANSLATE=1` — Skip translation stage
+- `NO_SERVE=1` — Skip serving after build
+- `SITE=sitename` — Target specific site
+- `FILES=N` — Override dev mode item count limit
+- `REDLIB_URL` — Self-hosted Redlib instance URL for Reddit data (e.g. `https://redlib.example.com`)
+- `REDDIT_CLIENT_ID` — Reddit OAuth app client ID (optional, register at https://www.reddit.com/prefs/apps)
+- `REDDIT_CLIENT_SECRET` — Reddit OAuth app client secret (optional)
 
-## Configuration
+## Configuration (config.yml)
 
-Sites and sources are defined in `config.yml`:
-- Sites define ports, tags, translations, and display options
-- Sources define adapters, APIs, and filtering rules
-- Tags link sources to sites (e.g., `source-hackernews-new` tag)
+Sites are `standalone` (www, i, picks — excluded from normal pipeline) or regular. Regular sites need:
+- `port` — Local dev server port
+- `tags` — Navigation grouping + `source-*` tags linking to sources
+- `translations` — Per-language title, short_title, description, keywords
 
-## Data Flow
+Sources need:
+- `id` — Must match a site's `source-*` tag
+- `type` — Adapter type (must exist in `adapters/mod.ts`)
+- `api` — URL, name, home_page_url
+- `rules` — Optional filtering rules (limit, notInclude, deduplicate, etc.)
 
-Raw Source -> FormatedItem -> FeedItem (with translations) -> Feedjson -> Static HTML
+After editing config.yml, run `make config` to regenerate `config.gen.json`.
+
+## Deployment
+
+Sites deploy to `{site}.buzzing.cc` via Cloudflare Pages using wrangler. CI runs via `.github/workflows/cron.yml`: fetch → format → translate → build → upload cache to S3 → publish all sites. The archive site runs as a Docker container (`serve-archive-site.ts`) serving content from S3.
+
+## Tool Versions
+
+`mise.toml` pins Deno (latest) and AWS CLI versions.

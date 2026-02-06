@@ -4,7 +4,7 @@ ifneq (,$(wildcard ./.env))
 endif
 .Phony: source
 source:
-	deno run -A main.ts --source --site china
+	deno run -A main.ts --source --site redditchina
 .Phony: source-all
 source-all:
 	deno run -A main.ts --source

@@ -290,7 +290,7 @@ sites:
 
   ask:
     port: 8007
-    stop: true
+    stop: false
     priority: 26
     redirect: true
     category: Discuss

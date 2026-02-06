@@ -37,6 +37,13 @@ import { fs, parseFeed, parseXml, path, SimpleTwitter } from "../deps.ts";
 import log from "../log.ts";
 import fetchPHData from "../sources/fetch-ph.ts";
 import { getTweets as fetchTwitterV2Data } from "../sources/fetch-twitter.ts";
+import {
+  getRedditAccessToken,
+  getRedditUserAgent,
+  hasRedditCredentials,
+  redditUrlToOAuth,
+} from "../reddit-auth.ts";
+import { fetchFromRedlib } from "../redlib.ts";
 export default async function fetchSources(
   options: RunOptions,
 ): Promise<{ postTasks: Task[] }> {
@@ -455,6 +462,52 @@ export default async function fetchSources(
           originalJson = await fetchPHData();
         } catch (e) {
           log.error(`fetch ph failed`, e);
+          continue;
+        }
+      } else if (sourceType === "reddit") {
+        const redlibUrl = Deno.env.get("REDLIB_URL");
+        try {
+          if (hasRedditCredentials()) {
+            // OAuth path: use oauth.reddit.com with bearer token
+            const token = await getRedditAccessToken();
+            const oauthUrl = redditUrlToOAuth(sourceUrl);
+            const c = new AbortController();
+            const timeoutId = setTimeout(() => c.abort(), 30000);
+            const originItemResult = await fetch(oauthUrl, {
+              headers: {
+                "User-Agent": getRedditUserAgent(),
+                "Authorization": `Bearer ${token}`,
+              },
+              signal: c.signal,
+            });
+            clearTimeout(timeoutId);
+            if (!originItemResult.ok) {
+              throw new Error(
+                `Reddit OAuth request failed: ${oauthUrl}, ${originItemResult.status}`,
+              );
+            }
+            originalJson = await originItemResult.json();
+          } else if (redlibUrl) {
+            // Redlib path: fetch from self-hosted Redlib instance
+            originalJson = await fetchFromRedlib(sourceUrl, redlibUrl);
+          } else {
+            // Direct request with proper bot User-Agent
+            const c = new AbortController();
+            const timeoutId = setTimeout(() => c.abort(), 30000);
+            const originItemResult = await fetch(sourceUrl, {
+              headers: { "User-Agent": getRedditUserAgent() },
+              signal: c.signal,
+            });
+            clearTimeout(timeoutId);
+            if (!originItemResult.ok) {
+              throw new Error(
+                `Reddit request failed: ${sourceUrl}, ${originItemResult.status}`,
+              );
+            }
+            originalJson = await originItemResult.json();
+          }
+        } catch (e) {
+          log.error(`fetch reddit ${sourceUrl} error`, e);
           continue;
         }
       } else {
