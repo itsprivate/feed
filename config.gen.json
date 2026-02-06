@@ -349,7 +349,7 @@
     "reddit": {
       "port": 8005,
       "priority": 17,
-      "stop": true,
+      "stop": false,
       "redirect": true,
       "category": "Entertainment",
       "max_image_height": 520,
@@ -429,7 +429,7 @@
     },
     "stocks": {
       "port": 8008,
-      "stop": true,
+      "stop": false,
       "redirect": true,
       "category": "Finance",
       "priority": 28,
@@ -550,7 +550,7 @@
     },
     "crypto": {
       "port": 8010,
-      "stop": true,
+      "stop": false,
       "archive": true,
       "redirect": true,
       "category": "Finance",
@@ -667,7 +667,7 @@
     "depth": {
       "port": 8013,
       "archive": true,
-      "stop": true,
+      "stop": false,
       "category": "Featured",
       "redirect": true,
       "priority": 17,
@@ -830,7 +830,7 @@
     },
     "sideproject": {
       "port": 8017,
-      "stop": true,
+      "stop": false,
       "archive": true,
       "redirect": true,
       "category": "Product",
@@ -907,7 +907,7 @@
     },
     "videos": {
       "port": 8020,
-      "stop": true,
+      "stop": false,
       "archive": true,
       "redirect": false,
       "priority": 23,
@@ -985,7 +985,7 @@
     "linux": {
       "port": 8022,
       "priority": 41,
-      "stop": true,
+      "stop": false,
       "archive": true,
       "category": "Dev",
       "tags": [
@@ -1061,7 +1061,7 @@
     },
     "feminism": {
       "port": 8024,
-      "stop": true,
+      "stop": false,
       "priority": 30,
       "category": "Discuss",
       "archive": true,
@@ -1102,7 +1102,7 @@
     },
     "tech": {
       "port": 8025,
-      "stop": true,
+      "stop": false,
       "priority": 25,
       "archive": true,
       "category": "Tech",
@@ -1140,7 +1140,7 @@
     },
     "worldnews": {
       "port": 8026,
-      "stop": true,
+      "stop": false,
       "priority": 18,
       "archive": true,
       "category": "News",
