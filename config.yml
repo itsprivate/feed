@@ -2037,10 +2037,7 @@ sources:
       name: Google News China
     rules:
       - type: limit
-        value: "10"
-      - type: notEndsWith
-        key: getHostname
-        value: ".cn"
+        value: "25"
   - api:
       url: spectatorindex
       name: The Spectator Index Twitter
