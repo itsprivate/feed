@@ -72,6 +72,7 @@ export default class Item<T> {
     if (
       this.getTitle() &&
       (type === "googlenews" ||
+        type === "googlenewsweb" ||
         type === "twitter" ||
         type === "twitterlink" ||
         type === "blueskylink" ||

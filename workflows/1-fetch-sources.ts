@@ -44,6 +44,7 @@ import {
   redditUrlToOAuth,
 } from "../reddit-auth.ts";
 import { fetchFromRedlib } from "../redlib.ts";
+import { fetchGoogleNewsWeb } from "../sources/fetch-googlenews-web.ts";
 export default async function fetchSources(
   options: RunOptions,
 ): Promise<{ postTasks: Task[] }> {
@@ -474,6 +475,15 @@ export default async function fetchSources(
           log.error(`fetch ph failed`, e);
           continue;
         }
+      } else if (sourceType === "googlenewsweb") {
+        try {
+          const articles = await fetchGoogleNewsWeb(sourceUrl);
+          originalJson = articles;
+        } catch (e) {
+          log.error(`fetch google news web ${sourceUrl} failed`);
+          log.error(e);
+          continue;
+        }
       } else if (sourceType === "reddit") {
         const redlibUrl = Deno.env.get("REDLIB_URL");
         try {
@@ -559,7 +569,7 @@ export default async function fetchSources(
       );
       sourceStat.raw_count = originalItems.length;
       // if google news limit time
-      if (sourceType === "googlenews") {
+      if (sourceType === "googlenews" || sourceType === "googlenewsweb") {
         let itemsCount = 10;
         originalItems = originalItems.filter(
           (item: Item<unknown>, index: number) => {

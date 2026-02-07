@@ -8,6 +8,7 @@ import devto from "./devto.ts";
 import { Type } from "../interface.ts";
 import newyorker from "./newyorker.ts";
 import googlenews from "./googlenews.ts";
+import googlenewsweb from "./googlenewsweb.ts";
 import lobste from "./lobste.ts";
 import thechinaproject from "./thechinaproject.ts";
 import twitterlink from "./twitterlink.ts";
@@ -28,6 +29,8 @@ const adapters: Record<string, Type<Item<RedditItem>>> = {
   rss,
   // @ts-ignore: hard to type
   googlenews,
+  // @ts-ignore: hard to type
+  googlenewsweb,
   // @ts-ignore: hard to type
   twitter,
   // @ts-ignore: hard to type

@@ -2566,25 +2566,20 @@
     },
     {
       "id": "source-google-china",
-      "type": "googlenews",
+      "type": "googlenewsweb",
       "api": {
-        "url": "https://proxy-sg.owenyoung.com/rss/topics/CAAqIggKIhxDQkFTRHdvSkwyMHZNR1F3TlhjekVnSmxiaWdBUAE?hl=en-US&gl=US&ceid=US%3Aen&_host=news.google.com",
+        "url": "https://news.google.com/topics/CAAqIggKIhxDQkFTRHdvSkwyMHZNR1F3TlhjekVnSmxiaWdBUAE?hl=en-US&gl=US&ceid=US:en",
         "name": "Google News China"
       },
       "rules": [
         {
           "type": "limit",
-          "value": "20"
+          "value": "10"
         },
         {
           "type": "notEndsWith",
           "key": "getHostname",
           "value": ".cn"
-        },
-        {
-          "type": "notInclude",
-          "key": "getTags",
-          "value": "U.S. News & World Report"
         }
       ]
     },
