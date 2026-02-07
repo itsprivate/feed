@@ -16,12 +16,86 @@ import {
   writeJSONFile,
 } from "../util.ts";
 import log from "../log.ts";
+
+async function cleanupOldRawFiles(rawPath: string) {
+  const now = new Date();
+  const oneMonthAgo = new Date(
+    now.getFullYear(),
+    now.getMonth() - 1,
+    now.getDate(),
+  );
+  let removedCount = 0;
+
+  try {
+    for await (const yearEntry of Deno.readDir(rawPath)) {
+      if (!yearEntry.isDirectory || !/^\d{4}$/.test(yearEntry.name)) continue;
+      const yearPath = path.join(rawPath, yearEntry.name);
+      const year = parseInt(yearEntry.name);
+
+      for await (const monthEntry of Deno.readDir(yearPath)) {
+        if (!monthEntry.isDirectory || !/^\d{2}$/.test(monthEntry.name)) {
+          continue;
+        }
+        const monthPath = path.join(yearPath, monthEntry.name);
+        const month = parseInt(monthEntry.name);
+
+        for await (const dayEntry of Deno.readDir(monthPath)) {
+          if (!dayEntry.isDirectory || !/^\d{2}$/.test(dayEntry.name)) continue;
+          const dayPath = path.join(monthPath, dayEntry.name);
+          const day = parseInt(dayEntry.name);
+
+          const dirDate = new Date(year, month - 1, day);
+          if (dirDate < oneMonthAgo) {
+            await Deno.remove(dayPath, { recursive: true });
+            removedCount++;
+          }
+        }
+
+        // remove month dir if empty
+        try {
+          const remaining = [];
+          for await (const e of Deno.readDir(monthPath)) {
+            remaining.push(e);
+            break;
+          }
+          if (remaining.length === 0) {
+            await Deno.remove(monthPath);
+          }
+        } catch { /* ignore */ }
+      }
+
+      // remove year dir if empty
+      try {
+        const remaining = [];
+        for await (const e of Deno.readDir(yearPath)) {
+          remaining.push(e);
+          break;
+        }
+        if (remaining.length === 0) {
+          await Deno.remove(yearPath);
+        }
+      } catch { /* ignore */ }
+    }
+  } catch (e) {
+    log.warn(`cleanup old raw files error: ${e.message}`);
+  }
+
+  if (removedCount > 0) {
+    log.info(
+      `cleaned up ${removedCount} old raw day directories (older than 1 month)`,
+    );
+  }
+}
+
 export default async function formatItems(
   options: RunOptions,
 ) {
   // get all 1-raw files
   // is exists raw files folder
   await fs.ensureDir(getDataRawPath());
+
+  // cleanup raw files older than 1 month to avoid repeated format errors on stale files
+  await cleanupOldRawFiles(getDataRawPath());
   const sites = options.siteIdentifiers || [];
   let { files, targetSiteIdentifiers } = await getFilesByTargetSiteIdentifiers(
     getDataRawPath(),

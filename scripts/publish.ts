@@ -2,6 +2,7 @@ import { fs } from "../deps.ts";
 import {
   getChangedSitePaths,
   getDistPath,
+  getGenConfig,
   pathToSiteIdentifier,
   readJSONFile,
 } from "../util.ts";
@@ -33,6 +34,19 @@ export default async function publishToPages() {
       }
     }
   }
+
+  // filter out stopped sites
+  const config = await getGenConfig();
+  const stoppedSites = siteIdentifiers.filter(
+    (s) => s !== indexSubDomain && config.sites[s]?.stop === true,
+  );
+  if (stoppedSites.length > 0) {
+    log.info(`skipping stopped sites: ${stoppedSites.join(", ")}`);
+    siteIdentifiers = siteIdentifiers.filter(
+      (s) => !config.sites[s]?.stop,
+    );
+  }
+
   // resort site
   siteIdentifiers = siteIdentifiers.sort((a, b) => {
     if (a === indexSubDomain) {
