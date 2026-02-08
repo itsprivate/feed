@@ -2574,7 +2574,7 @@
       "rules": [
         {
           "type": "limit",
-          "value": "25"
+          "value": "20"
         }
       ]
     },

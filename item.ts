@@ -513,10 +513,16 @@ export default class Item<T> {
       if (this.realUrl === undefined) {
         // try to get redirected url
         const originalUrl = this.getUrl();
-        const redirectedUrl = await getRedirectedUrl(originalUrl);
-        this.realUrl = redirectedUrl;
-        formatedItem.url = this.realUrl;
-        formatedItem._raw_url = originalUrl;
+        try {
+          const redirectedUrl = await getRedirectedUrl(originalUrl);
+          this.realUrl = redirectedUrl;
+          formatedItem.url = this.realUrl;
+          formatedItem._raw_url = originalUrl;
+        } catch (e) {
+          log.debug(`Failed to get redirected URL for ${this.getItemIdentifier()}: ${e.message}`);
+          // Keep using original URL if redirect fails
+          this.realUrl = originalUrl;
+        }
       }
     }
     // transform url
@@ -527,9 +533,19 @@ export default class Item<T> {
       if (options && options.imageCachedMap) {
         imageCachedMap = options.imageCachedMap;
       }
-      await this.tryToLoadImage(imageCachedMap);
-      if (this.image) {
-        formatedItem.image = this.image;
+      try {
+        // Add timeout protection for image loading (20 seconds)
+        const imagePromise = this.tryToLoadImage(imageCachedMap);
+        const timeoutPromise = new Promise<null>((_, reject) =>
+          setTimeout(() => reject(new Error("Image load timeout")), 20000)
+        );
+        await Promise.race([imagePromise, timeoutPromise]);
+        if (this.image) {
+          formatedItem.image = this.image;
+        }
+      } catch (e) {
+        log.debug(`Failed to load image for ${this.getItemIdentifier()}: ${e.message}`);
+        this.image = null;
       }
     }
     if (this.getTitle() === undefined) {
@@ -537,15 +553,24 @@ export default class Item<T> {
       if (options && options.titleCachedMap) {
         imageCachedMap = options.titleCachedMap;
       }
-      await this.tryToLoadTitle(imageCachedMap);
-      if (this.title) {
-        if (
-          formatedItem._translations &&
-          formatedItem._translations[this.getOriginalLanguage()]
-        ) {
-          formatedItem._translations[this.getOriginalLanguage()].title =
-            this.title;
+      try {
+        // Add timeout protection for title loading (20 seconds)
+        const titlePromise = this.tryToLoadTitle(imageCachedMap);
+        const timeoutPromise = new Promise<null>((_, reject) =>
+          setTimeout(() => reject(new Error("Title load timeout")), 20000)
+        );
+        await Promise.race([titlePromise, timeoutPromise]);
+        if (this.title) {
+          if (
+            formatedItem._translations &&
+            formatedItem._translations[this.getOriginalLanguage()]
+          ) {
+            formatedItem._translations[this.getOriginalLanguage()].title =
+              this.title;
+          }
         }
+      } catch (e) {
+        log.debug(`Failed to load title for ${this.getItemIdentifier()}: ${e.message}`);
       }
     }
     // if need to trim title suffix
