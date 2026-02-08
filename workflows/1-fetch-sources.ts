@@ -496,7 +496,7 @@ export default async function fetchSources(
             const originItemResult = await fetch(oauthUrl, {
               headers: {
                 "User-Agent": getRedditUserAgent(),
-                "Authorization": `Bearer ${token}`,
+                Authorization: `Bearer ${token}`,
               },
               signal: c.signal,
             });
@@ -570,7 +570,7 @@ export default async function fetchSources(
       sourceStat.raw_count = originalItems.length;
       // if google news limit time
       if (sourceType === "googlenews" || sourceType === "googlenewsweb") {
-        let itemsCount = 10;
+        let itemsCount = 20;
         originalItems = originalItems.filter(
           (item: Item<unknown>, index: number) => {
             if (sourceId === "source-google-newsall") {
@@ -587,6 +587,10 @@ export default async function fetchSources(
             }
           },
         );
+      }
+      // Initialize all items before filtering to ensure getId() works correctly
+      for (const item of originalItems) {
+        await item.init();
       }
       originalItems = filterByRules(originalItems, rules) as Item<unknown>[];
 

@@ -2037,7 +2037,7 @@ sources:
       name: Google News China
     rules:
       - type: limit
-        value: "25"
+        value: "20"
   - api:
       url: spectatorindex
       name: The Spectator Index Twitter
