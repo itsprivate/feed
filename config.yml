@@ -548,7 +548,7 @@ sites:
   nytimes:
     port: 8014
     archive: true
-    hide: true
+    hide: false
     category: News
     redirect: true
     priority: 28
@@ -582,7 +582,7 @@ sites:
     archive: true
     category: News
     redirect: true
-    hide: true
+    hide: false
     priority: 31
     tags:
       - depth
@@ -614,7 +614,7 @@ sites:
     archive: true
     category: News
     redirect: true
-    hide: true
+    hide: false
     priority: 23
     related:
       - economistnew
@@ -1101,7 +1101,7 @@ sites:
     port: 8035
     priority: 32
     archive: true
-    hide: true
+    hide: false
     category: News
     related:
       - reutersnew
@@ -1201,7 +1201,7 @@ sites:
   businessinsider:
     port: 8039
     priority: 32
-    hide: true
+    hide: false
     archive: true
     category: Finance
     tags:
