@@ -1,5 +1,6 @@
 import { Author, Embed } from "../interface.ts";
 import Item from "../item.ts";
+import log from "../log.ts";
 export default class ph extends Item<PHItem> {
   getOriginalPublishedDate(): Date {
     return new Date(this.originalItem.node.createdAt);
@@ -65,6 +66,28 @@ export default class ph extends Item<PHItem> {
     const node = this.originalItem.node;
     let url = "";
     if (node.media && node.media.length > 0) {
+      // Check if first media is an unsupported video (has videoUrl but not YouTube)
+      const firstMedia = node.media[0];
+      if (firstMedia.type === `video` && firstMedia.videoUrl && firstMedia.url) {
+        const videoUrl = firstMedia.videoUrl;
+        try {
+          const urlObj = new URL(videoUrl);
+          const isYouTube = urlObj.hostname === `www.youtube.com` ||
+            urlObj.hostname === `youtu.be` ||
+            urlObj.hostname === `youtube.com`;
+
+          // If not YouTube (e.g., Loom), use the preview image/gif as fallback
+          if (!isYouTube) {
+            log.debug(`Using preview image for unsupported video: ${videoUrl}`);
+            return firstMedia.url;
+          }
+        } catch (e) {
+          // If URL parsing fails, use the preview image as fallback
+          return firstMedia.url;
+        }
+      }
+
+      // Otherwise, find the first image type media
       const imageItem = node.media.find(
         (item) => item.type === `image` && item.url,
       );
@@ -108,7 +131,8 @@ export default class ph extends Item<PHItem> {
                 urlMatch.pathname.groups.id as string,
               );
             } else {
-              throw new Error(`cannot parse youtube url: ${url}`);
+              log.warn(`Cannot parse youtube url: ${url} - skipping embed`);
+              return undefined;
             }
           } else {
             // test is embed url
@@ -131,9 +155,10 @@ export default class ph extends Item<PHItem> {
           };
           return embed;
         } else {
-          throw new Error(
-            `unknown video provider: ${url} for ${this.getExternalUrl()} `,
+          log.warn(
+            `Unknown video provider: ${url} for ${this.getExternalUrl()} - skipping embed`,
           );
+          return undefined;
         }
       }
       // https://img.youtube.com/vi/nQCMDPWON5A/hqdefault.jpg
