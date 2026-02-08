@@ -22,7 +22,7 @@ export default class ph extends Item<PHItem> {
     return this.originalItem.node.commentsCount;
   }
   isNeedToGetRedirectedUrl() {
-    return true;
+    return false;
   }
 
   getUrl(): string {
