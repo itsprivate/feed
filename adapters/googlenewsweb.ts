@@ -51,6 +51,11 @@ export default class googlenewsweb extends Item<GoogleNewsWebArticle> {
     return new Date();
   }
 
+  override getPublishedDate(): Date {
+    // 使用原始发布时间作为 date_published，而不是抓取时间
+    return this.getOriginalPublishedDate();
+  }
+
   override getRawItem() {
     const item = { ...this.originalItem };
     item._id = this.getId();
