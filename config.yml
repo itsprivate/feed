@@ -2082,9 +2082,6 @@ sources:
       - url: https://rss.politico.com/technology.xml
         name: Politico Technology
         home_page_url: https://www.politico.com/technology
-      - name: Politico Politics
-        home_page_url: https://www.politico.com/politics
-        url: https://rss.politico.com/politics.xml
   - id: source-bluesky-politico
     type: blueskylink
     api:
