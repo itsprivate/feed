@@ -2,6 +2,9 @@ import RSS from "./rss.ts";
 import { sha1 } from "../util.ts";
 import log from "../log.ts";
 export default class economic extends RSS {
+  getImage(): string | null | undefined {
+    return undefined;
+  }
   getTitlePrefix(): string {
     const url = this.getUrl();
     const urlObj = new URL(url);
