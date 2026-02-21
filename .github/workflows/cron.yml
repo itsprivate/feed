@@ -71,7 +71,7 @@ jobs:
           AWS_DEFAULT_REGION: ${{secrets.AWS_DEFAULT_REGION}}
           AWS_ENDPOINT: ${{secrets.AWS_ENDPOINT}}
       - name: Install Chrome for Puppeteer
-        run: npx puppeteer browsers install chrome
+        run: deno install --allow-scripts=npm:puppeteer --entrypoint puppeteer_deps.ts
       - run: make prod-source
         # - run: make prod-sourcesite site=china
         id: source
