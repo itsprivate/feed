@@ -83,6 +83,7 @@ jobs:
           IM_DEEPL_TOKEN: ${{secrets.IM_DEEPL_TOKEN}}
           AWS_DEFAULT_REGION: ${{secrets.AWS_DEFAULT_REGION}}
           AWS_ENDPOINT: ${{secrets.AWS_ENDPOINT}}
+          DEEPL_TRANSLATE_URL: ${{secrets.DEEPL_TRANSLATE_URL}}
           PRODUCTHUNT_TOKEN: ${{secrets.PRODUCTHUNT_TOKEN}}
           REDDIT_CLIENT_ID: ${{secrets.REDDIT_CLIENT_ID}}
           REDDIT_CLIENT_SECRET: ${{secrets.REDDIT_CLIENT_SECRET}}

@@ -68,8 +68,12 @@ export default class Translation {
       //   targetLanguageRemote as Language
       // );
 
+      const translateUrl = Deno.env.get("DEEPL_TRANSLATE_URL");
+      if (!translateUrl) {
+        throw new Error("DEEPL_TRANSLATE_URL environment variable is not set");
+      }
       const res = await fetch(
-        "https://api2.immersivetranslate.com/deepl/translate",
+        translateUrl,
         {
           method: "POST",
           headers: {
