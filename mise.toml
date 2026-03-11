@@ -1,4 +1,4 @@
 [tools]
 deno = "latest"
-awscli = "2.22.35"
+awscli = { version = "2.22.35", symlink_bins = "true" }
 

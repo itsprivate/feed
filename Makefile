@@ -371,6 +371,14 @@ prod-zipuploadarchive:
 generateassets:
 	deno run -A ./scripts/generate-assets.ts
 
+.PHONY: dist
+dist:
+	deno run -A ./scripts/build-dist.ts $(site)
+
+.PHONY: dist-skipdownload
+dist-skipdownload:
+	deno run -A ./scripts/build-dist.ts --skip-download $(site)
+
 .Phony: testtweet
 testtweet:
 	deno test -A ./sources/fetch-twitter_test.ts
