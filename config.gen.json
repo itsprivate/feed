@@ -1605,6 +1605,7 @@
       }
     },
     "bloombergnew": {
+      "no_publish": true,
       "port": 8040,
       "priority": 18,
       "deduplicate": "and",

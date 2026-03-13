@@ -1224,6 +1224,7 @@ sites:
         description: "人気のビジネスインサイダーの最新 の投稿"
         keywords: "ビジネスインサイダー"
   bloombergnew:
+    no_publish: true
     port: 8040
     priority: 18
     deduplicate: and

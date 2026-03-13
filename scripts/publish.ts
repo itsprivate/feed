@@ -38,12 +38,14 @@ export default async function publishToPages() {
   // filter out stopped sites
   const config = await getGenConfig();
   const stoppedSites = siteIdentifiers.filter(
-    (s) => s !== indexSubDomain && config.sites[s]?.stop === true,
+    (s) =>
+      s !== indexSubDomain &&
+      (config.sites[s]?.stop === true || config.sites[s]?.no_publish === true),
   );
   if (stoppedSites.length > 0) {
-    log.info(`skipping stopped sites: ${stoppedSites.join(", ")}`);
+    log.info(`skipping stopped/no_publish sites: ${stoppedSites.join(", ")}`);
     siteIdentifiers = siteIdentifiers.filter(
-      (s) => !config.sites[s]?.stop,
+      (s) => !config.sites[s]?.stop && !config.sites[s]?.no_publish,
     );
   }
 
