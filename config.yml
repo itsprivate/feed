@@ -29,7 +29,7 @@ translations:
     advice_label: 提议更多喜欢的站点?
     more_posts_label: 还剩 {{count}} 篇...
     sources_label: 数据来源
-    disclaimer_label: 本站并非官方网站，仅对标题进行聚合翻译，所有内容版权归原站所有。
+    disclaimer_label: 本站并非官方网站，仅对标题进行聚合翻译，点击即跳转至原站，所有内容版权归原站所有。本站无意做 SEO 垃圾站，只是为了方便快速发现感兴趣的外语文章。
   en:
     about_label: About
     subscription_label: Subscription
@@ -53,7 +53,7 @@ translations:
     advice_label: Suggest a new site?
     more_posts_label: "{{count}} more..."
     sources_label: Sources
-    disclaimer_label: "This is an unofficial site. It only aggregates and translates content titles. All content copyrights belong to their original sources."
+    disclaimer_label: "This is an unofficial site that aggregates and translates titles only. Clicking any link takes you to the original site. All content copyrights belong to their original sources. This site is not an SEO spam farm — it simply helps you quickly discover interesting foreign-language articles."
   ja:
     about_label: このページについて
     subscription_label: 購読
@@ -77,7 +77,7 @@ translations:
     advice_label: 新しいサイトを提案しますか?
     more_posts_label: "{{count}}件のその他 ..."
     sources_label: ソース
-    disclaimer_label: 本サイトは非公式サイトです。コンテンツタイトルの集約と翻訳のみを行っており、すべてのコンテンツの著作権は元のサイトに帰属します。
+    disclaimer_label: 本サイトは非公式サイトです。タイトルの集約と翻訳のみを行い、リンクをクリックすると元のサイトに移動します。すべてのコンテンツの著作権は元のサイトに帰属します。SEO スパムサイトではなく、気になる外国語記事を素早く見つけるためのサイトです。
 
 sites:
   i:
