@@ -296,6 +296,7 @@
       {{/_other_sites.0}}
       <div class="about-content contrast small">
         <p class="p-summary site-description">{{ description }}</p>
+        <p><em>{{ disclaimer_label }}</em></p>
         <div>
         {{#_versions.1}}
         {{ version_label }}: {{#_versions}} {{#active}}
