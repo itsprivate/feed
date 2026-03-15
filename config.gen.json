@@ -1610,6 +1610,7 @@
     },
     "bloombergnew": {
       "no_publish": true,
+      "domain": "bbg.buzzing.cc",
       "port": 8040,
       "priority": 18,
       "deduplicate": "and",
