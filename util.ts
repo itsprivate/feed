@@ -349,6 +349,12 @@ export const urlToSiteIdentifier = (url: string, config: Config) => {
     if (urlObj.hostname.startsWith("dev-")) {
       hostname = hostname.substring(4);
     }
+    // check if any site has a custom domain matching this hostname
+    for (const siteId in config.sites) {
+      if (config.sites[siteId].domain === hostname) {
+        return siteId;
+      }
+    }
     return hostname.replace(`.${ROOT_DOMAIN}`, "");
   }
 };
