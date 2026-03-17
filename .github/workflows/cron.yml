@@ -72,6 +72,12 @@ jobs:
           AWS_ENDPOINT: ${{secrets.AWS_ENDPOINT}}
       - name: Install Chrome for Puppeteer
         run: deno install --allow-scripts=npm:puppeteer --entrypoint puppeteer_deps.ts
+      - name: Record baseline hash
+        id: baseline
+        run: |
+          hash=$(sha256sum prod-current/items/bloombergnew/items.json 2>/dev/null | cut -d' ' -f1 || echo "none")
+          echo "hash=$hash" >> $GITHUB_OUTPUT
+
       - run: make prod-source
         # - run: make prod-sourcesite site=china
         id: source
@@ -114,7 +120,18 @@ jobs:
           echo "::error::Source build failed"
           exit 1
 
+      - name: Check for updates
+        id: check_updates
+        run: |
+          hash=$(sha256sum prod-current/items/bloombergnew/items.json 2>/dev/null | cut -d' ' -f1 || echo "none")
+          if [ "$hash" != "${{ steps.baseline.outputs.hash }}" ]; then
+            echo "has_updates=true" >> $GITHUB_OUTPUT
+          else
+            echo "has_updates=false" >> $GITHUB_OUTPUT
+          fi
+
       - name: Trigger deployment
+        if: steps.check_updates.outputs.has_updates == 'true'
         run: |
           curl -X POST \
             -H "Accept: application/vnd.github+json" \
