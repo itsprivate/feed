@@ -2,3 +2,16 @@
 deno = "latest"
 awscli = { version = "2.22.35", symlink_bins = "true" }
 
+[tasks.build]
+run = '''
+TMP_DIR="$(mktemp -d)"
+trap 'rm -rf "$TMP_DIR"' EXIT
+
+rm -rf dist
+make dist site=bloombergnew
+
+mv dist/bloombergnew "$TMP_DIR/site"
+rm -rf dist
+mkdir -p dist
+cp -R "$TMP_DIR/site/." dist/
+'''
