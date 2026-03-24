@@ -1,0 +1,16 @@
+name: ${DOCKER_SERVICE_NAME}
+
+services:
+  ${DOCKER_SERVICE_NAME}:
+    image: ${IMAGE_TAG}
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      PORT: 3000
+    networks:
+      - shared
+
+networks:
+  shared:
+    external: true
