@@ -2035,9 +2035,10 @@
     },
     "axios": {
       "port": 8051,
-      "archive": true,
+      "archive": false,
       "category": "News",
-      "domain": "axiosnews.buzzing.cc",
+      "no_publish": true,
+      "domain": "axios.buzzing.cc",
       "redirect": false,
       "tags": [
         "news",

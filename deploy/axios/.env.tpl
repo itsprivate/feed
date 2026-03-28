@@ -1,6 +1,7 @@
 # Studio external app contract
 __PROJECT=axios
 __TYPE=static
+__BUILD_OUTPUT_DIR=dist/axios
 
 # URL
 PUBLIC_URL=https://axios.buzzing.cc

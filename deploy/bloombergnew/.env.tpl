@@ -1,6 +1,7 @@
 # Studio external app contract
 __PROJECT=bloombergnew
 __TYPE=static
+__BUILD_OUTPUT_DIR=dist/bloombergnew
 
 # URL
 PUBLIC_URL=https://bbg.buzzing.cc
