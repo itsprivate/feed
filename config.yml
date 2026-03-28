@@ -1530,6 +1530,7 @@ sites:
     redirect: false
     tags:
       - news
+      - www
       - source-rss-axios
     translations:
       "zh-Hans":
