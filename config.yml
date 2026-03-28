@@ -1527,6 +1527,7 @@ sites:
     port: 8051
     archive: false
     category: News
+    priority: 32
     no_publish: true
     domain: axios.buzzing.cc
     redirect: false
