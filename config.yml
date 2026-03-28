@@ -1527,6 +1527,7 @@ sites:
     port: 8051
     archive: true
     category: News
+    domain: axiosnews.buzzing.cc
     redirect: false
     tags:
       - news
