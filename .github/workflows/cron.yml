@@ -78,6 +78,11 @@ jobs:
           hash=$(sha256sum prod-current/items/bloombergnew/items.json 2>/dev/null | cut -d' ' -f1 || echo "none")
           echo "hash=$hash" >> $GITHUB_OUTPUT
 
+      - name: Record axios baseline hash
+        id: axios_baseline
+        run: |
+          hash=$(sha256sum prod-current/items/axios/items.json 2>/dev/null | cut -d' ' -f1 || echo "none")
+          echo "hash=$hash" >> $GITHUB_OUTPUT
       - run: make prod-source
         # - run: make prod-sourcesite site=china
         id: source
@@ -130,6 +135,16 @@ jobs:
             echo "has_updates=false" >> $GITHUB_OUTPUT
           fi
 
+      - name: Check for axios updates
+        id: check_axios_updates
+        run: |
+          hash=$(sha256sum prod-current/items/axios/items.json 2>/dev/null | cut -d' ' -f1 || echo "none")
+          if [ "$hash" != "${{ steps.axios_baseline.outputs.hash }}" ]; then
+            echo "has_updates=true" >> $GITHUB_OUTPUT
+          else
+            echo "has_updates=false" >> $GITHUB_OUTPUT
+          fi
+
       - name: Trigger deployment
         if: steps.check_updates.outputs.has_updates == 'true'
         run: |
@@ -138,6 +153,15 @@ jobs:
             -H "Authorization: token ${{ secrets.NEW_PERSONAL_TOKEN }}" \
             https://api.github.com/repos/tonormal/build/dispatches \
             -d '{"event_type":"deploy-external-app","client_payload":{"service":"bloombergnew","source_sha":"${{ github.sha }}"}}'
+
+      - name: Trigger deployment
+        if: steps.check_axios_updates.outputs.has_updates == 'true'
+        run: |
+          curl -X POST \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: token ${{ secrets.NEW_PERSONAL_TOKEN }}" \
+            https://api.github.com/repos/tonormal/build/dispatches \
+            -d '{"event_type":"deploy-external-app","client_payload":{"service":"axios","source_sha":"${{ github.sha }}"}}'
       - name: Publish pages
         if: true
         run: make prod-publishall

@@ -1525,8 +1525,9 @@ sites:
         keywords: "Ars Technica最新レポート"
   axios:
     port: 8051
-    archive: true
+    archive: false
     category: News
+    no_publish: true
     domain: axios.buzzing.cc
     redirect: false
     tags:
