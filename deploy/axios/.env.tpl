@@ -1,9 +1,9 @@
 # Studio external app contract
-__PROJECT=bloombergnew
+__PROJECT=axios
 __TYPE=static
 
 # URL
-PUBLIC_URL=https://bbg.buzzing.cc
+PUBLIC_URL=https://axios.buzzing.cc
 
 # Keys
 BUZZING_AWS_ACCESS_KEY_ID=
