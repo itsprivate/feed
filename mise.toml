@@ -9,9 +9,13 @@ trap 'rm -rf "$TMP_DIR"' EXIT
 
 rm -rf dist
 make dist site=bloombergnew
+mv dist/bloombergnew "$TMP_DIR/bloombergnew"
 
-mv dist/bloombergnew "$TMP_DIR/site"
+make dist site=axios
+mv dist/axios "$TMP_DIR/axios"
+
 rm -rf dist
 mkdir -p dist
-cp -R "$TMP_DIR/site/." dist/
+cp -R "$TMP_DIR/bloombergnew/." dist/bloombergnew/
+cp -R "$TMP_DIR/axios/." dist/axios/
 '''
