@@ -60,6 +60,10 @@ run:
 runsite:
 	deno run -A --watch=main.ts,templates/,config.yml main.ts --stage format,translate,build_current,archive,build_site,serve_site --site ${site}
 
+.Phony: runaxios
+runaxios:
+	deno run -A --watch=main.ts,templates/,config.yml main.ts --stage format,translate,build_current,archive,build_site,serve_site --site axios
+
 .Phony: prod-runsite
 prod-runsite:
 	PROD=1 deno run -A --watch=main.ts,templates/,config.yml main.ts --stage format,translate,build_current,archive,build_site,serve_site --site ${site}
@@ -168,6 +172,9 @@ buildcurrent:
 .Phony: dev
 dev:
 	wrangler pages dev public/${site}
+.Phony: devaxios
+devaxios:
+	wrangler pages dev public/axios
 .Phony: devprod
 devprod:
 	wrangler pages dev prod-public/${site}
