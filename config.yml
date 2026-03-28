@@ -736,7 +736,7 @@ sites:
         keywords: "buzzing,ビデオ"
   lobste:
     port: 8021
-    priority: 30
+    priority: 29
     category: Tech
     archive: true
     tags:
