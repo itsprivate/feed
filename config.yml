@@ -624,7 +624,6 @@ sites:
     tags:
       - depth
       - news
-      - www
       - source-bluesky-economist
     translations:
       zh-Hans:
