@@ -842,6 +842,7 @@ sites:
   tech:
     port: 8025
     stop: false
+    hide: true
     priority: 25
     archive: true
     category: Tech
