@@ -128,21 +128,21 @@
         "zh-Hans": {
           "title": "编辑精选",
           "short_title": "编辑精选",
-          "url": "https://www.owenyoung.com/categories/journal/"
+          "url": "https://www.owenyoung.com/articles"
         },
         "en": {
           "title": "Editor's Picks",
           "short_title": "Editor's Picks",
-          "url": "https://www.owenyoung.com/categories/journal/"
+          "url": "https://www.owenyoung.com/articles"
         },
         "ja": {
           "title": "エディターズピック",
-          "url": "https://www.owenyoung.com/categories/journal/"
+          "url": "https://www.owenyoung.com/articles"
         },
         "zh-Hant": {
           "title": "編輯精選",
           "short_title": "編輯精選",
-          "url": "https://www.owenyoung.com/categories/journal/"
+          "url": "https://www.owenyoung.com/articles"
         }
       }
     },

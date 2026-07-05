@@ -92,14 +92,14 @@ sites:
       "zh-Hans":
         title: "编辑精选"
         short_title: "编辑精选"
-        url: "https://www.owenyoung.com/links"
+        url: "https://www.owenyoung.com/articles"
       "en":
         title: "Editor's Picks"
         short_title: "Editor's Picks"
-        url: "https://www.owenyoung.com/links"
+        url: "https://www.owenyoung.com/articles"
       "ja":
         title: "エディターズピック"
-        url: "https://www.owenyoung.com/links"
+        url: "https://www.owenyoung.com/articles"
 
   www:
     port: 9001
