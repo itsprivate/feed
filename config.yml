@@ -2149,7 +2149,7 @@ sources:
   - id: source-sitemap-bloomberg
     type: sitemap
     api:
-      url: https://www.bloomberg.com/feeds/sitemap_news.xml
+      url: https://www.bloomberg.com/sitemaps/news/latest.xml
       name: Bloomberg Sitemap
       home_page_url: https://www.bloomberg.com/
     rules:
