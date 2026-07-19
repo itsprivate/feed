@@ -142,6 +142,7 @@ sites:
     port: 8001
     category: Tech
     priority: 28
+    archive: true
     hide: true
     tags:
       - hn
@@ -171,6 +172,7 @@ sites:
     priority: 10
     category: Featured
     port: 8002
+    archive: true
     redirect: true
     related:
       - hnnew
