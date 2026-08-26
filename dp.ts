@@ -23,6 +23,24 @@ const langMap: [Language, string][] = [
 ];
 // const d = new DPro(Deno.env.get("IM_DEEPL_AUTH_KEY"));
 
+/**
+ * A translate api failure.
+ *
+ * `permanent` marks a failure the payload itself caused, so retrying the same
+ * sentence will always fail the same way. Transient failures (5xx, timeouts,
+ * rate limits) are worth retrying on the next run.
+ */
+export class TranslateError extends Error {
+  constructor(
+    message: string,
+    readonly status: number,
+    readonly permanent: boolean,
+  ) {
+    super(message);
+    this.name = "TranslateError";
+  }
+}
+
 export default class Translation {
   /** Translator lang to custom lang */
   private static readonly langMap = new Map(langMap);
@@ -87,15 +105,29 @@ export default class Translation {
           }),
         },
       );
+      const contentType = res.headers.get("content-type") ?? "";
+      if (!res.ok || !contentType.includes("application/json")) {
+        const body = (await res.text()).slice(0, 200);
+        // the api never answers with html, so 403 + text/html is a WAF rejecting
+        // the payload itself -- e.g. a title containing `/etc/hosts`, which reads
+        // as a path traversal attempt. Retrying that sentence never helps.
+        const isBlockedByWAF = res.status === 403 &&
+          contentType.includes("text/html");
+        throw new TranslateError(
+          `translate failed: HTTP ${res.status} ${contentType} ${body}`,
+          res.status,
+          isBlockedByWAF,
+        );
+      }
       const result = await res.json();
-      if (res.ok && result && result.translations && result.translations[0]) {
+      if (result && result.translations && result.translations[0]) {
         if (result.translations[0].text) {
           results[targetLanguage] = result.translations[0].text;
         } else {
           results[targetLanguage] = sentence;
         }
       } else {
-        throw new Error(JSON.stringify(result));
+        throw new TranslateError(JSON.stringify(result), res.status, false);
       }
     }
     if (results["zh-Hans"]) {

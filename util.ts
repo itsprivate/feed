@@ -795,10 +795,12 @@ export function callWithTimeout<T>(func: unknown, timeout: number): Promise<T> {
         (response) => resolve(response),
         // @ts-ignore: hard to type
         (err) => {
-          const newerr = new Error(err);
-          // add stack
-          newerr.stack = err.stack;
-          return reject(newerr);
+          // reject the original error, so callers can still tell what it was
+          // (`new Error(err)` would stringify it and lose the type)
+          if (err instanceof Error) {
+            return reject(err);
+          }
+          return reject(new Error(String(err)));
         },
       )
       .finally(() => clearTimeout(timer));

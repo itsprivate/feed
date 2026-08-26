@@ -15,7 +15,7 @@ import {
 import log from "../log.ts";
 import SourceItemAdapter from "../adapters/source.ts";
 // import D from "../d.ts";
-import DPro from "../dp.ts";
+import DPro, { TranslateError } from "../dp.ts";
 
 export default async function translateItems(options: RunOptions) {
   const config = options.config;
@@ -101,7 +101,14 @@ export default async function translateItems(options: RunOptions) {
     let total = 0;
     let translateWithAPITotal = 0;
     let failedTotal = 0;
+    let consecutiveFailures = 0;
     let translateWithCacheTotal = 0;
+    // failing this many times in a row means the translate api itself is down
+    // (expired token, exhausted quota, blocked egress ip) rather than one bad
+    // item -- that, and only that, is worth aborting the whole run for.
+    const maxConsecutiveFailures = parseInt(
+      Deno.env.get("TRANSLATE_MAX_CONSECUTIVE_FAILURES") ?? "10",
+    );
     log.info(`start translate ${files.length} items`);
     const TRANSLATE_COUNT_ENV = Deno.env.get("TRANSLATE_COUNT");
     let translateCountLimit = -1;
@@ -234,19 +241,47 @@ export default async function translateItems(options: RunOptions) {
             // real total
             translateWithAPITotal += 1;
             isTranslateSuccess = true;
+            consecutiveFailures = 0;
 
             log.info(`${total}/${files.length} translated result:`, translated);
             if (translateWithAPITotal % 10 === 0) {
               log.info(`translated ${translateWithAPITotal} items `);
             }
           } catch (e) {
-            isTranslateSuccess = false;
             failedTotal++;
+            consecutiveFailures++;
             log.warn(
               `${total}/${files.length} translate ${file} ${value} failed`,
             );
             log.warn(e);
-            throw e;
+
+            // checked before the fallback below, so an api-wide outage that
+            // reports itself as permanent still aborts instead of quietly
+            // shipping every item untranslated
+            if (consecutiveFailures >= maxConsecutiveFailures) {
+              throw new Error(
+                `translate failed ${consecutiveFailures} times in a row, aborting`,
+                { cause: e },
+              );
+            }
+
+            if (e instanceof TranslateError && e.permanent) {
+              // this sentence will never translate, so fall back to the original
+              // text: the item still ships, and it stops being retried forever
+              log.warn(
+                `translate permanently rejected, keeping original text for ${field}`,
+              );
+              for (const language of todoLanguages) {
+                if (!translations[language.code]) {
+                  translations[language.code] = {};
+                }
+                translations[language.code][field] = value;
+              }
+              isTranslateSuccess = true;
+            } else {
+              // transient, leave the formated file in place for the next run
+              isTranslateSuccess = false;
+            }
           }
         }
       }
