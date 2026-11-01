@@ -6,6 +6,14 @@ import {
   parseItemIdentifier,
   tryToRemoveUnnecessaryParams,
 } from "../util.ts";
+
+// sanitizeTitle used to escape titles for sql, doubling every ' and \ before
+// storing them (It's -> It''s). Stored items and archives still hold those
+// titles, so undo it whenever a stored item is read.
+function unescapeStoredTitle(title: string): string {
+  return title.replaceAll("''", "'").replaceAll("\\\\", "\\");
+}
+
 export default class source extends Item<FormatedItem> {
   getSensitive(): boolean {
     return this.originalItem._sensitive || false;
@@ -33,7 +41,9 @@ export default class source extends Item<FormatedItem> {
     const language = this.originalItem._original_language;
     if (this.originalItem._translations) {
       if (this.originalItem._translations[language]) {
-        return this.originalItem._translations[language].title;
+        return unescapeStoredTitle(
+          this.originalItem._translations[language].title,
+        );
       }
     }
     return "";
@@ -162,8 +172,17 @@ export default class source extends Item<FormatedItem> {
     return parsedId.type;
   }
   getFullTranslations(): Record<string, Record<string, string>> | undefined {
-    if (this.originalItem._translations) {
-      return this.originalItem._translations;
+    const storedTranslations = this.originalItem._translations;
+    if (storedTranslations) {
+      // copy, so the stored item itself is left untouched
+      const translations: Record<string, Record<string, string>> = {};
+      for (const [language, fields] of Object.entries(storedTranslations)) {
+        translations[language] = { ...fields };
+        if (typeof fields.title === "string") {
+          translations[language].title = unescapeStoredTitle(fields.title);
+        }
+      }
+      return translations;
     } else {
       return undefined;
     }

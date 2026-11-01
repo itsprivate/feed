@@ -416,12 +416,9 @@ function sanitizeTitle(
     sanitized = sanitized.replace(pattern, replacement);
   }
 
-  // 转义数据库敏感字符
-  sanitized = sanitized
-    .replace(/'/g, "''") // SQL 注入防护
-    .replace(/\\/g, "\\\\") // 反斜杠转义
-    .replace(/\x00/g, "") // 移除 null 字节
-    .replace(/\x1a/g, ""); // 移除 ctrl+Z
+  // 标题只会写进 json 和模板，不进数据库，不要做 SQL 转义：
+  // 之前这里把 ' 转成 ''，页面上就显示成 It''s（旧数据在 adapters/source.ts 读取时还原）。
+  // null 字节、ctrl+Z 这类控制字符已经被上面的字符过滤去掉了。
 
   const wasTruncated = sanitized.length > maxLength;
 
