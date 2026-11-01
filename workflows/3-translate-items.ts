@@ -295,7 +295,14 @@ export default async function translateItems(options: RunOptions) {
               const keys = Object.keys(translation);
               for (const key of keys) {
                 if (key === "title") {
-                  const sanitized = sanitizeTitle(translation[key]);
+                  let sanitized = sanitizeTitle(translation[key]);
+                  // a title made only of emoji (e.g. "📸") sanitizes to an
+                  // empty string, keep the emoji instead of losing the title
+                  if (!sanitized.title) {
+                    sanitized = sanitizeTitle(translation[key], {
+                      keepEmoji: true,
+                    });
+                  }
                   translation[key] = sanitized.title;
                 }
               }
@@ -393,8 +400,13 @@ function sanitizeTitle(
     );
   }
 
-  // 过滤特殊字符，只保留基本标点符号和文字
-  sanitized = sanitized.replace(/[^\p{L}\p{N}\p{P}\p{Z}]/gu, "");
+  // 过滤特殊字符，只保留基本标点符号和文字（keepEmoji 时也保留 emoji）
+  sanitized = sanitized.replace(
+    keepEmoji
+      ? /[^\p{L}\p{N}\p{P}\p{Z}\p{Extended_Pictographic}\u{200D}\u{FE0F}]/gu
+      : /[^\p{L}\p{N}\p{P}\p{Z}]/gu,
+    "",
+  );
 
   // 将多个空格替换为单个空格
   sanitized = sanitized.replace(/\s+/g, " ");

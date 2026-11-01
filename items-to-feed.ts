@@ -99,6 +99,14 @@ export default function itemsToFeed(
         getFeedItemSyncOptions,
       );
 
+      // an item without a title has nothing to show, and jsonfeed-to-atom
+      // throws on it when the lite version leaves summary and content empty
+      // too, which would fail the build of every site
+      if (!feedItem.title) {
+        log.warn(`ignore item ${key}, cause it has no title`);
+        return;
+      }
+
       items.push(feedItem);
     } catch (_e) {
       // ignore
