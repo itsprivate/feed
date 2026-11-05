@@ -1,7 +1,7 @@
 page_size: 300
 translated_items_per_page: 100
 max_files_per_site: -1
-advice_url: "https://t.me/joinchat/GVK5UiDwPUAwMjkx"
+advice_url: "https://t.me/+bizkkXRSa2JlYWIx"
 translations:
   zh-Hans:
     about_label: 关于
@@ -1619,7 +1619,7 @@ social_links:
   - name: Twitter @问Reddit
     url: https://twitter.com/AskRedditZh
   - name: 加入 Telegram 讨论群
-    url: https://t.me/joinchat/GVK5UiDwPUAwMjkx
+    url: https://t.me/+bizkkXRSa2JlYWIx
 
 sources:
   - id: source-google-news

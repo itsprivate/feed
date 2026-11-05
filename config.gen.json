@@ -2,7 +2,7 @@
   "page_size": 300,
   "translated_items_per_page": 100,
   "max_files_per_site": -1,
-  "advice_url": "https://t.me/joinchat/GVK5UiDwPUAwMjkx",
+  "advice_url": "https://t.me/+bizkkXRSa2JlYWIx",
   "translations": {
     "zh-Hans": {
       "about_label": "关于",
@@ -207,6 +207,7 @@
       "port": 8001,
       "category": "Tech",
       "priority": 28,
+      "archive": true,
       "hide": true,
       "tags": [
         "hn",
@@ -243,6 +244,7 @@
       "priority": 10,
       "category": "Featured",
       "port": 8002,
+      "archive": true,
       "redirect": true,
       "related": [
         "hnnew",
@@ -791,7 +793,6 @@
       "tags": [
         "depth",
         "news",
-        "www",
         "source-bluesky-economist"
       ],
       "translations": {
@@ -939,7 +940,7 @@
     },
     "lobste": {
       "port": 8021,
-      "priority": 30,
+      "priority": 29,
       "category": "Tech",
       "archive": true,
       "tags": [
@@ -1091,6 +1092,7 @@
     "tech": {
       "port": 8025,
       "stop": false,
+      "hide": true,
       "priority": 25,
       "archive": true,
       "category": "Tech",
@@ -2037,6 +2039,7 @@
       "port": 8051,
       "archive": false,
       "category": "News",
+      "priority": 32,
       "no_publish": true,
       "domain": "axios.buzzing.cc",
       "redirect": false,
@@ -2178,7 +2181,7 @@
     },
     {
       "name": "加入 Telegram 讨论群",
-      "url": "https://t.me/joinchat/GVK5UiDwPUAwMjkx"
+      "url": "https://t.me/+bizkkXRSa2JlYWIx"
     }
   ],
   "sources": [
@@ -2748,7 +2751,7 @@
       "id": "source-sitemap-bloomberg",
       "type": "sitemap",
       "api": {
-        "url": "https://www.bloomberg.com/feeds/sitemap_news.xml",
+        "url": "https://www.bloomberg.com/sitemaps/news/latest.xml",
         "name": "Bloomberg Sitemap",
         "home_page_url": "https://www.bloomberg.com/"
       },
